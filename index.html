@@ -3,214 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RunPath Commander Pro V4</title>
-    
+    <title>RunPath Commander V5</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Heebo:wght@300;500;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
-        :root { --bg: #050508; --surface: #12121f; --accent: #d4f53c; --text: #ffffff; --muted: #8e8eaf; --border: #22223d; --military: #4a5d23; --danger: #ff4757; --blue: #3c9ef5; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Heebo', sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; overflow: hidden; height: 100vh; }
-        
+        :root { --bg: #050508; --surface: #12121f; --accent: #d4f53c; --text: #ffffff; --muted: #8e8eaf; --border: #22223d; --military: #4a5d23; --danger: #ff4757; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); font-family: 'Heebo', sans-serif; margin: 0; overflow: hidden; height: 100vh; }
         .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
         .header h1 { font-family: 'Bebas Neue'; font-size: 1.6rem; color: var(--accent); margin: 0; }
-
         .container { height: calc(100vh - 140px); overflow-y: auto; padding: 15px; }
         .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 15px; margin-bottom: 15px; }
-        
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); display: grid; grid-template-columns: repeat(5, 1fr); padding: 12px 0; border-top: 1px solid var(--border); z-index: 1000; }
-        .nav-item { color: var(--muted); border: none; background: none; font-size: 0.65rem; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .nav-item { color: var(--muted); border: none; background: none; font-size: 0.65rem; display: flex; flex-direction: column; align-items: center; }
         .nav-item.active { color: var(--accent); font-weight: 800; }
-        .nav-icon { font-size: 1.3rem; margin-bottom: 3px; }
-
-        .btn-action { background: var(--accent); color: black; border: none; width: 100%; padding: 14px; border-radius: 12px; font-weight: 800; margin-top: 10px; cursor: pointer; transition: 0.2s; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: white; padding: 10px; border-radius: 10px; font-size: 0.8rem; margin-top: 5px; cursor: pointer; width: 100%; }
-        
-        input, select { background: #1a1a2e; color: white; border: 1px solid var(--border); width: 100%; padding: 12px; border-radius: 10px; margin-top: 5px; }
-        #map { height: 260px; border-radius: 15px; margin-top: 10px; border: 1px solid var(--border); }
+        .btn-action { background: var(--accent); color: black; border: none; width: 100%; padding: 14px; border-radius: 12px; font-weight: 800; margin-top: 10px; cursor: pointer; }
+        .exercise-detail { font-size: 0.85rem; border-right: 2px solid var(--accent); padding-right: 10px; margin-bottom: 10px; color: #ddd; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .stat-box { background: var(--border); padding: 10px; border-radius: 12px; text-align: center; }
+        .stat-val { font-size: 1.4rem; font-weight: 800; color: var(--accent); display: block; }
+        #map { height: 200px; border-radius: 15px; margin-top: 10px; }
         .hidden { display: none; }
-        
-        .progression-log { font-size: 0.8rem; color: var(--muted); background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>RUNPATH ELITE</h1>
-    <div id="status-tag" style="font-size: 0.7rem; color: var(--accent);">READY</div>
+    <h1>RUNPATH COMMANDER</h1>
+    <div id="live-timer" style="font-family: 'Bebas Neue'; color: var(--danger);">00:00:00</div>
 </div>
 
 <div class="container">
     
-    <!-- עמוד 1: אימוני ריצה וכוח (דינמי) -->
+    <!-- עמוד 1: אימוני ריצה וכוח מפורטים -->
     <div id="page-1" class="page">
-        <h3 style="color: var(--blue);">👟 אימונים אישיים</h3>
+        <h3>תוכנית אימונים מותאמת</h3>
         <div class="card">
-            <h4>תכניות ריצה (לפי יעד)</h4>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <button class="btn-outline" onclick="generatePlan('5K')">5 ק"מ</button>
-                <button class="btn-outline" onclick="generatePlan('10K')">10 ק"מ</button>
-                <button class="btn-outline" onclick="generatePlan('Half')">חצי מרתון</button>
-                <button class="btn-outline" onclick="generatePlan('Full')">מרתון מלא</button>
-            </div>
-            <div id="run-plan-display" class="progression-log hidden"></div>
+            <h4>בניית תוכנית ריצה (3-4 חודשים)</h4>
+            <select id="run-goal">
+                <option value="5">5 ק"מ (שיפור תוצאה)</option>
+                <option value="10">10 ק"מ</option>
+                <option value="21">חצי מרתון</option>
+                <option value="42">מרתון מלא</option>
+            </select>
+            <button class="btn-action" onclick="buildPersonalPlan()">צור תוכנית מוצלבת</button>
+            <div id="plan-output" class="hidden" style="margin-top:15px; font-size:0.85rem;"></div>
         </div>
 
         <div class="card">
-            <h4>אימוני כוח</h4>
-            <select id="gym-env" onchange="updateGymOptions()">
+            <h4>אימוני כוח מפורטים</h4>
+            <select id="strength-mode" onchange="showExercises()">
                 <option value="home">בית (ללא ציוד)</option>
-                <option value="gym">חדר כושר (מכשירים/משקולות)</option>
+                <option value="gym">חדר כושר (Full Setup)</option>
             </select>
-            <div id="strength-options" style="margin-top:10px;">
-                <!-- אפשרויות כוח יתעדכנו כאן -->
-            </div>
+            <div id="exercise-list" style="margin-top:10px;"></div>
         </div>
     </div>
 
-    <!-- עמוד 2: צה"ל וגיבושים -->
+    <!-- עמוד 2: צבא (סיירות/מטכל/שייטת) -->
     <div id="page-2" class="page hidden">
-        <h3 style="color: var(--military);">⚔️ הכנה ליחידות מובחרות</h3>
-        <div class="card">
-            <h4>בחירת מסלול הכנה</h4>
-            <select id="mil-path">
-                <option value="8200">טכנולוגי (8200/81)</option>
-                <option value="sayarot">יום סיירות / גיבוש מטכ"ל</option>
-                <option value="shayetet">גיבוש שייטת 13</option>
-            </select>
-            <button class="btn-action" style="background: var(--military); color: white;" onclick="generateMilPlan()">בנה אימון מותאם</button>
-            <div id="mil-display" class="progression-log hidden"></div>
+        <h3 style="color:var(--accent)">⚔️ מסלול קרבי</h3>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div class="card" onclick="genMilPlan('Sayeret')">
+                <h4 style="color:var(--accent)">יום סיירות</h4>
+                <p style="font-size:0.7rem">מיקוד ב-2000 מ' ודיונות.</p>
+            </div>
+            <div class="card" onclick="genMilPlan('Gibush')">
+                <h4 style="color:var(--danger)">מטכ"ל / שייטת</h4>
+                <p style="font-size:0.7rem">סיבולת אקטואלית ושקים.</p>
+            </div>
         </div>
+        <div id="mil-plan-output" class="card hidden"></div>
     </div>
 
-    <!-- עמוד 3: ריצה וניווט (חיפוש גוגל מובנה) -->
+    <!-- עמוד 3: ניווט ומעקב חי -->
     <div id="page-3" class="page hidden">
-        <h3>ניווט ומסלול חכם</h3>
+        <div class="stats-grid">
+            <div class="stat-box"><span class="stat-val" id="live-dist">0.0</span>ק"מ</div>
+            <div class="stat-box"><span class="stat-val" id="live-pace">--</span>קצב</div>
+            <div class="stat-box"><span class="stat-val" id="live-cal">0</span>קלוריות</div>
+            <div class="stat-box"><span class="stat-val" id="live-alt">0</span>עליות</div>
+        </div>
         <div class="card">
-            <label>חפש מקומות לעבור בהם (Google Maps):</label>
-            <div style="display:flex; gap:5px;">
-                <input type="text" id="map-search" placeholder="למשל: ברזייה, פארק הירקון...">
-                <button class="btn-action" style="width: 60px; margin: 0;" onclick="searchGoogle()">🔎</button>
-            </div>
-            <select id="slope" style="margin-top:10px;">
-                <option value="flat">מישור</option>
-                <option value="hills">עליות</option>
-            </select>
-            <button class="btn-action" onclick="initMap()">הצג על המפה</button>
+            <input type="text" id="target-search" placeholder="הזן יעד (למשל: פארק הירקון)">
+            <button class="btn-action" onclick="addWaypoint()">הוסף למסלול</button>
         </div>
         <div id="map"></div>
+        <button id="run-btn" class="btn-action" style="background:var(--danger); color:white" onclick="toggleLiveRun()">התחל ריצה</button>
     </div>
 
-    <!-- עמוד 4: פרופיל וניתוח כושר מורחב -->
+    <!-- עמוד 4: פרופיל מורחב -->
     <div id="page-4" class="page hidden">
-        <h3>פרופיל אישי ונתוני כושר</h3>
+        <h3>פרופיל מאמן</h3>
         <div class="card">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                 <input type="number" id="u-age" placeholder="גיל">
-                <select id="u-gender"><option>זכר</option><option>נקבה</option></select>
                 <input type="number" id="u-weight" placeholder="משקל">
-                <input type="number" id="u-height" placeholder="גובה">
+                <select id="u-gender"><option>זכר</option><option>נקבה</option></select>
+                <input type="number" id="u-target-trains" placeholder="אימונים בשבוע">
             </div>
-            <label style="margin-top:10px; display:block;">כמות אימונים בשבוע (נוכחי):</label>
-            <input type="number" id="u-freq" placeholder="0-7">
-            
-            <label style="margin-top:10px; display:block;">רמת כושר אירובי (1-10):</label>
-            <input type="range" id="u-level" min="1" max="10" value="5">
-            
-            <button class="btn-action" onclick="saveProfile()">שמור ונתח כושר</button>
+            <label style="margin-top:10px; display:block">זמן ממוצע לאימון (דקות):</label>
+            <input type="number" id="u-time" placeholder="60">
+            <label style="margin-top:10px; display:block">רמת כושר (1-10):</label>
+            <input type="range" id="u-fitness" min="1" max="10">
+            <button class="btn-action" onclick="saveProfile()">שמור נתונים</button>
         </div>
     </div>
 
-    <!-- עמוד 5: באטל ובדיקת התקדמות (Log) -->
+    <!-- עמוד 5: בדיקות תקופתיות ושיא -->
     <div id="page-5" class="page hidden">
-        <h3 style="color: var(--danger);">PROGRESSION & BATTLE</h3>
+        <h3>TESTS & RECORDS</h3>
         <div class="card">
-            <h4>מבחן התקדמות חודשי</h4>
-            <p style="font-size:0.8rem; color:var(--muted);">בצע את אותו אימון כל חודש כדי לראות שיפור בתוצאות.</p>
-            <button class="btn-action" onclick="startProgressionTest()">התחל מבחן יום סיירות</button>
+            <h4>מבחן 5 ק"מ (Benchmark)</h4>
+            <button class="btn-action" onclick="saveTest('5K')">הזן תוצאה חדשה</button>
+            <div id="history-5k" class="exercise-detail" style="margin-top:10px;"></div>
         </div>
-        <div class="card">
-            <h4>היסטוריית תוצאות</h4>
-            <div id="history-log" class="progression-log">אין תוצאות שמורות עדיין.</div>
+        <div class="card" style="border-color:var(--danger)">
+            <h4>מבחן תקופתי - יום סיירות</h4>
+            <p style="font-size:0.7rem">מומלץ לבצע אחת ל-3 שבועות לבדיקת שיפור.</p>
+            <button class="btn-action" onclick="saveTest('Mil')">תעד אימון סימולציה</button>
         </div>
     </div>
 
 </div>
 
 <nav class="nav-bar">
-    <button class="nav-item active" onclick="showPage(1)"><span class="nav-icon">📊</span><span>אימונים</span></button>
+    <button class="nav-item active" onclick="showPage(1)"><span class="nav-icon">📊</span><span>אימון</span></button>
     <button class="nav-item" onclick="showPage(2)"><span class="nav-icon">⚔️</span><span>צה"ל</span></button>
-    <button class="nav-item" onclick="showPage(3)"><span class="nav-icon">🏃</span><span>ניווט</span></button>
+    <button class="nav-item" onclick="showPage(3)"><span class="nav-icon">🏃</span><span>רוץ</span></button>
     <button class="nav-item" onclick="showPage(4)"><span class="nav-icon">👤</span><span>פרופיל</span></button>
     <button class="nav-item" onclick="showPage(5)"><span class="nav-icon">🔥</span><span>Battle</span></button>
 </nav>
 
 <script>
-    let map;
-    let userData = { weight: 70, freq: 3, level: 5 };
+    let isRunning = false, seconds = 0, timer;
+    let map, pathLine;
 
     function showPage(n) {
         document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
         document.getElementById('page-' + n).classList.remove('hidden');
         document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === n-1));
-    }
-
-    // בניית תוכנית ריצה דינמית
-    function generatePlan(goal) {
-        const display = document.getElementById('run-plan-display');
-        display.classList.remove('hidden');
-        const workouts = userData.freq > 4 ? 4 : 3;
-        display.innerHTML = `<strong>תוכנית ל-${goal}:</strong><br>
-        * ${workouts} אימונים בשבוע.<br>
-        * דגש: ${userData.level > 7 ? 'שיפור זמנים ואינטרוולים' : 'בניית סיבולת בסיסית'}.<br>
-        * יום א: ריצת נפח קלה.<br>
-        * יום ג: אימון עליות / הפוגות.`;
-    }
-
-    // אימוני כוח - בית/מכון
-    function updateGymOptions() {
-        const env = document.getElementById('gym-env').value;
-        const container = document.getElementById('strength-options');
-        if(env === 'home') {
-            container.innerHTML = '<button class="btn-outline">Full Body (משקל גוף)</button><button class="btn-outline">אימון ליבה ויציבה</button>';
-        } else {
-            container.innerHTML = '<button class="btn-outline">Hypertrophy (מכשירים)</button><button class="btn-outline">כוח מתפרץ (סקוואט/דדליפט)</button>';
-        }
-    }
-
-    // חיפוש גוגל מפות ישיר
-    function searchGoogle() {
-        const q = document.getElementById('map-search').value;
-        window.open(`https://www.google.com/maps/search/${q}`, '_blank');
+        if(n === 3 && !map) initMap();
     }
 
     function initMap() {
-        if(!map) {
-            map = L.map('map').setView([32.085, 34.781], 13);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+        map = L.map('map', {zoomControl: false}).setView([32.085, 34.781], 13);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+        pathLine = L.polyline([], {color: '#d4f53c'}).addTo(map);
+    }
+
+    // תוכנית ריצה מוצלבת
+    function buildPersonalPlan() {
+        const goal = document.getElementById('run-goal').value;
+        const fit = document.getElementById('u-fitness').value || 5;
+        const output = document.getElementById('plan-output');
+        output.classList.remove('hidden');
+        
+        let weeks = 12;
+        let desc = fit > 7 ? "דגש על אינטרוולים ומהירות סף." : "דגש על בניית בסיס אירובי הדרגתי.";
+        
+        output.innerHTML = `<strong>תוכנית ל-${goal} ק"מ (${weeks} שבועות):</strong><br>
+        * חודש 1: נפח נמוך, 3 אימונים בשבוע.<br>
+        * חודש 2: הוספת אימון עליות/כוח.<br>
+        * חודש 3: אימוני סף (Tempo) והעלאת קילומטראז'.<br>
+        ${desc}`;
+    }
+
+    // פירוט תרגילי כוח
+    function showExercises() {
+        const mode = document.getElementById('strength-mode').value;
+        const list = document.getElementById('exercise-list');
+        if(mode === 'home') {
+            list.innerHTML = `
+                <div class="exercise-detail"><strong>שכיבות סמיכה:</strong> 4 סטים, 15 חזרות. ידיים ברוחב כתפיים, גב ישר.</div>
+                <div class="exercise-detail"><strong>לאנג'ים:</strong> 3 סטים, 12 לכל רגל. דגש על ברך ב-90 מעלות.</div>
+                <div class="exercise-detail"><strong>פלאנק:</strong> 3 סטים, 60 שניות. ליבה הדוקה.</div>
+            `;
+        } else {
+            list.innerHTML = `
+                <div class="exercise-detail"><strong>סקוואט (מוט):</strong> 4 סטים, 8 חזרות. משקל: 70% מהמקסימום.</div>
+                <div class="exercise-detail"><strong>לחיצת חזה:</strong> 3 סטים, 10 חזרות. שליטה בירידה.</div>
+                <div class="exercise-detail"><strong>מתח:</strong> 3 סטים עד כשל.</div>
+            `;
         }
     }
 
-    function saveProfile() {
-        userData.weight = document.getElementById('u-weight').value;
-        userData.freq = document.getElementById('u-freq').value;
-        userData.level = document.getElementById('u-level').value;
-        alert("פרופיל עודכן! התוכניות יותאמו לרמה " + userData.level);
-    }
-
-    function startProgressionTest() {
-        const result = prompt("הזן תוצאה לריצת 2,000 מטר (בפורמט MM:SS):");
-        if(result) {
-            const date = new Date().toLocaleDateString();
-            const log = document.getElementById('history-log');
-            if(log.innerText.includes('אין')) log.innerHTML = '';
-            log.innerHTML += `<div>${date}: תוצאה - ${result}</div>`;
+    // מעקב חי
+    function toggleLiveRun() {
+        isRunning = !isRunning;
+        const btn = document.getElementById('run-btn');
+        if(isRunning) {
+            btn.innerText = "עצור ריצה";
+            timer = setInterval(() => {
+                seconds++;
+                let h = Math.floor(seconds/3600), m = Math.floor((seconds%3600)/60), s = seconds%60;
+                document.getElementById('live-timer').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            }, 1000);
+        } else {
+            clearInterval(timer);
+            btn.innerText = "המשך ריצה";
         }
     }
 
-    window.onload = updateGymOptions;
+    function addWaypoint() {
+        const target = document.getElementById('target-search').value;
+        if(target) {
+            alert("היעד '" + target + "' נוסף למסלול. המערכת מחשבת קצב נדרש...");
+            window.open(`https://www.google.com/maps/search/${target}`, '_blank');
+        }
+    }
+
+    function saveTest(type) {
+        const res = prompt("הזן תוצאה (זמן או ניקוד):");
+        const log = type === '5K' ? document.getElementById('history-5k') : document.getElementById('mil-plan-output');
+        log.classList.remove('hidden');
+        log.innerHTML += `<div>${new Date().toLocaleDateString()}: ${res}</div>`;
+    }
+
+    window.onload = () => { showExercises(); };
 </script>
 </body>
 </html>
