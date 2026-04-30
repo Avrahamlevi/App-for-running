@@ -1,0 +1,9 @@
+{
+  "short_name": "RunPath",
+  "name": "RunPath Pro Training",
+  "start_url": "index.html",
+  "display": "standalone",
+  "theme_color": "#050508",
+  "background_color": "#050508",
+  "orientation": "portrait"
+}
