@@ -3,38 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RunPath Commander Elite</title>
+    <title>RunPath Commander V3</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Heebo:wght@300;500;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
-        :root { --bg: #050508; --surface: #12121f; --accent: #d4f53c; --text: #ffffff; --muted: #8e8eaf; --border: #22223d; --military: #4a5d23; --gym: #3c9ef5; }
+        :root { --bg: #050508; --surface: #12121f; --accent: #d4f53c; --text: #ffffff; --muted: #8e8eaf; --border: #22223d; --military: #4a5d23; --danger: #ff4757; --blue: #3c9ef5; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); font-family: 'Heebo', sans-serif; margin: 0; overflow: hidden; height: 100vh; }
         
         .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
         .header h1 { font-family: 'Bebas Neue'; font-size: 1.6rem; color: var(--accent); margin: 0; }
 
-        .container { height: calc(100vh - 140px); overflow-y: auto; padding: 20px; }
+        .container { height: calc(100vh - 140px); overflow-y: auto; padding: 15px; }
         .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 15px; margin-bottom: 15px; }
         
-        /* Navigation */
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); display: grid; grid-template-columns: repeat(5, 1fr); padding: 12px 0; border-top: 1px solid var(--border); z-index: 1000; }
         .nav-item { color: var(--muted); border: none; background: none; font-size: 0.65rem; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .nav-item.active { color: var(--accent); font-weight: 800; }
         .nav-icon { font-size: 1.3rem; margin-bottom: 3px; }
 
-        /* Training Columns */
-        .train-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .train-type { padding: 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 800; text-align: center; border: 1px solid var(--border); }
-        .type-mil { background: var(--military); color: white; }
-        .type-civ { background: var(--surface); color: var(--accent); }
+        .level-badge { display: inline-block; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 800; margin-bottom: 8px; }
+        .lvl-easy { background: #2ed573; color: black; }
+        .lvl-med { background: #ffa502; color: black; }
+        .lvl-hard { background: var(--danger); color: white; }
 
-        #map { height: 250px; border-radius: 15px; margin-top: 10px; border: 1px solid var(--border); }
-        .btn-action { background: var(--accent); color: black; border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: 800; margin-top: 10px; font-size: 1rem; }
-        input, select { background: #1a1a2e; color: white; border: 1px solid var(--border); width: 100%; padding: 12px; border-radius: 10px; margin-top: 5px; }
+        .btn-action { background: var(--accent); color: black; border: none; width: 100%; padding: 14px; border-radius: 12px; font-weight: 800; margin-top: 10px; cursor: pointer; }
+        input, select, textarea { background: #1a1a2e; color: white; border: 1px solid var(--border); width: 100%; padding: 12px; border-radius: 10px; margin-top: 5px; font-family: inherit; }
+        #map { height: 260px; border-radius: 15px; margin-top: 10px; border: 1px solid var(--border); }
         .hidden { display: none; }
     </style>
 </head>
@@ -42,104 +40,113 @@
 
 <div class="header">
     <h1>RUNPATH ELITE</h1>
-    <div style="font-size: 0.7rem; color: var(--muted);">IDF PREP MODE</div>
+    <div style="font-size: 0.7rem; color: var(--muted);">PREP MODE ACTIVE</div>
 </div>
 
 <div class="container">
     
-    <!-- עמוד 1: תוכניות אימונים (פוצל לצבא ואזרחי) -->
+    <!-- עמוד 1: תוכניות אזרחיות וכוח -->
     <div id="page-1" class="page">
-        <h3>מרכז תוכניות אימון</h3>
-        
-        <div style="margin-bottom: 20px;">
-            <p style="color: var(--accent); font-weight: 800; margin-bottom: 5px;">⚔️ מסלול לוחם (גיבושים וסיירות)</p>
-            <div class="card">
-                <div class="train-grid">
-                    <div class="train-type type-mil">בוחן בר-אור</div>
-                    <div class="train-type type-mil">יום סיירות</div>
-                </div>
-                <p style="font-size: 0.8rem; margin-top: 10px; color: var(--muted);">אימוני עצימות ממוקדים ל-3,000 מטר, זחילות ודיונות.</p>
+        <h3 style="color: var(--blue);">👟 מסלול אזרחי (מרחקים וכוח)</h3>
+        <div class="card">
+            <h4>תוכניות ריצה</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button class="btn-action" style="background:var(--border); color:white; font-size: 0.8rem;">5-10 ק"מ</button>
+                <button class="btn-action" style="background:var(--border); color:white; font-size: 0.8rem;">חצי מרתון</button>
+                <button class="btn-action" style="background:var(--blue); color:white; font-size: 0.8rem; grid-column: span 2;">מרתון מלא</button>
             </div>
         </div>
-
-        <div>
-            <p style="color: var(--gym); font-weight: 800; margin-bottom: 5px;">👟 מסלול אזרחי (מרחקים וכוח)</p>
-            <div class="card">
-                <div class="train-grid">
-                    <div class="train-type type-civ">5-10 ק"מ</div>
-                    <div class="train-type type-civ">חצי מרתון</div>
-                </div>
-                <div class="train-type" style="margin-top:10px; background: var(--gym); color: white;">שילוב אימוני כוח (Cross-Training)</div>
-                <p style="font-size: 0.8rem; margin-top: 10px; color: var(--muted);">שילוב ריצה עם אימוני התנגדות ומשקולות לחיזוק הגוף.</p>
-            </div>
+        <div class="card" style="border-right: 4px solid var(--blue);">
+            <h4>אימוני כוח משולבים</h4>
+            <p style="font-size: 0.8rem; color: var(--muted);">אימוני פלג גוף תחתון וליבה למניעת פציעות בנפחים גבוהים.</p>
         </div>
     </div>
 
-    <!-- עמוד 2: צבא (פירוט תרגילים) -->
+    <!-- עמוד 2: צבא - סימולציות גיבוש ויום סיירות -->
     <div id="page-2" class="page hidden">
-        <h3>מאגר תרגילי סיירות</h3>
+        <h3 style="color: var(--accent);">⚔️ הכנה ליחידות מובחרות</h3>
+        
+        <!-- רמת מתחילים -->
         <div class="card">
-            <h4>סימולציית גיבוש</h4>
-            <ul style="font-size: 0.8rem; padding-right: 20px;">
-                <li>ספרינטים בעלייה (60 מטר X 10)</li>
-                <li>זחילות 20 מטר (X 5 סטים)</li>
-                <li>סקוואטים עם "שק" (משקל גוף)</li>
-            </ul>
+            <span class="level-badge lvl-easy">רמה 1: בסיס</span>
+            <h4>סימולציית יום סיירות (חימום)</h4>
+            <p style="font-size: 0.8rem;">דגש על טכניקת ריצה בחול, אינטרוולים קצרים וזמני מנוחה קצובים.</p>
         </div>
+
+        <!-- רמת ביניים -->
         <div class="card">
-            <h4>תרגילים טכניים (8200/81)</h4>
-            <p style="font-size: 0.8rem;">שיפור סיבולת בסיסית תוך עמידה בזמני תקן צבאיים.</p>
+            <span class="level-badge lvl-med">רמה 2: עצימות</span>
+            <h4>סימולציית גיבוש - מסלול לוחם</h4>
+            <p style="font-size: 0.8rem;">ספרינטים בעלייה, תרגילי כוח מתפרץ וסיבולת שריר גבוהה.</p>
+        </div>
+
+        <!-- רמת קומנדו -->
+        <div class="card">
+            <span class="level-badge lvl-hard">רמה 3: קצה</span>
+            <h4>יום סיירות מלא (סימולציה)</h4>
+            <p style="font-size: 0.8rem;">דימוי מלא של התחנות: זחילות, שקים, וריצת ה-2,000 המפורסמת תחת לחץ.</p>
         </div>
     </div>
 
-    <!-- עמוד 3: ריצה וניווט (כולל בחירת עליות ונקודות עניין) -->
+    <!-- עמוד 3: ריצה, ניווט וברזיות -->
     <div id="page-3" class="page hidden">
-        <h3>תכנון מסלול וריצה</h3>
+        <h3>צא לריצה</h3>
         <div class="card">
-            <label>העדפת טופוגרפיה:</label>
-            <select id="slope-pref">
-                <option value="flat">מישור (קל / מהירות)</option>
-                <option value="hills">יותר עליות (קושי / סיירות)</option>
-                <option value="random">משולב (טבעי)</option>
+            <label>נקודות עניין בדרך:</label>
+            <select id="map-features">
+                <option value="none">מסלול נקי</option>
+                <option value="water">ברזיות ציבוריות 🚰</option>
+                <option value="scenic">נקודות נוף (דירוג גוגל גבוה) ⭐</option>
+                <option value="custom">בחירה חופשית על המפה 📍</option>
             </select>
-
-            <label style="margin-top:10px; display:block;">נקודות לעבור בדרך:</label>
-            <select id="points-pref">
-                <option value="none">מסלול חופשי</option>
-                <option value="scenic">נקודות נוף מומלצות (דירוג גבוה)</option>
-                <option value="parks">פארקים וגינות בקרבת מקום</option>
+            <label style="margin-top:10px; display:block;">טופוגרפיה:</label>
+            <select id="slope">
+                <option value="flat">מישור</option>
+                <option value="hills">עליות (הכנה לגיבוש)</option>
             </select>
-            
-            <button class="btn-action" onclick="startRun()">צא לדרך עם GPS</button>
+            <button class="btn-action" onclick="startTracking()">הפעל GPS וניווט</button>
         </div>
         <div id="map"></div>
     </div>
 
-    <!-- עמוד 4: פרופיל (כולל מסך הפתיחה) -->
+    <!-- עמוד 4: פרופיל וכושר נוכחי -->
     <div id="page-4" class="page hidden">
-        <h3>הגדרות פרופיל</h3>
+        <h3>פרופיל וניתוח כושר</h3>
         <div class="card">
-            <p style="font-size: 0.8rem; color: var(--muted);">עדכן את הנתונים שלך לחישוב קלוריות וביצועים מדויק:</p>
-            <input type="number" id="weight" placeholder="משקל (ק"ג)">
-            <input type="number" id="height" placeholder="גובה (ס"מ)">
-            <select id="gender"><option>גבר</option><option>אישה</option></select>
-            <button class="btn-action" style="background: var(--gym); color: white;" onclick="saveProfile()">עדכן נתונים</button>
+            <label>כמה אימונים בשבוע?</label>
+            <input type="number" placeholder="למשל: 4">
+            <label>משקל גוף (ק"ג)</label>
+            <input type="number" id="u-weight" placeholder="70">
+            <label>רמת כושר נוכחית:</label>
+            <select>
+                <option>מתחיל (0-2 ק"מ רציף)</option>
+                <option>בינוני (5-10 ק"מ רציף)</option>
+                <option>מתקדם (מתכונן לגיבושים)</option>
+            </select>
+            <label>זמן ממוצע לאימון (דקות):</label>
+            <input type="number" placeholder="45">
+            <button class="btn-action" onclick="alert('הנתונים נשמרו!')">שמור פרופיל</button>
         </div>
     </div>
 
-    <!-- עמוד 5: באטל / יצירתי -->
+    <!-- עמוד 5: באטל ותחרות מול סימולציות -->
     <div id="page-5" class="page hidden">
-        <h3>BATTLE MODE</h3>
-        <div class="card" style="border: 2px solid #ff4757;">
-            <p>רוץ נגד תוצאת הבר-אור הקודמת שלך. האפליקציה תצפצף אם אתה איטי מהקצב הנדרש!</p>
-            <button class="btn-action" style="background: #ff4757; color: white;">START FIGHT</button>
+        <h3 style="color: var(--danger);">BATTLE ZONE</h3>
+        <div class="card" style="border: 1px solid var(--danger);">
+            <h4>תחרות מול סימולציית יום סיירות</h4>
+            <p style="font-size: 0.8rem;">הזן את שיא ה-2,000 שלך ונסה לנצח את ה"רפאים" של הלוחמים ביחידות המובחרות.</p>
+            <button class="btn-action" style="background: var(--danger); color: white;">START BATTLE</button>
+        </div>
+        <div class="card">
+            <h4>דו קרב גיבוש</h4>
+            <p style="font-size: 0.8rem;">תחרות נגד זמני תקן של גיבושי סיירת מטכ"ל/שייטת.</p>
         </div>
     </div>
 
 </div>
 
 <nav class="nav-bar">
-    <button class="nav-item active" onclick="showPage(1)"><span class="nav-icon">📊</span><span>תוכניות</span></button>
+    <button class="nav-item active" onclick="showPage(1)"><span class="nav-icon">📊</span><span>אזרחי</span></button>
     <button class="nav-item" onclick="showPage(2)"><span class="nav-icon">⚔️</span><span>צה"ל</span></button>
     <button class="nav-item" onclick="showPage(3)"><span class="nav-icon">🏃</span><span>רוץ</span></button>
     <button class="nav-item" onclick="showPage(4)"><span class="nav-icon">👤</span><span>פרופיל</span></button>
@@ -148,28 +155,29 @@
 
 <script>
     let map;
-    function showPage(num) {
+    function showPage(n) {
         document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-        document.getElementById('page-' + num).classList.remove('hidden');
-        document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === num-1));
-        if(num === 3 && !map) initMap();
+        document.getElementById('page-' + n).classList.remove('hidden');
+        document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === n-1));
+        if(n === 3 && !map) initMap();
     }
 
     function initMap() {
         map = L.map('map', {zoomControl: false}).setView([32.085, 34.781], 14);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+        
+        // הוספת נקודה של "בחירה חופשית" בלחיצה
+        map.on('click', function(e) {
+            if(document.getElementById('map-features').value === 'custom') {
+                L.marker(e.latlng).addTo(map).bindPopup("נקודת יעד שבחרת").openPopup();
+            }
+        });
     }
 
-    function startRun() {
-        const slope = document.getElementById('slope-pref').value;
-        const points = document.getElementById('points-pref').value;
-        alert("המערכת מתכננת מסלול " + (slope === 'hills' ? 'עם עליות' : 'מישורי') + " הכולל " + (points === 'scenic' ? 'נקודות עניין מומלצות' : 'ניווט חופשי'));
-    }
-
-    function saveProfile() {
-        const w = document.getElementById('weight').value;
-        localStorage.setItem('userWeight', w);
-        alert("הנתונים נשמרו! האפליקציה תחשב ביצועים לפי " + w + " ק״ג.");
+    function startTracking() {
+        const feat = document.getElementById('map-features').value;
+        if(feat === 'water') alert("מציג ברזיות ציבוריות קרובות על המפה...");
+        if(feat === 'custom') alert("לחץ על המפה כדי לסמן מקומות שאתה רוצה לעבור בהם!");
     }
 </script>
 </body>
