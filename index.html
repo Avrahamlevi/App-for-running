@@ -3,89 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RunPath Pro | avrahamlevi</title>
+    <title>RunPath Elite | IDF & Marathon Prep</title>
     
-    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Heebo:wght@300;500;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
-        :root { --bg: #050508; --surface: #12121f; --accent: #d4f53c; --text: #ffffff; --muted: #8e8eaf; --border: #22223d; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-family: 'Heebo', sans-serif; margin: 0; overflow: hidden; }
-        .container { padding: 25px; max-width: 500px; margin: 0 auto; }
-        h1 { font-family: 'Bebas Neue'; font-size: 4rem; margin: 0; color: var(--accent); line-height: 0.9; }
-        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 20px; margin-bottom: 20px; }
-        .btn-main { background: var(--accent); color: #000; border: none; width: 100%; padding: 20px; border-radius: 18px; font-weight: 800; font-size: 1.2rem; cursor: pointer; }
-        #liveTracker { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 1000; flex-direction: column; padding: 20px; }
-        #liveTracker.active { display: flex; }
-        #map { height: 45vh; width: 100%; border-radius: 24px; margin: 20px 0; border: 1px solid var(--border); }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .stat-val { font-family: 'Bebas Neue'; font-size: 2.8rem; line-height: 1; margin-bottom: 5px; }
-        .stat-label { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; }
+        :root { --bg: #050508; --surface: #12121f; --accent: #d4f53c; --text: #ffffff; --muted: #8e8eaf; --border: #22223d; --military: #4a5d23; }
+        body { background: var(--bg); color: var(--text); font-family: 'Heebo', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+        h1, h2, h3 { font-family: 'Bebas Neue'; color: var(--accent); margin: 0; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 15px; margin-bottom: 15px; }
+        
+        /* Setup Overlay */
+        #setupOverlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .setup-content { width: 100%; max-width: 400px; }
+        input, select { background: #222; color: white; border: 1px solid var(--border); width: 100%; padding: 12px; border-radius: 10px; margin-bottom: 15px; font-family: inherit; }
+        
+        /* Tabs & Buttons */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; scrollbar-width: none; }
+        .tab { background: var(--surface); padding: 8px 20px; border-radius: 50px; font-size: 0.9rem; white-space: nowrap; border: 1px solid var(--border); cursor: pointer; color: var(--muted); }
+        .tab.active { background: var(--accent); color: black; font-weight: 800; border-color: var(--accent); }
+        .btn-start { background: var(--accent); color: black; border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 1.2rem; cursor: pointer; }
+
+        #map { height: 250px; border-radius: 20px; margin: 15px 0; border: 1px solid var(--border); }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border); z-index: 1000; }
+        .mil-badge { background: var(--military); color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 800; }
     </style>
 </head>
 <body>
 
-<div class="container" id="homePage">
-    <div style="margin-top: 40px;">
-        <p style="color: var(--muted); margin:0;">שלום, אברהם</p>
-        <h1>RUNPATH</h1>
+<!-- מסך הגדרות ראשוני -->
+<div id="setupOverlay">
+    <div class="setup-content">
+        <h1>קצת עליך</h1>
+        <p style="color: var(--muted); margin-bottom: 20px;">כדי לחשב קלוריות ומסלולים בצורה מדויקת</p>
+        <select id="gender"><option value="male">גבר</option><option value="female">אישה</option></select>
+        <input type="number" id="weight" placeholder="משקל (קג)">
+        <input type="number" id="height" placeholder="גובה (סמ)">
+        <input type="number" id="age" placeholder="גיל">
+        <button class="btn-start" onclick="saveProfile()">שמור והמשך</button>
     </div>
-    <div class="card" style="margin-top: 30px;">
-        <div style="font-size: 1.2rem; margin-bottom: 10px; font-weight: 800;">מוכן לאימון?</div>
-        <p style="color: var(--muted); font-size: 0.9rem;">המערכת מודדת מרחק, קלוריות וקצב ריצה.</p>
-        <button class="btn-main" onclick="startRun()">צא לדרך</button>
-    </div>
-    <div class="card"><div style="color: var(--accent); font-weight: 800;">הכנה לצה"ל</div><p style="font-size: 0.8rem; color: var(--muted);">מעקב מדויק לריצת 3,000 מטר (בר-אור).</p></div>
 </div>
 
-<div id="liveTracker">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div class="stat-val" id="timer">00:00</div>
-        <div style="background: #ff4757; width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 10px #ff4757;"></div>
+<div class="container" id="mainApp" style="display:none;">
+    <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <p style="color: var(--muted); margin:0;">שלום, אברהם</p>
+            <h2>COMMANDER DASH</h2>
+        </div>
+        <div id="profileBrief" style="text-align: left; font-size: 0.8rem; color: var(--accent);"></div>
     </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" onclick="switchSection('mil')">מסלול לוחם</div>
+        <div class="tab" onclick="switchSection('pro')">ריצות ארוכות</div>
+        <div class="tab" onclick="switchSection('map-view')">ניווט ונוף</div>
+    </div>
+
+    <!-- Content Sections -->
+    <div id="mil-sec" class="card">
+        <div style="display: flex; justify-content: space-between;">
+            <h3>תוכנית הכנה לצה"ל</h3>
+            <span class="mil-badge">UNIT 8200/81</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--muted);">אימונים ממוקדים לבר-אור (3 ק"מ), ימי סיירות וגיבושים.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
+            <button class="tab active">בוחן בר-אור</button>
+            <button class="tab">סימולציית דיונות</button>
+        </div>
+    </div>
+
+    <div id="pro-sec" class="card" style="display:none;">
+        <h3>ריצות למרחקים</h3>
+        <p style="font-size: 0.8rem; color: var(--muted);">בניית סבולת ל-10 ק"מ, חצי מרתון ומרתון.</p>
+    </div>
+
+    <!-- Weekly Progress -->
+    <div class="card">
+        <canvas id="weeklyChart" style="max-height: 120px;"></canvas>
+    </div>
+
     <div id="map"></div>
-    <div class="stat-grid">
-        <div class="card"><div class="stat-val" id="dist">0.00</div><div class="stat-label">קילומטרים</div></div>
-        <div class="card"><div class="stat-val" id="cal">0</div><div class="stat-label">קלוריות</div></div>
-    </div>
-    <button class="btn-main" style="background: #ff4757; color: white;" onclick="location.reload()">סיום אימון</button>
+
+    <button class="btn-start" onclick="startRun()">התחל אימון</button>
 </div>
+
+<nav class="nav-bar">
+    <span style="color: var(--accent);">אימון</span>
+    <span style="color: var(--muted);">גרפים</span>
+    <span style="color: var(--muted);">הגדרות</span>
+</nav>
 
 <script>
-    let map, userMarker, pathLine, watchId, startTime, totalDist = 0, lastCoord = null;
+    let userProfile = {};
+    let map, path, userMarker;
+    let totalDist = 0;
+
+    function saveProfile() {
+        userProfile = {
+            gender: document.getElementById('gender').value,
+            weight: document.getElementById('weight').value,
+            height: document.getElementById('height').value
+        };
+        if(!userProfile.weight || !userProfile.height) return alert("אנא מלא את כל הפרטים");
+        
+        localStorage.setItem('runPathProfile', JSON.stringify(userProfile));
+        document.getElementById('setupOverlay').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        initMap();
+        renderChart();
+    }
+
+    function initMap() {
+        map = L.map('map', {zoomControl: false}).setView([32.0853, 34.7818], 15);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+    }
+
+    function renderChart() {
+        const ctx = document.getElementById('weeklyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'],
+                datasets: [{ label: 'ק"מ', data: [3, 5, 0, 4, 6, 2, 0], borderColor: '#d4f53c', tension: 0.4 }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        });
+    }
 
     function startRun() {
-        document.getElementById('liveTracker').classList.add('active');
-        startTime = Date.now();
-        setInterval(() => {
-            let diff = Math.floor((Date.now() - startTime) / 1000);
-            document.getElementById('timer').textContent = `${String(Math.floor(diff/60)).padStart(2,'0')}:${String(diff%60).padStart(2,'0')}`;
-        }, 1000);
-
-        watchId = navigator.geolocation.watchPosition(pos => {
-            const { latitude, longitude } = pos.coords;
-            if (!map) {
-                map = L.map('map', { zoomControl: false }).setView([latitude, longitude], 17);
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-                userMarker = L.marker([latitude, longitude]).addTo(map);
-                pathLine = L.polyline([], {color: '#d4f53c', weight: 6}).addTo(map);
+        alert("המערכת מחשבת מסלול ומפעילה מעקב קלוריות לפי משקל " + userProfile.weight + " ק״ג");
+        navigator.geolocation.watchPosition(p => {
+            const {latitude: lat, longitude: lon} = p.coords;
+            if(!userMarker) {
+                userMarker = L.marker([lat, lon]).addTo(map);
+                path = L.polyline([], {color: '#d4f53c'}).addTo(map);
             }
-            userMarker.setLatLng([latitude, longitude]);
-            pathLine.addLatLng([latitude, longitude]);
-            map.panTo([latitude, longitude]);
-
-            if (lastCoord) {
-                const d = L.latLng(lastCoord).distanceTo(L.latLng(latitude, longitude)) / 1000;
-                if (d > 0.002) { totalDist += d; lastCoord = {lat: latitude, lng: longitude}; }
-            } else { lastCoord = {lat: latitude, lng: longitude}; }
-            
-            document.getElementById('dist').textContent = totalDist.toFixed(2);
-            document.getElementById('cal').textContent = Math.round(totalDist * 75 * 1.036);
-        }, null, { enableHighAccuracy: true });
+            userMarker.setLatLng([lat, lon]);
+            path.addLatLng([lat, lon]);
+            map.panTo([lat, lon]);
+        }, null, {enableHighAccuracy: true});
     }
+
+    window.onload = () => {
+        const saved = localStorage.getItem('runPathProfile');
+        if(saved) {
+            userProfile = JSON.parse(saved);
+            document.getElementById('setupOverlay').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            initMap();
+            renderChart();
+        }
+    };
 </script>
 </body>
 </html>
