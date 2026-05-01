@@ -889,3 +889,37 @@ window.addEventListener('load',function(){
 </script>
 </body>
 </html>
+
+<!-- שינויים עיקריים ב-HTML וב-Logic -->
+<script>
+// הוספת אופציה ל-2 אימונים בשבוע ב-HTML (בקטגוריית ריצה)
+// <option value="2">2 פעמים (בסיס צה"לי)</option>
+
+function buildRun() {
+  // אלגוריתם שמתאים את הקצב למי שרץ רק פעמיים בשבוע
+  // הוספת אימון "בר-אור" (3 ק"מ) כחלק מהמטרות
+  var goal = document.getElementById('rg').value; 
+  if (goal == "3") { // בוחן בר אור
+      // יצירת תוכנית של 8 שבועות לשיפור ריצת 3000
+  }
+}
+
+// הוספת קטגוריית BATTLE לגיבושים
+function renderBattleSpecial() {
+  var h = `
+    <div class="card">
+      <div class="ct">מדדי יום סיירות / גיבוש</div>
+      <div class="tabs">
+        <button class="tab on" onclick="setBattleMode('sayeret')">יום סיירות</button>
+        <button class="tab" onclick="setBattleMode('gibush')">גיבוש</button>
+      </div>
+      <div id="battle-stats-input">
+        <span class="lbl">זמן ריצה עם ציוד (10 ק"ג)</span>
+        <input type="text" id="ruck-time" placeholder="00:00">
+        <button class="btn" onclick="saveBattleResult()">שמור ותעד שיפור</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('rhist').innerHTML += h;
+}
+</script>
