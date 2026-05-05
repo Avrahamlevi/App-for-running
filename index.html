@@ -64,7 +64,7 @@
     <div class="page active" id="p-train">
       <h3>💪 תוכנית כוח חכמה</h3>
       <div class="card">
-        <div class="title">בניית תוכנית חודשית/שבועית מלאה</div>
+        <div class="title">בניית תוכניות אימון</div>
         <div class="row">
           <div><label>סביבה</label><select id="str-env"><option value="home">בית</option><option value="gym">חדר כושר</option></select></div>
           <div><label>אימונים בשבוע</label><select id="str-tpw"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
@@ -209,6 +209,21 @@
 
     <div class="page" id="p-history">
       <h3>📚 היסטוריה</h3>
+      <div class="tabs" id="history-tabs" style="margin-bottom:8px">
+        <button class="tab active" data-tab="hist-main" onclick="setHistoryTab('hist-main', this)">היסטוריית ריצות + כוח</button>
+        <button class="tab" data-tab="hist-tests" onclick="setHistoryTab('hist-tests', this)">בדיקות שיפור</button>
+      </div>
+      <div id="hist-main">
+      <div class="card">
+        <div class="title">היסטוריית ריצות</div>
+        <div id="run-history"></div>
+      </div>
+      <div class="card">
+        <div class="title">היסטוריית אימוני כוח</div>
+        <div id="strength-history"></div>
+      </div>
+      </div>
+      <div id="hist-tests" style="display:none">
       <div class="card">
         <div class="title">🗓 בדיקות תקופתיות אוטומטיות</div>
         <div class="mini">המערכת בונה לך לוח מבחנים חודשי כדי לראות שיפור אמיתי בכל התחומים.</div>
@@ -248,13 +263,6 @@
         </div>
         <div id="monthly-progress-log" style="margin-top:8px"></div>
       </div>
-      <div class="card">
-        <div class="title">כל הריצות במקום אחד</div>
-        <div id="run-history"></div>
-      </div>
-      <div class="card">
-        <div class="title">כל אימוני הכוח במקום אחר</div>
-        <div id="strength-history"></div>
       </div>
     </div>
 
@@ -316,6 +324,13 @@
       });
       if(name === "history") renderHistory();
       if(name === "run") setTimeout(() => map.invalidateSize(), 100);
+    }
+
+    function setHistoryTab(tab, el){
+      document.querySelectorAll("#history-tabs .tab").forEach(t => t.classList.remove("active"));
+      if(el) el.classList.add("active");
+      document.getElementById("hist-main").style.display = tab === "hist-main" ? "block" : "none";
+      document.getElementById("hist-tests").style.display = tab === "hist-tests" ? "block" : "none";
     }
 
     // ===== Storage =====
@@ -1517,9 +1532,11 @@
       if(!q) return;
       document.getElementById("ai-q").value = "";
       addAiMsg("user", q);
+      // תמיד מחזיר תשובה מיידית כדי שה-AI לא "ישבר" למשתמש
+      addAiMsg("ai", localCoachAnswer(q));
       const key = localStorage.getItem(KEY_API);
       if(!key){
-        addAiMsg("ai", localCoachAnswer(q) + " (טיפ: הוסף API key בפרופיל לתשובות AI מלאות).");
+        addAiMsg("ai", "טיפ: אם תרצה תשובת ענן מתקדמת, הוסף API key בפרופיל.");
         return;
       }
       try{
@@ -1547,9 +1564,9 @@
         }
         const data = await res.json();
         const text = data.content?.[0]?.text || "אין תשובה כרגע.";
-        addAiMsg("ai", text);
+        addAiMsg("ai", "תשובת AI מורחבת: " + text);
       }catch{
-        addAiMsg("ai", localCoachAnswer(q) + " (נפלה שגיאת רשת או מפתח).");
+        addAiMsg("ai", "תשובת ענן לא זמינה כרגע (רשת/הרשאות). התשובה המקומית כבר ניתנה מעל.");
       }
     }
 
