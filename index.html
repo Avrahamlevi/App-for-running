@@ -1,1022 +1,1060 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>RUNPATH</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Heebo:wght@400;500;700;900&display=swap" rel="stylesheet">
-<style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#0a0a12;--card:#12121e;--card2:#1a1a2a;--border:#1e1e38;
-  --primary:#c8f135;--primary-dark:#8ab00f;--primary-fg:#0a0a12;
-  --red:#ff3355;--blue:#3399ff;--gold:#ffaa00;
-  --text:#e8e8f0;--muted:#55556a;--muted2:#888898;
-  --radius:14px;--radius-sm:8px;
-}
-body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;direction:rtl;overflow:hidden;height:100dvh;display:flex;flex-direction:column}
-.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.logo{font-family:'Bebas Neue',cursive;font-size:26px;color:var(--primary);letter-spacing:3px;display:flex;align-items:center;gap:6px}
-.logo-zap{width:20px;height:20px;fill:var(--primary)}
-.clock{font-family:'Bebas Neue',cursive;font-size:20px;color:var(--red);letter-spacing:3px}
-.content{flex:1;overflow-y:auto;padding:12px 14px 16px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-.content::-webkit-scrollbar{width:3px}
-.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-.bottomnav{background:var(--card);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);flex-shrink:0;padding:8px 0 12px}
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;transition:color .15s;padding:2px 0}
-.nav-btn.active{color:var(--primary)}
-.nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.page{display:none}
-.page.active{display:block}
-h3{font-size:15px;font-weight:900;margin-bottom:12px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-.card-title{font-weight:700;font-size:13px;color:var(--primary);margin-bottom:10px}
-.tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-.tab{border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--card2);color:var(--muted2);transition:all .15s;font-family:'Heebo',sans-serif}
-.tab.active{background:var(--primary);color:var(--primary-fg);border-color:var(--primary);font-weight:700}
-label{font-size:11px;color:var(--muted2);display:block;margin-top:10px}
-select,input[type=text],input[type=number],input[type=date]{width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'Heebo',sans-serif;margin-top:5px;outline:none}
-select:focus,input:focus{border-color:var(--primary)}
-.range-row{display:flex;align-items:center;gap:10px;margin-top:8px}
-input[type=range]{flex:1;accent-color:var(--primary)}
-.range-val{color:var(--primary);font-weight:700;font-size:15px;min-width:20px}
-.btn{width:100%;background:var(--primary);color:var(--primary-fg);border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:900;cursor:pointer;margin-top:10px;font-family:'Heebo',sans-serif;transition:opacity .15s}
-.btn:hover{opacity:.85}
-.btn-red{background:var(--red);color:#fff}
-.btn-muted{background:var(--muted);color:var(--text)}
-.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
-.stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
-.stat-val{font-family:'Bebas Neue',cursive;font-size:28px;color:var(--primary);display:block}
-.stat-lbl{font-size:10px;color:var(--muted2)}
-.phase{border-radius:12px;padding:12px;margin-bottom:8px;background:var(--card2)}
-.phase-title{font-size:13px;font-weight:900;margin-bottom:8px}
-.session{border-right:3px solid;padding-right:10px;padding-top:6px;padding-bottom:6px;margin-bottom:6px}
-.session-name{font-weight:700;font-size:12px}
-.session-desc{font-size:11px;color:var(--muted2);margin-top:2px;line-height:1.5}
-.pace-card{border-radius:12px;padding:12px;margin-bottom:10px}
-.pace-row{font-size:12px;color:var(--muted2);line-height:2.2}
-.pace-row strong{color:var(--text)}
-.ex-card{background:var(--card2);border-radius:10px;padding:10px;margin-bottom:8px}
-.ex-name{font-weight:700;font-size:13px}
-.ex-sets{font-size:11px;color:var(--primary);margin-top:3px}
-.ex-tip{font-size:10px;color:var(--muted);margin-top:2px}
-.run-type-card{border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
-.rt-header{display:flex;align-items:center;gap:8px}
-.rt-icon{font-size:22px;line-height:1}
-.rt-name{font-weight:700;font-size:13px}
-.rt-pace{font-size:11px}
-.rt-chevron{margin-right:auto;font-size:12px;color:var(--muted)}
-.rt-details{margin-top:10px;display:none}
-.rt-details.open{display:block}
-.rt-detail-row{font-size:11px;color:var(--muted2);margin-bottom:4px;line-height:1.6}
-.rt-detail-row strong{color:var(--text)}
-.rt-tip{font-size:11px;color:var(--muted2);border-right:2px solid;padding-right:8px;margin-bottom:4px}
-.map-placeholder{background:var(--card2);border:1px solid var(--border);border-radius:12px;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;position:relative;overflow:hidden}
-.map-dots{position:absolute;inset:0;opacity:.2}
-.map-label{font-size:13px;color:var(--muted2);z-index:1}
-.map-sublabel{font-size:11px;color:var(--muted);z-index:1}
-.poi-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
-.poi-row:last-child{border-bottom:none}
-.add-btn{background:var(--card2);border:1px solid var(--primary);color:var(--primary);border-radius:6px;padding:4px 10px;font-size:10px;cursor:pointer;font-family:'Heebo',sans-serif}
-.poi-log{margin-top:8px;font-size:11px;color:var(--primary)}
-.profile-stat{font-size:12px;color:var(--muted2);line-height:2.2}
-.profile-stat strong{color:var(--text)}
-.progress-bar{background:var(--border);border-radius:8px;height:8px;margin:8px 0}
-.progress-fill{background:var(--primary);height:8px;border-radius:8px;transition:width .3s}
-.rec-box{background:var(--card2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--muted2);margin-top:8px}
-.rec-box strong{color:var(--text)}
-.battle-result{background:var(--card2);border-radius:8px;padding:8px 10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:flex-start;font-size:12px}
-.result-val{color:var(--primary);font-weight:700}
-.result-meta{font-size:10px;color:var(--muted);margin-top:2px}
-.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700}
-.badge-blue{background:var(--blue);color:#fff}
-.badge-up{background:var(--primary);color:var(--primary-fg)}
-.badge-down{background:var(--red);color:#fff}
-.badge-same{background:var(--border);color:var(--muted2)}
-.tip-row{font-size:12px;color:var(--muted2);line-height:2;margin-bottom:2px}
-.tip-row strong{color:var(--text)}
-.idf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
-.idf-type{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;cursor:pointer;text-align:center;transition:border-color .15s}
-.idf-type.active{border-color:var(--primary)}
-.idf-type-label{font-weight:700;font-size:11px;margin-bottom:4px}
-.idf-type-desc{font-size:9px;color:var(--muted)}
-.warn-card{border:1px solid var(--red);background:rgba(255,51,85,.08);border-radius:10px;padding:10px;margin-bottom:8px;font-size:12px;color:var(--red)}
-.summary-card{border:1px solid var(--gold);border-radius:12px;padding:12px;margin-bottom:10px;font-size:12px;color:var(--muted2);line-height:2.2}
-.summary-card strong{color:var(--primary)}
-.ai-section{margin-top:10px}
-.ai-input-row{display:flex;gap:6px;margin-top:6px}
-.ai-input{flex:1;background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;font-size:12px;font-family:'Heebo',sans-serif;outline:none}
-.ai-input:focus{border-color:var(--primary)}
-.ai-send{background:var(--primary);color:var(--primary-fg);border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;font-family:'Heebo',sans-serif}
-.ai-messages{margin-top:8px;max-height:280px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-.ai-msg{padding:10px;border-radius:10px;margin-bottom:6px;font-size:12px;line-height:1.7}
-.ai-msg.user{background:var(--card2);text-align:right;border-left:3px solid var(--primary)}
-.ai-msg.ai{background:rgba(200,241,53,.05);border-right:3px solid var(--primary)}
-.ai-msg.loading{color:var(--muted2)}
-.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary);margin:0 2px;animation:bounce 1.2s infinite}
-.dot:nth-child(2){animation-delay:.2s}
-.dot:nth-child(3){animation-delay:.4s}
-@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>RUNPATH PRO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Heebo:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    :root{
+      --bg:#0b0c13; --card:#131525; --card2:#1b1f34; --border:#28304f;
+      --pri:#c8f135; --pri-fg:#0a0a12; --text:#eef1ff; --muted:#9ca5cc;
+      --danger:#ff4b6d; --ok:#3ddc97; --warn:#ffb020;
+      --r:14px;
+    }
+    body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);height:100dvh;overflow:hidden;display:flex;flex-direction:column}
+    .top{padding:12px 14px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .logo{font-family:'Bebas Neue',cursive;letter-spacing:2px;font-size:28px;color:var(--pri)}
+    .clock{font-family:'Bebas Neue',cursive;letter-spacing:2px;font-size:22px;color:var(--danger)}
+    .content{flex:1;overflow:auto;padding:12px}
+    .page{display:none}
+    .page.active{display:block}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:10px}
+    .title{font-size:14px;font-weight:900;color:var(--pri);margin-bottom:8px}
+    .sub{font-size:11px;color:var(--muted);margin-bottom:6px}
+    h3{font-size:16px;font-weight:900;margin-bottom:10px}
+    label{font-size:11px;color:var(--muted);display:block;margin-top:8px}
+    input,select,button,textarea{font-family:'Heebo',sans-serif}
+    input,select,textarea{width:100%;margin-top:4px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--text);padding:9px 10px;font-size:13px;outline:none}
+    input:focus,select:focus,textarea:focus{border-color:var(--pri)}
+    .btn{width:100%;margin-top:8px;border:none;border-radius:11px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;background:var(--pri);color:var(--pri-fg)}
+    .btn.alt{background:#2a3252;color:var(--text)}
+    .btn.danger{background:var(--danger);color:#fff}
+    .btn.ok{background:var(--ok);color:#072414}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .tabs{display:flex;flex-wrap:wrap;gap:6px}
+    .tab{border:1px solid var(--border);background:var(--card2);color:var(--muted);padding:6px 10px;border-radius:9px;font-size:11px;cursor:pointer}
+    .tab.active{background:var(--pri);color:var(--pri-fg);border-color:var(--pri);font-weight:800}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+    .s{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:9px;text-align:center}
+    .sv{font-family:'Bebas Neue',cursive;font-size:30px;color:var(--pri);line-height:1}
+    .sl{font-size:10px;color:var(--muted)}
+    #map{height:300px;border-radius:12px;border:1px solid var(--border);overflow:hidden}
+    .mini{font-size:11px;color:var(--muted)}
+    .wk{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:7px}
+    .wk strong{color:var(--pri)}
+    .list-item{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:9px;margin-bottom:6px;font-size:12px}
+    .kpi{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px}
+    .bottom{background:var(--card);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 0}
+    .nav{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer}
+    .nav.active{color:var(--pri);font-weight:800}
+    .badge{display:inline-block;background:#2a3252;color:#cfd6ff;border-radius:999px;padding:2px 8px;font-size:10px}
+  </style>
 </head>
 <body>
-
-<div class="topbar">
-  <div class="logo">
-    RUNPATH
-    <svg class="logo-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+  <div class="top">
+    <div class="logo">RUNPATH PRO</div>
+    <div class="clock" id="clock">00:00:00</div>
   </div>
-  <div class="clock" id="clock">00:00:00</div>
-</div>
 
-<div class="content">
-  <!-- TRAIN PAGE -->
-  <div class="page active" id="page-train">
-    <h3>📊 תוכנית אימונים</h3>
-    <div class="tabs" id="train-tabs">
-      <button class="tab active" data-tab="run" onclick="setTab('train-tabs','run',this)">🏃 ריצה</button>
-      <button class="tab" data-tab="str" onclick="setTab('train-tabs','str',this)">💪 כוח</button>
-      <button class="tab" data-tab="runtypes" onclick="setTab('train-tabs','runtypes',this)">📍 סוגי ריצות</button>
-    </div>
-    <div id="train-run">
+  <div class="content">
+    <div class="page active" id="p-train">
+      <h3>💪 תוכנית כוח חכמה</h3>
       <div class="card">
-        <div class="card-title">תוכנית ריצה אישית</div>
-        <label>מטרה</label>
-        <select id="run-goal">
-          <option value="3">בר-אור (3 ק"מ)</option>
-          <option value="5" selected>5 ק"מ</option>
-          <option value="10">10 ק"מ</option>
-          <option value="21">חצי מרתון</option>
-          <option value="42">מרתון מלא</option>
-        </select>
-        <label>רמת כושר (1=מתחיל, 10=מתקדם)</label>
-        <div class="range-row">
-          <input type="range" min="1" max="10" value="5" id="run-fit" oninput="document.getElementById('run-fit-val').textContent=this.value">
-          <span class="range-val" id="run-fit-val">5</span>
+        <div class="title">בניית תוכנית חודשית/שבועית</div>
+        <div class="row">
+          <div><label>סביבה</label><select id="str-env"><option value="home">בית</option><option value="gym">חדר כושר</option></select></div>
+          <div><label>אימונים בשבוע</label><select id="str-tpw"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
         </div>
-        <label>אימונים בשבוע</label>
-        <select id="run-tpw">
-          <option value="1">1 פעם</option><option value="2">2 פעמים</option>
-          <option value="3" selected>3 פעמים</option><option value="4">4 פעמים</option>
-          <option value="5">5 פעמים</option><option value="6">6 פעמים</option>
-        </select>
-        <button class="btn" onclick="buildRunPlan()">🏃 צור תוכנית</button>
+        <div class="row">
+          <div><label>מספר שבועות</label><select id="str-weeks"><option>4</option><option>6</option><option>8</option></select></div>
+          <div><label>פוקוס</label><select id="str-focus"><option value="full">Full Body</option><option value="legs">רגליים</option><option value="upper">פלג גוף עליון</option></select></div>
+        </div>
+        <button class="btn" onclick="buildStrengthPlan()">צור תוכנית כוח מפורטת</button>
+        <button class="btn alt" onclick="saveStrengthPlanToLibrary()">הוסף לרשימת האימונים</button>
       </div>
-      <div id="run-plan-result"></div>
+      <div id="strength-plan"></div>
     </div>
-    <div id="train-str" style="display:none">
+
+    <div class="page" id="p-idf">
+      <h3>⚔ תוכנית צה"ל שבועית מפורטת</h3>
       <div class="card">
-        <div class="card-title">אימון כוח</div>
-        <div class="tabs" id="str-mode-tabs">
-          <button class="tab active" onclick="setTab('str-mode-tabs','home',this);renderStr()">🏠 בית</button>
-          <button class="tab" onclick="setTab('str-mode-tabs','gym',this);renderStr()">🏋 חדר כושר</button>
+        <div class="title">הכנה לפי תאריך יעד</div>
+        <div class="row">
+          <div><label>סוג אירוע</label><select id="idf-type"><option value="bar_or">בר-אור</option><option value="say">יום סיירות</option><option value="gib">גיבוש</option></select></div>
+          <div><label>תאריך אירוע</label><input id="idf-date" type="date" /></div>
         </div>
-        <div class="text-xs" style="font-size:11px;color:var(--muted2);margin-bottom:6px">בחר קבוצת שרירים:</div>
-        <div class="tabs" id="muscle-tabs">
-          <button class="tab active" onclick="setTab('muscle-tabs','all',this);renderStr()">הכל</button>
-          <button class="tab" onclick="setTab('muscle-tabs','chest',this);renderStr()">חזה</button>
-          <button class="tab" onclick="setTab('muscle-tabs','back',this);renderStr()">גב</button>
-          <button class="tab" onclick="setTab('muscle-tabs','legs',this);renderStr()">רגליים</button>
-          <button class="tab" onclick="setTab('muscle-tabs','core',this);renderStr()">ליבה</button>
-          <button class="tab" onclick="setTab('muscle-tabs','full',this);renderStr()">Full Body</button>
+        <div class="row">
+          <div><label>אימונים בשבוע</label><select id="idf-tpw"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+          <div><label>רמת כושר (1-10)</label><input id="idf-fit" type="number" min="1" max="10" value="5" /></div>
         </div>
+        <button class="btn" onclick="buildIdfWeeklyPlan()">בנה תוכנית שבוע-שבוע</button>
       </div>
-      <div id="str-content"></div>
+      <div id="idf-plan"></div>
     </div>
-    <div id="train-runtypes" style="display:none">
-      <div class="card"><div class="card-title">📖 מדריך סוגי ריצות</div><div style="font-size:11px;color:var(--muted2)">לחץ על כל סוג ריצה לפרטים</div></div>
-      <div id="runtypes-content"></div>
-    </div>
-  </div>
 
-  <!-- IDF PAGE -->
-  <div class="page" id="page-idf">
-    <h3>⚔ מסלול קרבי</h3>
-    <div class="card">
-      <div class="card-title">סוג אירוע</div>
-      <div class="idf-grid">
-        <div class="idf-type active" id="idf-bar_or" onclick="setIdfType('bar_or')">
-          <div class="idf-type-label">🎯 בר-אור</div>
-          <div class="idf-type-desc">ריצת 3 ק"מ, מבחן כושר</div>
-        </div>
-        <div class="idf-type" id="idf-say" onclick="setIdfType('say')">
-          <div class="idf-type-label">🦅 יום סיירות</div>
-          <div class="idf-type-desc">2000מ׳, דיונות, מסלולים</div>
-        </div>
-        <div class="idf-type" id="idf-gib" onclick="setIdfType('gib')">
-          <div class="idf-type-label">💀 גיבוש</div>
-          <div class="idf-type-desc">מטכ"ל / שייטת / עוקץ</div>
-        </div>
+    <div class="page" id="p-run">
+      <h3>🏃 ריצה חיה + מפה + תכנון מסלול</h3>
+      <div class="stats">
+        <div class="s"><div class="sv" id="v-time">00:00:00</div><div class="sl">זמן</div></div>
+        <div class="s"><div class="sv" id="v-dist">0.00</div><div class="sl">ק"מ</div></div>
+        <div class="s"><div class="sv" id="v-pace">--:--</div><div class="sl">דק'/ק"מ</div></div>
+        <div class="s"><div class="sv" id="v-cals">0</div><div class="sl">קלוריות</div></div>
+        <div class="s"><div class="sv" id="v-up">0</div><div class="sl">עליות מ'</div></div>
+        <div class="s"><div class="sv" id="v-down">0</div><div class="sl">ירידות מ'</div></div>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-title">פרטי האירוע</div>
-      <label>תאריך האירוע</label>
-      <input type="date" id="idf-date">
-      <label>אימונים בשבוע</label>
-      <select id="idf-tpw">
-        <option value="1">1 פעם</option><option value="2">2 פעמים</option>
-        <option value="3" selected>3 פעמים</option><option value="4">4 פעמים</option>
-        <option value="5">5 פעמים</option><option value="6">6 פעמים</option>
-      </select>
-      <label>זמן לאימון (דקות)</label>
-      <input type="number" id="idf-dur" value="60">
-      <div id="idf-fit-section">
-        <label>רמת כושר (1=מתחיל, 10=מתקדם)</label>
-        <div class="range-row">
-          <input type="range" min="1" max="10" value="5" id="idf-fit" oninput="document.getElementById('idf-fit-val').textContent=this.value">
-          <span class="range-val" id="idf-fit-val">5</span>
-        </div>
+      <div id="map"></div>
+      <div class="mini" style="margin-top:6px">לחץ על המפה להוספת נקודות תכנון מסלול. אפשר לנקות/לתכנן/לשמור.</div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn ok" onclick="startRun()">התחל</button>
+        <button class="btn alt" onclick="pauseRun()">השהה (שירותים/עצירה)</button>
       </div>
-      <button class="btn" onclick="buildIdfPlan()">⚔ בנה תוכנית</button>
+      <div class="row">
+        <button class="btn alt" onclick="resumeRun()">המשך</button>
+        <button class="btn danger" onclick="finishRun()">סיים ושמור ריצה</button>
+      </div>
+      <div class="row">
+        <button class="btn alt" onclick="planRouteFromPoints()">תכנן מסלול לפי נקודות</button>
+        <button class="btn alt" onclick="clearRoutePlan()">נקה מסלול מתוכנן</button>
+      </div>
+      <div id="run-note" class="mini" style="margin-top:8px"></div>
     </div>
-    <div id="idf-plan-result"></div>
-  </div>
 
-  <!-- RUN PAGE -->
-  <div class="page" id="page-run">
-    <div class="stat-grid">
-      <div class="stat-box"><span class="stat-val" id="run-dist">0.00</span><span class="stat-lbl">ק"מ</span></div>
-      <div class="stat-box"><span class="stat-val" id="run-pace">--:--</span><span class="stat-lbl">קצב דק'/ק"מ</span></div>
-      <div class="stat-box"><span class="stat-val" id="run-cals">0</span><span class="stat-lbl">קלוריות</span></div>
-      <div class="stat-box"><span class="stat-val" id="run-elev">0</span><span class="stat-lbl">עליות מ'</span></div>
+    <div class="page" id="p-history">
+      <h3>📚 היסטוריה</h3>
+      <div class="card">
+        <div class="title">כל הריצות במקום אחד</div>
+        <div id="run-history"></div>
+      </div>
+      <div class="card">
+        <div class="title">כל אימוני הכוח במקום אחר</div>
+        <div id="strength-history"></div>
+      </div>
     </div>
-    <div class="map-placeholder">
-      <svg class="map-dots" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice">
-        <g fill="var(--primary)" opacity=".6">
-          <circle cx="40" cy="60" r="2"/><circle cx="80" cy="40" r="2"/><circle cx="120" cy="70" r="2"/>
-          <circle cx="160" cy="45" r="2"/><circle cx="200" cy="80" r="2"/><circle cx="240" cy="55" r="2"/>
-          <circle cx="60" cy="100" r="2"/><circle cx="100" cy="120" r="2"/><circle cx="140" cy="95" r="2"/>
-          <circle cx="180" cy="130" r="2"/><circle cx="220" cy="110" r="2"/><circle cx="260" cy="140" r="2"/>
-          <circle cx="40" cy="155" r="2"/><circle cx="90" cy="145" r="2"/><circle cx="150" cy="160" r="2"/>
-        </g>
-        <polyline points="40,60 80,40 120,70 160,45 200,80 240,55" fill="none" stroke="var(--primary)" stroke-width="1.5" opacity=".4"/>
-      </svg>
-      <div style="font-size:28px;z-index:1">🗺</div>
-      <div class="map-label">פארק הירקון</div>
-      <div class="map-sublabel">GPS פעיל – מחכה לאימון</div>
-    </div>
-    <div class="card">
-      <div class="card-title">📍 נקודות עצירה על המסלול</div>
-      <div id="poi-list"></div>
-      <div class="poi-log" id="poi-log"></div>
-    </div>
-    <button class="btn btn-red" id="run-btn" onclick="toggleRun()">▶ התחל ריצה</button>
-    <div id="run-final" style="text-align:center;margin-top:10px;font-family:'Bebas Neue',cursive;font-size:28px;color:var(--primary)"></div>
-  </div>
 
-  <!-- PROFILE PAGE -->
-  <div class="page" id="page-profile">
-    <h3>👤 פרופיל</h3>
-    <div class="card">
-      <div class="card-title">נתונים אישיים</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div><label>גיל</label><input type="number" id="p-age" value="22"></div>
-        <div><label>משקל (ק"ג)</label><input type="number" id="p-weight" value="75"></div>
+    <div class="page" id="p-profile">
+      <h3>👤 פרופיל + AI Coach</h3>
+      <div class="card">
+        <div class="row">
+          <div><label>גיל</label><input id="age" type="number" value="22" /></div>
+          <div><label>משקל (ק"ג)</label><input id="weight" type="number" value="75" /></div>
+        </div>
+        <label>Anthropic API Key (אופציונלי)</label>
+        <input id="api-key" type="password" placeholder="sk-ant-..." />
+        <button class="btn alt" onclick="saveApiKey()">שמור מפתח</button>
       </div>
-      <label>מגדר</label>
-      <select id="p-gender"><option value="m">זכר</option><option value="f">נקבה</option></select>
-      <label style="color:var(--primary);font-weight:700;margin-top:14px">📅 סטטוס אימון נוכחי</label>
-      <label>כמה אימונים בשבוע?</label>
-      <select id="p-tpw">
-        <option value="0">0 – לא מתאמן</option><option value="1">1 פעם</option>
-        <option value="2">2 פעמים</option><option value="3">3 פעמים</option>
-        <option value="4">4 פעמים</option><option value="5">5+ פעמים</option>
-      </select>
-      <label>זמן אימון (דקות)</label>
-      <input type="number" id="p-dur" value="45">
-      <label>סוג אימונים</label>
-      <select id="p-type">
-        <option value="run">ריצה בלבד</option><option value="str">כוח בלבד</option>
-        <option value="mix" selected>שילוב ריצה + כוח</option><option value="non">לא מתאמן</option>
-      </select>
-      <label>רמת כושר (1-10)</label>
-      <div class="range-row">
-        <input type="range" min="1" max="10" value="5" id="p-fit" oninput="document.getElementById('p-fit-val').textContent=this.value;updateProfileAnalysis()">
-        <span class="range-val" id="p-fit-val">5</span>
-      </div>
-      <button class="btn" id="save-btn" onclick="saveProfile()">💾 שמור פרופיל</button>
-    </div>
-    <div class="card" id="profile-analysis">
-      <div class="card-title">ניתוח הפרופיל</div>
-      <div class="profile-stat" id="profile-stats-text"></div>
-      <div class="progress-bar"><div class="progress-fill" id="fit-bar"></div></div>
-      <div style="font-size:11px;color:var(--muted2)" id="fit-label"></div>
-      <div class="rec-box" id="profile-rec"></div>
-    </div>
-    <!-- AI COACH -->
-    <div class="card">
-      <div class="card-title">🤖 מאמן AI אישי</div>
-      <div id="ai-messages" class="ai-messages"></div>
-      <div class="ai-input-row">
-        <input class="ai-input" id="ai-input" placeholder="שאל את המאמן..." onkeydown="if(event.key==='Enter')sendAI()">
-        <button class="ai-send" onclick="sendAI()">שלח</button>
+      <div class="card">
+        <div class="title">🤖 מאמן AI אישי</div>
+        <div id="ai-log" style="max-height:240px;overflow:auto"></div>
+        <div class="row" style="margin-top:8px">
+          <input id="ai-q" type="text" placeholder="מה להתאמן החודש?" />
+          <button class="btn" style="margin-top:0" onclick="askCoach()">שלח</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- BATTLE PAGE -->
-  <div class="page" id="page-battle">
-    <h3>🔥 Battle Tests</h3>
-    <div class="card">
-      <div class="card-title">בדיקות ריצה תקופתיות</div>
-      <div class="tabs" id="run-test-tabs">
-        <button class="tab active" onclick="setTab('run-test-tabs','2k',this);loadBattleHistory()">2 ק"מ</button>
-        <button class="tab" onclick="setTab('run-test-tabs','5k',this);loadBattleHistory()">5 ק"מ</button>
-        <button class="tab" onclick="setTab('run-test-tabs','10k',this);loadBattleHistory()">10 ק"מ</button>
-        <button class="tab" onclick="setTab('run-test-tabs','21k',this);loadBattleHistory()">חצי מרתון</button>
-        <button class="tab" onclick="setTab('run-test-tabs','bar_or',this);loadBattleHistory()">בר-אור 3K</button>
-      </div>
-      <label>תוצאה (MM:SS)</label>
-      <input type="text" id="run-result" placeholder="24:30">
-      <label style="margin-top:6px">הערות</label>
-      <input type="text" id="run-notes" placeholder="תנאים, תחושה...">
-      <button class="btn" onclick="saveBattleResult('run')">📌 שמור תוצאה</button>
-      <div id="run-history" style="margin-top:10px"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">בדיקות כוח תקופתיות</div>
-      <div class="tabs" id="str-test-tabs">
-        <button class="tab active" onclick="setTab('str-test-tabs','pushups',this);loadBattleHistory()">שכיבות</button>
-        <button class="tab" onclick="setTab('str-test-tabs','pullups',this);loadBattleHistory()">מתח</button>
-        <button class="tab" onclick="setTab('str-test-tabs','plank',this);loadBattleHistory()">פלאנק</button>
-        <button class="tab" onclick="setTab('str-test-tabs','situps',this);loadBattleHistory()">כפיפות</button>
-        <button class="tab" onclick="setTab('str-test-tabs','squats',this);loadBattleHistory()">סקוואט</button>
-      </div>
-      <label id="str-result-label">מס' חזרות</label>
-      <input type="number" id="str-result" placeholder="30">
-      <label style="margin-top:6px">הערות</label>
-      <input type="text" id="str-notes" placeholder="הערות...">
-      <button class="btn" onclick="saveBattleResult('str')">📌 שמור תוצאה</button>
-      <div id="str-history" style="margin-top:10px"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">📅 לוח בדיקות מומלץ</div>
-      <div class="tip-row">• <strong>2K / 5K / בר-אור:</strong> כל 3 שבועות</div>
-      <div class="tip-row">• <strong>10K / חצי מרתון:</strong> כל 4–6 שבועות</div>
-      <div class="tip-row">• <strong>שכיבות / מתח:</strong> כל 2 שבועות</div>
-      <div class="tip-row">• <strong>פלאנק / כפיפות:</strong> כל שבוע</div>
-      <div class="tip-row">• <strong>Ruck / קומבו גיבוש:</strong> כל 3-4 שבועות</div>
-    </div>
-    <div class="card">
-      <div class="card-title">💡 טיפים לשיפור</div>
-      <div class="tip-row">🔹 <strong>עקביות:</strong> אימון קבוע עדיף על אינטנסיבי אקראי</div>
-      <div class="tip-row">🔹 <strong>שינה:</strong> 7-9 שעות = שיפור ביצועים 10-15%</div>
-      <div class="tip-row">🔹 <strong>תזונה:</strong> אכול 2-3 שעות לפני, שתה 3+ ליטר ביום</div>
-      <div class="tip-row">🔹 <strong>שיקום:</strong> מתיחות + גלגול קצף אחרי כל אימון</div>
-      <div class="tip-row">🔹 <strong>מנטלי:</strong> תדמיין הצלחה לפני כל טסט</div>
-    </div>
-  </div>
-</div>
+  <nav class="bottom">
+    <button class="nav active" id="n-train" onclick="showPage('train')">כוח</button>
+    <button class="nav" id="n-idf" onclick="showPage('idf')">צה"ל</button>
+    <button class="nav" id="n-run" onclick="showPage('run')">ריצה</button>
+    <button class="nav" id="n-history" onclick="showPage('history')">היסטוריה</button>
+    <button class="nav" id="n-profile" onclick="showPage('profile')">פרופיל</button>
+  </nav>
 
-<!-- BOTTOM NAV -->
-<nav class="bottomnav">
-  <button class="nav-btn active" id="nav-train" onclick="showPage('train')">
-    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    <span>אימון</span>
-  </button>
-  <button class="nav-btn" id="nav-idf" onclick="showPage('idf')">
-    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    <span>צה"ל</span>
-  </button>
-  <button class="nav-btn" id="nav-run" onclick="showPage('run')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M10 8l-3 3 2.5 2.5L7 20"/><path d="M14 8l3 3-2.5 2.5L17 20"/><path d="M8 13l4-1 4 1"/></svg>
-    <span>רוץ</span>
-  </button>
-  <button class="nav-btn" id="nav-profile" onclick="showPage('profile')">
-    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    <span>פרופיל</span>
-  </button>
-  <button class="nav-btn" id="nav-battle" onclick="showPage('battle')">
-    <svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
-    <span>Battle</span>
-  </button>
-</nav>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // ===== Clock =====
+    setInterval(() => {
+      const d = new Date();
+      document.getElementById("clock").textContent =
+        String(d.getHours()).padStart(2, "0") + ":" +
+        String(d.getMinutes()).padStart(2, "0") + ":" +
+        String(d.getSeconds()).padStart(2, "0");
+    }, 1000);
 
-<script>
-// ===== DATA =====
-const STR = {
-  home:{
-    chest:[
-      {n:'שכיבות סמיכה רגילות',s:'4',r:'15–20',rest:'60שנ',t:'ידיים ברוחב כתפיים, גב ישר, ירידה איטית 3שנ'},
-      {n:'שכיבות צרות (טריצפס)',s:'3',r:'12',rest:'60שנ',t:'מרפקים צמודים לגוף, ירידה איטית'},
-      {n:'שכיבות רחבות (חזה)',s:'3',r:'12',rest:'60שנ',t:'ידיים רחבות מכתפיים, פתח חזה'},
-      {n:'שכיבות Pike (כתפיים)',s:'3',r:'10',rest:'60שנ',t:'ישבן גבוה כמו V הפוך, עבוד כתפיים'},
-    ],
-    back:[
-      {n:'מתח (אם יש מתקן)',s:'3',r:'עד כשל',rest:'90שנ',t:'תנועה מלאה, עד סנטר מעל הבר'},
-      {n:'Superman',s:'3',r:'15',rest:'45שנ',t:'שכב על בטן, הרם ידיים ורגליים יחד 3שנ'},
-      {n:'Renegade Row (עם בקבוק)',s:'3',r:'10 לכל יד',rest:'60שנ',t:'שמור על ליבה יציבה'},
-    ],
-    legs:[
-      {n:'סקוואט ללא משקל',s:'4',r:'20',rest:'60שנ',t:'ברכיים מעל בהונות, ישבן אחורה ולמטה'},
-      {n:"לאנג'ים",s:'3',r:'12 לכל רגל',rest:'60שנ',t:"ברך קדמית 90 מעלות, לא מעבר לאצבעות"},
-      {n:'Glute Bridge',s:'4',r:'20',rest:'45שנ',t:'לחץ ישבן מעלה, עצור שנייה בפסגה'},
-      {n:'Wall Sit',s:'3',r:'45–60שנ',rest:'45שנ',t:'גב לקיר, ברכיים 90 מעלות'},
-      {n:'Calf Raises',s:'4',r:'25',rest:'30שנ',t:'עלייה מלאה, ירידה איטית – חשוב לרצים'},
-    ],
-    core:[
-      {n:'פלאנק קדמי',s:'3',r:'60שנ',rest:'30שנ',t:'גוף קו ישר, ליבה מכווצת'},
-      {n:'Side Plank',s:'3',r:'40שנ לכל צד',rest:'30שנ',t:'חיזוק ליבה לרצים'},
-      {n:'Mountain Climbers',s:'3',r:'20 לכל רגל',rest:'45שנ',t:'ירך גבוה, קצב מהיר, ליבה יציבה'},
-      {n:'Dead Bug',s:'3',r:'10 לכל צד',rest:'45שנ',t:'גב שטוח לקרקע, ידיים ורגליים נגדיות'},
-      {n:'Russian Twists',s:'3',r:'20 לכל צד',rest:'45שנ',t:'הרם רגליים, סובב גוף'},
-    ],
-    full:[
-      {n:'Burpees',s:'4',r:'10',rest:'60שנ',t:'פיצוץ כלפי מעלה, נחיתה רכה'},
-      {n:'Jump Squats',s:'3',r:'15',rest:'60שנ',t:'ירידה מלאה, קפיצה פיצוצית'},
-      {n:'Plank to Downward Dog',s:'3',r:'12',rest:'45שנ',t:'מפלאנק לכלב כלפי מטה – זרימה'},
-    ]
-  },
-  gym:{
-    chest:[
-      {n:'לחיצת חזה שכיבה (Bench)',s:'4',r:'6–10',rest:'2דק',t:'שליטה בירידה 3שנ, פיצוץ למעלה'},
-      {n:'Incline Bench Press',s:'3',r:'8–10',rest:'90שנ',t:'חזה עליון, זווית 30-45 מעלות'},
-      {n:'Cable Flyes',s:'3',r:'12',rest:'60שנ',t:'קפל ידיים לאמצע, כווץ חזה'},
-      {n:'Dips',s:'3',r:'10–12',rest:'90שנ',t:'הוסף משקל, הורד עד 90 מעלות'},
-    ],
-    back:[
-      {n:'Deadlift',s:'3',r:'5',rest:'3דק',t:'85% ממקסימום, גב ישר'},
-      {n:'Barbell Row',s:'3',r:'8–10',rest:'90שנ',t:'גב מקביל לקרקע, מרפקים אחורה'},
-      {n:'Pull-ups / Weighted',s:'4',r:'6–8',rest:'90שנ',t:'הוסף משקל אם מגיע ל-12 רגיל'},
-    ],
-    legs:[
-      {n:'Squat (מוט)',s:'4',r:'6–8',rest:'2–3דק',t:'70-80% ממקסימום'},
-      {n:'Romanian Deadlift (RDL)',s:'3',r:'12',rest:'90שנ',t:'ירך אחורי – חשוב לרצים'},
-      {n:'Bulgarian Split Squat',s:'3',r:'10 לכל רגל',rest:'90שנ',t:'אחת הטובות לרצים'},
-      {n:'Calf Raises (עם מוט)',s:'4',r:'20',rest:'45שנ',t:'עלייה מלאה, ירידה איטית 3שנ'},
-    ],
-    core:[
-      {n:'Ab Wheel',s:'3',r:'10',rest:'60שנ',t:'גב ישר, ירידה איטית'},
-      {n:'Hanging Leg Raise',s:'3',r:'12',rest:'60שנ',t:'תנועה מבוקרת, ברכיים מעל מותניים'},
-      {n:'Cable Pallof Press',s:'3',r:'12 לכל צד',rest:'45שנ',t:'מתנגד לסיבוב – ליבה פונקציונלית'},
-    ],
-    full:[
-      {n:'Thrusters (Squat+Press)',s:'4',r:'8',rest:'90שנ',t:'סקוואט + לחיצת כתפיים – פיצוצי'},
-      {n:'Farmers Walk',s:'3',r:'30מ',rest:'60שנ',t:'צעד זקוף, ידיות כבדות'},
-      {n:'Battle Ropes',s:'4',r:'30שנ',rest:'30שנ',t:'גלים, כריות, צלבים – כל גוף'},
-    ]
-  }
-};
-const groupNames={chest:'חזה + כתפיים',back:'גב + ביצפ',legs:'רגליים + ישבן',core:'ליבה + בטן',full:'Full Body'};
-const runTypes=[
-  {icon:'🐢',name:'ריצה קלה (Easy Run)',col:'#3399ff',pace:'קצב נוח – אפשר לדבר במשפטים',goal:'שיקום, נפח, בניית בסיס אירובי',when:'רוב אימוני השבוע (60-70% מהנפח)',tips:['שמור על שיחה נוחה','לב בסביבות 65-75% מהמקסימום','אל תרוץ מהר מדי – זו טעות נפוצה']},
-  {icon:'🔥',name:'Tempo Run (ריצת סף)',col:'#ffaa00',pace:'קצב קשה אבל ברי קיימא',goal:'העלאת סף חומצת חלב, שיפור ריצת קצב',when:'1-2 פעמים בשבוע, 20-40 דקות',tips:['חימום 10 דקות קל לפני','לב בסביבות 85-90% מהמקסימום','לא יותר ממשפט אחד-שניים בשיחה']},
-  {icon:'⚡',name:'אינטרוולים (Intervals)',col:'#ff3355',pace:'קצב מרוץ 5K ומהר יותר',goal:'שיפור VO2max, מהירות, כוח ריצה',when:'1 פעם בשבוע, 20-30 דקות עבודה',tips:['400מ / 800מ / 1000מ – חזרות עם מנוחה','מנוחה = חצי עד שליש זמן הריצה','חימום + קירור חובה']},
-  {icon:'🏃',name:'ריצה ארוכה (Long Run)',col:'#c8f135',pace:'קצב לפחות 90 שנ׳ איטי מקצב מרוץ',goal:'בניית סיבולת, הרגלת הגוף למרחקים',when:'פעם בשבוע',tips:['ספג מים ואנרגיה כל 30-45 דקות','אל תעלה יותר מ-10% שבוע','רץ לאט יותר ממה שנדמה לך']},
-  {icon:'⛰',name:'ריצת עליות (Hills)',col:'#ffaa00',pace:'מאמץ גבוה בעלייה, קל בירידה',goal:'כוח שרירי ריצה, VO2max, מניעת פציעות',when:'1 פעם בשבוע, 6-12 חזרות',tips:['הטה גוף קדימה קלות','עלייה קצרה 30-90 שניות','ירד לאט – אל תקפוץ']},
-  {icon:'🌻',name:'Fartlek',col:'#3399ff',pace:'לסירוגין – בחר בעצמך',goal:'מהירות לסירוגין, הנאה, גיוון',when:'1-2 פעמים בשבוע',tips:['ריץ מהר עד עמוד החשמל, ואז קל','ללא מבנה נוקשה – ריצה חופשית','מיני-אינטרוולים בלי שעון']},
-  {icon:'🎽',name:'ריצה עם ציוד (Ruck Run)',col:'#ff3355',pace:'איטי מהרגיל – תרמיל מוסיף עומס',goal:'כוח, סיבולת, הכנה לצבא',when:'1-2 פעמים בשבוע',tips:['התחל עם 8 ק"ג, הוסף הדרגתית','קצב 8:00-9:30 לק"מ','חשוב לריצה צבאית ולגיבושים']},
-];
-const poiTypes=[
-  {id:'water',label:'💧 מים / ברז'},{id:'store',label:'🏪 קיוסק / חנות'},
-  {id:'wc',label:'🚻 שירותים'},{id:'rest',label:'⛲ צל / מנוחה'},
-  {id:'gym',label:'🏋 מתקן כושר חיצוני'},{id:'aid',label:'🏥 עזרה ראשונה'},
-  {id:'park',label:'🚗 חניה / נקודת פגישה'},
-];
-
-// ===== HELPERS =====
-function getPaces(fit){
-  if(fit<=3)return{easy:'7:30–8:30',tempo:'6:00–6:45',interval:'5:30–6:10',long:'8:00–9:00'};
-  if(fit<=6)return{easy:'6:45–7:30',tempo:'5:20–6:00',interval:'4:50–5:30',long:'7:00–8:00'};
-  return{easy:'6:00–6:45',tempo:'4:45–5:20',interval:'4:15–4:50',long:'6:15–7:00'};
-}
-
-function setTab(groupId,val,el){
-  document.querySelectorAll('#'+groupId+' .tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  el.dataset.tab=el.dataset.tab||val;
-}
-
-function getActiveTab(groupId){
-  const active=document.querySelector('#'+groupId+' .tab.active');
-  return active?active.dataset.tab||active.textContent.trim():null;
-}
-
-function showPage(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  document.getElementById('nav-'+name).classList.add('active');
-  if(name==='profile')updateProfileAnalysis();
-  if(name==='run')renderPois();
-  if(name==='battle')loadBattleHistory();
-  if(name==='train'&&document.querySelector('#str-content').innerHTML==='')renderStr();
-  if(name==='train'&&document.querySelector('#runtypes-content').innerHTML==='')renderRunTypes();
-}
-
-// ===== CLOCK =====
-setInterval(()=>{
-  const n=new Date();
-  document.getElementById('clock').textContent=
-    String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
-},1000);
-
-// ===== TRAIN TABS =====
-function setTrainTab(t){
-  ['run','str','runtypes'].forEach(id=>{
-    document.getElementById('train-'+id).style.display=id===t?'block':'none';
-  });
-  if(t==='str'&&!document.querySelector('#str-content').innerHTML)renderStr();
-  if(t==='runtypes'&&!document.querySelector('#runtypes-content').innerHTML)renderRunTypes();
-}
-document.querySelector('[data-tab="run"]').onclick=function(){setTab('train-tabs','run',this);setTrainTab('run')};
-document.querySelector('[data-tab="str"]').onclick=function(){setTab('train-tabs','str',this);setTrainTab('str')};
-document.querySelector('[data-tab="runtypes"]').onclick=function(){setTab('train-tabs','runtypes',this);setTrainTab('runtypes')};
-
-// ===== RUN PLAN =====
-function buildRunPlan(){
-  const goal=parseInt(document.getElementById('run-goal').value);
-  const fit=parseInt(document.getElementById('run-fit').value);
-  const tpw=parseInt(document.getElementById('run-tpw').value);
-  const paces=getPaces(fit);
-  const key=goal>=42?42:goal>=21?21:goal>=10?10:goal>=5?5:3;
-  const plans=getRunPlans(paces,tpw);
-  const p=plans[key];
-  const level=fit<=3?'מתחיל':fit<=6?'בינוני':'מתקדם';
-  let html=`<div style="font-size:10px;color:var(--muted2);text-transform:uppercase;margin-bottom:6px">${p.w} שבועות | ${level} | ${tpw} אימונים/שבוע</div>`;
-  html+=`<div class="pace-card" style="border:1px solid #3399ff">
-    <div class="pace-row">⚡ קצב קל: <strong>${paces.easy}</strong><br>
-    🔥 קצב סף: <strong style="color:var(--primary)">${paces.tempo}</strong><br>
-    💨 קצב אינטרוולים: <strong style="color:var(--red)">${paces.interval}</strong><br>
-    🐢 קצב ארוכה: <strong>${paces.long}</strong></div></div>`;
-  p.ph.forEach(phase=>{
-    html+=`<div class="phase" style="border:1px solid ${phase.c}">
-      <div class="phase-title" style="color:${phase.c}">${phase.t}</div>`;
-    phase.ss.slice(0,Math.min(tpw,phase.ss.length)).forEach(s=>{
-      html+=`<div class="session" style="border-color:${phase.c}">
-        <div class="session-name">יום ${s.d}: ${s.tp}</div>
-        <div class="session-desc">${s.dt}</div></div>`;
-    });
-    html+='</div>';
-  });
-  document.getElementById('run-plan-result').innerHTML=html;
-}
-
-function getRunPlans(paces,tpw){
-  const{easy:pE,tempo:pT,interval:pI,long:pL}=paces;
-  return{
-    3:{w:8,ph:[
-      {t:'שלב א׳ – בסיס (שב 1–3)',c:'#3399ff',ss:[
-        {d:'ראשון',tp:'ריצה קלה',dt:`30–35 דקות, קצב ${pE}`},
-        {d:'רביעי',tp:'Fartlek',dt:'25 דקות: 1דק מהר / 2דק קל'},
-        {d:'שישי',tp:'כוח',dt:'שכיבות + מתח + בטן, 3 סבבים'},
-      ]},
-      {t:'שלב ב׳ – נפח (שב 4–6)',c:'#ffaa00',ss:[
-        {d:'ראשון',tp:'אינטרוולים 400מ׳',dt:`6×400מ׳ קצב ${pI} + 90שנ מנוחה`},
-        {d:'רביעי',tp:'Tempo Run',dt:`10דק חימום + 15דק קצב ${pT} + 5דק קירור`},
-        {d:'שישי',tp:'ריצה קלה',dt:`25 דקות קצב ${pE}`},
-      ]},
-      {t:'שלב ג׳ – חידוד (שב 7–8)',c:'#ff3355',ss:[
-        {d:'ראשון',tp:'אינטרוולים 1000מ׳',dt:`4×1000מ׳ קצב ${pI} + 2דק מנוחה`},
-        {d:'רביעי',tp:'Tempo + קצב',dt:`10דק חימום + 20דק קצב ${pT}`},
-        {d:'שישי',tp:'ריצה קלה',dt:'20 דקות בלבד, שיקום'},
-      ]},
-    ]},
-    5:{w:6,ph:[
-      {t:'שלב א׳ – בסיס (שב 1–2)',c:'#3399ff',ss:[
-        {d:'ראשון',tp:'ריצה קלה',dt:`30–35 דקות, קצב ${pE}`},
-        {d:'שלישי',tp:'אינטרוולים 200מ׳',dt:`6×200מ׳ קצב ${pI} + 200מ׳ הליכה`},
-        {d:'שישי',tp:'ריצה ארוכה',dt:`5–6 ק"מ, קצב ${pL}`},
-        {d:'שבת',tp:'כוח',dt:'שכיבות + בטן + רגליים – 3 סבבים'},
-      ]},
-      {t:'שלב ב׳ – נפח (שב 3–4)',c:'#ffaa00',ss:[
-        {d:'ראשון',tp:'ריצה נוחה',dt:`40 דקות, קצב ${pE}`},
-        {d:'שלישי',tp:'Tempo Run',dt:`10דק חימום + 20דק קצב ${pT} + 5דק קירור`},
-        {d:'חמישי',tp:'עליות',dt:'6×45שנ ריצת עלייה + ירידה בהליכה'},
-        {d:'שבת',tp:'ריצה ארוכה',dt:`7 ק"מ, קצב ${pL}`},
-      ]},
-      {t:'שלב ג׳ – חידוד (שב 5–6)',c:'#ff3355',ss:[
-        {d:'ראשון',tp:'אינטרוולים 1000מ׳',dt:`4×1000מ׳ קצב ${pI} + 90שנ מנוחה`},
-        {d:'שלישי',tp:'Tempo ממושך',dt:`10 חימום + 25 דקות קצב ${pT}`},
-        {d:'חמישי',tp:'ריצה קלה',dt:`30 דקות קצב ${pE}`},
-        {d:'שבת',tp:'ריצה ארוכה + קצב',dt:`8 ק"מ, האחרון 2 ק"מ בקצב ${pT}`},
-      ]},
-    ]},
-    10:{w:8,ph:[
-      {t:'שלב א׳ – בסיס (שב 1–2)',c:'#3399ff',ss:[
-        {d:'ראשון',tp:'ריצה קלה',dt:`40 דקות, קצב ${pE}`},
-        {d:'שלישי',tp:'Fartlek',dt:'30 דקות: 2דק מהר / 3דק קל לסירוגין'},
-        {d:'שבת',tp:'ריצה ארוכה',dt:`8 ק"מ, קצב ${pL}`},
-      ]},
-      {t:'שלב ב׳ – נפח (שב 3–5)',c:'#ffaa00',ss:[
-        {d:'ראשון',tp:'ריצה נוחה',dt:`50 דקות, קצב ${pE}`},
-        {d:'שלישי',tp:'Tempo 2×15',dt:`2×15 דקות קצב ${pT} + 2דק מנוחה`},
-        {d:'חמישי',tp:'עליות',dt:'8×45שנ עלייה + ירידה הליכה'},
-        {d:'שבת',tp:'ריצה ארוכה',dt:`12 ק"מ, קצב ${pL}`},
-      ]},
-      {t:'שלב ג׳ – חידוד (שב 6–8)',c:'#ff3355',ss:[
-        {d:'ראשון',tp:'אינטרוולים 1200מ׳',dt:`5×1200מ׳ קצב ${pI} + 2דק מנוחה`},
-        {d:'שלישי',tp:'Tempo 30 דקות',dt:`10 חימום + 30 דקות קצב ${pT}`},
-        {d:'חמישי',tp:'נפח קל',dt:`50 דקות קצב ${pE}`},
-        {d:'שבת',tp:'ריצה ארוכה',dt:`14–16 ק"מ, קצב ${pL}`},
-      ]},
-    ]},
-    21:{w:12,ph:[
-      {t:'שלב א׳ – בסיס (שב 1–3)',c:'#3399ff',ss:[
-        {d:'ראשון',tp:'ריצה קלה',dt:`50 דקות, קצב ${pE}`},
-        {d:'שלישי',tp:'Tempo',dt:`10 חימום + 20 דקות קצב ${pT}`},
-        {d:'חמישי',tp:'אינטרוולים 800מ׳',dt:`6×800מ׳ קצב ${pI} + 90שנ`},
-        {d:'שבת',tp:'ריצה ארוכה',dt:`16 ק"מ, קצב ${pL}`},
-      ]},
-      {t:'שלב ב׳ – נפח (שב 4–8)',c:'#ffaa00',ss:[
-        {d:'ראשון',tp:'כפול בוקר+ערב',dt:'30דק בוקר + 25דק ערב, שניהם קל'},
-        {d:'שלישי',tp:'Tempo ממושך',dt:`10 חימום + 35 דקות קצב ${pT}`},
-        {d:'חמישי',tp:'אינטרוולים 2000מ׳',dt:`4×2000מ׳ קצב ${pI} + 2דק מנוחה`},
-        {d:'שבת',tp:'ריצה ארוכה',dt:`20–22 ק"מ, קצב ${pL}`},
-      ]},
-      {t:'שלב ג׳ – טייפר (שב 9–12)',c:'#ff3355',ss:[
-        {d:'ראשון',tp:'Tune-up',dt:'12 ק"מ בקצב מרוץ'},
-        {d:'שלישי',tp:'מהירות',dt:`10×400מ׳ קצב ${pI}`},
-        {d:'חמישי',tp:'ריצה קלה',dt:'30 דקות בלבד'},
-        {d:'שבת',tp:'ריצה ארוכה (יורדת)',dt:'25 ← 20 ← 15 ← 10 ק"מ'},
-      ]},
-    ]},
-    42:{w:16,ph:[
-      {t:'שלב א׳ – בסיס (שב 1–4)',c:'#3399ff',ss:[
-        {d:'ראשון',tp:'ריצה קלה',dt:`60 דקות, קצב ${pE}`},
-        {d:'שלישי',tp:'Tempo',dt:`10 חימום + 30 דקות קצב ${pT}`},
-        {d:'חמישי',tp:'אינטרוולים 800מ׳',dt:`8×800מ׳ קצב ${pI} + 90שנ`},
-        {d:'שבת',tp:'ריצה ארוכה',dt:`20 ק"מ, קצב ${pL}`},
-      ]},
-      {t:'שלב ב׳ – נפח (שב 5–12)',c:'#ffaa00',ss:[
-        {d:'ראשון',tp:'כפול',dt:'45 דקות בוקר + 25 דקות ערב'},
-        {d:'שלישי',tp:'Tempo 50 דקות',dt:`10 חימום + 50 דקות קצב ${pT}`},
-        {d:'חמישי',tp:'אינטרוולים 1600מ׳',dt:`5×1600מ׳ קצב ${pI} + 2דק`},
-        {d:'שבת',tp:'ריצה ארוכה',dt:`28–32 ק"מ, קצב ${pL}`},
-      ]},
-      {t:'שלב ג׳ – טייפר (שב 13–16)',c:'#ff3355',ss:[
-        {d:'ראשון',tp:'Tune-up Race',dt:'10 ק"מ בקצב מרתון'},
-        {d:'שלישי',tp:'Tempo קצר',dt:`10 חימום + 20 דקות קצב ${pT}`},
-        {d:'חמישי',tp:'ריצה קלה',dt:'30–40 דקות בלבד'},
-        {d:'שבת',tp:'ריצה ארוכה (יורדת)',dt:'20 ← 16 ← 12 ← 6 ק"מ'},
-      ]},
-    ]},
-  };
-}
-
-// ===== STRENGTH =====
-function renderStr(){
-  const mode=getActiveTab('str-mode-tabs')||'home';
-  const muscle=getActiveTab('muscle-tabs')||'all';
-  const groups=muscle==='all'?['chest','back','legs','core','full']:[muscle];
-  let html='';
-  groups.forEach(g=>{
-    if(muscle==='all')html+=`<div style="font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px">${groupNames[g]}</div>`;
-    (STR[mode]?.[g]||[]).forEach(ex=>{
-      html+=`<div class="ex-card"><div class="ex-name">${ex.n}</div>
-        <div class="ex-sets">${ex.s} סטים × ${ex.r} | מנוחה: ${ex.rest}</div>
-        <div class="ex-tip">💡 ${ex.t}</div></div>`;
-    });
-  });
-  document.getElementById('str-content').innerHTML=html;
-}
-
-// ===== RUN TYPES =====
-function renderRunTypes(){
-  let html='';
-  runTypes.forEach((r,i)=>{
-    html+=`<div class="run-type-card card" style="border-color:var(--border)" onclick="toggleRt(${i})">
-      <div class="rt-header">
-        <span class="rt-icon">${r.icon}</span>
-        <div style="flex:1"><div class="rt-name">${r.name}</div><div class="rt-pace" style="color:${r.col}">${r.pace}</div></div>
-        <span class="rt-chevron" id="rt-chev-${i}">▼</span>
-      </div>
-      <div class="rt-details" id="rt-det-${i}">
-        <div class="rt-detail-row" style="margin-top:8px">🎯 <strong>מטרה:</strong> ${r.goal}</div>
-        <div class="rt-detail-row">📅 <strong>מתי:</strong> ${r.when}</div>
-        <div class="rt-detail-row"><strong>💡 טיפים:</strong></div>
-        ${r.tips.map(t=>`<div class="rt-tip" style="border-color:${r.col}">${t}</div>`).join('')}
-      </div></div>`;
-  });
-  document.getElementById('runtypes-content').innerHTML=html;
-}
-function toggleRt(i){
-  const det=document.getElementById('rt-det-'+i);
-  const chev=document.getElementById('rt-chev-'+i);
-  const open=det.classList.toggle('open');
-  chev.textContent=open?'▲':'▼';
-}
-
-// ===== IDF =====
-let idfType='bar_or';
-function setIdfType(t){
-  idfType=t;
-  ['bar_or','say','gib'].forEach(id=>{
-    document.getElementById('idf-'+id).classList.toggle('active',id===t);
-  });
-  document.getElementById('idf-fit-section').style.display=t==='bar_or'?'block':'none';
-}
-
-function buildIdfPlan(){
-  const dateVal=document.getElementById('idf-date').value;
-  if(!dateVal){alert('נא להזין תאריך');return;}
-  const now=new Date();now.setHours(0,0,0,0);
-  const ev=new Date(dateVal);ev.setHours(0,0,0,0);
-  const days=Math.round((ev-now)/86400000);
-  if(days<0){alert('התאריך עבר – בחר תאריך עתידי');return;}
-  const wks=Math.max(1,Math.floor(days/7));
-  const rem=days%7;
-  const t=parseInt(document.getElementById('idf-tpw').value);
-  const dur=parseInt(document.getElementById('idf-dur').value);
-  const fit=parseInt(document.getElementById('idf-fit').value);
-  let phases;
-  if(idfType==='bar_or')phases=buildBarOrPlan(wks,t,fit);
-  else if(idfType==='say')phases=buildSayeretPlan(wks,t);
-  else phases=buildGibushPlan(wks,t);
-  let html=`<div class="summary-card">⏳ נותרו: <strong>${wks} שבועות${rem>0?' ו-'+rem+' ימים':''} (${days} ימים)</strong><br>
-    🏋 ${t} אימונים × ${dur} דק = <strong>${t*dur} דק/שבוע</strong></div>`;
-  if(wks<=4)html+=`<div class="warn-card">⚠ זמן קצר – תוכנית דחוסה עם דגש על שמירת כושר</div>`;
-  phases.forEach(phase=>{
-    html+=`<div class="phase" style="border:1px solid ${phase.c}">
-      <div class="phase-title" style="color:${phase.c}">${phase.t}</div>`;
-    phase.ss.slice(0,Math.min(t,phase.ss.length)).forEach(s=>{
-      html+=`<div class="session" style="border-color:${phase.c}">
-        <div class="session-name">☑ ${s.tp}</div>
-        <div class="session-desc">${s.dt}</div></div>`;
-    });
-    html+='</div>';
-  });
-  document.getElementById('idf-plan-result').innerHTML=html;
-}
-
-function buildBarOrPlan(weeks,tpw,fit){
-  const p1=Math.max(1,Math.round(weeks*0.3));
-  const p2=Math.max(1,Math.round(weeks*0.4));
-  const p3=Math.max(1,weeks-p1-p2);
-  const pace=fit<=3?'6:30–7:30':fit<=6?'5:30–6:30':'4:45–5:30';
-  const intPace=fit<=3?'5:00–5:45':fit<=6?'4:15–5:00':'3:45–4:15';
-  return[
-    {t:`שלב א׳ – בסיס אירובי (${p1} שב)`,c:'#3399ff',ss:[
-      {tp:'ריצה 3 ק"מ + זמן',dt:`רוץ 3 ק"מ ברצף, קצב ${pace}. תעד זמן!`},
-      {tp:'Fartlek 25 דק',dt:'1 דקה מהר / 2 דקות קל'},
-      {tp:'ריצה קלה 30-40 דק',dt:`קצב ${pace}, שמור על שיחה נוחה`},
-      {tp:'כוח פונקציונלי',dt:'שכיבות ×20 + מתח ×6 + בטן ×30 + סקוואט ×25 – 3 סבבים'},
-    ]},
-    {t:`שלב ב׳ – שיפור מהירות (${p2} שב)`,c:'#ffaa00',ss:[
-      {tp:'אינטרוולים 400מ׳',dt:`8×400מ׳ קצב ${intPace} + 90שנ מנוחה`},
-      {tp:'Tempo 3 ק"מ',dt:`חימום 10דק + 3 ק"מ בקצב מרוץ + קירור 5דק`},
-      {tp:'אינטרוולים 200מ׳',dt:'10×200מ׳ ספרינט + 200מ׳ הליכה'},
-      {tp:'ריצה עם עליות',dt:'8×30שנ עלייה + ירידה הליכה'},
-    ]},
-    {t:`שלב ג׳ – חידוד + פיק (${p3} שב)`,c:'#ff3355',ss:[
-      {tp:"בנצ'מרק 3 ק'מ!",dt:'רוץ 3 ק"מ מקסימלי – זה הטסט שלך!'},
-      {tp:'אינטרוולים 1000מ׳',dt:`3×1000מ׳ קצב ${intPace} + 2דק מנוחה`},
-      {tp:'Tempo 2 ק"מ × 2',dt:'חימום + 2 ק"מ מהיר + 3דק + 2 ק"מ מהיר'},
-      {tp:'Strides',dt:'15דק קל + 8×20שנ ספרינט'},
-    ]},
-  ];
-}
-
-function buildSayeretPlan(weeks,tpw){
-  const p1=Math.max(1,Math.round(weeks*0.35));
-  const p2=Math.max(1,Math.round(weeks*0.4));
-  const p3=Math.max(1,weeks-p1-p2);
-  return[
-    {t:`שלב א׳ – בסיס (${p1} שב)`,c:'#3399ff',ss:[
-      {tp:'2000מ׳ × 2',dt:'קצב 8:30–9:30, 4 דקות מנוחה. רשום זמן!'},
-      {tp:'ריצה עם ציוד',dt:'20–25 דקות, תרמיל 8 ק"ג, קצב 7:30–8:30'},
-      {tp:'מסלול כוח',dt:'שכיבות ×20 + מתח ×8 + בטן ×30 + קפיצות ×20 – 3 סבבים'},
-      {tp:'נפח קל',dt:'40 דקות ריצה קלה, קצב 7:00–7:30'},
-    ]},
-    {t:`שלב ב׳ – עצימות (${p2} שב)`,c:'#ffaa00',ss:[
-      {tp:'2000מ׳ × 3',dt:'קצב 7:30–8:30, 3 דקות מנוחה'},
-      {tp:'דיונות / עליות',dt:'10× ריצת עלייה 30שנ + ירידה בהליכה'},
-      {tp:'ריצה עם ציוד',dt:'35 דקות, 12 ק"ג, קצב 8:00–9:00'},
-      {tp:'אינטרוולים 400מ׳',dt:'8×400מ׳ מהיר + 90שנ הליכה'},
-    ]},
-    {t:`שלב ג׳ – פיק (${p3} שב)`,c:'#ff3355',ss:[
-      {tp:'2000מ׳ פיק – טסט!',dt:'ריצה מקסימלית, תעד בעמוד Battle'},
-      {tp:'סימולציה מלאה',dt:'5 ק"מ עם ציוד 15 ק"ג + מסלול כוח + 1000מ ספרינט'},
-      {tp:'Fartlek',dt:'30 דקות: 1דק מהר / 2דק קל'},
-      {tp:'מנוחה אקטיבית',dt:'30 דקות קל בלבד'},
-    ]},
-  ];
-}
-
-function buildGibushPlan(weeks,tpw){
-  const p1=Math.max(1,Math.round(weeks*0.35));
-  const p2=Math.max(1,Math.round(weeks*0.4));
-  const p3=Math.max(1,weeks-p1-p2);
-  return[
-    {t:`שלב א׳ – בסיס (${p1} שב)`,c:'#3399ff',ss:[
-      {tp:'ריצה 6–8 ק"מ',dt:'קצב 6:30–7:30. עקביות, נפח נמוך'},
-      {tp:'כוח פונקציונלי',dt:'שכיבות ×25 + מתח ×8 + כפיפות ×40 + פלאנק 90שנ – 4 סבבים'},
-      {tp:'נשיאת תרמיל',dt:'15 ק"ג: ריצה 20דק → 50 שכיבות → ריצה 10דק'},
-      {tp:'נפח אירובי',dt:'55 דקות קל, קצב 7:00–7:30'},
-    ]},
-    {t:`שלב ב׳ – עצימות (${p2} שב)`,c:'#ffaa00',ss:[
-      {tp:'Gut Check Workout',dt:'ריצה 5ק"מ + 50 שכיבות + 25 מתח + 100 כפיפות + ריצה 5ק"מ'},
-      {tp:'אינטרוולים כבדים',dt:'10×400מ עם תרמיל 10 ק"ג, 90שנ מנוחה'},
-      {tp:'Ruck March',dt:'8–10 ק"מ עם 18–20 ק"ג, קצב 8:30–9:30'},
-      {tp:'נפח ארוך',dt:'14–16 ק"מ, קצב 6:30–7:00'},
-    ]},
-    {t:`שלב ג׳ – סימולציה (${p3} שב)`,c:'#ff3355',ss:[
-      {tp:'סימולציה 24–48h',dt:'אימון ×4 ביום שישי–שבת, 5 שעות שינה'},
-      {tp:'Ruck March מלא',dt:'12 ק"מ עם 22 ק"ג, קצב 9:00'},
-      {tp:'טסט כוח סופי',dt:'מקס מתח → 2דק → מקס שכיבות → 3ק"מ → מקס שכיבות שוב'},
-      {tp:'מנוחה אקטיבית',dt:'30 דקות קל. שמור אנרגיה לגיבוש'},
-    ]},
-  ];
-}
-
-// ===== RUN PAGE =====
-let running=false,runSecs=0,runTimer=null;
-let poiList=[...poiTypes.map((p,i)=>({...p,count:i<3?1:0}))];
-
-function renderPois(){
-  const types=[
-    {id:'water',label:'💧 מים / ברז'},{id:'store',label:'🏪 קיוסק / חנות'},
-    {id:'wc',label:'🚻 שירותים'},{id:'rest',label:'⛲ צל / מנוחה'},
-    {id:'gym',label:'🏋 מתקן כושר חיצוני'},{id:'aid',label:'🏥 עזרה ראשונה'},
-    {id:'park',label:'🚗 חניה / נקודת פגישה'},
-  ];
-  let html='';
-  types.forEach(p=>{
-    const count=poiList.find(x=>x.id===p.id)?.count||0;
-    html+=`<div class="poi-row"><span>${p.label}</span>
-      <div style="display:flex;align-items:center;gap:6px">
-        ${count>0?`<span style="font-size:10px;color:var(--primary)">${count}</span>`:''}
-        <button class="add-btn" onclick="addPoi('${p.id}')">+ הוסף</button>
-      </div></div>`;
-  });
-  document.getElementById('poi-list').innerHTML=html;
-}
-
-function addPoi(id){
-  const idx=poiList.findIndex(x=>x.id===id);
-  if(idx>=0)poiList[idx].count=(poiList[idx].count||0)+1;
-  else poiList.push({id,count:1});
-  const lbl=poiTypes.find(p=>p.id===id)?.label||id;
-  document.getElementById('poi-log').textContent='✅ "'+lbl+'" נוספה';
-  renderPois();
-}
-
-function toggleRun(){
-  running=!running;
-  const btn=document.getElementById('run-btn');
-  if(running){
-    btn.textContent='⏹ עצור ריצה';btn.classList.remove('btn-red');btn.classList.add('btn-muted');
-    runTimer=setInterval(()=>{
-      runSecs++;
-      const dist=(runSecs/60*0.17);
-      const cals=Math.round(runSecs/60*75*0.1);
-      const elev=Math.round(runSecs/60*1.2);
-      const pace=dist>0.05?runSecs/60/dist:0;
-      document.getElementById('run-dist').textContent=dist.toFixed(2);
-      document.getElementById('run-cals').textContent=cals;
-      document.getElementById('run-elev').textContent=elev;
-      document.getElementById('run-pace').textContent=pace>0?Math.floor(pace)+':'+String(Math.round((pace%1)*60)).padStart(2,'0'):'--:--';
-    },1000);
-  }else{
-    clearInterval(runTimer);
-    btn.textContent='▶ התחל ריצה';btn.classList.add('btn-red');btn.classList.remove('btn-muted');
-    if(runSecs>0){
-      const h=Math.floor(runSecs/3600),m=Math.floor((runSecs%3600)/60),s=runSecs%60;
-      document.getElementById('run-final').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    // ===== Page Nav =====
+    function showPage(name){
+      ["train","idf","run","history","profile"].forEach(p=>{
+        document.getElementById("p-"+p).classList.toggle("active", p === name);
+        document.getElementById("n-"+p).classList.toggle("active", p === name);
+      });
+      if(name === "history") renderHistory();
+      if(name === "run") setTimeout(() => map.invalidateSize(), 100);
     }
-  }
-}
 
-// ===== PROFILE =====
-function updateProfileAnalysis(){
-  const fit=parseInt(document.getElementById('p-fit').value);
-  const tpw=parseInt(document.getElementById('p-tpw').value);
-  const dur=parseInt(document.getElementById('p-dur').value)||0;
-  const age=document.getElementById('p-age').value;
-  const weight=document.getElementById('p-weight').value;
-  const type={run:'ריצה בלבד',str:'כוח בלבד',mix:'שילוב',non:'לא מתאמן'}[document.getElementById('p-type').value];
-  const vol=tpw*dur;
-  document.getElementById('profile-stats-text').innerHTML=`גיל: <strong>${age}</strong> | משקל: <strong>${weight} ק"מ</strong><br>סוג: <strong>${type}</strong> | נפח: <strong style="color:var(--primary)">${vol} דק/שבוע</strong>`;
-  document.getElementById('fit-bar').style.width=(fit*10)+'%';
-  const fitLabel=fit<=3?'🟡 מתחיל':fit<=6?'🟢 בינוני':'⚡ מתקדם';
-  document.getElementById('fit-label').textContent=`רמת כושר ${fit}/10: ${fitLabel}`;
-  const rec=tpw===0?'התחל ב-2 אימונים קצרים בשבוע':tpw<=2?'הוסף אימון אחד נוסף לשיפור מהיר':tpw<=4?'רמה טובה! שפר עצימות':'נפח גבוה – דגש על שינה ושיקום';
-  document.getElementById('profile-rec').innerHTML=`💡 <strong>המלצה:</strong> ${rec}`;
-}
+    // ===== Storage =====
+    const KEY_RUNS = "runpath_pro_runs";
+    const KEY_STR = "runpath_pro_strength";
+    const KEY_STR_LIBRARY = "runpath_pro_strength_library";
+    const KEY_API = "runpath_pro_api_key";
 
-function saveProfile(){
-  updateProfileAnalysis();
-  const btn=document.getElementById('save-btn');
-  btn.textContent='✅ נשמר!';
-  setTimeout(()=>btn.textContent='💾 שמור פרופיל',2000);
-}
+    function loadJson(key, fallback){
+      try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+      catch { return fallback; }
+    }
+    function saveJson(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
 
-// ===== BATTLE RESULTS (localStorage) =====
-function getBattleKey(tab){return'runpath_battle_'+tab;}
-function saveBattleResult(type){
-  const isRun=type==='run';
-  const tab=getActiveTab(isRun?'run-test-tabs':'str-test-tabs');
-  const resultInput=document.getElementById(isRun?'run-result':'str-result');
-  const notesInput=document.getElementById(isRun?'run-notes':'str-notes');
-  if(!resultInput.value.trim())return;
-  const key=getBattleKey(tab);
-  let history=[];
-  try{history=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
-  history.unshift({result:resultInput.value.trim(),notes:notesInput.value.trim(),date:new Date().toLocaleDateString('he-IL')});
-  if(history.length>15)history=history.slice(0,15);
-  localStorage.setItem(key,JSON.stringify(history));
-  resultInput.value='';notesInput.value='';
-  loadBattleHistory();
-}
-function loadBattleHistory(){
-  ['run','str'].forEach(type=>{
-    const isRun=type==='run';
-    const tab=getActiveTab(isRun?'run-test-tabs':'str-test-tabs');
-    if(!tab)return;
-    const key=getBattleKey(tab);
-    let history=[];
-    try{history=JSON.parse(localStorage.getItem(key)||'[]');}catch(e){}
-    const units={pushups:'חזרות',pullups:'חזרות',plank:'שניות',situps:'חזרות',squats:'חזרות'};
-    const unit=units[tab]||'';
-    let html=`<div style="font-size:10px;color:var(--muted2);text-transform:uppercase;margin-bottom:6px">היסטוריה</div>`;
-    if(!history.length)html+='<div style="font-size:12px;color:var(--muted2)">אין תוצאות עדיין</div>';
-    history.forEach((h,i)=>{
-      let badge='';
-      if(i<history.length-1){
-        if(isRun){badge=`<span class="badge badge-blue">📈 לשיפור</span>`;}
-        else{
-          const cur=parseInt(h.result)||0,prev=parseInt(history[i+1].result)||0;
-          if(cur>prev)badge=`<span class="badge badge-up">+${cur-prev} ↑</span>`;
-          else if(cur<prev)badge=`<span class="badge badge-down">${cur-prev} ↓</span>`;
-          else badge=`<span class="badge badge-same">= זהה</span>`;
+    // ===== Extended Libraries (Pro Max) =====
+    const EXTENDED_EXERCISE_LIBRARY = {
+      home: {
+        full: [
+          "שכיבות סמיכה רגילות",
+          "שכיבות סמיכה רחבות",
+          "שכיבות סמיכה יהלום",
+          "שכיבות סמיכה עם רגליים מוגבהות",
+          "שכיבות סמיכה יד אחת (שלב לימוד)",
+          "שכיבות סמיכה קצב איטי 4-1-1",
+          "סקוואט משקל גוף",
+          "סקוואט עצירה בתחתית",
+          "סקוואט קפיצה",
+          "סקוואט פיצול",
+          "לאנג' קדמי",
+          "לאנג' אחורי",
+          "לאנג' הליכה",
+          "לאנג' צידי",
+          "Bulgarian Split Squat",
+          "Hip Hinge עם תיק גב",
+          "Good Morning עם תיק",
+          "Hip Bridge",
+          "Glute Bridge חד רגל",
+          "Hamstring Slide עם מגבת",
+          "Wall Sit",
+          "Calf Raises איטי",
+          "Calf Raises חד רגל",
+          "Step Up על ספסל",
+          "Step Down בשליטה",
+          "פלאנק קדמי",
+          "פלאנק צד",
+          "פלאנק כתף-כתף",
+          "פלאנק עם הרמת רגל",
+          "Dead Bug",
+          "Bird Dog",
+          "Hollow Hold",
+          "Russian Twist",
+          "V Sit",
+          "Mountain Climbers",
+          "Bear Crawl",
+          "Inchworm",
+          "Burpees",
+          "High Knees",
+          "Skaters",
+          "Jumping Jacks",
+          "Boxer Shuffle",
+          "Lateral Shuffle",
+          "Shadow Boxing",
+          "Sit Through",
+          "Sprawl",
+          "Superman Hold",
+          "Y-T-W ללא משקל",
+          "Reverse Snow Angels",
+          "Door Row עם מגבת",
+          "Isometric Row with Towel",
+          "Isometric Chest Squeeze",
+          "Isometric Squat Hold",
+          "Hip Airplane",
+          "Cossack Squat",
+          "Deep Squat Mobility Hold",
+          "Thoracic Rotation",
+          "Scapular Push-up",
+          "Shoulder Tap Push-up",
+          "Tempo Burpee 3-0-1",
+          "Power Knees",
+          "Split Jump",
+          "Broad Jump",
+          "Single Leg Hop",
+          "Pogo Jumps",
+          "Ankling Drill",
+          "A-Skip במקום",
+          "B-Skip במקום",
+          "Wall March",
+          "Reverse Lunge to Knee Drive",
+          "Push-up to Down Dog",
+          "Pike Push-up",
+          "Handstand Hold Against Wall",
+          "Triceps Dips על כיסא",
+          "Bench Dip עצירה בתחתית",
+          "Farmer Carry עם שקיות",
+          "Suitcase Carry חד צד",
+          "Overhead Carry עם בקבוקים",
+          "March Carry",
+          "Front Rack Carry מאולתר",
+          "Glute Med Walk עם גומיה",
+          "Monster Walk עם גומיה",
+          "Clamshell עם גומיה",
+          "Fire Hydrant",
+          "Donkey Kick",
+          "Copenhagen Side Plank בסיסי",
+          "Nordic Eccentric עזרה",
+          "Wall Calf Iso Hold",
+          "Toe Raises לקדמת השוק",
+          "Tibialis Raise קיר",
+          "Soleus Raises כפוף ברך",
+          "Plank Reach",
+          "Plank Walk Out",
+          "Alternating V-Up",
+          "Flutter Kicks",
+          "Leg Raises",
+          "Reverse Crunch"
+        ],
+        legs: [
+          "סקוואט משקל גוף",
+          "סקוואט פיצול",
+          "לאנג' קדמי",
+          "לאנג' אחורי",
+          "Bulgarian Split Squat",
+          "Wall Sit",
+          "Glute Bridge",
+          "Glute Bridge חד רגל",
+          "Hamstring Slide",
+          "Calf Raises",
+          "Tibialis Raise",
+          "Soleus Raise",
+          "Step Up",
+          "Step Down",
+          "Broad Jump",
+          "Pogo Jumps",
+          "Single Leg Hop",
+          "Cossack Squat",
+          "Hip Airplane",
+          "Reverse Lunge to Knee Drive",
+          "Lateral Lunge",
+          "Curtsy Lunge",
+          "Skater Jump",
+          "Squat Hold 45 שנ'",
+          "Tempo Squat 4-2-1",
+          "Tempo Lunge 3-1-1",
+          "Hip Thrust על ספה",
+          "Heel Elevated Squat",
+          "Split Squat Pulses",
+          "Calf Iso Hold"
+        ],
+        upper: [
+          "שכיבות סמיכה רגילות",
+          "שכיבות סמיכה רחבות",
+          "שכיבות יהלום",
+          "Pike Push-up",
+          "Triceps Dip",
+          "Door Towel Row",
+          "Reverse Snow Angels",
+          "Scapular Push-up",
+          "Handstand Hold Wall",
+          "Shoulder Tap Push-up",
+          "Isometric Row",
+          "Isometric Chest Press",
+          "Superman Hold",
+          "Y-T-W",
+          "Plank Shoulder Tap",
+          "Farmer Carry",
+          "Suitcase Carry",
+          "Overhead Carry",
+          "Push-up Slow Tempo",
+          "Push-up Explosive"
+        ]
+      },
+      gym: {
+        full: [
+          "Back Squat",
+          "Front Squat",
+          "Deadlift קלאסי",
+          "Romanian Deadlift",
+          "Trap Bar Deadlift",
+          "Bench Press",
+          "Incline Bench Press",
+          "Dumbbell Bench Press",
+          "Overhead Press",
+          "Push Press",
+          "Bent Over Row",
+          "Chest Supported Row",
+          "Lat Pulldown",
+          "Pull-up",
+          "Weighted Pull-up",
+          "Seated Cable Row",
+          "Dips",
+          "Machine Chest Press",
+          "Leg Press",
+          "Hack Squat",
+          "Bulgarian Split Squat",
+          "Walking Lunges DB",
+          "Step Up DB",
+          "Calf Raise Standing",
+          "Calf Raise Seated",
+          "Hip Thrust",
+          "Glute Ham Raise",
+          "Hamstring Curl",
+          "Leg Extension",
+          "Cable Pallof Press",
+          "Ab Wheel",
+          "Hanging Leg Raise",
+          "Cable Crunch",
+          "Wood Chopper",
+          "Face Pull",
+          "Rear Delt Fly",
+          "Lateral Raise",
+          "Biceps Curl",
+          "Hammer Curl",
+          "Triceps Rope Pushdown",
+          "Skull Crusher",
+          "Farmer Walk Heavy",
+          "Sled Push",
+          "Sled Pull",
+          "Kettlebell Swing",
+          "Thruster",
+          "Goblet Squat",
+          "Landmine Press",
+          "Landmine Squat",
+          "Single Leg RDL",
+          "Cable Kickback",
+          "Adductor Machine",
+          "Abductor Machine",
+          "Reverse Hyper",
+          "Back Extension",
+          "Nordic Curl",
+          "Barbell Hip Thrust",
+          "Pause Squat",
+          "Tempo Bench",
+          "Deficit Deadlift",
+          "Box Squat",
+          "Pin Press",
+          "T-bar Row",
+          "Meadows Row",
+          "Arnold Press",
+          "Machine Row",
+          "Smith Squat",
+          "Smith Lunge",
+          "Smith RDL",
+          "Cable Lateral Raise",
+          "Cable Curl",
+          "Overhead Triceps Extension",
+          "Plate Front Raise",
+          "Shrugs",
+          "Incline DB Row",
+          "Seal Row",
+          "Pullover Cable",
+          "Machine Pullover",
+          "Reverse Pec Deck",
+          "Hip Airplane Assisted",
+          "Box Jump",
+          "Depth Jump",
+          "Med Ball Slam",
+          "Battle Rope",
+          "Assault Bike Sprint",
+          "Row Erg Sprint",
+          "Ski Erg Sprint",
+          "Stairmaster Intervals",
+          "Treadmill Hill Repeats",
+          "Incline Walk Weighted",
+          "Sandbag Carry",
+          "Front Rack Carry",
+          "Overhead Carry KB",
+          "Suitcase Carry KB",
+          "Yoke Walk",
+          "Core Anti Rotation Hold"
+        ],
+        legs: [
+          "Back Squat",
+          "Front Squat",
+          "Hack Squat",
+          "Leg Press",
+          "Split Squat",
+          "Bulgarian Split Squat",
+          "RDL",
+          "Deadlift",
+          "Hip Thrust",
+          "Hamstring Curl",
+          "Leg Extension",
+          "Calf Raise Standing",
+          "Calf Raise Seated",
+          "Tibialis Machine",
+          "Adductor Machine",
+          "Abductor Machine",
+          "Step Up",
+          "Walking Lunge",
+          "Reverse Lunge",
+          "Box Jump",
+          "Sled Push",
+          "Sled Pull",
+          "Nordic Curl",
+          "Glute Ham Raise",
+          "Single Leg Press",
+          "Single Leg RDL",
+          "Pistol Box Squat",
+          "Pause Squat",
+          "Tempo Squat",
+          "Banded Hip Thrust"
+        ],
+        upper: [
+          "Bench Press",
+          "Incline Bench",
+          "DB Press",
+          "OHP",
+          "Push Press",
+          "Cable Fly",
+          "Dips",
+          "T-bar Row",
+          "Lat Pulldown",
+          "Pull-up",
+          "Seated Row",
+          "Face Pull",
+          "Rear Delt Fly",
+          "Lateral Raise",
+          "Biceps Curl",
+          "Hammer Curl",
+          "Triceps Pushdown",
+          "Skull Crusher",
+          "Arnold Press",
+          "Landmine Press",
+          "Machine Chest Press",
+          "Machine Row",
+          "Incline Curl",
+          "Preacher Curl",
+          "Overhead Triceps Extension"
+        ]
+      }
+    };
+
+    const RUN_WORKOUT_LIBRARY = [
+      "Easy 30 דק",
+      "Easy 40 דק",
+      "Easy 50 דק",
+      "Long 8 ק\"מ",
+      "Long 10 ק\"מ",
+      "Long 12 ק\"מ",
+      "Long 14 ק\"מ",
+      "Long 16 ק\"מ",
+      "Tempo 2x10 דק",
+      "Tempo 3x8 דק",
+      "Tempo 20 דק רציף",
+      "Tempo 30 דק רציף",
+      "Interval 8x400",
+      "Interval 10x400",
+      "Interval 6x800",
+      "Interval 5x1000",
+      "Interval 4x1200",
+      "Hill 8x30שנ",
+      "Hill 10x45שנ",
+      "Hill 12x60שנ",
+      "Fartlek 1/2",
+      "Fartlek 2/2",
+      "Fartlek גלים",
+      "Recovery 25 דק",
+      "Recovery 35 דק",
+      "Strides 8x20שנ",
+      "Strides 10x20שנ",
+      "Cadence Drill",
+      "Form Drill",
+      "Ruck 20 דק 8קג",
+      "Ruck 35 דק 10קג",
+      "Ruck 50 דק 12קג",
+      "Ruck 70 דק 15קג",
+      "2K Benchmark",
+      "3K Benchmark",
+      "5K Benchmark",
+      "10K Benchmark",
+      "Downhill Technique",
+      "Uphill Strength",
+      "Sand Run Intervals",
+      "Trail Technical",
+      "Trail Endurance",
+      "Treadmill Incline Build",
+      "Treadmill Pace Control",
+      "Sprint 10x100",
+      "Sprint 12x100",
+      "Sprint 8x200",
+      "Mixed 400/800",
+      "Mixed Tempo + Strides",
+      "Mixed Hill + Tempo",
+      "Mixed Long + Finish Fast"
+    ];
+
+    const COACHING_TIPS_LIBRARY = [
+      "שמור כלל 80/20: רוב הריצות קלות.",
+      "אל תעלה נפח שבועי ביותר מ-10%.",
+      "אם דופק בוקר עולה 8+ פעימות, הקל עומס.",
+      "יום מנוחה מלא לפחות פעם בשבוע.",
+      "עבודת כוח פעמיים בשבוע מפחיתה פציעות רצים.",
+      "הקפד על חימום 10-15 דקות לפני איכות.",
+      "הוסף 4-6 ספרינטים קצרים אחרי ריצה קלה.",
+      "נעלי ריצה: החלפה כל 600-800 ק\"מ.",
+      "באימוני עליות שמור צעדים קצרים ומהירים.",
+      "בירידות שמור תדירות גבוהה ובלימה מינימלית.",
+      "קלוריות הן הערכה - המגמה חשובה יותר מהמספר.",
+      "עקוב אחרי שינה, סטרס, כאב, ומצב רוח.",
+      "דלואד כל שבוע רביעי מומלץ.",
+      "לפני טסט חשוב - הורד עומס 48-72 שעות.",
+      "אל תנסה שיא אישי בכל אימון.",
+      "בגיבוש: התאמן גם על עייפות והחלטות תחת עומס.",
+      "באימון כוח איכות תנועה לפני משקל.",
+      "סיים אימון עם 5-10 דקות שחרור.",
+      "שתייה: 400-700 מ\"ל לשעה לפי מזג אוויר.",
+      "פחמימה לפני ריצה ארוכה משפרת ביצועים.",
+      "אחרי ריצה עצימה שלב חלבון + פחמימה.",
+      "שלב תרגילי קרסול וכף רגל למניעת שין-ספלינט.",
+      "כאבי עומס מתמשכים דורשים הורדת עומס חכמה.",
+      "תעד אימונים - מה שנמדד משתפר.",
+      "בדיקות תקופתיות כל 2-4 שבועות.",
+      "באימוני סף - נשימה קשה אך נשלטת.",
+      "אל תדלג על טכניקה: A-skip/B-skip ו-ankling.",
+      "ריצת שיקום אמורה להרגיש קלה באמת.",
+      "במהירות - איכות לפני כמות.",
+      "במסלול צבאי - תרגול משקל חשוב בהדרגה.",
+      "נפח גבוה ללא שינה = סיכון לפציעה.",
+      "בקיץ הורד קצבים לפי חום ולחות.",
+      "שלב אימוני ליבה אנטי-רוטציה.",
+      "בעליות: מבט 3-5 מטר קדימה.",
+      "בשבוע טייפר שומרים חדות ומפחיתים נפח.",
+      "חיזוק ירך אחורית קריטי לרצים מהירים.",
+      "שמור טווחי תנועה טובים באגן וקרסול.",
+      "אל תפתח צעד בכוח, דחיפה אחורה מספיקה.",
+      "תכנון מסלול מראש משפר התמדה.",
+      "עבודת נשימה בין אינטרוולים משפרת התאוששות.",
+      "במסלולי חול יש להאט ולהגדיל תדירות.",
+      "אם הקצב לא יציב - עבור לשליטת מאמץ (RPE).",
+      "ריצה לפי תחושה חשובה כמו לפי שעון.",
+      "היסטוריה אישית טובה מממוצעים כלליים.",
+      "תעד עליות וירידות בנפרד להבנת עומס שרירי.",
+      "גיוון משטחים מפחית שחיקת עומס.",
+      "ריצת בוקר עצימה דורשת ארוחת ערב מתאימה.",
+      "בחודש קשה הגדל צריכת חלבון.",
+      "להוריד עומס בזמן שווה ערך ללהתקדם בזמן.",
+      "התמדה מנצחת מוטיבציה רגעית."
+    ];
+
+    const MONTHLY_TEMPLATES = {
+      base: [
+        "שבוע 1: בסיס + טכניקה + כוח מתון",
+        "שבוע 2: העלאת נפח מבוקרת",
+        "שבוע 3: עצימות גבוהה + סימולציה",
+        "שבוע 4: דלואד + בדיקת התקדמות"
+      ],
+      race: [
+        "שבוע 1: בניית קצב מטרה",
+        "שבוע 2: נפח שיא מחזור",
+        "שבוע 3: חידוד מהירות",
+        "שבוע 4: טייפר + תחרות/טסט"
+      ],
+      idf: [
+        "שבוע 1: בסיס אירובי + כוח פונקציונלי",
+        "שבוע 2: ספרינטים + עליות + עומס ציוד",
+        "שבוע 3: סימולציה מלאה ותרחישי עייפות",
+        "שבוע 4: הורדת עומס ושמירת חדות"
+      ]
+    };
+
+    // ===== Strength Plan =====
+    let latestStrengthPlan = null;
+    function buildStrengthPlan(){
+      const env = document.getElementById("str-env").value;
+      const tpw = parseInt(document.getElementById("str-tpw").value, 10);
+      const weeks = parseInt(document.getElementById("str-weeks").value, 10);
+      const focus = document.getElementById("str-focus").value;
+      const ex = EXTENDED_EXERCISE_LIBRARY[env][focus] || EXTENDED_EXERCISE_LIBRARY[env].full;
+      let html = '<div class="card"><div class="title">תוכנית כוח שבועית</div>';
+      const sessions = [];
+      for(let w=1; w<=weeks; w++){
+        const deload = (w % 4 === 0);
+        html += `<div class="wk"><strong>שבוע ${w}</strong> <span class="badge">${deload ? "דלואד" : "התקדמות"}</span><br/>`;
+        if(w <= 4){
+          const monthlyLine = MONTHLY_TEMPLATES.base[w-1];
+          html += `<span class="mini">${monthlyLine}</span><br/>`;
+        }
+        for(let d=1; d<=tpw; d++){
+          const idx1 = (w * 3 + d * 2) % ex.length;
+          const idx2 = (w * 5 + d * 3) % ex.length;
+          const idx3 = (w * 7 + d * 4) % ex.length;
+          const idx4 = (w * 9 + d * 5) % ex.length;
+          const intensity = deload ? "3 סטים × 10-12 חזרות (קל + טכניקה)" : `4-5 סטים × ${focus === "legs" ? "6-10" : "6-12"} חזרות`;
+          const line = `אימון ${d}: ${ex[idx1]}, ${ex[idx2]}, ${ex[idx3]}, ${ex[idx4]} | ${intensity}`;
+          html += `${line}<br/>`;
+          sessions.push({ week: w, day: d, text: line });
+        }
+        html += `<div class="mini">טיפ שבוע: ${COACHING_TIPS_LIBRARY[(w-1) % COACHING_TIPS_LIBRARY.length]}</div>`;
+        html += "</div>";
+      }
+      html += "</div>";
+      latestStrengthPlan = { createdAt: new Date().toISOString(), env, tpw, weeks, focus, sessions };
+      document.getElementById("strength-plan").innerHTML = html;
+    }
+
+    function saveStrengthPlanToLibrary(){
+      if(!latestStrengthPlan){
+        alert("צור תוכנית כוח לפני שמירה.");
+        return;
+      }
+      const list = loadJson(KEY_STR_LIBRARY, []);
+      list.unshift(latestStrengthPlan);
+      saveJson(KEY_STR_LIBRARY, list.slice(0, 20));
+      const history = loadJson(KEY_STR, []);
+      history.unshift({
+        date: new Date().toLocaleString("he-IL"),
+        title: `תוכנית כוח ${latestStrengthPlan.weeks} שבועות`,
+        details: `${latestStrengthPlan.env} | ${latestStrengthPlan.tpw} אימונים/שבוע | פוקוס ${latestStrengthPlan.focus}`
+      });
+      saveJson(KEY_STR, history.slice(0, 200));
+      alert("נשמר לרשימת אימוני כוח בהצלחה.");
+    }
+
+    // ===== IDF Weekly Plan =====
+    function buildIdfWeeklyPlan(){
+      const type = document.getElementById("idf-type").value;
+      const dateVal = document.getElementById("idf-date").value;
+      const tpw = parseInt(document.getElementById("idf-tpw").value, 10);
+      const fit = parseInt(document.getElementById("idf-fit").value, 10);
+      if(!dateVal){ alert("נא לבחור תאריך יעד."); return; }
+      const now = new Date(); now.setHours(0,0,0,0);
+      const target = new Date(dateVal); target.setHours(0,0,0,0);
+      const days = Math.ceil((target - now) / 86400000);
+      if(days < 7){ alert("צריך לפחות שבוע אחד לתוכנית."); return; }
+      const weeks = Math.floor(days / 7);
+      const easyPace = fit <= 3 ? "7:00-8:00" : fit <= 6 ? "6:00-7:00" : "5:00-6:00";
+      const hardPace = fit <= 3 ? "5:30-6:15" : fit <= 6 ? "4:45-5:30" : "4:00-4:45";
+      let html = `<div class="card"><div class="title">תוכנית שבועית ל-${weeks} שבועות</div><div class="sub">כל שבוע מפורט לפי אימונים, עומס, ושבוע דלואד.</div>`;
+      for(let w=1; w<=weeks; w++){
+        const deload = w % 4 === 0;
+        const taper = w > weeks - 2;
+        const longKm = Math.max(3, Math.round((fit + w) * 0.9));
+        const loadTag = taper ? "TAPER" : deload ? "DELOAD" : "BUILD";
+        html += `<div class="wk"><strong>שבוע ${w}</strong> <span class="badge">${loadTag}</span><br/>`;
+        for(let d=1; d<=tpw; d++){
+          let s = "";
+          if(type === "bar_or"){
+            s = d === 1 ? `ריצה קלה 30-45 דק קצב ${easyPace}` :
+                d === 2 ? `אינטרוולים 6x400 קצב ${hardPace}` :
+                `טסט/טמפו 2-3 ק"מ + כוח פונקציונלי`;
+          } else if(type === "say"){
+            s = d === 1 ? `ריצת 2000מ x ${Math.min(4, 1 + Math.floor(w/2))}` :
+                d === 2 ? `עליות 8-12 חזרות + ספרינטים קצרים` :
+                `ריצה עם משקל 8-16 ק"ג + כוח מתפרץ`;
+          } else {
+            s = d === 1 ? `Ruck ${Math.min(8 + w, 20)} ק"ג 40-90 דק` :
+                d === 2 ? `קומבו כוח: שכיבות/מתח/סקוואט/בטן 4-6 סבבים` :
+                `ריצת נפח ${longKm} ק"מ קצב ${easyPace}`;
+          }
+          if(deload) s += " (הפחתה ~25% עומס)";
+          if(taper) s += " (עצימות קצרה, שמירת חדות)";
+          html += `אימון ${d}: ${s}<br/>`;
+        }
+        html += "</div>";
+      }
+      html += "</div>";
+      document.getElementById("idf-plan").innerHTML = html;
+    }
+
+    // ===== Map + Run Tracking =====
+    const map = L.map("map");
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+    map.setView([32.0853, 34.7818], 13);
+
+    let runPath = [];
+    let runPolyline = L.polyline([], { color: "#c8f135", weight: 4 }).addTo(map);
+    let plannedPoints = [];
+    let plannedMarkers = [];
+    let plannedLine = L.polyline([], { color: "#3da5ff", weight: 4, dashArray: "8,8" }).addTo(map);
+    let watchId = null;
+    let timerId = null;
+    let running = false;
+    let paused = false;
+    let startTs = null;
+    let elapsedMs = 0;
+    let lastPos = null;
+    let distanceM = 0;
+    let elevUp = 0;
+    let elevDown = 0;
+    let userMarker = null;
+
+    map.on("click", (e)=>{
+      plannedPoints.push([e.latlng.lat, e.latlng.lng]);
+      const mk = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+      plannedMarkers.push(mk);
+      plannedLine.setLatLngs(plannedPoints);
+      setRunNote(`נוספה נקודת תכנון (${plannedPoints.length}).`);
+    });
+
+    function setRunNote(msg){ document.getElementById("run-note").textContent = msg; }
+    function nowElapsedSec(){
+      if(!startTs) return Math.floor(elapsedMs/1000);
+      return Math.floor((elapsedMs + (running && !paused ? Date.now() - startTs : 0))/1000);
+    }
+    function fmtHMS(sec){
+      const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+      return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+    }
+    function paceString(sec, km){
+      if(km <= 0.01) return "--:--";
+      const p = sec / km;
+      const m = Math.floor(p/60), s = Math.round(p%60);
+      return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+    }
+    function haversineM(a,b){
+      const R = 6371000;
+      const toRad = x => x*Math.PI/180;
+      const dLat = toRad(b.lat-a.lat), dLon = toRad(b.lng-a.lng);
+      const s1 = Math.sin(dLat/2), s2 = Math.sin(dLon/2);
+      const aa = s1*s1 + Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*s2*s2;
+      return 2*R*Math.atan2(Math.sqrt(aa),Math.sqrt(1-aa));
+    }
+    function updateRunUi(){
+      const sec = nowElapsedSec();
+      const km = distanceM / 1000;
+      const weight = parseFloat(document.getElementById("weight").value || "75");
+      const cals = Math.round((km * weight) * 1.03);
+      document.getElementById("v-time").textContent = fmtHMS(sec);
+      document.getElementById("v-dist").textContent = km.toFixed(2);
+      document.getElementById("v-pace").textContent = paceString(sec, km);
+      document.getElementById("v-cals").textContent = cals;
+      document.getElementById("v-up").textContent = Math.round(elevUp);
+      document.getElementById("v-down").textContent = Math.round(elevDown);
+    }
+
+    function onPos(pos){
+      if(!running || paused) return;
+      const p = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+        alt: typeof pos.coords.altitude === "number" ? pos.coords.altitude : null,
+        acc: pos.coords.accuracy || 999,
+        t: Date.now()
+      };
+      if(p.acc > 35) return; // סינון נקודות רועשות
+      if(lastPos){
+        const d = haversineM(lastPos, p);
+        if(d > 1 && d < 80){ // מסנן קפיצות GPS
+          distanceM += d;
+          if(lastPos.alt !== null && p.alt !== null){
+            const da = p.alt - lastPos.alt;
+            if(Math.abs(da) >= 1){
+              if(da > 0) elevUp += da;
+              else elevDown += Math.abs(da);
+            }
+          }
         }
       }
-      html+=`<div class="battle-result">
-        <div><span class="result-val">${h.result} ${unit}</span>
-          <span class="result-meta">${h.date}</span>
-          ${h.notes?`<div style="font-size:10px;color:var(--muted)">${h.notes}</div>`:''}
-        </div>${badge}</div>`;
+      lastPos = p;
+      runPath.push([p.lat, p.lng]);
+      runPolyline.setLatLngs(runPath);
+      if(!userMarker){
+        userMarker = L.circleMarker([p.lat,p.lng], { radius: 6, color: "#ff4b6d" }).addTo(map);
+      } else {
+        userMarker.setLatLng([p.lat,p.lng]);
+      }
+      map.panTo([p.lat,p.lng], { animate: true, duration: 0.3 });
+      updateRunUi();
+    }
+    function onPosErr(err){
+      setRunNote("שגיאת GPS: " + (err.message || "לא ידוע"));
+    }
+
+    function ensureWatch(){
+      if(!("geolocation" in navigator)){
+        alert("הדפדפן לא תומך GPS.");
+        return false;
+      }
+      if(watchId === null){
+        watchId = navigator.geolocation.watchPosition(onPos, onPosErr, {
+          enableHighAccuracy: true,
+          timeout: 12000,
+          maximumAge: 1000
+        });
+      }
+      return true;
+    }
+    function startRun(){
+      if(running){ setRunNote("האימון כבר פעיל."); return; }
+      if(!ensureWatch()) return;
+      running = true; paused = false; startTs = Date.now();
+      setRunNote("ריצה התחילה. אפשר להשהות ולהמשיך מתי שצריך.");
+      if(timerId) clearInterval(timerId);
+      timerId = setInterval(updateRunUi, 1000);
+      updateRunUi();
+    }
+    function pauseRun(){
+      if(!running || paused) return;
+      paused = true;
+      elapsedMs += Date.now() - startTs;
+      startTs = null;
+      setRunNote("הריצה הושהתה.");
+      updateRunUi();
+    }
+    function resumeRun(){
+      if(!running || !paused) return;
+      paused = false;
+      startTs = Date.now();
+      setRunNote("הריצה נמשכה.");
+      updateRunUi();
+    }
+    function finishRun(){
+      if(!running){ setRunNote("אין ריצה פעילה לסיום."); return; }
+      if(!paused && startTs) elapsedMs += Date.now() - startTs;
+      running = false; paused = false; startTs = null;
+      if(timerId) clearInterval(timerId);
+      timerId = null;
+      if(watchId !== null){
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+      }
+      const km = distanceM / 1000;
+      const sec = Math.floor(elapsedMs / 1000);
+      const run = {
+        date: new Date().toLocaleString("he-IL"),
+        durationSec: sec,
+        distanceKm: Number(km.toFixed(3)),
+        pace: paceString(sec, km),
+        calories: Math.round((km * parseFloat(document.getElementById("weight").value || "75")) * 1.03),
+        elevUp: Math.round(elevUp),
+        elevDown: Math.round(elevDown),
+        points: runPath
+      };
+      const list = loadJson(KEY_RUNS, []);
+      list.unshift(run);
+      saveJson(KEY_RUNS, list.slice(0, 300));
+      setRunNote("הריצה הסתיימה ונשמרה בהיסטוריה.");
+      renderHistory();
+      // Reset current run state for next run
+      elapsedMs = 0; distanceM = 0; elevUp = 0; elevDown = 0; lastPos = null;
+      runPath = [];
+      runPolyline.setLatLngs([]);
+      if(userMarker){ map.removeLayer(userMarker); userMarker = null; }
+      updateRunUi();
+    }
+
+    async function planRouteFromPoints(){
+      if(plannedPoints.length < 2){
+        setRunNote("צריך לפחות 2 נקודות תכנון.");
+        return;
+      }
+      const coords = plannedPoints.map(p => `${p[1]},${p[0]}`).join(";");
+      const url = `https://router.project-osrm.org/route/v1/foot/${coords}?overview=full&geometries=geojson`;
+      try{
+        setRunNote("מתכנן מסלול...");
+        const res = await fetch(url);
+        const data = await res.json();
+        if(!data.routes || !data.routes[0]) throw new Error("לא נמצא מסלול");
+        const routeCoords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+        plannedLine.setLatLngs(routeCoords);
+        map.fitBounds(L.latLngBounds(routeCoords));
+        const km = (data.routes[0].distance / 1000).toFixed(2);
+        setRunNote(`מסלול תוכנן בהצלחה: ${km} ק"מ.`);
+      }catch(e){
+        setRunNote("נכשל תכנון מסלול. נסה נקודות קרובות יותר.");
+      }
+    }
+    function clearRoutePlan(){
+      plannedPoints = [];
+      plannedMarkers.forEach(m=>map.removeLayer(m));
+      plannedMarkers = [];
+      plannedLine.setLatLngs([]);
+      setRunNote("תכנון המסלול נוקה.");
+    }
+
+    // ===== History =====
+    function renderHistory(){
+      const runs = loadJson(KEY_RUNS, []);
+      const str = loadJson(KEY_STR, []);
+      const runWrap = document.getElementById("run-history");
+      const strWrap = document.getElementById("strength-history");
+      if(!runs.length) runWrap.innerHTML = '<div class="mini">אין ריצות עדיין.</div>';
+      else {
+        runWrap.innerHTML = runs.slice(0, 40).map(r => `
+          <div class="list-item">
+            <strong>${r.date}</strong><br/>
+            ${r.distanceKm} ק"מ | קצב ${r.pace} | זמן ${fmtHMS(r.durationSec)}
+            <div class="kpi"><span>🔥 ${r.calories}</span><span>⬆ ${r.elevUp}מ</span><span>⬇ ${r.elevDown}מ</span></div>
+          </div>
+        `).join("");
+      }
+      if(!str.length) strWrap.innerHTML = '<div class="mini">אין אימוני כוח עדיין.</div>';
+      else {
+        strWrap.innerHTML = str.slice(0, 60).map(s => `
+          <div class="list-item"><strong>${s.date}</strong><br/>${s.title}<br/><span class="mini">${s.details}</span></div>
+        `).join("");
+      }
+    }
+
+    // ===== AI Coach =====
+    function saveApiKey(){
+      const v = document.getElementById("api-key").value.trim();
+      if(!v){ alert("לא הוזן מפתח."); return; }
+      localStorage.setItem(KEY_API, v);
+      alert("מפתח נשמר מקומית בדפדפן.");
+    }
+    function addAiMsg(role, text){
+      const box = document.getElementById("ai-log");
+      const cls = role === "user" ? "background:#2b3458;" : "background:#1f2a20;border-right:3px solid #3ddc97;";
+      box.innerHTML += `<div style="${cls}padding:8px;border-radius:9px;margin-bottom:6px;font-size:12px">${text}</div>`;
+      box.scrollTop = 99999;
+    }
+    function localCoachAnswer(q){
+      const lower = q.toLowerCase();
+      if(lower.includes("חודש")) return "לחודש הקרוב: 3 ריצות + 2 כוח בשבוע. שבוע 1-2 בניית בסיס, שבוע 3 עומס, שבוע 4 דלואד. למדוד שינה, דופק בוקר ועייפות.";
+      if(lower.includes("בר אור") || lower.includes("בר-אור")) return "לבר-אור: 2 אימוני איכות (400מ/1000מ) + ריצה קלה + אימון כוח פונקציונלי. טסט 3 ק\"מ כל 10-14 יום.";
+      return "המלצה חכמה: שלב 80% קל, 20% עצים. שמור יום מנוחה מלא, והעלה עומס עד 10% לשבוע בלבד.";
+    }
+    async function askCoach(){
+      const q = document.getElementById("ai-q").value.trim();
+      if(!q) return;
+      document.getElementById("ai-q").value = "";
+      addAiMsg("user", q);
+      const key = localStorage.getItem(KEY_API);
+      if(!key){
+        addAiMsg("ai", localCoachAnswer(q) + " (טיפ: הוסף API key בפרופיל לתשובות AI מלאות).");
+        return;
+      }
+      try{
+        const profile = {
+          age: document.getElementById("age").value,
+          weight: document.getElementById("weight").value
+        };
+        const res = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": key,
+            "anthropic-version": "2023-06-01"
+          },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-20250514",
+            max_tokens: 500,
+            system: `אתה מאמן כושר מקצועי. ענה בעברית קצרה, מעשית, עם תוכנית שבועית ברורה. גיל ${profile.age}, משקל ${profile.weight}.`,
+            messages: [{ role: "user", content: q }]
+          })
+        });
+        if(!res.ok){
+          const t = await res.text();
+          throw new Error(t || "שגיאה בשירות AI");
+        }
+        const data = await res.json();
+        const text = data.content?.[0]?.text || "אין תשובה כרגע.";
+        addAiMsg("ai", text);
+      }catch{
+        addAiMsg("ai", localCoachAnswer(q) + " (נפלה שגיאת רשת או מפתח).");
+      }
+    }
+
+    // ===== Usability improvements =====
+    document.addEventListener("visibilitychange", () => {
+      if(document.hidden && running && !paused){
+        setRunNote("האפליקציה ברקע: המדידה יכולה להיות מוגבלת בדפדפן. מומלץ להשאיר את המסך פעיל.");
+      }
     });
-    document.getElementById(isRun?'run-history':'str-history').innerHTML=html;
-    if(isRun&&tab==='plank'){document.getElementById('str-result-label').textContent='זמן (שניות)';}
-    else if(!isRun){document.getElementById('str-result-label').textContent="מס' חזרות";}
-  });
-}
 
-// ===== AI COACH =====
-const aiMessages=[];
-async function sendAI(){
-  const input=document.getElementById('ai-input');
-  const text=input.value.trim();
-  if(!text)return;
-  input.value='';
-  const profile={
-    age:document.getElementById('p-age').value,
-    weight:document.getElementById('p-weight').value,
-    fit:document.getElementById('p-fit').value,
-    tpw:document.getElementById('p-tpw').value,
-    dur:document.getElementById('p-dur').value,
-    type:document.getElementById('p-type').value,
-  };
-  aiMessages.push({role:'user',content:text});
-  renderAI();
-  const loadingId='loading-'+Date.now();
-  const loadingDiv=document.createElement('div');
-  loadingDiv.className='ai-msg ai loading';loadingDiv.id=loadingId;
-  loadingDiv.innerHTML='<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
-  document.getElementById('ai-messages').appendChild(loadingDiv);
-  document.getElementById('ai-messages').scrollTop=99999;
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:`אתה מאמן כושר ישראלי מקצועי בשם RUN-AI. המשתמש: גיל ${profile.age}, משקל ${profile.weight}ק"ג, רמת כושר ${profile.fit}/10, ${profile.tpw} אימונים/שבוע × ${profile.dur} דק, סוג: ${profile.type}. ענה בעברית, קצר וממוקד, מקסימום 150 מילה. אתה מתמחה בריצה, הכנה לצבא, ואימוני כוח.`,
-        messages:[...aiMessages]
-      })
-    });
-    const data=await res.json();
-    document.getElementById(loadingId)?.remove();
-    const reply=data.content?.[0]?.text||'מצטער, אין תגובה כרגע.';
-    aiMessages.push({role:'assistant',content:reply});
-    renderAI();
-  }catch(e){
-    document.getElementById(loadingId)?.remove();
-    aiMessages.push({role:'assistant',content:'שגיאה בחיבור. נסה שוב.'});
-    renderAI();
-  }
-}
+    if("wakeLock" in navigator){
+      let wake = null;
+      async function requestWakeLock(){
+        try { wake = await navigator.wakeLock.request("screen"); } catch {}
+      }
+      document.addEventListener("click", requestWakeLock, { once: true });
+    }
 
-function renderAI(){
-  const container=document.getElementById('ai-messages');
-  let html='';
-  aiMessages.forEach(m=>{
-    html+=`<div class="ai-msg ${m.role==='user'?'user':'ai'}">${m.content}</div>`;
-  });
-  container.innerHTML=html;
-  container.scrollTop=99999;
-}
-
-// ===== INIT =====
-renderStr();
-renderRunTypes();
-renderPois();
-updateProfileAnalysis();
-loadBattleHistory();
-</script>
+    // ===== Init =====
+    updateRunUi();
+    renderHistory();
+    const savedApi = localStorage.getItem(KEY_API);
+    if(savedApi) document.getElementById("api-key").value = savedApi;
+  </script>
 </body>
 </html>
