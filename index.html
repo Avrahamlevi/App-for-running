@@ -71,7 +71,21 @@
         </div>
         <div class="row">
           <div><label>מספר שבועות</label><select id="str-weeks"><option>4</option><option>6</option><option>8</option><option>10</option><option>12</option><option>16</option><option>20</option><option>24</option></select></div>
-          <div><label>פוקוס</label><select id="str-focus"><option value="full">Full Body</option><option value="legs">רגליים</option><option value="upper">פלג גוף עליון</option></select></div>
+          <div>
+            <label>פוקוס כוח</label>
+            <select id="str-focus">
+              <option value="full">Full Body</option>
+              <option value="legs">רגליים</option>
+              <option value="back">גב</option>
+              <option value="chest">חזה</option>
+              <option value="shoulders">כתפיים</option>
+              <option value="biceps">יד קדמית (בייספס)</option>
+              <option value="triceps">יד אחורית (טרייספס)</option>
+              <option value="forearms">אמות</option>
+              <option value="core">בטן/ליבה</option>
+              <option value="upper">פלג גוף עליון</option>
+            </select>
+          </div>
         </div>
         <div class="row">
           <div>
@@ -98,6 +112,31 @@
         <button class="btn alt" onclick="saveStrengthPlanToLibrary()">הוסף לרשימת האימונים</button>
       </div>
       <div id="strength-plan"></div>
+      <div class="card">
+        <div class="title">🏃 תוכנית ריצה נפרדת לפי מטרה</div>
+        <div class="row">
+          <div>
+            <label>מטרת מרחק (ק"מ)</label>
+            <select id="run-goal-km">
+              <option value="3">3</option>
+              <option value="5" selected>5</option>
+              <option value="10">10</option>
+              <option value="21">21.1 (חצי מרתון)</option>
+              <option value="42">42.2 (מרתון)</option>
+            </select>
+          </div>
+          <div>
+            <label>רמת כושר (1-10)</label>
+            <input id="run-fit-level" type="number" min="1" max="10" value="5" />
+          </div>
+        </div>
+        <div class="row">
+          <div><label>אימוני ריצה בשבוע</label><select id="run-tpw"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option></select></div>
+          <div><label>מספר שבועות</label><select id="run-weeks"><option>4</option><option>6</option><option>8</option><option selected>10</option><option>12</option><option>16</option><option>20</option></select></div>
+        </div>
+        <button class="btn" onclick="buildRunningPlan()">צור תוכנית ריצה מפורטת</button>
+      </div>
+      <div id="running-plan"></div>
     </div>
 
     <div class="page" id="p-idf">
@@ -293,6 +332,47 @@
     }
     function saveJson(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
 
+    const STRENGTH_SPLITS = {
+      back: ["Deadlift", "Bent Over Row", "Lat Pulldown", "Seated Cable Row", "Pull-up", "Face Pull", "T-bar Row", "Back Extension"],
+      chest: ["Bench Press", "Incline Bench Press", "Dumbbell Bench Press", "Machine Chest Press", "Cable Fly", "Dips", "Push-up Explosive"],
+      shoulders: ["Overhead Press", "Push Press", "Arnold Press", "Lateral Raise", "Rear Delt Fly", "Landmine Press", "Plate Front Raise"],
+      biceps: ["Biceps Curl", "Hammer Curl", "Incline Curl", "Preacher Curl", "Cable Curl", "Chin-up"],
+      triceps: ["Triceps Rope Pushdown", "Skull Crusher", "Overhead Triceps Extension", "Bench Dip", "Close Grip Push-up", "Dips"],
+      forearms: ["Farmer Carry", "Suitcase Carry", "Dead Hang", "Wrist Curl", "Reverse Wrist Curl", "Plate Pinch Hold"],
+      core: ["Plank קדמי", "פלאנק צד", "Dead Bug", "Hollow Hold", "Ab Wheel", "Hanging Leg Raise", "Cable Pallof Press", "Wood Chopper"],
+      upper: ["Bench Press", "Bent Over Row", "Overhead Press", "Lat Pulldown", "Dips", "Face Pull", "Biceps Curl", "Triceps Rope Pushdown"]
+    };
+
+    const EXERCISE_EXECUTION_TIPS = {
+      "Deadlift": "גב ניטרלי, המוט צמוד לרגל, דחיפה מהרצפה עם הרגליים.",
+      "Bench Press": "שכמות אסופות, הורדה מבוקרת לחזה ועלייה בקו ישר.",
+      "Overhead Press": "בטן וישבן נעולים, המוט עובר קרוב לפנים עד נעילה.",
+      "Squat": "ברכיים בכיוון האצבעות, ירידה נשלטת ועלייה חזקה.",
+      "RDL": "ציר ירך לאחור, גב ישר, עצירה במתיחה בירך אחורית.",
+      "Lat Pulldown": "מרפקים למטה-אחור, חזה פתוח, בלי משיכה מהצוואר.",
+      "Seated Cable Row": "גב ניטרלי, משיכה עם מרפקים, עצירה בכיווץ.",
+      "Pull-up": "טווח מלא, שליטה בירידה, עליה עד סנטר מעל המוט.",
+      "Dips": "כתפיים אחורה, ירידה עד 90 מעלות, עליה יציבה.",
+      "Biceps Curl": "מרפקים צמודים, ללא תנופה, ירידה איטית.",
+      "Triceps Rope Pushdown": "מרפקים מקובעים לצדדים, פתיחה מלאה למטה.",
+      "Lateral Raise": "הרמה עד גובה כתף בלי תנופה מהגב.",
+      "Ab Wheel": "ליבה נעולה, גב ניטרלי, טווח שאתה שולט בו.",
+      "Farmer Carry": "כתפיים מטה-אחור, צעדים יציבים, בלי הטיה לצד.",
+      "default": "שמור טכניקה נקייה, טווח תנועה מלא, וסיים 1-2 חזרות לפני כשל."
+    };
+
+    function getExecutionTip(name){
+      const exact = EXERCISE_EXECUTION_TIPS[name];
+      if(exact) return exact;
+      const key = Object.keys(EXERCISE_EXECUTION_TIPS).find(k => k !== "default" && name.includes(k));
+      return key ? EXERCISE_EXECUTION_TIPS[key] : EXERCISE_EXECUTION_TIPS.default;
+    }
+
+    function getStrengthExercisePool(env, focus){
+      if(STRENGTH_SPLITS[focus]) return STRENGTH_SPLITS[focus];
+      return EXTENDED_EXERCISE_LIBRARY[env][focus] || EXTENDED_EXERCISE_LIBRARY[env].full;
+    }
+
     function buildStructuredSession(exList, week, day, goal, intensity){
       const mainRepByIntensity = { easy: "10-12", mid: "8-10", hard: "5-8" };
       const assistRepByIntensity = { easy: "12-15", mid: "10-12", hard: "8-10" };
@@ -312,10 +392,10 @@
       const b = bonus[(week + day) % bonus.length];
       return [
         { block: "חימום", text: "10-12 דק מוביליטי + הפעלה" },
-        { block: "תרגיל מרכזי A", text: `${exList[i1]} | 4-5 סטים × ${mainRepByIntensity[intensity]}` },
-        { block: "תרגיל מרכזי B", text: `${exList[i2]} | 4 סטים × ${mainRepByIntensity[intensity]}` },
-        { block: "אביזרים", text: `${exList[i3]} + ${exList[i4]} | 3 סטים × ${assistRepByIntensity[intensity]}` },
-        { block: "רץ-ספציפי", text: `${b} | 3 סטים איכות` },
+        { block: "תרגיל מרכזי A", text: `${exList[i1]} | 4-5 סטים × ${mainRepByIntensity[intensity]} | ביצוע: ${getExecutionTip(exList[i1])}` },
+        { block: "תרגיל מרכזי B", text: `${exList[i2]} | 4 סטים × ${mainRepByIntensity[intensity]} | ביצוע: ${getExecutionTip(exList[i2])}` },
+        { block: "אביזרים", text: `${exList[i3]} + ${exList[i4]} | 3 סטים × ${assistRepByIntensity[intensity]} | ביצוע: ${getExecutionTip(exList[i3])}` },
+        { block: "רץ-ספציפי", text: `${b} | 3 סטים איכות | דגש: שליטה חד-רגלית, קרסול וליבה` },
         { block: "סיום", text: "5-8 דק שחרור + נשימה" }
       ];
     }
@@ -775,7 +855,7 @@
       const focus = document.getElementById("str-focus").value;
       const runGoal = document.getElementById("str-run-goal").value;
       const intensity = document.getElementById("str-intensity").value;
-      const ex = EXTENDED_EXERCISE_LIBRARY[env][focus] || EXTENDED_EXERCISE_LIBRARY[env].full;
+      const ex = getStrengthExercisePool(env, focus);
       let html = '<div class="card"><div class="title">תוכנית כוח שבועית</div>';
       const sessions = [];
       for(let w=1; w<=weeks; w++){
@@ -822,6 +902,82 @@
       });
       saveJson(KEY_STR, history.slice(0, 200));
       alert("נשמר לרשימת אימוני כוח בהצלחה.");
+    }
+
+    function getPaceByFit(fit){
+      if(fit <= 3) return { easy: "7:00-8:00", tempo: "5:50-6:30", interval: "5:15-5:50", long: "7:30-8:30" };
+      if(fit <= 6) return { easy: "6:00-7:00", tempo: "5:00-5:40", interval: "4:30-5:00", long: "6:30-7:30" };
+      return { easy: "5:10-6:00", tempo: "4:20-5:00", interval: "3:55-4:30", long: "5:45-6:40" };
+    }
+
+    function runSessionTemplate(type, paces, goalKm){
+      const map = {
+        easy: {
+          title: "ריצה קלה",
+          details: `30-60 דק בקצב ${paces.easy}. ביצוע: נשימה נוחה, אפשר לדבר במשפטים שלמים, דופק אירובי.`,
+          warmup: "10 דק הליכה/ריצה קלה + מוביליטי ירך וקרסול",
+          cooldown: "5-10 דק ריצה קלה + מתיחות קלות"
+        },
+        interval: {
+          title: "אינטרוולים",
+          details: `8-12 חזרות קצרות בקצב ${paces.interval}. ביצוע: יציאה חזקה מבוקרת, התאוששות בין חזרות בהליכה/ג'וג.`,
+          warmup: "15 דק חימום + 4 האצות 60 מטר",
+          cooldown: "10 דק קל + נשימות איטיות"
+        },
+        tempo: {
+          title: "ריצת קצב (Tempo)",
+          details: `20-35 דק בקצב ${paces.tempo}. ביצוע: מאמץ קשה אך נשלט, שמירת קצב אחיד מתחילת הקטע ועד סופו.`,
+          warmup: "12 דק קל + תרגילי טכניקה",
+          cooldown: "8 דק קל + שחרור תאומים/ירך אחורית"
+        },
+        long: {
+          title: "ריצה ארוכה",
+          details: `מרחק ארוך בקצב ${paces.long}. ביצוע: פתיחה איטית, שתייה כל 20-30 דק, סיום חזק רק אם נשאר כוח.`,
+          warmup: "8-10 דק קל מאוד",
+          cooldown: "10 דק הליכה + מילוי נוזלים"
+        },
+        hill: {
+          title: "ריצת עליות",
+          details: "8-12 חזרות עלייה 30-75 שנ'. ביצוע: הטיה קלה קדימה, צעד קצר ומהיר, ירידה איטית בשליטה.",
+          warmup: "15 דק קל + drills",
+          cooldown: "10 דק קל + מתיחות ירך קדמית"
+        }
+      };
+      const base = map[type];
+      const goalText = `יעד: ${goalKm} ק"מ`;
+      return { ...base, goalText };
+    }
+
+    function buildRunningPlan(){
+      const goalKm = parseInt(document.getElementById("run-goal-km").value, 10);
+      const fit = parseInt(document.getElementById("run-fit-level").value, 10);
+      const tpw = parseInt(document.getElementById("run-tpw").value, 10);
+      const weeks = parseInt(document.getElementById("run-weeks").value, 10);
+      const paces = getPaceByFit(fit);
+      const weeklyTypesBase = goalKm >= 21 ? ["easy", "interval", "tempo", "easy", "long", "hill"] :
+                              goalKm >= 10 ? ["easy", "interval", "tempo", "long", "hill"] :
+                              ["easy", "interval", "tempo", "long"];
+      let html = `<div class="card"><div class="title">תוכנית ריצה ${weeks} שבועות ליעד ${goalKm} ק"מ</div>`;
+      for(let w = 1; w <= weeks; w++){
+        const deload = w % 4 === 0;
+        const taper = w > weeks - 2;
+        html += `<div class="wk"><strong>שבוע ${w}</strong> <span class="badge">${taper ? "TAPER" : (deload ? "DELOAD" : "BUILD")}</span><br/>`;
+        for(let d = 1; d <= tpw; d++){
+          const t = weeklyTypesBase[(w + d - 2) % weeklyTypesBase.length];
+          const plan = runSessionTemplate(t, paces, goalKm);
+          html += `<div class="list-item"><strong>אימון ${d}: ${plan.title}</strong><br/>`;
+          html += `• ${plan.goalText}<br/>`;
+          html += `• חימום: ${plan.warmup}<br/>`;
+          html += `• עיקרי: ${plan.details}<br/>`;
+          if(deload) html += `• שבוע דלואד: הורד נפח אימון ב-20-30%.<br/>`;
+          if(taper) html += `• שבוע חידוד: שמור עצימות אך קצר נפח כולל.<br/>`;
+          html += `• קירור: ${plan.cooldown}</div>`;
+        }
+        html += `<div class="mini">בדיקת התקדמות שבועית: זמן ריצה 2-3 ק"מ או קטע Tempo של 20 דק.</div>`;
+        html += `</div>`;
+      }
+      html += "</div>";
+      document.getElementById("running-plan").innerHTML = html;
     }
 
     // ===== IDF Weekly Plan =====
@@ -1350,9 +1506,11 @@
     }
     function localCoachAnswer(q){
       const lower = q.toLowerCase();
-      if(lower.includes("חודש")) return "לחודש הקרוב: 3 ריצות + 2 כוח בשבוע. שבוע 1-2 בניית בסיס, שבוע 3 עומס, שבוע 4 דלואד. למדוד שינה, דופק בוקר ועייפות.";
-      if(lower.includes("בר אור") || lower.includes("בר-אור")) return "לבר-אור: 2 אימוני איכות (400מ/1000מ) + ריצה קלה + אימון כוח פונקציונלי. טסט 3 ק\"מ כל 10-14 יום.";
-      return "המלצה חכמה: שלב 80% קל, 20% עצים. שמור יום מנוחה מלא, והעלה עומס עד 10% לשבוע בלבד.";
+      if(lower.includes("תזונה") || lower.includes("אוכל")) return "לתזונה ספורטיבית: בכל ארוחה שלב חלבון איכותי, פחמימה מורכבת וירקות. לפני אימון עצים אכול פחמימה קלה 60-120 דק לפני, ואחרי אימון יעד חלבון + פחמימה לשיקום.";
+      if(lower.includes("משקל") || lower.includes("משקלים")) return "לעבודה עם משקלים: בחר עומס שמאפשר טכניקה מושלמת, השאר 1-2 חזרות ברזרבה, והתקדם בהדרגה 2.5%-5% כשכל הסטים נקיים.";
+      if(lower.includes("חודש")) return "לחודש הקרוב: 3-4 ריצות + 2-3 כוח בשבוע. שבוע 1-2 בניית בסיס, שבוע 3 עומס, שבוע 4 דלואד. למדוד שינה, דופק בוקר ועייפות.";
+      if(lower.includes("בר אור") || lower.includes("בר-אור")) return "לבר-אור: 2 אימוני איכות (400מ/1000מ) + ריצה קלה + כוח פונקציונלי. טסט 3 ק\"מ כל 10-14 יום ומעקב שיפור.";
+      return "אני יכול לענות על ריצה, כוח, תזונה, עלייה במסת שריר, ירידה בשומן, מניעת פציעות, עומסים ומשקלים. כלל זהב: 80% קל, 20% עצים, התקדמות הדרגתית ושינה טובה.";
     }
     async function askCoach(){
       const q = document.getElementById("ai-q").value.trim();
@@ -1379,7 +1537,7 @@
           body: JSON.stringify({
             model: "claude-sonnet-4-20250514",
             max_tokens: 500,
-            system: `אתה מאמן כושר מקצועי. ענה בעברית קצרה, מעשית, עם תוכנית שבועית ברורה. גיל ${profile.age}, משקל ${profile.weight}.`,
+            system: `אתה מאמן ספורט ותזונה מקצועי ברמה גבוהה. אתה עונה על כל שאלת ספורט: ריצה, תוכניות אימון, משקלים, כוח (גב/חזה/כתפיים/יד קדמית/יד אחורית/אמות/בטן), תזונה, התאוששות, מניעת פציעות, ושיפור ביצועים. תענה בעברית ברורה ומעשית, עם צעדים מדויקים לביצוע. המשתמש בן ${profile.age}, משקל ${profile.weight} ק"ג.`,
             messages: [{ role: "user", content: q }]
           })
         });
