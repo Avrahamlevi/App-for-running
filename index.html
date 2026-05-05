@@ -273,8 +273,19 @@
           <div><label>גיל</label><input id="age" type="number" value="22" /></div>
           <div><label>משקל (ק"ג)</label><input id="weight" type="number" value="75" /></div>
         </div>
-        <label>Anthropic API Key (אופציונלי)</label>
-        <input id="api-key" type="password" placeholder="sk-ant-..." />
+        <div class="row">
+          <div>
+            <label>ספק AI</label>
+            <select id="ai-provider">
+              <option value="openrouter" selected>OpenRouter (מומלץ)</option>
+              <option value="anthropic">Anthropic</option>
+            </select>
+          </div>
+          <div>
+            <label>API Key</label>
+            <input id="api-key" type="password" placeholder="sk-or-v1... או sk-ant-..." />
+          </div>
+        </div>
         <button class="btn alt" onclick="saveApiKey()">שמור מפתח</button>
       </div>
       <div class="card">
@@ -340,6 +351,7 @@
     const KEY_MONTHLY = "runpath_pro_monthly_progress";
     const KEY_PERIODIC_TESTS = "runpath_pro_periodic_tests";
     const KEY_API = "runpath_pro_api_key";
+    const KEY_AI_PROVIDER = "runpath_pro_ai_provider";
 
     function loadJson(key, fallback){
       try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
@@ -1511,6 +1523,8 @@
       const v = document.getElementById("api-key").value.trim();
       if(!v){ alert("לא הוזן מפתח."); return; }
       localStorage.setItem(KEY_API, v);
+      const provider = document.getElementById("ai-provider")?.value || "openrouter";
+      localStorage.setItem(KEY_AI_PROVIDER, provider);
       alert("מפתח נשמר מקומית בדפדפן.");
     }
     function addAiMsg(role, text){
@@ -1535,6 +1549,7 @@
       // תמיד מחזיר תשובה מיידית כדי שה-AI לא "ישבר" למשתמש
       addAiMsg("ai", localCoachAnswer(q));
       const key = localStorage.getItem(KEY_API);
+      const provider = localStorage.getItem(KEY_AI_PROVIDER) || (document.getElementById("ai-provider")?.value || "openrouter");
       if(!key){
         addAiMsg("ai", "טיפ: אם תרצה תשובת ענן מתקדמת, הוסף API key בפרופיל.");
         return;
@@ -1544,26 +1559,50 @@
           age: document.getElementById("age").value,
           weight: document.getElementById("weight").value
         };
-        const res = await fetch("https://api.anthropic.com/v1/messages", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": key,
-            "anthropic-version": "2023-06-01"
-          },
-          body: JSON.stringify({
-            model: "claude-sonnet-4-20250514",
-            max_tokens: 500,
-            system: `אתה מאמן ספורט ותזונה מקצועי ברמה גבוהה. אתה עונה על כל שאלת ספורט: ריצה, תוכניות אימון, משקלים, כוח (גב/חזה/כתפיים/יד קדמית/יד אחורית/אמות/בטן), תזונה, התאוששות, מניעת פציעות, ושיפור ביצועים. תענה בעברית ברורה ומעשית, עם צעדים מדויקים לביצוע. המשתמש בן ${profile.age}, משקל ${profile.weight} ק"ג.`,
-            messages: [{ role: "user", content: q }]
-          })
-        });
+        let res;
+        if(provider === "openrouter"){
+          res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${key}`
+            },
+            body: JSON.stringify({
+              model: "anthropic/claude-3.5-sonnet",
+              messages: [
+                {
+                  role: "system",
+                  content: `אתה מאמן ספורט ותזונה מקצועי ברמה גבוהה. אתה עונה על כל שאלת ספורט: ריצה, תוכניות אימון, משקלים, כוח (גב/חזה/כתפיים/יד קדמית/יד אחורית/אמות/בטן), תזונה, התאוששות, מניעת פציעות, ושיפור ביצועים. תענה בעברית ברורה ומעשית, עם צעדים מדויקים לביצוע. המשתמש בן ${profile.age}, משקל ${profile.weight} ק"ג.`
+                },
+                { role: "user", content: q }
+              ],
+              max_tokens: 500
+            })
+          });
+        }else{
+          res = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": key,
+              "anthropic-version": "2023-06-01"
+            },
+            body: JSON.stringify({
+              model: "claude-sonnet-4-20250514",
+              max_tokens: 500,
+              system: `אתה מאמן ספורט ותזונה מקצועי ברמה גבוהה. אתה עונה על כל שאלת ספורט: ריצה, תוכניות אימון, משקלים, כוח (גב/חזה/כתפיים/יד קדמית/יד אחורית/אמות/בטן), תזונה, התאוששות, מניעת פציעות, ושיפור ביצועים. תענה בעברית ברורה ומעשית, עם צעדים מדויקים לביצוע. המשתמש בן ${profile.age}, משקל ${profile.weight} ק"ג.`,
+              messages: [{ role: "user", content: q }]
+            })
+          });
+        }
         if(!res.ok){
           const t = await res.text();
           throw new Error(t || "שגיאה בשירות AI");
         }
         const data = await res.json();
-        const text = data.content?.[0]?.text || "אין תשובה כרגע.";
+        const text = provider === "openrouter"
+          ? (data.choices?.[0]?.message?.content || "אין תשובה כרגע.")
+          : (data.content?.[0]?.text || "אין תשובה כרגע.");
         addAiMsg("ai", "תשובת AI מורחבת: " + text);
       }catch{
         addAiMsg("ai", "תשובת ענן לא זמינה כרגע (רשת/הרשאות). התשובה המקומית כבר ניתנה מעל.");
@@ -1590,6 +1629,10 @@
     renderHistory();
     const savedApi = localStorage.getItem(KEY_API);
     if(savedApi) document.getElementById("api-key").value = savedApi;
+    const savedProvider = localStorage.getItem(KEY_AI_PROVIDER);
+    if(savedProvider && document.getElementById("ai-provider")){
+      document.getElementById("ai-provider").value = savedProvider;
+    }
   </script>
 </body>
 </html>
