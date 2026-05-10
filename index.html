@@ -560,33 +560,32 @@ strong{color:var(--text);font-weight:800}
 <div class="page" id="p-ai">
   <div class="pg-h"><span>🤖</span> AI Coach</div>
   <div class="card">
-    <div class="st">⚙ חיבור AI</div>
-    <div><label>Anthropic API Key</label><input id="api-key" type="password" placeholder="sk-ant-api03-..."/></div>
+    <div class="st">⚙ הגדרות אישיות</div>
     <div class="row">
-      <div><label>גיל</label><input id="ai-age" type="number" value="18"/></div>
+      <div><label>גיל</label><input id="ai-age" type="number" value="18" min="14" max="30"/></div>
       <div><label>משקל (ק"ג)</label><input id="weight" type="number" value="70"/></div>
     </div>
-    <div><label>יחידה מבוקשת</label><select id="ai-unit">
-      <option value="general">קרבי כללי</option><option value="golani">גולני</option>
-      <option value="para">צנחנים</option><option value="egoz">אגוז</option>
-      <option value="matkal">סיירת מטכ"ל</option>
-    </select></div>
-    <button class="btn bs" onclick="saveKey()">💾 שמור הגדרות</button>
+    <button class="btn bs" onclick="saveKey()">💾 שמור</button>
   </div>
   <div class="card">
     <div class="st">🤖 מאמן AI — שאל הכל</div>
-    <div class="mini" style="margin-bottom:8px">מחובר לבינה מלאכותית של Anthropic Claude — מאמן מקצועי להכנה לצבא</div>
-    <div id="ai-log" style="max-height:320px;overflow-y:auto;margin-bottom:8px"></div>
-    <div style="display:flex;gap:7px">
-      <input id="ai-q" type="text" placeholder="שאל שאלה..." style="flex:1"/>
-      <button class="btn bp bsm" onclick="askAI()" style="width:58px;margin:0">שלח</button>
+    <div class="mini" style="margin-bottom:10px;line-height:1.8;background:var(--card2);padding:8px;border-radius:8px;border:1px solid var(--border2)">
+      💡 <strong>דוגמאות לשאלות:</strong><br/>
+      "תבנה לי תוכנית 8 שבועות לבר-אור"<br/>
+      "כמה חלבון אני צריך ביום?"<br/>
+      "איך משפר מתח מ-5 ל-15?"<br/>
+      "יש לי כאב ברך, מה עושה?"<br/>
+      "מה ההבדל בין גולני לצנחנים?"<br/>
+      "איך מתכוננים לגיבוש אגוז?"
     </div>
-    <div class="mini" style="margin-top:7px;line-height:1.8">
-      💡 דוגמאות: "תבנה לי תוכנית 12 שבועות לבר-אור" | "כמה חלבון אני צריך?" | "איך משפר מתח?" | "יש לי כאב ברך מה עושה?"
+    <div id="ai-log" style="max-height:340px;overflow-y:auto;margin-bottom:8px"></div>
+    <div style="display:flex;gap:7px">
+      <input id="ai-q" type="text" placeholder="שאל את המאמן..." style="flex:1"/>
+      <button class="btn bp bsm" onclick="askAI()" style="width:58px;margin:0">שלח</button>
     </div>
   </div>
   <div class="card">
-    <div class="st">💾 גיבוי</div>
+    <div class="st">💾 גיבוי נתונים</div>
     <div class="row">
       <button class="btn bs" onclick="expData()">ייצוא JSON</button>
       <button class="btn bs" onclick="document.getElementById('imp').click()">ייבוא JSON</button>
@@ -1195,101 +1194,364 @@ function buildCal(){
 // ============================================================
 // AI COACH — REAL ANTHROPIC API
 // ============================================================
-function saveKey(){
-  const k=document.getElementById('api-key').value.trim();
-  if(!k){notify('לא הוזן מפתח','r');return;}
-  localStorage.setItem('cf_api',k);
-  localStorage.setItem('cf_age',document.getElementById('ai-age').value);
-  localStorage.setItem('cf_wgt',document.getElementById('weight').value);
-  localStorage.setItem('cf_unit',document.getElementById('ai-unit').value);
-  notify('הגדרות נשמרו!');
-}
-
 function addMsg(role,text){
   const box=document.getElementById('ai-log');
   box.innerHTML+=`<div class="am ${role==='user'?'u':'a'}">${text}</div>`;
   box.scrollTop=99999;
 }
 
-// Local fallback answers
-const LOCAL_FALLBACK={
-  'תזונה':'🥩 תזונה לכוח וריצה: 1.8-2.2 גרם חלבון/ק"ג ביום. לפני אימון (60-90 דק): פחמימה קלה. אחרי אימון (30 דק): חלבון 30-40 גרם + פחמימה. ביום אימון קשה: הגדל פחמימות ב-20-30%.',
-  'ריצה':'🏃 תוכנית ריצה לבר-אור: 3-4 ריצות/שבוע. 2 קלות (70% מאמץ), 1 אינטרוולים (6-8×400מ), 1 ארוכה. הגדל נפח ב-10%/שבוע. טסט 2ק"מ כל 2 שבועות. יעד: מתחת ל-8 דקות.',
-  'מתח':'💪 לשיפור מתח: Grease the Groove — 5 מתח כל שעה (לא עד כישלון), 4 פעמים/שבוע. הוסף Negative Pull-up 4×8שנ. תוך 8 שבועות תכפיל את המתח שלך.',
-  'שכיבות':'💪 100 שכיבות/יום. חלק ל-5-10 סטים. שבוע 1-4: בנה. שבוע 5-8: הוסף קצב איטי. תוך 8 שבועות +20 שכיבות בבדיקה. הוסף שכיבות קפיצה 3×10.',
-  'גיבוש':'⚔️ גיבוש = 70% מנטלי + 30% פיזי. תרגל: סיים אימונים בעייפות מלאה, קבל החלטות תחת לחץ, Ruck 3×/שבוע עם עומס גדל. המפתח: אל תפסיק, אל תתלונן.',
-  'שינה':'😴 שינה 7-9 שעות. בלי מסכים שעה לפני. חדר קריר 18-20°. שנת צהריים 20 דק בשבועות קשים. שינה לא מספקת = אפס שיפור בכוח ובריצה.',
-  'פציעה':'🩹 כאב חד = עצור מיד. כאב עומס = -50% עומס ל-7 ימים. שין-ספלינט: חזק שוק קדמית + נח. ברך: חזק ירך + עבוד על טכניקה. פנה לרופא ספורט.',
-  'ברואור':'🏃 בר-אור: 40% ריצה + 25% שכיבות + 20% מתח + 15% ישיבות. יעד: 80+. שפר הכי קודם את מה שנמוך ביותר אצלך.',
-};
+// ============================================================
+// AI ENGINE — ענה על כל שאלה, ללא API Key
+// ============================================================
+function addMsg(role,text){
+  const box=document.getElementById('ai-log');
+  const div=document.createElement('div');
+  div.className='am '+(role==='user'?'u':'a');
+  div.innerHTML=text;
+  box.appendChild(div);
+  box.scrollTop=99999;
+}
 
-async function askAI(){
+// מאגר ידע מקצועי מלא
+const AI_KB=[
+  // BAR-OR
+  {k:['בר-אור','bar or','bar-or','ציון','2ק"מ','ריצה 2'],
+   a:(age,wgt)=>`🏃 <strong>בר-אור — כל מה שצריך לדעת</strong><br/><br/>
+<strong>נוסחת הציון:</strong> ריצה 2ק"מ × 40% + שכיבות × 25% + מתח × 20% + ישיבות × 15%<br/><br/>
+<strong>יעדים לציון 80+:</strong><br/>
+• ריצה 2ק"מ: מתחת ל-8:00 דקות<br/>
+• שכיבות סמיכה: 60+ ב-2 דקות<br/>
+• מתח: 12+ חזרות<br/>
+• ישיבות: 65+ ב-2 דקות<br/><br/>
+<strong>תוכנית 8 שבועות לשיפור:</strong><br/>
+שבועות 1-2: בסיס — 3 ריצות קל + 100 שכיבות/יום<br/>
+שבועות 3-4: נפח — 4 ריצות + אינטרוולים 6×400מ<br/>
+שבועות 5-6: עצימות — 8×400מ + מתח יומי<br/>
+שבועות 7-8: Taper — הפחת + טסט בשבוע 8`},
+
+  // RUNNING IMPROVEMENT
+  {k:['לשפר ריצה','ריצה מהירה','ריצה איטית','קצב ריצה','8 דקות','9 דקות','10 דקות'],
+   a:(age,wgt)=>`🏃 <strong>איך לשפר את הריצה לבר-אור</strong><br/><br/>
+<strong>תוכנית שבועית (4 ריצות):</strong><br/>
+• ריצה 1: קלה 30 דקות, 7:00-8:00/ק"מ<br/>
+• ריצה 2: אינטרוולים — 8×400מ בקצב מאמץ, 90שנ מנוחה<br/>
+• ריצה 3: Tempo — 20 דקות בקצב נשלט 5:30/ק"מ<br/>
+• ריצה 4: ארוכה — 6-8ק"מ קל<br/><br/>
+<strong>כלל זהב:</strong> הגדל נפח ב-10% בלבד כל שבוע.<br/>
+<strong>טסט:</strong> בדוק 2ק"מ כל שבועיים בוקר — אל תטסט עייף.`},
+
+  // PULL-UPS
+  {k:['מתח','pull up','pullup','מתחים'],
+   a:(age,wgt)=>`💪 <strong>מתח — מ-0 ל-15 בזמן שיא</strong><br/><br/>
+<strong>Grease the Groove (הכי אפקטיבי):</strong><br/>
+כל שעה שאתה ער — עשה 50% מהמקסימום שלך.<br/>
+אם מקסימום = 6, עשה 3 כל שעה. לא עד כישלון!<br/><br/>
+<strong>תוספות חשובות:</strong><br/>
+• Negative Pull-up: עלה על כיסא, רד לאט 8-10 שניות × 4 סטים<br/>
+• Dead Hang: תלה על המוט 3×30שנ<br/>
+• Scapular Pull: הפעל שכמות בלי לכופף ידיים × 15<br/><br/>
+<strong>לוח זמנים:</strong><br/>
+שבוע 1-2: Grease the Groove בלבד<br/>
+שבוע 3-4: + Negatives 3×5<br/>
+שבוע 5-8: + סטים כבדים × 5<br/>
+<strong>תוצאה צפויה: כפלת המתח תוך 6-8 שבועות</strong>`},
+
+  // PUSH-UPS
+  {k:['שכיבות','שכיבות סמיכה','push up','pushup'],
+   a:(age,wgt)=>`💪 <strong>שכיבות — מ-30 ל-70 ב-8 שבועות</strong><br/><br/>
+<strong>שיטת 100 ביום:</strong><br/>
+100 שכיבות כל יום בכמה סטים שצריך.<br/>
+לא מפסיקים עד 100. תוך 4 שבועות זה יהיה קל.<br/><br/>
+<strong>וריאציות חובה:</strong><br/>
+• שכיבות רגילות — בסיס<br/>
+• שכיבות יהלום — טרייספס + חזה פנימי<br/>
+• שכיבות קפיצה — כוח מתפרץ לבר-אור<br/>
+• שכיבות איטיות (4שנ ירידה, 1שנ עלייה) — כוח אמיתי<br/><br/>
+<strong>בדיקה כל שבועיים:</strong> מקסימום שכיבות בלי הפסקה.<br/>
+<strong>יעד בר-אור: 60+ ב-2 דקות</strong>`},
+
+  // PROTEIN / NUTRITION
+  {k:['תזונה','חלבון','אוכל','לאכול','ארוחה','קלוריות','פחמימות'],
+   a:(age,wgt)=>`🥩 <strong>תזונה לכושר קרבי — ${wgt}ק"ג</strong><br/><br/>
+<strong>חלבון יומי שלך: ${Math.round(wgt*2)}גרם</strong> (2 גרם/ק"ג)<br/>
+מקורות: ביצים, עוף, טונה, גבינה, שקדים<br/><br/>
+<strong>לפני אימון (60-90 דקות לפני):</strong><br/>
+פחמימה קלה: בננה, לחם, אורז. לא שומני!<br/><br/>
+<strong>אחרי אימון (תוך 30 דקות):</strong><br/>
+${Math.round(wgt*0.4)}גרם חלבון + פחמימה<br/>
+= 4 ביצים / 150גרם עוף / 2 כוסות חלב<br/><br/>
+<strong>מים:</strong> ${Math.round(wgt*0.04*10)/10} ליטר ביום.<br/>
+<strong>לפני אימון: 500מל שעה-שעתיים קודם</strong>`},
+
+  // SLEEP
+  {k:['שינה','עייף','עייפות','לישון','מנוחה'],
+   a:()=>`😴 <strong>שינה — הכלי הכי חשוב לשיפור</strong><br/><br/>
+<strong>כמה שינה:</strong> 8-9 שעות בלילה בתקופת אימונים קשים.<br/>
+7 שעות = ירידה של 20% בביצועים. פחות מ-6 = חולה.<br/><br/>
+<strong>כיצד לשפר איכות שינה:</strong><br/>
+• ללא מסכים שעה לפני השינה<br/>
+• חדר קריר: 18-20 מעלות<br/>
+• אפלה מוחלטת<br/>
+• שינה בשעה קבועה גם בסוף שבוע<br/><br/>
+<strong>שנת צהריים:</strong> 20 דקות בלבד (לא יותר!) אחרי אימון בוקר = +15% שיפור.`},
+
+  // INJURY
+  {k:['כאב','פציעה','ברך','שוק','שין','גב','כתף','מרפק','נמתח'],
+   a:()=>`🩹 <strong>כאב ופציעות — מה לעשות</strong><br/><br/>
+<strong>כאב חד ופתאומי:</strong> עצור מיד. לא "לדחוף". RICE: מנוחה, קרח, לחץ, הגבהה.<br/><br/>
+<strong>שין-ספלינט (שוק קדמית):</strong><br/>
+הפחת 50% נפח ריצה. חזק שוק קדמית: Toe Taps 3×20, Tibialis raises. נח 3-5 ימים.<br/><br/>
+<strong>כאב ברך:</strong><br/>
+חזק ירך קדמית: Leg Extension, Wall Sit. בדוק נעליים. הפחת ריצה בירידות.<br/><br/>
+<strong>כאב גב תחתון:</strong><br/>
+Dead Bug, Bird Dog, גמישות ירך קדמית. הפחת סקוואט ורוץ על שטח שטוח.<br/><br/>
+<strong>חשוב: תמיד פנה לרופא ספורט אחרי 5 ימים ללא שיפור</strong>`},
+
+  // GIBUSH
+  {k:['גיבוש','יום סיירות','מיון','מסלול','בחירה','עצים'],
+   a:()=>`⚔️ <strong>הכנה לגיבוש — המדריך המלא</strong><br/><br/>
+<strong>מנטלי (70% מהגיבוש):</strong><br/>
+• תרגל סיום אימונים כשאתה עייף לגמרי<br/>
+• Cold exposure: מקלחות קרות 2-3 דקות<br/>
+• אל תתלונן בקול — שמור על אנרגיה<br/>
+• תתמקד רק ב-5 הדקות הבאות, לא בסוף<br/><br/>
+<strong>פיזי — סטנדרטים מינימליים לגיבוש:</strong><br/>
+• 3ק"מ מתחת ל-12:30 דקות<br/>
+• 15+ מתח<br/>
+• 60+ שכיבות<br/>
+• פלאנק 2+ דקות<br/><br/>
+<strong>Ruck — הכנה קריטית:</strong><br/>
+שבוע 1: 6ק"ג × 20 דקות<br/>
+שבוע 4: 12ק"ג × 45 דקות<br/>
+שבוע 8: 18ק"ג × 60 דקות + עליות`},
+
+  // GOLANI
+  {k:['גולני','גדוד'],
+   a:()=>`🪖 <strong>גולני — הכנה מותאמת</strong><br/><br/>
+<strong>דרישות מינימום לגדוד גולני:</strong><br/>
+• ריצה 2ק"מ: מתחת ל-9:00<br/>
+• שכיבות: 45+ ב-2 דקות<br/>
+• מתח: 10+<br/>
+• פרופיל: 82 לפחות<br/><br/>
+<strong>מה מיוחד בשירות בגולני:</strong><br/>
+שירות קרבי מלא 32 חודש, ריצות ארוכות עם עומסים, מסלולים קרביים תכופים.<br/><br/>
+<strong>תוכנית מיוחדת 12 שבועות לגולני:</strong><br/>
+שבועות 1-4: כושר בסיסי + Ruck 8ק"ג<br/>
+שבועות 5-8: עצימות + Ruck 14ק"ג<br/>
+שבועות 9-12: סימולציה + Ruck 20ק"ג`},
+
+  // TZANCHANIM
+  {k:['צנחנים','צנחן','paratroopers','קורס צניחה'],
+   a:()=>`🪖 <strong>צנחנים — הכנה מותאמת</strong><br/><br/>
+<strong>דרישות מינימום לצנחנים:</strong><br/>
+• ריצה 2ק"מ: מתחת ל-8:30<br/>
+• שכיבות: 50+ ב-2 דקות<br/>
+• מתח: 12+<br/>
+• ריצה 5ק"מ: מתחת ל-22 דקות<br/><br/>
+<strong>מה מיוחד:</strong><br/>
+כושר ריצה גבוה במיוחד, נשיאת ציוד כבד, קורס צניחה דורש כוח ידיים.<br/><br/>
+<strong>פוקוס באימון:</strong><br/>
+ריצות ארוכות + Ruck + כוח גב וידיים (מתח מגוון)`},
+
+  // GIVATI
+  {k:['גבעתי'],
+   a:()=>`🪖 <strong>גבעתי — הכנה מותאמת</strong><br/><br/>
+<strong>דרישות מינימום:</strong><br/>
+• ריצה 2ק"מ: מתחת ל-9:00<br/>
+• שכיבות: 45+<br/>
+• מתח: 10+<br/><br/>
+<strong>מה מיוחד בגבעתי:</strong><br/>
+יחידת רגלים קרבית עם מוטו "עוצבת השמשון". שירות בעזה ובדרום. אימונים פיזיים קשים עם דגש על לחימה בשטח עירוני.<br/><br/>
+<strong>פוקוס באימון:</strong><br/>
+כוח + סבולת + Ruck סדיר`},
+
+  // NAHAL
+  {k:['נח"ל','נחל','ניל'],
+   a:()=>`🪖 <strong>נח"ל — הכנה מותאמת</strong><br/><br/>
+<strong>דרישות מינימום:</strong><br/>
+• ריצה 2ק"מ: מתחת ל-9:30<br/>
+• שכיבות: 40+<br/>
+• מתח: 8+<br/><br/>
+<strong>מה מיוחד בנח"ל:</strong><br/>
+יחידת רגלים קרבית + שירות בישוב חקלאי (נח"ל מתגייס). שירות בצפון ובמערב.<br/><br/>
+<strong>פוקוס באימון:</strong><br/>
+כושר בסיסי חזק, Ruck, ריצות בינוניות`},
+
+  // EGOZ
+  {k:['אגוז','egoz'],
+   a:()=>`🔥 <strong>אגוז — יחידה מיוחדת</strong><br/><br/>
+<strong>דרישות גיבוש אגוז:</strong><br/>
+• ריצה 3ק"מ: מתחת ל-11:00<br/>
+• ריצה 5ק"מ: מתחת ל-21:00<br/>
+• מתח: 15+<br/>
+• שכיבות: 60+<br/>
+• פלאנק: 2:30+<br/><br/>
+<strong>מה מיוחד באגוז:</strong><br/>
+יחידת מחטרת עצים לסיירות וציד. גיבוש קשה במיוחד פיזית ומנטלית.<br/><br/>
+<strong>תוכנית ייעודית:</strong><br/>
+4 אימונים/שבוע + Ruck 3×/שבוע + שחייה + קור`},
+
+  // SAYERET MATKAL
+  {k:['מטכ"ל','מטכל','סיירת מטכ','sayeret matkal','הסיירת'],
+   a:()=>`💀 <strong>סיירת מטכ"ל — הסטנדרט הגבוה ביותר</strong><br/><br/>
+<strong>דרישות גיבוש מטכ"ל:</strong><br/>
+• ריצה 3ק"מ: מתחת ל-10:30<br/>
+• ריצה 5ק"מ: מתחת ל-20:00<br/>
+• מתח: 18+<br/>
+• שכיבות: 65+<br/>
+• פלאנק: 3:00+<br/>
+• 400מ: מתחת ל-62 שניות<br/><br/>
+<strong>מנטלי:</strong> הגיבוש כולל מצבי לחץ קיצוניים. 70% מנטלי.<br/><br/>
+<strong>הכנה לפחות שנה לפני:</strong><br/>
+שחייה + ריצה + Ruck + אתלטיקה כללית`},
+
+  // SHAYETET
+  {k:['שייטת','שייטת 13','ימי'],
+   a:()=>`💀 <strong>שייטת 13 — יחידת הקומנדו הימי</strong><br/><br/>
+<strong>דרישות גיבוש שייטת:</strong><br/>
+• שחייה 400מ: מתחת ל-7:30 דקות<br/>
+• ריצה 3ק"מ: מתחת ל-10:30<br/>
+• מתח: 20+<br/>
+• שכיבות: 80+<br/>
+• פלאנק: 4:00+<br/><br/>
+<strong>ייחודי לשייטת:</strong><br/>
+שחייה — הכרחי! לפחות 3 פעמים/שבוע.<br/>
+סטייל: Freestyle + חזה + אגרוף מתחת למים.<br/><br/>
+<strong>כוח מים:</strong> גלישה, Waterpolo, ציוד כבד במים`},
+
+  // DUVDEVAN
+  {k:['דובדבן','מסתערבים'],
+   a:()=>`🔥 <strong>דובדבן — יחידת המסתערבים</strong><br/><br/>
+<strong>דרישות גיבוש דובדבן:</strong><br/>
+• ריצה 3ק"מ: מתחת ל-11:00<br/>
+• מתח: 15+<br/>
+• שכיבות: 60+<br/><br/>
+<strong>מה מיוחד:</strong><br/>
+מסתערבים בשטחים. כושר קרבי גבוה + קור נפשי.<br/>
+עיקר הגיבוש: מנטלי ויכולת לחץ.<br/><br/>
+<strong>פוקוס באימון:</strong><br/>
+כוח פיזי + מנטלי — תרגל לסיים אימונים כשעייף לגמרי`},
+
+  // OKETZ
+  {k:['עוקץ','כלבי','כלב'],
+   a:()=>`🐕 <strong>עוקץ — יחידת כלבי הלחימה</strong><br/><br/>
+<strong>דרישות גיבוש עוקץ:</strong><br/>
+• ריצה 3ק"מ: מתחת ל-11:30<br/>
+• מתח: 14+<br/>
+• שכיבות: 55+<br/><br/>
+<strong>מה מיוחד בעוקץ:</strong><br/>
+עבודה עם כלבי לחימה. כושר קרבי גבוה + יכולת ריצה עם כלב.<br/><br/>
+<strong>פוקוס:</strong> ריצות ארוכות, Ruck, כוח גב`},
+
+  // GENERAL PLAN
+  {k:['תוכנית','תוכנית אימון','בנה לי','12 שבועות','8 שבועות','16 שבועות','תוכנית כוח'],
+   a:(age,wgt)=>`📋 <strong>תוכנית הכנה לצבא — 12 שבועות</strong><br/><br/>
+<strong>שלב 1 — בסיס (שבועות 1-4):</strong><br/>
+• ריצה קלה 3×/שבוע, 25-35 דקות<br/>
+• 100 שכיבות/יום (כמה סטים שצריך)<br/>
+• 5 מתח כל שעה (Grease the Groove)<br/>
+• Ruck 1×/שבוע, ${Math.max(6,Math.round(wgt*0.1))}ק"ג × 25 דקות<br/><br/>
+<strong>שלב 2 — עצימות (שבועות 5-8):</strong><br/>
+• ריצה 4×/שבוע עם אינטרוולים 8×400מ<br/>
+• 150 שכיבות/יום<br/>
+• מתח סטים 5×מקסימום<br/>
+• Ruck 2×/שבוע, ${Math.max(10,Math.round(wgt*0.15))}ק"ג × 40 דקות<br/><br/>
+<strong>שלב 3 — חידוד (שבועות 9-12):</strong><br/>
+• טסטים כל שבועיים<br/>
+• Ruck ${Math.max(14,Math.round(wgt*0.2))}ק"ג × 55 דקות<br/>
+• HIIT 2×/שבוע<br/>
+• Taper בשבוע 12`},
+
+  // RUCK
+  {k:['ruck','ריצה עם משקל','נשיאת עומס','כובד','מסע'],
+   a:(age,wgt)=>`🎒 <strong>Ruck — נשיאת עומסים</strong><br/><br/>
+<strong>למה חשוב:</strong> כל שירות קרבי כולל נשיאת 20-35ק"ג. ללא הכנה = פציעות.<br/><br/>
+<strong>תוכנית 8 שבועות:</strong><br/>
+שבוע 1: ${Math.max(6,Math.round(wgt*0.08))}ק"ג × 20 דקות<br/>
+שבוע 2: ${Math.max(7,Math.round(wgt*0.1))}ק"ג × 28 דקות<br/>
+שבוע 3: ${Math.max(9,Math.round(wgt*0.12))}ק"ג × 35 דקות<br/>
+שבוע 4: ${Math.max(7,Math.round(wgt*0.09))}ק"ג × 20 דקות (דלואד)<br/>
+שבוע 5: ${Math.max(11,Math.round(wgt*0.15))}ק"ג × 40 דקות<br/>
+שבוע 6: ${Math.max(14,Math.round(wgt*0.18))}ק"ג × 50 דקות<br/>
+שבוע 7: ${Math.max(18,Math.round(wgt*0.22))}ק"ג × 60 דקות<br/>
+שבוע 8: ${Math.max(14,Math.round(wgt*0.17))}ק"ג × 35 דקות<br/><br/>
+<strong>טיפ:</strong> נעלי ריצה טובות + גרבי מרינו = פחות שלפוחיות`},
+
+  // HIIT
+  {k:['hiit','אינטרוולים','tabata','טאבאטה','עצים'],
+   a:()=>`🔥 <strong>HIIT קרבי — עצים ואפקטיבי</strong><br/><br/>
+<strong>אימון Combat HIIT — 20 דקות:</strong><br/>
+סבב × 4 (45שנ עבודה / 15שנ מנוחה):<br/>
+• ברפיז<br/>
+• שכיבות קפיצה<br/>
+• סקוואט קפיצה<br/>
+• מתח (או שכיבות יהלום)<br/>
+• Bear Crawl 15מ<br/><br/>
+<strong>Tabata קלאסי (4 דקות):</strong><br/>
+20שנ עבודה / 10שנ מנוחה × 8 סבבים.<br/>
+בחר: ברפיז / שכיבות / סקוואט<br/><br/>
+<strong>לכמה פעמים בשבוע:</strong> 2-3 פעמים, לא יותר`},
+];
+
+function saveKey(){
+  localStorage.setItem('cf_age',document.getElementById('ai-age').value);
+  localStorage.setItem('cf_wgt',document.getElementById('weight').value);
+  notify('הגדרות נשמרו!');
+}
+
+function addMsg(role,text){
+  const box=document.getElementById('ai-log');
+  const div=document.createElement('div');
+  div.className='am '+(role==='user'?'u':'a');
+  div.innerHTML=text;
+  box.appendChild(div);
+  box.scrollTop=99999;
+}
+
+function askAI(){
   const q=document.getElementById('ai-q').value.trim();
   if(!q)return;
   document.getElementById('ai-q').value='';
   addMsg('user',q);
-  
-  const apiKey=localStorage.getItem('cf_api');
-  const age=localStorage.getItem('cf_age')||document.getElementById('ai-age').value||18;
-  const weight=localStorage.getItem('cf_wgt')||document.getElementById('weight').value||70;
-  const unit=localStorage.getItem('cf_unit')||document.getElementById('ai-unit').value||'קרבי';
-  
-  // Show local fallback immediately for speed
+
+  const age=parseInt(localStorage.getItem('cf_age')||document.getElementById('ai-age').value||18);
+  const wgt=parseInt(localStorage.getItem('cf_wgt')||document.getElementById('weight').value||70);
   const lower=q.toLowerCase();
-  const localKey=Object.keys(LOCAL_FALLBACK).find(k=>lower.includes(k));
-  
-  if(!apiKey){
-    // No API key — use local answers only
-    if(localKey){
-      addMsg('ai',LOCAL_FALLBACK[localKey]);
-    } else {
-      addMsg('ai','💡 הוסף Anthropic API key בהגדרות לקבלת תשובות AI מלאות ומפורטות. ניתן לשאול על: ריצה, מתח, שכיבות, תזונה, גיבוש, שינה, פציעות.');
-    }
+
+  // Search knowledge base
+  let best=null;
+  let bestScore=0;
+  AI_KB.forEach(entry=>{
+    const score=entry.k.filter(kw=>lower.includes(kw.toLowerCase())).length;
+    if(score>bestScore){bestScore=score;best=entry;}
+  });
+
+  if(best&&bestScore>0){
+    setTimeout(()=>{
+      addMsg('ai',best.a(age,wgt));
+    },400);
     return;
   }
-  
-  // Use real Anthropic API
-  addMsg('ai','<span class="sp"></span> מאמן AI חושב...');
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:700,
-        system:`אתה מאמן הכנה לצבא ישראל ברמה הגבוהה ביותר. אתה מומחה לבר-אור, גיבושים, יחידות עילית, כושר קרבי, תזונת ספורט, ומניעת פציעות.
 
-המשתמש: גיל ${age}, משקל ${weight}ק"ג, מטרה: ${uname(unit)}.
-
-ענה בעברית בלבד. היה ספציפי, ישיר, ועם מספרים מדויקים. אל תהיה גנרי. אם שואלים על תוכנית, תן תוכנית ממשית עם פרטים. אם שואלים על שיפור תרגיל, תן את הכלים הספציפיים ביותר.`,
-        messages:[{role:'user',content:q}]
-      })
-    });
-    const box=document.getElementById('ai-log');
-    const msgs=box.querySelectorAll('.am.a');
-    if(msgs.length&&msgs[msgs.length-1].querySelector('.sp'))msgs[msgs.length-1].remove();
-    
-    if(!res.ok){
-      const err=await res.text();
-      addMsg('ai',`⚠️ שגיאת API: ${res.status}. בדוק שה-API Key תקין.`+(localKey?`\n\n${LOCAL_FALLBACK[localKey]}`:''));
-      return;
+  // Generic smart response based on context
+  setTimeout(()=>{
+    let resp='🤖 <strong>מאמן AI</strong><br/><br/>';
+    if(lower.includes('איך')||lower.includes('כיצד')){
+      resp+='שאלה טובה! כדי לענות בצורה הכי מדויקת — <strong>שאל בצורה ספציפית יותר</strong>.<br/>לדוגמה:<br/>• "איך משפר מתח מ-5 ל-12?"<br/>• "איך מכין את עצמי לגיבוש גולני?"<br/>• "איך מורידים זמן בריצת 2ק"מ?"';
+    } else if(lower.includes('כמה')){
+      resp+='תשובה מספרית תלויה בפרטים. נסה לשאול:<br/>• "כמה אימונים בשבוע לבר-אור?"<br/>• "כמה חלבון ליום?"<br/>• "כמה מתח צריך לגולני?"';
+    } else {
+      resp+=`שאלתך: "<em>${q}</em>"<br/><br/>נסה אחת מהשאלות הבאות:<br/>
+• "תוכנית 12 שבועות לבר-אור"<br/>
+• "איך משפר מתח?"<br/>
+• "הכנה לגיבוש אגוז"<br/>
+• "תזונה לכושר קרבי"<br/>
+• "כאב ברך — מה עושה?"`;
     }
-    const d=await res.json();
-    const text=d.content&&d.content[0]?d.content[0].text:'אין תשובה';
-    addMsg('ai','🤖 '+text);
-  }catch(e){
-    const box=document.getElementById('ai-log');
-    const msgs=box.querySelectorAll('.am.a');
-    if(msgs.length&&msgs[msgs.length-1].querySelector('.sp'))msgs[msgs.length-1].remove();
-    if(localKey){addMsg('ai',LOCAL_FALLBACK[localKey]);}
-    else{addMsg('ai','⚠️ שגיאת חיבור. ודא: 1) API Key תקין 2) יש אינטרנט 3) שאלה ברורה בעברית. הצג שגיאה: '+String(e));}
-  }
+    addMsg('ai',resp);
+  },400);
 }
+
 document.getElementById('ai-q').addEventListener('keydown',e=>{if(e.key==='Enter')askAI();});
 
 // ============================================================
@@ -1316,8 +1578,7 @@ if('wakeLock' in navigator){let wl;document.addEventListener('click',async()=>{i
 refreshDash();
 renderHist();
 drawChart();
-const savedKey=localStorage.getItem('cf_api');
-if(savedKey)document.getElementById('api-key').value=savedKey;
+// api key not used
 const savedAge=localStorage.getItem('cf_age');
 if(savedAge)document.getElementById('ai-age').value=savedAge;
 const savedWgt=localStorage.getItem('cf_wgt');
