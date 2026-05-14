@@ -351,6 +351,162 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .sess-row:last-child{border:none}.sess-lbl{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.6px}
 .wk{background:var(--card2);border:1px solid var(--b1);border-left:3px solid var(--pri);border-radius:9px;padding:10px;margin-bottom:7px}
 .wk.wr{border-left-color:var(--red)}.wk.wy{border-left-color:var(--yellow)}
+
+/* ─── MODAL (Athlete details, forms, etc) ─── */
+.modal-bk{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9998;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.modal-bk.show{display:flex;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--b2);border-radius:18px 18px 0 0;width:100%;max-width:430px;max-height:92vh;overflow-y:auto;padding:14px;animation:slideUp .3s cubic-bezier(.4,0,.2,1);position:relative;-webkit-overflow-scrolling:touch}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;padding-bottom:10px;border-bottom:1px solid var(--b2);position:sticky;top:-14px;background:var(--card2);padding-top:14px;margin-top:-14px;z-index:5}
+.modal-ttl{font-family:var(--fd);font-size:14px;letter-spacing:2px;color:var(--purpleL);display:flex;align-items:center;gap:8px}
+.modal-x{background:var(--card3);border:1px solid var(--b2);color:var(--txt);width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900}
+.modal-x:active{transform:scale(.9)}
+
+/* ─── ATHLETE DETAIL ─── */
+.ath-profile{display:flex;align-items:center;gap:12px;padding:12px;background:linear-gradient(135deg,rgba(124,58,237,.1),var(--card3));border-radius:13px;margin-bottom:12px;border:1px solid rgba(124,58,237,.2)}
+.ath-profile-av{width:56px;height:56px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:2px solid var(--purpleL)}
+.ath-profile-inf{flex:1;min-width:0}
+.ath-profile-nm{font-family:var(--fd);font-size:16px;letter-spacing:1.5px;color:var(--txt)}
+.ath-profile-mt{font-size:11px;color:var(--txt2);margin-top:3px;line-height:1.5}
+.gap-bar{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--card2);border-radius:9px;margin-bottom:5px;font-size:12px;border:1px solid var(--b1)}
+.gap-l{font-weight:700;font-size:12px}
+.gap-v{font-family:var(--fm);font-size:11px}
+.gap-ok{color:var(--pri)}.gap-no{color:var(--orange)}.gap-bad{color:var(--red)}
+
+/* ─── CHART (history line) ─── */
+.chart-wrap{background:var(--card2);border-radius:11px;padding:10px;margin-bottom:10px;border:1px solid var(--b1)}
+.chart-svg{width:100%;height:120px}
+.chart-legend{display:flex;gap:8px;justify-content:center;margin-top:6px;font-size:10px;color:var(--txt2);flex-wrap:wrap}
+.chart-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:4px;vertical-align:middle}
+
+/* ─── CHAT ─── */
+.chat-wrap{background:var(--card);border:1px solid var(--b1);border-radius:11px;padding:9px;margin-bottom:10px;max-height:240px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.chat-msg{padding:8px 11px;border-radius:11px;margin-bottom:5px;font-size:12px;max-width:85%;line-height:1.5;word-wrap:break-word}
+.chat-msg.coach{background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(124,58,237,.08));border:1px solid rgba(124,58,237,.25);margin-right:auto;border-bottom-right-radius:3px}
+.chat-msg.athlete{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);margin-left:auto;border-bottom-left-radius:3px}
+.chat-time{font-size:8px;color:var(--txt3);margin-top:3px}
+.chat-in{display:flex;gap:6px;margin-top:6px}
+.chat-in input{flex:1}
+
+/* ─── ATTENDANCE / WEEKLY GRID ─── */
+.att-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0}
+.att-day{aspect-ratio:1;border-radius:7px;background:var(--card3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:1px solid var(--b2);cursor:pointer;color:var(--txt3);transition:.2s}
+.att-day.done{background:rgba(0,255,136,.18);border-color:var(--pri);color:var(--pri);box-shadow:0 0 8px rgba(0,255,136,.2)}
+.att-day.miss{background:rgba(255,45,85,.1);border-color:var(--red);color:var(--red)}
+.att-day.fut{opacity:.4}
+
+/* ─── RECRUIT READINESS METER ─── */
+.recruit-card{background:linear-gradient(135deg,rgba(124,58,237,.15),var(--card2));border:1px solid rgba(124,58,237,.3);border-radius:13px;padding:12px;margin-bottom:9px;text-align:center;position:relative;overflow:hidden}
+.recruit-pct{font-family:var(--fd);font-size:46px;line-height:1;color:var(--purpleL);text-shadow:0 0 20px rgba(167,139,250,.5)}
+.recruit-lbl{font-size:11px;color:var(--txt2);letter-spacing:1px;margin-top:4px}
+.recruit-eta{font-size:11px;color:var(--yellow);margin-top:5px;font-weight:800}
+
+/* ─── INPUT FORM IN MODAL ─── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.form-grid.three{grid-template-columns:repeat(3,1fr)}
+
+/* ─── QUICK ACTION CHIPS ─── */
+.qaction{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px;padding-bottom:3px;-webkit-overflow-scrolling:touch}
+.qaction::-webkit-scrollbar{display:none}
+.qaction-btn{flex:0 0 auto;padding:9px 12px;background:var(--card3);border:1px solid var(--b2);border-radius:10px;font-size:11px;font-weight:800;color:var(--txt);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;font-family:var(--fb)}
+.qaction-btn:active{transform:scale(.96)}
+.qaction-btn.p{background:rgba(124,58,237,.12);border-color:rgba(124,58,237,.3);color:var(--purpleL)}
+.qaction-btn.g{background:rgba(0,255,136,.08);border-color:rgba(0,255,136,.25);color:var(--pri)}
+.qaction-btn.r{background:rgba(255,45,85,.08);border-color:rgba(255,45,85,.25);color:var(--red)}
+.qaction-btn.y{background:rgba(255,214,10,.08);border-color:rgba(255,214,10,.25);color:var(--yellow)}
+
+/* ─── ANNOUNCEMENT (coach -> all athletes) ─── */
+.ann-card{background:linear-gradient(135deg,rgba(255,136,0,.1),var(--card2));border:1px solid rgba(255,136,0,.3);border-radius:11px;padding:11px;margin-bottom:7px;position:relative}
+.ann-card::before{content:'📢';position:absolute;top:-10px;right:14px;font-size:18px;background:var(--bg);padding:0 4px}
+.ann-t{font-weight:900;color:var(--orange);font-size:12px;margin-bottom:4px}
+.ann-m{font-size:12px;line-height:1.5;color:var(--txt)}
+.ann-d{font-size:9px;color:var(--txt3);margin-top:4px}
+
+/* ─── PROGRAM TEMPLATE CARD ─── */
+.tmpl-card{background:var(--card2);border:1px solid var(--b1);border-radius:11px;padding:11px;margin-bottom:7px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:10px}
+.tmpl-card:active{transform:scale(.98);background:var(--card3)}
+.tmpl-ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.tmpl-info{flex:1;min-width:0}
+.tmpl-nm{font-weight:900;font-size:13px}
+.tmpl-d{font-size:10px;color:var(--txt2);margin-top:2px;line-height:1.4}
+.tmpl-meta{display:flex;gap:8px;margin-top:4px;font-size:9px;color:var(--txt3)}
+
+/* ─── METRIC COMPARISON BAR (for leaderboard between athletes) ─── */
+.cmp-bar{display:flex;align-items:center;gap:8px;padding:8px;background:var(--card2);border-radius:9px;margin-bottom:5px;font-size:12px;border:1px solid var(--b1)}
+.cmp-bar .cmp-n{flex:0 0 90px;font-weight:800;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmp-bar .cmp-track{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;position:relative}
+.cmp-bar .cmp-fill{height:100%;background:linear-gradient(90deg,var(--purple2),var(--purpleL));border-radius:3px;transition:width .8s}
+.cmp-bar .cmp-v{flex:0 0 38px;font-family:var(--fd);font-size:13px;text-align:left;color:var(--purpleL)}
+
+/* ─── PRICING TIER (For Selling) ─── */
+.tier-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:10px 0}
+.tier-card{background:var(--card2);border:1px solid var(--b1);border-radius:11px;padding:11px 8px;text-align:center;position:relative}
+.tier-card.gold{border-color:var(--yellow);background:linear-gradient(180deg,rgba(255,214,10,.05),var(--card2))}
+.tier-nm{font-family:var(--fd);font-size:11px;letter-spacing:1px;color:var(--purpleL);margin-bottom:4px}
+.tier-price{font-family:var(--fd);font-size:22px;color:var(--txt);line-height:1}
+.tier-per{font-size:9px;color:var(--txt3);margin-top:2px}
+.tier-feats{font-size:10px;line-height:1.6;margin-top:8px;color:var(--txt2);text-align:right}
+
+/* ─── ROUTE MAP / GPS ─── */
+.route-canvas{width:100%;height:240px;background:linear-gradient(180deg,#0a1825,#050810);border:1px solid var(--b2);border-radius:13px;position:relative;overflow:hidden;touch-action:none;cursor:crosshair}
+.route-canvas::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,136,.04) 0,rgba(0,255,136,.04) 1px,transparent 1px,transparent 30px),repeating-linear-gradient(90deg,rgba(0,255,136,.04) 0,rgba(0,255,136,.04) 1px,transparent 1px,transparent 30px);pointer-events:none}
+.route-svg{width:100%;height:100%;display:block}
+.route-pt{fill:var(--pri);stroke:var(--card);stroke-width:2;cursor:pointer;transition:.2s}
+.route-pt.start{fill:var(--yellow)}
+.route-pt.end{fill:var(--red)}
+.route-pt:hover{r:8}
+.route-line{fill:none;stroke:var(--pri);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(0,255,136,.5))}
+.route-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:10px 0}
+.rstat{background:var(--card2);border:1px solid var(--b1);border-radius:9px;padding:8px 4px;text-align:center}
+.rstat-v{font-family:var(--fd);font-size:18px;line-height:1;color:var(--pri)}
+.rstat-v.cy{color:var(--cyan)}.rstat-v.or{color:var(--orange)}.rstat-v.yl{color:var(--yellow)}
+.rstat-l{font-size:8px;color:var(--txt3);margin-top:3px;letter-spacing:.4px;text-transform:uppercase}
+
+/* ─── ELEVATION PROFILE ─── */
+.elev-svg{width:100%;height:70px;background:var(--card2);border:1px solid var(--b1);border-radius:9px;margin-top:8px}
+.elev-fill{fill:rgba(0,255,136,.15)}
+.elev-line{fill:none;stroke:var(--pri);stroke-width:2}
+
+/* ─── PACE SPLITS ─── */
+.split-row{display:flex;align-items:center;gap:8px;padding:6px 9px;background:var(--card2);border-radius:8px;margin-bottom:4px;border:1px solid var(--b1);font-size:11px}
+.split-k{font-family:var(--fd);font-size:12px;width:32px;color:var(--cyan)}
+.split-bar{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.split-bar-f{height:100%;background:linear-gradient(90deg,var(--cyan),var(--pri));border-radius:3px}
+.split-bar-f.slow{background:linear-gradient(90deg,var(--orange),var(--red))}
+.split-pace{font-family:var(--fm);font-size:11px;width:55px;text-align:left;color:var(--txt)}
+
+/* ─── WORKOUT BUILDER ─── */
+.wb-block{background:var(--card2);border:1px solid var(--b1);border-left:3px solid var(--pri);border-radius:10px;padding:10px;margin-bottom:7px;position:relative}
+.wb-block.run{border-left-color:var(--cyan)}
+.wb-block.strength{border-left-color:var(--orange)}
+.wb-block.combat{border-left-color:var(--red)}
+.wb-block.recovery{border-left-color:var(--purpleL)}
+.wb-block-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.wb-tag{font-size:9px;font-weight:900;padding:2px 7px;border-radius:8px;letter-spacing:.5px;text-transform:uppercase}
+.wb-tag.run{background:rgba(0,229,255,.15);color:var(--cyan)}
+.wb-tag.strength{background:rgba(255,136,0,.15);color:var(--orange)}
+.wb-tag.combat{background:rgba(255,45,85,.15);color:var(--red)}
+.wb-tag.recovery{background:rgba(167,139,250,.15);color:var(--purpleL)}
+.wb-min{font-family:var(--fd);font-size:13px;color:var(--txt)}
+.wb-title{font-weight:800;font-size:13px;margin-bottom:4px}
+.wb-desc{font-size:11px;color:var(--txt2);line-height:1.5}
+.wb-ex-list{margin-top:6px;font-size:11px;color:var(--txt2);line-height:1.7}
+
+/* ─── HISTORY LOG ─── */
+.hist-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:11px;margin-bottom:6px;border:1px solid var(--b1);position:relative}
+.hist-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--pri);border-radius:3px 0 0 3px}
+.hist-item.run::before{background:var(--cyan)}
+.hist-item.strength::before{background:var(--orange)}
+.hist-item.combat::before{background:var(--red)}
+.hist-item.test::before{background:var(--yellow)}
+.hist-ic{width:36px;height:36px;border-radius:9px;background:var(--card3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hist-i{flex:1;min-width:0}
+.hist-t{font-weight:800;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-d{font-size:10px;color:var(--txt3);margin-top:2px}
+.hist-s{font-family:var(--fm);font-size:10px;color:var(--txt2);margin-top:3px}
+.hist-v{font-family:var(--fd);font-size:14px;color:var(--pri);flex-shrink:0;text-align:left}
+
 </style>
 </head>
 <body>
@@ -652,32 +808,64 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 
   <div id="lb-out"></div>
 
-  <!-- ═══ COACH ONLY: Group management ═══ -->
+  <!-- ═══ COACH ONLY: Full coaching dashboard ═══ -->
   <div class="co">
+    <!-- KPI overview -->
     <div class="card pc">
-      <div class="sh p">🎖 ניהול קבוצה — מאמן</div>
+      <div class="sh p">🎖 דשבורד מאמן</div>
       <div class="coach-kpi-grid" id="coach-kpi-grid"></div>
-      <!-- Filters -->
-      <div class="tabs" id="coach-filter-tabs">
+
+      <!-- Quick action chips -->
+      <div class="qaction">
+        <button class="qaction-btn p" onclick="openAddAthleteModal()">➕ הוסף חניך</button>
+        <button class="qaction-btn y" onclick="openAnnouncementModal()">📢 הודעה</button>
+        <button class="qaction-btn g" onclick="openSendPlanModal()">🎯 שלח תוכנית</button>
+        <button class="qaction-btn" onclick="openCompareModal()">📊 השווה</button>
+        <button class="qaction-btn" onclick="openAttendanceWeek()">📅 נוכחות שבועית</button>
+        <button class="qaction-btn r" onclick="exportGroupReport()">📤 ייצא CSV</button>
+        <button class="qaction-btn" onclick="openMonetizeModal()">💰 מסלולים</button>
+      </div>
+    </div>
+
+    <!-- Announcements feed -->
+    <div class="card pc" id="ann-feed-card" style="display:none">
+      <div class="sh p">📢 הודעות אחרונות</div>
+      <div id="ann-feed-list"></div>
+    </div>
+
+    <!-- Recruit Readiness — best athletes for unit -->
+    <div class="card pc">
+      <div class="sh p">🎯 מועמדי גיוס מובילים</div>
+      <div class="mini" style="margin-bottom:8px">סינון לפי יחידת יעד — מי הכי קרוב</div>
+      <select id="recruit-unit-sel" onchange="renderRecruitCandidates()" style="margin-bottom:8px"></select>
+      <div id="recruit-list"></div>
+    </div>
+
+    <!-- Athletes list with filter tabs -->
+    <div class="card pc">
+      <div class="sh p">👥 רשימת חניכים</div>
+      <div class="tabs" id="coach-filter-tabs" style="margin-bottom:8px">
         <button class="tab on" onclick="coachFilter('all',this)">הכל</button>
         <button class="tab" onclick="coachFilter('alert',this)">⚠️ דורשים תשומת לב</button>
         <button class="tab" onclick="coachFilter('ok',this)">✅ בכושר</button>
       </div>
+      <input id="coach-search" type="text" placeholder="🔍 חפש לפי שם..." oninput="renderCoachGroup()" style="margin-bottom:8px"/>
       <div id="coach-group-list"></div>
-      <div class="r2" style="margin-top:8px">
-        <button class="btn bpur" onclick="addDemoAthlete()">+ הוסף חניך</button>
-        <button class="btn bs" onclick="exportGroupReport()">📤 ייצא דוח</button>
-      </div>
     </div>
   </div>
 </div>
 
+<!-- ═══ MODALS (rendered at end of body, separate from pages) ═══ -->
+
 <!-- ══════════════════════ TRAIN ══════════════════════ -->
 <div class="pg" id="p-train">
   <div class="pgh"><span>💪</span> אימון</div>
-  <div class="tabs">
+  <div class="tabs" style="overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap">
     <button class="tab on" onclick="trt('tr-str',this)">כוח</button>
     <button class="tab" onclick="trt('tr-run',this)">ריצה</button>
+    <button class="tab" onclick="trt('tr-route',this)">🗺 מסלול</button>
+    <button class="tab" onclick="trt('tr-build',this)">🤖 בונה</button>
+    <button class="tab" onclick="trt('tr-hist',this)">📜 היסטוריה</button>
     <button class="tab" onclick="trt('tr-hi',this)">HIIT</button>
     <button class="tab" onclick="trt('tr-tmr',this)">טיימר</button>
     <button class="tab" onclick="trt('tr-rec',this)">שיקום</button>
@@ -717,6 +905,122 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
       <button class="btn bp" onclick="buildRun()">צור תוכנית ריצה</button>
     </div>
     <div id="rp-out"></div>
+  </div>
+
+  <!-- ════════════ ROUTE PLANNER TAB ════════════ -->
+  <div id="tr-route" style="display:none">
+    <div class="card cc">
+      <div class="sh c">🗺 מתכנן מסלול ריצה</div>
+      <div class="mini" style="margin-bottom:8px">לחץ על המפה כדי להוסיף נקודות. גרור נקודה כדי להזיז. המסלול יחושב אוטומטית.</div>
+      <div class="route-canvas" id="route-canvas">
+        <svg class="route-svg" id="route-svg" viewBox="0 0 400 240" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="route-stats" id="route-stats">
+        <div class="rstat"><div class="rstat-v cy" id="rs-dist">0.0</div><div class="rstat-l">ק"מ</div></div>
+        <div class="rstat"><div class="rstat-v or" id="rs-time">--:--</div><div class="rstat-l">זמן</div></div>
+        <div class="rstat"><div class="rstat-v yl" id="rs-elev">0</div><div class="rstat-l">מטר עליה</div></div>
+        <div class="rstat"><div class="rstat-v" id="rs-cal">0</div><div class="rstat-l">קלוריות</div></div>
+      </div>
+      <div class="r2">
+        <div><label>קצב יעד (ד:ש/ק"מ)</label><input id="rt-pace" type="text" value="5:30" inputmode="numeric"/></div>
+        <div><label>משקל ק"ג</label><input id="rt-wgt" type="number" value="72"/></div>
+      </div>
+      <div class="r2">
+        <button class="btn bs bsm" onclick="undoRoutePt()">↩ בטל נקודה</button>
+        <button class="btn br bsm" onclick="clearRoute()">🗑 נקה מסלול</button>
+      </div>
+      <button class="btn bp" onclick="saveRoute()">💾 שמור מסלול</button>
+    </div>
+
+    <!-- Elevation profile -->
+    <div class="card">
+      <div class="sh c">⛰ פרופיל גובה</div>
+      <svg class="elev-svg" id="elev-svg" viewBox="0 0 400 70" preserveAspectRatio="none"></svg>
+      <div class="mini" id="elev-info" style="text-align:center;margin-top:6px;font-family:var(--fm)">לחץ נקודות במפה</div>
+    </div>
+
+    <!-- Splits -->
+    <div class="card">
+      <div class="sh c">⏱ פיצולי קצב לפי ק"מ</div>
+      <div id="splits-list"><div class="mini" style="text-align:center;padding:10px">בנה מסלול לראות פיצולים</div></div>
+    </div>
+
+    <!-- Saved routes -->
+    <div class="card">
+      <div class="sh y">💾 מסלולים שמורים</div>
+      <div id="saved-routes"></div>
+    </div>
+  </div>
+
+  <!-- ════════════ AI WORKOUT BUILDER TAB ════════════ -->
+  <div id="tr-build" style="display:none">
+    <div class="card hot">
+      <div class="sh">🤖 בונה אימונים חכם</div>
+      <div class="mini" style="margin-bottom:8px">המערכת תבנה לך אימון מותאם אישית לפי המטרה והזמן שלך</div>
+
+      <label>🎯 מה המטרה שלך?</label>
+      <select id="wb-goal">
+        <option value="gibush">הכנה לגיבוש</option>
+        <option value="baror">שיפור ציון בר-אור</option>
+        <option value="endurance">סיבולת — ריצות ארוכות</option>
+        <option value="strength">כוח כללי</option>
+        <option value="pull">שיפור מתח</option>
+        <option value="push">שיפור שכיבות</option>
+        <option value="speed">מהירות + ספרינטים</option>
+        <option value="ruck">הכנה למסעות (Ruck)</option>
+        <option value="combat">כושר קרבי כללי</option>
+        <option value="recovery">שיקום פציעה</option>
+      </select>
+
+      <label>⏱ כמה זמן יש לך?</label>
+      <select id="wb-time">
+        <option value="20">20 דקות — קצר</option>
+        <option value="45" selected>45 דקות — סטנדרט</option>
+        <option value="60">60 דקות — מלא</option>
+        <option value="90">90 דקות — ארוך</option>
+        <option value="120">2 שעות — מסע</option>
+      </select>
+
+      <label>📍 איפה אתה מתאמן?</label>
+      <select id="wb-env">
+        <option value="field">בחוץ — שטח פתוח</option>
+        <option value="park">פארק עם מתח</option>
+        <option value="home">בית — ללא ציוד</option>
+        <option value="gym">חדר כושר מלא</option>
+      </select>
+
+      <label>🎖 רמת כושר</label>
+      <select id="wb-level">
+        <option value="beg">מתחיל</option>
+        <option value="med" selected>בינוני</option>
+        <option value="adv">מתקדם</option>
+        <option value="elite">עילית</option>
+      </select>
+
+      <label>🎯 יחידת יעד (אופציונלי)</label>
+      <select id="wb-unit"><option value="">— ללא —</option></select>
+
+      <button class="btn bp" onclick="buildWorkout()">⚡ בנה לי אימון</button>
+    </div>
+    <div id="wb-output"></div>
+  </div>
+
+  <!-- ════════════ HISTORY TAB ════════════ -->
+  <div id="tr-hist" style="display:none">
+    <div class="card">
+      <div class="sh y">📜 כל האימונים שלי</div>
+      <div class="qaction">
+        <button class="qaction-btn p" onclick="filterHist('all')">הכל</button>
+        <button class="qaction-btn g" onclick="filterHist('run')">🏃 ריצה</button>
+        <button class="qaction-btn y" onclick="filterHist('strength')">🏋 כוח</button>
+        <button class="qaction-btn r" onclick="filterHist('combat')">⚔ קרבי</button>
+        <button class="qaction-btn" onclick="filterHist('test')">🎯 מבחנים</button>
+      </div>
+      <div id="hist-summary" style="margin-bottom:10px"></div>
+      <div id="hist-list"></div>
+      <button class="btn bs" style="margin-top:8px" onclick="addHistDemo()">+ הוסף אימון (ידני)</button>
+      <button class="btn br bsm" style="margin-top:6px" onclick="clearHistory()">🗑 נקה היסטוריה</button>
+    </div>
   </div>
 
   <div id="tr-hi" style="display:none">
@@ -820,6 +1124,11 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
   <button class="nav" id="n-ai" onclick="showPg('ai')"><span class="ni">🤖</span>AI</button>
 </nav>
 
+<!-- ════════════ MODALS ════════════ -->
+<div class="modal-bk" id="modal-bk" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-content"></div>
+</div>
+
 <script>
 'use strict';
 // ═══════════════════════════════════════════════════
@@ -833,21 +1142,47 @@ const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}};
 // UNITS — COMPLETE DATABASE
 // ═══════════════════════════════════════════════════
 const UNITS={
+  // ─── Tier 1: רגלים בסיסי ───
   gen:   {n:'קרבי כללי',r:570,p:35,l:7,r3:13,r5:24,col:'#6a94aa',emoji:'🪖',tier:1,desc:'סטנדרט קרבי בסיסי — תנאי סף לכל יחידה קרבית'},
+  nahal: {n:"נח\"ל",r:570,p:40,l:8,r3:13,r5:24,col:'#ffd60a',emoji:'🌿',tier:1,desc:'גדודי רגלים + ייעוד חקלאי — נגיש יחסית'},
+
+  // ─── Tier 2: רגלים עילית ───
   golani:{n:'גולני',r:540,p:45,l:10,r3:12,r5:22.5,col:'#00cc6a',emoji:'🟢',tier:2,desc:'גדוד רגלים עילית — ריצות ארוכות + כוח + מסעות'},
   para:  {n:'צנחנים',r:510,p:50,l:12,r3:11.5,r5:22,col:'#0a84ff',emoji:'🪂',tier:2,desc:'פלס עילית — מסעות קשים + כוח גוף עליון מצוין'},
   giv:   {n:'גבעתי',r:540,p:45,l:10,r3:12,r5:22.5,col:'#ff8800',emoji:'🔶',tier:2,desc:'חטיבת רגלים — נוכחות בשטח גבוהה'},
-  nahal: {n:"נח\"ל",r:570,p:40,l:8,r3:13,r5:24,col:'#ffd60a',emoji:'🌿',tier:1,desc:'גדודי רגלים + ייעוד חקלאי — נגיש יחסית'},
   kfir:  {n:'כפיר',r:555,p:42,l:9,r3:12.5,r5:23,col:'#ff6600',emoji:'🦁',tier:2,desc:'חטיבת כפיר — פעילות ביהודה ושומרון'},
-  givati101:{n:'גדוד 101 גבעתי',r:510,p:52,l:13,r3:11.5,r5:21.5,col:'#ff4400',emoji:'⚔',tier:3,desc:'גדוד עילית של גבעתי — מסעות קשים, הגיבוש הדרשות גבוהות'},
+  karakal:{n:'קרקל',r:555,p:42,l:9,r3:12.5,r5:23,col:'#ffa500',emoji:'🐈',tier:2,desc:'גדוד מעורב גברים-נשים — לחימה בגבולות'},
+  bardelas:{n:'ברדלס',r:555,p:42,l:9,r3:12.5,r5:23,col:'#ff7700',emoji:'🐆',tier:2,desc:'גדוד מעורב — לחימה בגבול ירדן'},
+
+  // ─── Tier 3: מובחר ───
+  givati101:{n:'גדוד 101 גבעתי',r:510,p:52,l:13,r3:11.5,r5:21.5,col:'#ff4400',emoji:'⚔',tier:3,desc:'גדוד עילית של גבעתי — מסעות קשים, גיבוש דרישות גבוהות'},
   say:   {n:'סייר דיביזיוני',r:510,p:52,l:13,r3:11.5,r5:21,col:'#bf5af2',emoji:'🔭',tier:3,desc:'יחידות סיור דיביזיוניות — תצפית, לחימה בשטח'},
-  egoz:  {n:'אגוז / דובדבן',r:480,p:60,l:15,r3:11,r5:21,col:'#ff2d55',emoji:'💀',tier:4,desc:'יחידות לוחמה בשטח הררי — גיבוש ארוך ומפרך מאוד'},
   oketz: {n:'עוקץ',r:495,p:56,l:14,r3:11.5,r5:21.5,col:'#ff8800',emoji:'🐕‍🦺',tier:3,desc:'יחידת כלבנים מובחרת — כושר גבוה + עבודת צוות'},
+  yaalom:{n:'יהל"ם',r:495,p:55,l:14,r3:11.5,r5:21,col:'#8b4513',emoji:'💎',tier:3,desc:'הנדסה קרבית מיוחדת — חבלה, פיצוצים, נשק כימי'},
+  tzasach:{n:'צנחנים סיירת',r:495,p:58,l:15,r3:11,r5:21,col:'#1e90ff',emoji:'🪂',tier:3,desc:'סיירת חטיבת הצנחנים — איתור, חילוץ, מבצעי עומק'},
+  egozsay:{n:'גולני סיירת',r:495,p:56,l:14,r3:11,r5:21,col:'#228b22',emoji:'🦅',tier:3,desc:'סיירת גולני — לוחמה בשטח הררי וסבוך'},
+  givsay:{n:'גבעתי סיירת',r:495,p:56,l:14,r3:11,r5:21,col:'#ff6347',emoji:'🦂',tier:3,desc:'סיירת גבעתי — לחימה בשטח עירוני ופתוח'},
+  nahalsay:{n:'נח"ל סיירת',r:495,p:54,l:13,r3:11.5,r5:21.5,col:'#9acd32',emoji:'🌵',tier:3,desc:'סיירת נח"ל — איסוף מודיעין, לחימה'},
+
+  // ─── Tier 4: קשה מאוד ───
+  egoz:  {n:'אגוז',r:480,p:60,l:15,r3:11,r5:21,col:'#ff2d55',emoji:'💀',tier:4,desc:'לחימה בשטח הררי — נגד גרילה. גיבוש ארוך ומפרך'},
+  duvdevan:{n:'דובדבן',r:480,p:60,l:15,r3:11,r5:21,col:'#dc143c',emoji:'🍒',tier:4,desc:'יחידת מסתערבים — לחימה בלבוש אזרחי בשטח אויב'},
+  rimon: {n:'רימון',r:485,p:58,l:14,r3:11,r5:21,col:'#a0522d',emoji:'🪦',tier:4,desc:'לוחמה במדבר — מעקב, איתור, לחימה בנגב'},
+  maglan:{n:'מגלן',r:475,p:60,l:16,r3:11,r5:20.5,col:'#4b0082',emoji:'🎯',tier:4,desc:'לחימה בעומק שטח אויב — איתור מטרות איכותיות'},
+
+  // ─── Tier 5: עילית מיוחד ───
   unit669:{n:'יחידה 669',r:460,p:65,l:18,r3:10.5,r5:20,col:'#00e5ff',emoji:'🚁',tier:5,desc:'חילוץ לחימה — נדרש קורס צניחה + כושר עילית + שחייה'},
   shaldag:{n:'שלדג',r:450,p:68,l:19,r3:10,r5:19.5,col:'#00bcd4',emoji:'🦅',tier:5,desc:'סיירת חיל האוויר — מבצעי עומק, גיבוש מהקשים ביותר'},
   kommando:{n:'קומנדו ימי',r:455,p:65,l:18,r3:10.5,r5:20,col:'#0055ff',emoji:'🌊',tier:5,desc:'לחימה ימית — שחייה מינימום 400מ + כושר יבשתי גבוה'},
+  unit217:{n:'דובדבן (217)',r:465,p:64,l:17,r3:10.5,r5:20,col:'#b22222',emoji:'🎭',tier:5,desc:'מסתערבים — חדירה לשטח אויב בלבוש אזרחי'},
+  lotar: {n:'לוט"ר כפיר',r:475,p:62,l:16,r3:10.5,r5:20,col:'#ff1493',emoji:'🔫',tier:5,desc:'לוחמה בטרור — חילוץ חטופים, סיכול פיגועים'},
+  unit8200:{n:'8200 - יחידת איסוף',r:540,p:40,l:8,r3:12,r5:23,col:'#9370db',emoji:'💻',tier:5,desc:'מודיעין סיגינט — דרישות שכל גבוהות, פיזי בינוני'},
+  yamam: {n:'ימ"מ',r:465,p:66,l:18,r3:10.5,r5:20,col:'#191970',emoji:'🎖',tier:5,desc:'יחידת לוחמה בטרור משטרתית — גיבוש קשה במיוחד'},
+
+  // ─── Tier 6: מקסימום ───
   shai:  {n:'שייטת 13',r:450,p:72,l:22,r3:10,r5:19,col:'#00e5ff',emoji:'🤿',tier:6,desc:'יחידת עילית ימית — הגיבוש הכי קשה בצה"ל. שחייה + כושר מקסימלי'},
   matkal:{n:"סיירת מטכ\"ל",r:450,p:68,l:20,r3:10,r5:19,col:'#ff2d55',emoji:'🔱',tier:6,desc:'הסיירת — מבצעי עומק, גיבוש קיצוני. מנטלי 70% מהדרישה'},
+  unit669elite:{n:'669 לוחם בכיר',r:445,p:70,l:21,r3:10,r5:19,col:'#00ffff',emoji:'⚡',tier:6,desc:'דרגת קצונה ביחידה 669 — מבצעים מורכבים, רפואה מתקדמת'},
 };
 
 // ═══════════════════════════════════════════════════
@@ -904,9 +1239,12 @@ function tt(id,el){
   el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
 }
 function trt(id,el){
-  ['tr-str','tr-run','tr-hi','tr-tmr','tr-rec'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
+  ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-hi','tr-tmr','tr-rec'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
   document.getElementById(id).style.display='block';
   el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
+  if(id==='tr-route')initRoute();
+  if(id==='tr-hist')renderHistory();
+  if(id==='tr-build')initBuilder();
 }
 
 // ═══════════════════════════════════════════════════
@@ -1270,7 +1608,7 @@ function initMuscleGrid(){
 function toggleMuscle(id){
   muscleState[id]=muscleState[id]==='sore'?'ok':'sore';
   sv(K.REC+'_muscles',muscleState);
-  const el=document.getElementById('ms-'+m=>id);
+  const el=document.getElementById('ms-'+id);
   initMuscleGrid();
   calcRecovery();
 }
@@ -1499,17 +1837,30 @@ function copyTxt(t){
 }
 
 // ═══════════════════════════════════════════════════
-// COACH GROUP MANAGEMENT
+// COACH GROUP MANAGEMENT — FULL DASHBOARD
 // ═══════════════════════════════════════════════════
+const K2={ANN:'cf7ann',CHAT:'cf7chat',ATT:'cf7att',HIST:'cf7hist',PLANS:'cf7plans'};
+
 const DEMO_ATHLETES=[
-  {nm:'ירון כהן',age:19,unit:'egoz',run:490,psh:62,pul:16,bar:82,si:70,training_days:5,note:'בתהליך מצוין',target:'אגוז',status:'ok',emoji:'🦁',joined:'2025-01-10'},
-  {nm:'איתי לוי',age:18,unit:'golani',run:540,psh:48,pul:10,bar:65,si:58,training_days:3,note:'מתח צריך שיפור — GTG יומי',target:'גולני',status:'warn',emoji:'⚡',joined:'2025-01-15'},
-  {nm:'עמית מזרחי',age:20,unit:'para',run:515,psh:55,pul:13,bar:75,si:65,training_days:4,note:'',target:'צנחנים',status:'ok',emoji:'🐯',joined:'2025-01-08'},
-  {nm:'דניאל ברוך',age:18,unit:'gen',run:590,psh:32,pul:6,bar:45,si:42,training_days:2,note:'⚠️ מתחת לסטנדרט — חסר מוטיבציה',target:'כפיר',status:'alert',emoji:'🔥',joined:'2025-02-01'},
-  {nm:'נועם שפיר',age:19,unit:'shai',run:465,psh:71,pul:21,bar:89,si:74,training_days:6,note:'מועמד מצוין לשייטת 13!',target:"שייטת 13",status:'ok',emoji:'💀',joined:'2025-01-05'},
-  {nm:'תום אברמוב',age:18,unit:'matkal',run:472,psh:68,pul:19,bar:86,si:72,training_days:5,note:'עבודה מעולה. להמשיך',target:"סיירת מטכ\"ל",status:'ok',emoji:'🗡',joined:'2025-01-12'},
-  {nm:'שי פרץ',age:19,unit:'unit669',run:481,psh:64,pul:17,bar:83,si:68,training_days:4,note:'שחייה עדיין חלשה',target:'669',status:'warn',emoji:'🚁',joined:'2025-01-20'},
+  {nm:'ירון כהן',age:19,phone:'050-1234567',unit:'egoz',run:490,psh:62,pul:16,bar:82,si:70,training_days:5,note:'בתהליך מצוין',target:'אגוז',status:'ok',emoji:'🦁',joined:'2025-01-10',height:178,weight:74,injuries:''},
+  {nm:'איתי לוי',age:18,phone:'052-7654321',unit:'golani',run:540,psh:48,pul:10,bar:65,si:58,training_days:3,note:'מתח צריך שיפור — GTG יומי',target:'גולני',status:'warn',emoji:'⚡',joined:'2025-01-15',height:175,weight:71,injuries:''},
+  {nm:'עמית מזרחי',age:20,phone:'054-9988776',unit:'para',run:515,psh:55,pul:13,bar:75,si:65,training_days:4,note:'',target:'צנחנים',status:'ok',emoji:'🐯',joined:'2025-01-08',height:182,weight:78,injuries:''},
+  {nm:'דניאל ברוך',age:18,phone:'053-1112233',unit:'gen',run:590,psh:32,pul:6,bar:45,si:42,training_days:2,note:'⚠️ מתחת לסטנדרט — חסר מוטיבציה',target:'כפיר',status:'alert',emoji:'🔥',joined:'2025-02-01',height:170,weight:80,injuries:'כאב ברך שמאל'},
+  {nm:'נועם שפיר',age:19,phone:'050-7878787',unit:'shai',run:465,psh:71,pul:21,bar:89,si:74,training_days:6,note:'מועמד מצוין לשייטת 13!',target:'שייטת 13',status:'ok',emoji:'💀',joined:'2025-01-05',height:180,weight:72,injuries:''},
+  {nm:'תום אברמוב',age:18,phone:'054-3344556',unit:'matkal',run:472,psh:68,pul:19,bar:86,si:72,training_days:5,note:'עבודה מעולה. להמשיך',target:"סיירת מטכ\"ל",status:'ok',emoji:'🗡',joined:'2025-01-12',height:177,weight:73,injuries:''},
+  {nm:'שי פרץ',age:19,phone:'052-1122334',unit:'unit669',run:481,psh:64,pul:17,bar:83,si:68,training_days:4,note:'שחייה עדיין חלשה',target:'669',status:'warn',emoji:'🚁',joined:'2025-01-20',height:179,weight:75,injuries:''},
 ];
+
+// Demo history per athlete (last 8 weeks of bar-or score)
+function getAthHist(name){
+  const hist=ld(K2.HIST,{});
+  if(!hist[name]){
+    const base=Math.floor(40+Math.random()*30);
+    const arr=[];for(let i=0;i<8;i++)arr.push(Math.min(95,Math.max(30,base+i*3+Math.floor(Math.random()*8-4))));
+    hist[name]=arr; sv(K2.HIST,hist);
+  }
+  return hist[name];
+}
 
 let coachFilterMode='all';
 function coachFilter(mode,el){
@@ -1518,31 +1869,35 @@ function coachFilter(mode,el){
   el.classList.add('on');renderCoachGroup();
 }
 
+function getAthletes(){return ld(K.ATH,DEMO_ATHLETES.slice(0,4));}
+function saveAthletes(a){sv(K.ATH,a);}
+
 function renderCoachGroup(){
-  const athletes=ld(K.ATH,DEMO_ATHLETES.slice(0,4));
+  const athletes=getAthletes();
+  const search=(document.getElementById('coach-search')?.value||'').trim().toLowerCase();
   let filtered=athletes;
-  if(coachFilterMode==='alert')filtered=athletes.filter(a=>a.status==='alert'||a.status==='warn');
-  if(coachFilterMode==='ok')filtered=athletes.filter(a=>a.status==='ok');
+  if(coachFilterMode==='alert')filtered=filtered.filter(a=>a.status==='alert'||a.status==='warn');
+  if(coachFilterMode==='ok')filtered=filtered.filter(a=>a.status==='ok');
+  if(search)filtered=filtered.filter(a=>a.nm.toLowerCase().includes(search)||(a.target||'').toLowerCase().includes(search));
 
   const ok=athletes.filter(a=>a.status==='ok').length;
-  const warn=athletes.filter(a=>a.status==='warn').length;
-  const alert=athletes.filter(a=>a.status==='alert').length;
   const avgScore=athletes.length?Math.round(athletes.reduce((s,a)=>s+(a.bar||0),0)/athletes.length):0;
   const avgDays=athletes.length?Math.round(athletes.reduce((s,a)=>s+(a.training_days||0),0)/athletes.length):0;
 
-  document.getElementById('coach-kpi-grid').innerHTML=`
+  const kpig=document.getElementById('coach-kpi-grid');
+  if(kpig)kpig.innerHTML=`
     <div class="ck-box"><div class="ck-num" style="color:var(--purpleL)">${athletes.length}</div><div class="ck-lbl">חניכים</div></div>
     <div class="ck-box"><div class="ck-num" style="color:var(--pri)">${ok}</div><div class="ck-lbl">✅ בכושר</div></div>
-    <div class="ck-box"><div class="ck-num" style="color:var(--yellow)">${avgScore}</div><div class="ck-lbl">ממוצע</div></div>
+    <div class="ck-box"><div class="ck-num" style="color:var(--yellow)">${avgScore}</div><div class="ck-lbl">ממוצע ציון</div></div>
     <div class="ck-box"><div class="ck-num" style="color:var(--cyan)">${avgDays}</div><div class="ck-lbl">ימי/שבוע</div></div>`;
 
   let html='';
-  filtered.forEach((a,i)=>{
+  filtered.forEach((a,_i)=>{
+    const i=athletes.indexOf(a);
     const u=UNITS[a.unit]||UNITS.gen;
     const rm=a.run<900?`${Math.floor(a.run/60)}:${String(a.run%60).padStart(2,'0')}`:'--';
     const barPct=a.bar||0;
-    const tgtU=Object.values(UNITS).find(u=>u.n===a.target)||u;
-    const gap=Math.max(0,a.bar-(tgtU?.l||0)*5);
+    const tgtU=Object.values(UNITS).find(uu=>uu.n===a.target)||u;
     html+=`<div class="ath-card ${a.status}">
       <div class="ath-top">
         <div class="ath-av">${a.emoji}</div>
@@ -1552,7 +1907,7 @@ function renderCoachGroup(){
         </div>
         <div class="ath-status">
           <div class="sdot ${a.status==='ok'?'g':a.status==='warn'?'y':'r'}"></div>
-          <span style="font-size:9px;color:var(--txt2)">${{ok:'מוכן',warn:'בהתפתחות',alert:'דורש תשומת לב'}[a.status]}</span>
+          <span style="font-size:9px;color:var(--txt2)">${{ok:'מוכן',warn:'בהתפתחות',alert:'דורש'}[a.status]}</span>
         </div>
       </div>
       <div class="ath-kpis">
@@ -1562,57 +1917,664 @@ function renderCoachGroup(){
         <div class="ath-kpi"><div class="ath-kpi-val" style="color:${barPct>=80?'var(--pri)':barPct>=60?'var(--yellow)':'var(--red)'}">${barPct}</div><div class="ath-kpi-lbl">ציון</div></div>
         <div class="ath-kpi"><div class="ath-kpi-val" style="color:var(--cyan)">${a.training_days}×</div><div class="ath-kpi-lbl">ימי/שב</div></div>
       </div>
-      <div class="pw" style="margin-bottom:6px"><div class="pf ${barPct>=60?'':'pr'}" style="width:${barPct}%"></div></div>
+      <div class="pw" style="margin-bottom:6px"><div class="pf ${barPct>=80?'':barPct>=60?'py':'pr'}" style="width:${barPct}%"></div></div>
       ${a.note?`<div class="mini" style="margin-bottom:8px;background:var(--card3);padding:6px 9px;border-radius:8px">📝 ${a.note}</div>`:''}
+      ${a.injuries?`<div class="mini" style="margin-bottom:8px;background:rgba(255,45,85,.08);padding:6px 9px;border-radius:8px;color:var(--red)">🩹 ${a.injuries}</div>`:''}
       <div class="ath-acts">
         <div class="ath-btn pri" onclick="viewAthlete(${i})">📊 פרטים</div>
-        <div class="ath-btn pur" onclick="sendPlan(${i})">📤 שלח תוכנית</div>
-        <div class="ath-btn" onclick="addNote(${i})">✏️ הערה</div>
-        <div class="ath-btn" onclick="callAthlete(${i})">📞 שיחה</div>
+        <div class="ath-btn pur" onclick="chatAthlete(${i})">💬 צ'אט</div>
+        <div class="ath-btn" onclick="editAthlete(${i})">✏️ ערוך</div>
+        <div class="ath-btn" onclick="markAttend(${i})">✅ נוכחות</div>
       </div>
     </div>`;
   });
-  if(!filtered.length)html='<div class="mini" style="text-align:center;padding:16px">אין חניכים בקטגוריה זו</div>';
+  if(!filtered.length)html='<div class="mini" style="text-align:center;padding:16px">אין חניכים תואמים</div>';
   document.getElementById('coach-group-list').innerHTML=html;
+
+  // Build unit selector for recruit candidates
+  const sel=document.getElementById('recruit-unit-sel');
+  if(sel&&!sel.dataset.built){
+    let opts='';Object.entries(UNITS).forEach(([k,v])=>{opts+=`<option value="${k}">${v.emoji} ${v.n}</option>`;});
+    sel.innerHTML=opts;sel.value='egoz';sel.dataset.built='1';
+  }
+  renderRecruitCandidates();
+  renderAnnouncements();
 }
 
+// ═══════════════════════════════════════════════════
+// MODAL SYSTEM
+// ═══════════════════════════════════════════════════
+function openModal(title,body){
+  const bk=document.getElementById('modal-bk');
+  const mc=document.getElementById('modal-content');
+  mc.innerHTML=`<div class="modal-hdr"><div class="modal-ttl">${title}</div><button class="modal-x" onclick="closeModal()">✕</button></div>${body}`;
+  bk.classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal-bk').classList.remove('show');
+  document.body.style.overflow='';
+}
+
+// ═══════════════════════════════════════════════════
+// VIEW ATHLETE — FULL PROFILE MODAL
+// ═══════════════════════════════════════════════════
 function viewAthlete(i){
-  const athletes=ld(K.ATH,DEMO_ATHLETES.slice(0,4));
+  const athletes=getAthletes();
   const a=athletes[i];if(!a)return;
   const u=UNITS[a.unit]||UNITS.gen;
   const rm=a.run<900?`${Math.floor(a.run/60)}:${String(a.run%60).padStart(2,'0')}`:'--';
   const joined=a.joined?new Date(a.joined).toLocaleDateString('he-IL'):'--';
-  const tgtU=UNITS[Object.keys(UNITS).find(k=>UNITS[k].n===a.target)||a.unit]||u;
-  const gap=Math.max(0,tgtU.r-a.run);
+  const tgtU=Object.values(UNITS).find(uu=>uu.n===a.target)||u;
+  const runGap=Math.max(0,a.run-tgtU.r);
   const pushGap=Math.max(0,tgtU.p-a.psh);
   const pullGap=Math.max(0,tgtU.l-a.pul);
-  alert(`👤 ${a.nm} ${a.emoji}\n\nגיל: ${a.age} | הצטרף: ${joined}\nיחידה מבוקשת: ${a.target}\n\n📊 ביצועים:\n2K: ${rm} | שכ': ${a.psh} | מתח: ${a.pul}\nציון: ${a.bar}/100 | ישיבות: ${a.si}\n\n📅 אימונים: ${a.training_days} ימים/שבוע\n\n🎯 פערים ליעד:\n2K: ${gap>0?'נדרש שיפור של '+gap+'שנ':'✅ עומד'}\nשכ': ${pushGap>0?'חסר '+pushGap:'✅ עומד'}\nמתח: ${pullGap>0?'חסר '+pullGap:'✅ עומד'}\n\n📝 הערות: ${a.note||'אין'}`);
-}
-function sendPlan(i){const a=ld(K.ATH,DEMO_ATHLETES.slice(0,4))[i];if(a)notify(`תוכנית נשלחה ל${a.nm}! 📤`,'p');}
-function addNote(i){const n=prompt('הוסף הערה:');if(n){const ath=ld(K.ATH,DEMO_ATHLETES.slice(0,4));if(ath[i]){ath[i].note=n;sv(K.ATH,ath);renderCoachGroup();}}}
-function callAthlete(i){const a=ld(K.ATH,DEMO_ATHLETES.slice(0,4))[i];if(a)notify(`📞 שיחה עם ${a.nm}`);}
+  const tgtRm=`${Math.floor(tgtU.r/60)}:${String(tgtU.r%60).padStart(2,'0')}`;
 
-function addDemoAthlete(){
-  const ath=ld(K.ATH,DEMO_ATHLETES.slice(0,4));
-  const next=DEMO_ATHLETES[ath.length%DEMO_ATHLETES.length];
-  if(!ath.find(a=>a.nm===next.nm)){ath.push(next);sv(K.ATH,ath);}
-  renderCoachGroup();notify(`${next.nm} נוסף! ${next.emoji}`,'p');
+  const hist=getAthHist(a.nm);
+  // Build SVG chart
+  const w=380,h=120,pad=20;
+  const max=Math.max(...hist,100),min=Math.min(...hist,30);
+  const range=max-min||1;
+  const xStep=(w-pad*2)/(hist.length-1);
+  let path='',pts='';
+  hist.forEach((v,k)=>{
+    const x=pad+k*xStep,y=h-pad-((v-min)/range)*(h-pad*2);
+    path+=(k===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';
+    pts+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="${u.col}" stroke="var(--card)" stroke-width="1.5"/>`;
+  });
+  const trend=hist[hist.length-1]-hist[0];
+  const trendEmoji=trend>5?'📈 שיפור מצוין':trend>0?'⬆️ שיפור':trend<-5?'📉 ירידה — דורש התערבות':'➡️ יציב';
+
+  // Predict recruitment readiness: percentage based on how close to target
+  const runScore=Math.max(0,Math.min(100,100-(runGap/tgtU.r)*200));
+  const pushScore=Math.max(0,Math.min(100,a.psh/tgtU.p*100));
+  const pullScore=Math.max(0,Math.min(100,a.pul/tgtU.l*100));
+  const recruitPct=Math.round((runScore+pushScore+pullScore)/3);
+  const etaMonths=recruitPct>=90?0:recruitPct>=70?2:recruitPct>=50?4:recruitPct>=30?6:9;
+  const etaTxt=etaMonths===0?'✅ מוכן עכשיו!':`כ-${etaMonths} חודשי הכנה`;
+
+  const body=`
+  <div class="ath-profile">
+    <div class="ath-profile-av">${a.emoji}</div>
+    <div class="ath-profile-inf">
+      <div class="ath-profile-nm">${a.nm}</div>
+      <div class="ath-profile-mt">גיל ${a.age} | ${a.height||'?'}ס"מ ${a.weight||'?'}ק"ג<br/>📞 ${a.phone||'לא הוזן'} | הצטרף ${joined}</div>
+    </div>
+  </div>
+
+  <div class="recruit-card">
+    <div class="recruit-pct">${recruitPct}%</div>
+    <div class="recruit-lbl">מוכנות לגיוס ל${a.target} ${tgtU.emoji}</div>
+    <div class="recruit-eta">⏱ ${etaTxt}</div>
+  </div>
+
+  <div class="sh p">📈 התקדמות 8 שבועות (ציון בר-אור)</div>
+  <div class="chart-wrap">
+    <svg class="chart-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+      <line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" stroke="var(--b2)" stroke-width="1"/>
+      <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}" stroke="var(--b2)" stroke-width="1"/>
+      <path d="${path}" fill="none" stroke="${u.col}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      ${pts}
+    </svg>
+    <div class="chart-legend" style="color:${trend>=0?'var(--pri)':'var(--red)'}"><strong>${trendEmoji}</strong> | ${hist[0]} → ${hist[hist.length-1]} (Δ ${trend>=0?'+':''}${trend})</div>
+  </div>
+
+  <div class="sh y">🎯 פערים ליעד (${a.target} — ${tgtU.tier?'Tier '+tgtU.tier:''})</div>
+  <div class="gap-bar"><span class="gap-l">⏱ ריצה 2K</span><span class="gap-v">${rm} → ${tgtRm}</span><span class="${runGap===0?'gap-ok':runGap<30?'gap-no':'gap-bad'}">${runGap===0?'✅':runGap+'שנ'}</span></div>
+  <div class="gap-bar"><span class="gap-l">💪 שכיבות</span><span class="gap-v">${a.psh} → ${tgtU.p}</span><span class="${pushGap===0?'gap-ok':pushGap<10?'gap-no':'gap-bad'}">${pushGap===0?'✅':'-'+pushGap}</span></div>
+  <div class="gap-bar"><span class="gap-l">🏋 מתח</span><span class="gap-v">${a.pul} → ${tgtU.l}</span><span class="${pullGap===0?'gap-ok':pullGap<5?'gap-no':'gap-bad'}">${pullGap===0?'✅':'-'+pullGap}</span></div>
+  <div class="gap-bar"><span class="gap-l">📅 ימי אימון</span><span class="gap-v">${a.training_days}/${tgtU.tier>=4?6:5}</span><span class="${a.training_days>=5?'gap-ok':a.training_days>=3?'gap-no':'gap-bad'}">${a.training_days>=5?'✅':'-'+(5-a.training_days)}</span></div>
+
+  ${a.injuries?`<div class="sh r">🩹 פציעות</div><div class="mini" style="background:rgba(255,45,85,.06);padding:10px;border-radius:9px;border:1px solid rgba(255,45,85,.2)">${a.injuries}</div>`:''}
+
+  ${a.note?`<div class="sh c">📝 הערות מאמן</div><div class="mini" style="background:var(--card3);padding:10px;border-radius:9px;margin-bottom:8px">${a.note}</div>`:''}
+
+  <div class="sh">⚡ פעולות מהירות</div>
+  <div class="r2" style="gap:6px;margin-bottom:6px">
+    <button class="btn bpur bsm" onclick="closeModal();chatAthlete(${i})">💬 פתח צ'אט</button>
+    <button class="btn bp bsm" onclick="closeModal();sendPlanToAthlete(${i})">🎯 שלח תוכנית</button>
+  </div>
+  <div class="r2" style="gap:6px;margin-bottom:6px">
+    <button class="btn bcy bsm" onclick="closeModal();editAthlete(${i})">✏️ ערוך פרטים</button>
+    <button class="btn by bsm" onclick="closeModal();markAttend(${i})">✅ נוכחות היום</button>
+  </div>
+  <div class="r2" style="gap:6px">
+    <button class="btn bo bsm" onclick="exportAthletePdf(${i})">📄 ייצא דוח</button>
+    <button class="btn br bsm" onclick="deleteAthlete(${i})">🗑 הסר חניך</button>
+  </div>`;
+  openModal(`👤 ${a.nm} ${a.emoji}`,body);
 }
 
+// ═══════════════════════════════════════════════════
+// ADD / EDIT ATHLETE
+// ═══════════════════════════════════════════════════
+function openAddAthleteModal(){editAthlete(-1);}
+function editAthlete(i){
+  const athletes=getAthletes();
+  const a=i>=0?athletes[i]:{nm:'',age:18,phone:'',unit:'gen',target:'',run:600,psh:30,pul:5,bar:50,si:50,training_days:3,note:'',status:'warn',emoji:'⚔',joined:new Date().toISOString().slice(0,10),height:175,weight:72,injuries:''};
+  let unitOpts='';Object.entries(UNITS).forEach(([k,v])=>{unitOpts+=`<option value="${k}" ${k===a.unit?'selected':''}>${v.emoji} ${v.n}</option>`;});
+  let tgtOpts='<option value="">בחר יעד</option>';Object.values(UNITS).forEach(v=>{tgtOpts+=`<option value="${v.n}" ${v.n===a.target?'selected':''}>${v.emoji} ${v.n}</option>`;});
+  const emojis=['⚔','🦁','⚡','🐯','🔥','💀','🗡','🚁','🦅','🌊','🪖','🐺','🦊','🐻','🚀','🎯','⭐'];
+  let emojiOpts='';emojis.forEach(e=>{emojiOpts+=`<option value="${e}" ${e===a.emoji?'selected':''}>${e}</option>`;});
+
+  const body=`
+  <div class="form-grid">
+    <div><label>שם מלא *</label><input id="ae-nm" type="text" value="${a.nm}" placeholder="שם החניך"/></div>
+    <div><label>אימוג'י</label><select id="ae-emoji">${emojiOpts}</select></div>
+  </div>
+  <div class="form-grid three">
+    <div><label>גיל</label><input id="ae-age" type="number" value="${a.age}" min="16" max="30"/></div>
+    <div><label>גובה ס"מ</label><input id="ae-height" type="number" value="${a.height||175}"/></div>
+    <div><label>משקל ק"ג</label><input id="ae-weight" type="number" value="${a.weight||72}"/></div>
+  </div>
+  <label>טלפון</label><input id="ae-phone" type="tel" value="${a.phone||''}" placeholder="050-1234567"/>
+  <div class="form-grid">
+    <div><label>יחידה נוכחית</label><select id="ae-unit">${unitOpts}</select></div>
+    <div><label>🎯 יעד גיוס</label><select id="ae-target">${tgtOpts}</select></div>
+  </div>
+  <div class="sh y" style="margin-top:10px">📊 ביצועים נוכחיים</div>
+  <div class="form-grid">
+    <div><label>2K ריצה (שניות)</label><input id="ae-run" type="number" value="${a.run}" placeholder="540 = 9:00"/></div>
+    <div><label>שכיבות שמיכה (מקס)</label><input id="ae-psh" type="number" value="${a.psh}"/></div>
+  </div>
+  <div class="form-grid three">
+    <div><label>מתח (מקס)</label><input id="ae-pul" type="number" value="${a.pul}"/></div>
+    <div><label>ישיבות בטן/2דק</label><input id="ae-si" type="number" value="${a.si}"/></div>
+    <div><label>ימי/שבוע</label><input id="ae-td" type="number" value="${a.training_days}" min="1" max="7"/></div>
+  </div>
+  <label>🩹 פציעות / מגבלות</label>
+  <textarea id="ae-inj" rows="2" placeholder="כאב ברך, שין-ספלינט, וכו'">${a.injuries||''}</textarea>
+  <label>📝 הערות מאמן</label>
+  <textarea id="ae-note" rows="2" placeholder="התרשמות, התקדמות, נקודות לעבודה">${a.note||''}</textarea>
+  <label>סטטוס</label>
+  <select id="ae-status">
+    <option value="ok" ${a.status==='ok'?'selected':''}>✅ מוכן / בכושר</option>
+    <option value="warn" ${a.status==='warn'?'selected':''}>⚡ בהתפתחות</option>
+    <option value="alert" ${a.status==='alert'?'selected':''}>⚠️ דורש תשומת לב</option>
+  </select>
+  <button class="btn bp" style="margin-top:12px" onclick="saveAthlete(${i})">${i>=0?'💾 שמור שינויים':'➕ הוסף חניך'}</button>
+  <button class="btn bs" onclick="closeModal()">ביטול</button>`;
+  openModal(i>=0?`✏️ עריכת ${a.nm}`:'➕ חניך חדש',body);
+}
+
+function saveAthlete(i){
+  const nm=document.getElementById('ae-nm').value.trim();
+  if(!nm){notify('שם חובה','r');return;}
+  const data={
+    nm,
+    emoji:document.getElementById('ae-emoji').value,
+    age:parseInt(document.getElementById('ae-age').value||18),
+    height:parseInt(document.getElementById('ae-height').value||175),
+    weight:parseInt(document.getElementById('ae-weight').value||72),
+    phone:document.getElementById('ae-phone').value.trim(),
+    unit:document.getElementById('ae-unit').value,
+    target:document.getElementById('ae-target').value||UNITS[document.getElementById('ae-unit').value].n,
+    run:parseInt(document.getElementById('ae-run').value||600),
+    psh:parseInt(document.getElementById('ae-psh').value||0),
+    pul:parseInt(document.getElementById('ae-pul').value||0),
+    si:parseInt(document.getElementById('ae-si').value||0),
+    training_days:parseInt(document.getElementById('ae-td').value||3),
+    note:document.getElementById('ae-note').value.trim(),
+    injuries:document.getElementById('ae-inj').value.trim(),
+    status:document.getElementById('ae-status').value
+  };
+  // Auto-calc bar score from inputs
+  const age=data.age;
+  data.bar=calcBarAuto(data.run,data.psh,data.pul,data.si,age);
+  const ath=getAthletes();
+  if(i>=0){data.joined=ath[i].joined||new Date().toISOString().slice(0,10);ath[i]=data;}
+  else{data.joined=new Date().toISOString().slice(0,10);ath.push(data);}
+  saveAthletes(ath);
+  closeModal();renderCoachGroup();
+  notify(i>=0?'✏️ עודכן!':'➕ נוסף!','p');
+}
+
+function calcBarAuto(run,psh,pul,si,age){
+  // Simplified bar-or formula
+  const runRef=age<=20?540:570;
+  const runScore=Math.max(0,Math.min(100,100-(run-runRef)*0.5));
+  const pshScore=Math.min(100,psh*1.5);
+  const pulScore=Math.min(100,pul*5);
+  const siScore=Math.min(100,si*1.4);
+  return Math.round(runScore*.4+pshScore*.25+pulScore*.2+siScore*.15);
+}
+
+function deleteAthlete(i){
+  if(!confirm('להסיר את החניך הזה?'))return;
+  const ath=getAthletes();ath.splice(i,1);saveAthletes(ath);
+  closeModal();renderCoachGroup();notify('הוסר','r');
+}
+
+// ═══════════════════════════════════════════════════
+// CHAT — coach <-> athlete
+// ═══════════════════════════════════════════════════
+function chatAthlete(i){
+  const a=getAthletes()[i];if(!a)return;
+  const chats=ld(K2.CHAT,{});
+  const key=a.nm;
+  if(!chats[key])chats[key]=[{from:'athlete',msg:'שלום מאמן! מה התוכנית להיום?',time:Date.now()-3600000}];
+  sv(K2.CHAT,chats);
+  renderChatModal(i,key);
+}
+function renderChatModal(i,key){
+  const a=getAthletes()[i];
+  const chats=ld(K2.CHAT,{});
+  const msgs=chats[key]||[];
+  let chatHtml='';
+  msgs.forEach(m=>{
+    const t=new Date(m.time).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+    chatHtml+=`<div class="chat-msg ${m.from==='coach'?'coach':'athlete'}">${m.msg}<div class="chat-time">${m.from==='coach'?'אתה':a.nm} · ${t}</div></div>`;
+  });
+  if(!msgs.length)chatHtml='<div class="mini" style="text-align:center;padding:20px">אין הודעות עדיין</div>';
+  const body=`
+  <div class="ath-profile" style="padding:9px;margin-bottom:8px">
+    <div class="ath-profile-av" style="width:42px;height:42px;font-size:22px">${a.emoji}</div>
+    <div class="ath-profile-inf"><div class="ath-profile-nm" style="font-size:13px">${a.nm}</div><div class="ath-profile-mt" style="font-size:10px">${a.phone||''}</div></div>
+  </div>
+  <div class="chat-wrap" id="chat-wrap-box">${chatHtml}</div>
+  <div class="chat-in">
+    <input id="chat-inp" type="text" placeholder="כתוב הודעה..." onkeydown="if(event.key==='Enter')sendChat(${i},'${key.replace(/'/g,"\\'")}')"/>
+    <button class="btn bpur bsm" style="width:60px" onclick="sendChat(${i},'${key.replace(/'/g,"\\'")}')">שלח</button>
+  </div>
+  <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">
+    <button class="qaction-btn p" onclick="quickChat(${i},'${key.replace(/'/g,"\\'")}','✅ עבודה מצוינת השבוע!')">✅ מצוין</button>
+    <button class="qaction-btn y" onclick="quickChat(${i},'${key.replace(/'/g,"\\'")}','⚡ צריך לעלות נפח השבוע')">⚡ נפח</button>
+    <button class="qaction-btn r" onclick="quickChat(${i},'${key.replace(/'/g,"\\'")}','⚠️ למה דילגת על אימון?')">⚠️ דילוג</button>
+    <button class="qaction-btn g" onclick="quickChat(${i},'${key.replace(/'/g,"\\'")}','🎯 תוכנית חדשה תוכנת. בדוק!')">🎯 תוכנית</button>
+  </div>`;
+  openModal(`💬 צ'אט · ${a.nm}`,body);
+  setTimeout(()=>{const w=document.getElementById('chat-wrap-box');if(w)w.scrollTop=99999;},50);
+}
+function sendChat(i,key){
+  const inp=document.getElementById('chat-inp');
+  const msg=inp.value.trim();if(!msg)return;
+  const chats=ld(K2.CHAT,{});
+  if(!chats[key])chats[key]=[];
+  chats[key].push({from:'coach',msg,time:Date.now()});
+  sv(K2.CHAT,chats);
+  inp.value='';renderChatModal(i,key);
+}
+function quickChat(i,key,msg){
+  const chats=ld(K2.CHAT,{});
+  if(!chats[key])chats[key]=[];
+  chats[key].push({from:'coach',msg,time:Date.now()});
+  sv(K2.CHAT,chats);
+  renderChatModal(i,key);
+}
+
+// ═══════════════════════════════════════════════════
+// ATTENDANCE
+// ═══════════════════════════════════════════════════
+function markAttend(i){
+  const a=getAthletes()[i];if(!a)return;
+  const att=ld(K2.ATT,{});
+  if(!att[a.nm])att[a.nm]=[];
+  const today=new Date().toISOString().slice(0,10);
+  if(att[a.nm].includes(today)){
+    att[a.nm]=att[a.nm].filter(d=>d!==today);
+    notify(`❌ ${a.nm} — סומן כלא נכח`,'r');
+  }else{
+    att[a.nm].push(today);
+    notify(`✅ ${a.nm} — נוכחות מאושרת!`,'p');
+  }
+  sv(K2.ATT,att);
+}
+
+function openAttendanceWeek(){
+  const ath=getAthletes();
+  const att=ld(K2.ATT,{});
+  const today=new Date();
+  // Build week (last 7 days)
+  const days=[];for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(d.getDate()-i);days.push(d);}
+  const dn=['א','ב','ג','ד','ה','ו','ש'];
+  let body='<div class="mini" style="margin-bottom:10px">לחץ על יום כדי לסמן/לבטל נוכחות. שבוע נוכחי:</div>';
+  // Header row
+  body+='<div style="display:grid;grid-template-columns:90px repeat(7,1fr);gap:3px;margin-bottom:5px">';
+  body+='<div></div>';
+  days.forEach(d=>{const isT=d.toDateString()===today.toDateString();body+=`<div style="text-align:center;font-size:9px;color:${isT?'var(--pri)':'var(--txt3)'}"><div>${dn[d.getDay()]}</div><div>${d.getDate()}/${d.getMonth()+1}</div></div>`;});
+  body+='</div>';
+
+  ath.forEach((a,i)=>{
+    const arr=att[a.nm]||[];
+    body+=`<div style="display:grid;grid-template-columns:90px repeat(7,1fr);gap:3px;align-items:center;margin-bottom:4px">`;
+    body+=`<div style="font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.emoji} ${a.nm}</div>`;
+    days.forEach(d=>{
+      const ds=d.toISOString().slice(0,10);
+      const done=arr.includes(ds);
+      const isFut=d>today;
+      body+=`<div class="att-day ${done?'done':''} ${isFut?'fut':''}" onclick="toggleAttDate(${i},'${ds}')">${done?'✓':isFut?'-':'·'}</div>`;
+    });
+    body+='</div>';
+  });
+
+  // Weekly stats
+  const weekKey=days.map(d=>d.toISOString().slice(0,10));
+  const totalAtt=ath.reduce((s,a)=>s+(att[a.nm]||[]).filter(d=>weekKey.includes(d)).length,0);
+  const totalPossible=ath.length*7;
+  const pct=totalPossible?Math.round(totalAtt/totalPossible*100):0;
+  body+=`<div class="card" style="margin-top:11px;padding:11px"><div class="sh p">📊 סיכום שבועי</div>
+    <div style="display:flex;justify-content:space-around;text-align:center">
+      <div><div style="font-family:var(--fd);font-size:24px;color:var(--pri)">${totalAtt}</div><div class="mini">אימונים סך הכל</div></div>
+      <div><div style="font-family:var(--fd);font-size:24px;color:var(--purpleL)">${pct}%</div><div class="mini">אחוז נוכחות</div></div>
+      <div><div style="font-family:var(--fd);font-size:24px;color:var(--yellow)">${ath.length}</div><div class="mini">חניכים</div></div>
+    </div></div>`;
+  openModal('📅 נוכחות שבועית',body);
+}
+function toggleAttDate(i,ds){
+  const a=getAthletes()[i];if(!a)return;
+  const att=ld(K2.ATT,{});
+  if(!att[a.nm])att[a.nm]=[];
+  if(att[a.nm].includes(ds))att[a.nm]=att[a.nm].filter(d=>d!==ds);
+  else att[a.nm].push(ds);
+  sv(K2.ATT,att);
+  openAttendanceWeek();
+}
+
+// ═══════════════════════════════════════════════════
+// SEND PLAN — Templates library
+// ═══════════════════════════════════════════════════
+const PLAN_TEMPLATES=[
+  {id:'beginner4',ico:'🟢',nm:'מתחיל — 4 שבועות יסוד',d:'בסיס כושר קרבי, גוף מלא, נפח נמוך-בינוני',lvl:'מתחיל',days:4,target:'gen,nahal'},
+  {id:'golani8',ico:'🟢',nm:'גולני — 8 שבועות',d:'דגש על נפח רגליים + מסעות. ריצות ארוכות + ruck',lvl:'בינוני',days:5,target:'golani,giv,kfir'},
+  {id:'para8',ico:'🪂',nm:'צנחנים — 8 שבועות',d:'גוף עליון מצוין + מסעות. שכיבות + מתח + ruck כבד',lvl:'בינוני+',days:5,target:'para'},
+  {id:'egoz12',ico:'💀',nm:'אגוז/דובדבן — 12 שבועות',d:'הכנה לגיבוש קשה. נפח גבוה + נשיאות',lvl:'מתקדם',days:6,target:'egoz,givati101'},
+  {id:'669-16',ico:'🚁',nm:'669 — 16 שבועות',d:'כושר עילית + שחייה + הכנת קור נפשי',lvl:'מתקדם+',days:6,target:'unit669,shaldag'},
+  {id:'shai20',ico:'🌊',nm:'שייטת 13 — 20 שבועות',d:'הקשה ביותר. שחייה 3×/שבוע + cold + עומס מקסימלי',lvl:'אליטה',days:7,target:'shai,kommando'},
+  {id:'matkal-16',ico:'🔱',nm:"סיירת מטכ\"ל — 16 שבועות",d:'נפח עצום + מנטלי. ruck ארוכים + יום חוצה גוף',lvl:'אליטה',days:7,target:'matkal'},
+  {id:'rehab',ico:'🩹',nm:'תוכנית שיקום (פציעה)',d:'חזרה הדרגתית אחרי פציעה. דגש על חיזוק יציבות',lvl:'שיקום',days:3,target:'*'},
+  {id:'taper2',ico:'🎯',nm:'Taper — 2 שבועות לפני מבחן',d:'הורדת נפח, שמירה על עצימות, התאוששות',lvl:'כל הרמות',days:4,target:'*'},
+  {id:'gtg-arm',ico:'💪',nm:'GTG — מתח מ-5 ל-15',d:'8 שבועות Grease-the-Groove. הכי אפקטיבי',lvl:'בינוני',days:7,target:'*'},
+];
+
+function openSendPlanModal(){
+  let body='<div class="mini" style="margin-bottom:10px">בחר תבנית תוכנית מהספרייה ושלח לחניך:</div>';
+  PLAN_TEMPLATES.forEach(t=>{
+    body+=`<div class="tmpl-card" onclick="pickPlanTpl('${t.id}')">
+      <div class="tmpl-ico" style="background:rgba(124,58,237,.1)">${t.ico}</div>
+      <div class="tmpl-info">
+        <div class="tmpl-nm">${t.nm}</div>
+        <div class="tmpl-d">${t.d}</div>
+        <div class="tmpl-meta"><span>🎚 ${t.lvl}</span><span>📅 ${t.days} ימים/שבוע</span></div>
+      </div>
+    </div>`;
+  });
+  openModal('🎯 ספריית תוכניות',body);
+}
+function pickPlanTpl(id){
+  const t=PLAN_TEMPLATES.find(p=>p.id===id);if(!t)return;
+  const ath=getAthletes();
+  let body=`<div class="mini" style="margin-bottom:10px">לאיזה חניך לשלוח את <strong style="color:var(--purpleL)">${t.nm}</strong>?</div>`;
+  body+='<div style="max-height:50vh;overflow-y:auto;margin-bottom:10px">';
+  ath.forEach((a,i)=>{
+    body+=`<div class="tmpl-card" onclick="confirmSendPlan('${id}',${i})">
+      <div class="tmpl-ico" style="background:var(--card3)">${a.emoji}</div>
+      <div class="tmpl-info"><div class="tmpl-nm">${a.nm}</div><div class="tmpl-d">${UNITS[a.unit].n} | יעד: ${a.target}</div></div>
+    </div>`;
+  });
+  body+='</div><button class="btn bs" onclick="openSendPlanModal()">← חזור</button>';
+  openModal(`📤 שלח: ${t.nm}`,body);
+}
+function confirmSendPlan(tid,ai){
+  const t=PLAN_TEMPLATES.find(p=>p.id===tid);
+  const a=getAthletes()[ai];if(!t||!a)return;
+  // Save assignment
+  const plans=ld(K2.PLANS,{});
+  if(!plans[a.nm])plans[a.nm]=[];
+  plans[a.nm].push({tid,nm:t.nm,sent:Date.now()});
+  sv(K2.PLANS,plans);
+  // Auto chat msg
+  const chats=ld(K2.CHAT,{});
+  if(!chats[a.nm])chats[a.nm]=[];
+  chats[a.nm].push({from:'coach',msg:`🎯 תוכנית חדשה: <strong>${t.nm}</strong><br/>${t.d}<br/>📅 ${t.days} ימים/שבוע — ${t.lvl}`,time:Date.now()});
+  sv(K2.CHAT,chats);
+  closeModal();
+  notify(`📤 "${t.nm}" נשלחה ל${a.nm}!`,'p');
+}
+function sendPlanToAthlete(i){openSendPlanModal();}
+
+// ═══════════════════════════════════════════════════
+// ANNOUNCEMENTS (broadcast)
+// ═══════════════════════════════════════════════════
+function openAnnouncementModal(){
+  const body=`
+  <div class="mini" style="margin-bottom:10px">הודעה זו תוצג לכל החניכים במצב ספורטאי:</div>
+  <label>כותרת</label><input id="ann-t" type="text" placeholder="כותרת קצרה (למשל: אימון מבחן ביום שישי)" maxlength="60"/>
+  <label>תוכן</label><textarea id="ann-m" rows="4" placeholder="פרטי ההודעה..." maxlength="400"></textarea>
+  <div class="qaction" style="margin-top:10px">
+    <button class="qaction-btn y" onclick="quickAnn('🎯 אימון מבחן ביום שישי 06:00 בפארק','הביאו מים + מד דופק. נמדוד 2K + שכיבות + מתח. תהיו בכושר!')">🎯 מבחן</button>
+    <button class="qaction-btn r" onclick="quickAnn('⚠️ אימון מבוטל היום','בגלל גשם, נדחה למחר באותה שעה')">⚠️ ביטול</button>
+    <button class="qaction-btn g" onclick="quickAnn('🎉 כל הכבוד!','השבוע יצא מצוין! המשיכו ככה!')">🎉 שבח</button>
+    <button class="qaction-btn p" onclick="quickAnn('📅 לוח השבוע','ראשון/שלישי/חמישי — אימונים. שישי — מבחן')">📅 לוח</button>
+  </div>
+  <button class="btn bo" style="margin-top:11px" onclick="sendAnnouncement()">📢 פרסם לכל החניכים</button>
+  <button class="btn bs" onclick="closeModal()">ביטול</button>`;
+  openModal('📢 הודעה לקבוצה',body);
+}
+function quickAnn(t,m){
+  document.getElementById('ann-t').value=t;
+  document.getElementById('ann-m').value=m;
+}
+function sendAnnouncement(){
+  const t=document.getElementById('ann-t').value.trim();
+  const m=document.getElementById('ann-m').value.trim();
+  if(!t||!m){notify('מלא כותרת ותוכן','r');return;}
+  const anns=ld(K2.ANN,[]);
+  anns.unshift({t,m,date:Date.now()});
+  sv(K2.ANN,anns.slice(0,20));
+  closeModal();renderAnnouncements();
+  notify('📢 פורסם לכל החניכים!','p');
+}
+function renderAnnouncements(){
+  const anns=ld(K2.ANN,[]);
+  const card=document.getElementById('ann-feed-card');
+  const list=document.getElementById('ann-feed-list');
+  if(!card||!list)return;
+  if(!anns.length){card.style.display='none';return;}
+  card.style.display='block';
+  let html='';
+  anns.slice(0,5).forEach(a=>{
+    const d=new Date(a.date).toLocaleDateString('he-IL')+' '+new Date(a.date).toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+    html+=`<div class="ann-card"><div class="ann-t">${a.t}</div><div class="ann-m">${a.m}</div><div class="ann-d">📆 ${d}</div></div>`;
+  });
+  list.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════
+// COMPARE ATHLETES
+// ═══════════════════════════════════════════════════
+let compareMetric='bar';
+function openCompareModal(){
+  const ath=getAthletes();
+  if(ath.length<2){notify('נדרשים לפחות 2 חניכים','y');return;}
+  renderCompareView();
+}
+function renderCompareView(){
+  const ath=[...getAthletes()];
+  const metrics={bar:{n:'ציון בר-אור',k:'bar',max:100,suffix:''},run:{n:'2K ריצה',k:'run',max:600,suffix:'שנ',reverse:true},psh:{n:'שכיבות',k:'psh',max:80,suffix:''},pul:{n:'מתח',k:'pul',max:25,suffix:''},days:{n:'ימי אימון/שבוע',k:'training_days',max:7,suffix:''}};
+  const m=metrics[compareMetric];
+  ath.sort((a,b)=>m.reverse?(a[m.k]-b[m.k]):(b[m.k]-a[m.k]));
+  let body='<div class="qaction" style="margin-bottom:10px">';
+  Object.entries(metrics).forEach(([k,v])=>{body+=`<button class="qaction-btn ${k===compareMetric?'p':''}" onclick="setCompareMetric('${k}')">${v.n}</button>`;});
+  body+='</div>';
+  body+=`<div class="sh p">${m.n} — דירוג קבוצה</div>`;
+  ath.forEach((a,idx)=>{
+    const v=a[m.k]||0;
+    const display=m.k==='run'?`${Math.floor(v/60)}:${String(v%60).padStart(2,'0')}`:v+m.suffix;
+    const pct=m.reverse?Math.max(10,100-(v/m.max)*100):(v/m.max)*100;
+    body+=`<div class="cmp-bar">
+      <div class="cmp-n">${idx+1}. ${a.emoji} ${a.nm}</div>
+      <div class="cmp-track"><div class="cmp-fill" style="width:${Math.min(100,pct)}%"></div></div>
+      <div class="cmp-v">${display}</div>
+    </div>`;
+  });
+  openModal('📊 השוואת חניכים',body);
+}
+function setCompareMetric(k){compareMetric=k;renderCompareView();}
+
+// ═══════════════════════════════════════════════════
+// RECRUIT CANDIDATES
+// ═══════════════════════════════════════════════════
+function renderRecruitCandidates(){
+  const sel=document.getElementById('recruit-unit-sel');
+  if(!sel||!sel.value)return;
+  const unit=UNITS[sel.value];if(!unit)return;
+  const ath=getAthletes();
+  // Score each athlete vs this unit
+  const scored=ath.map(a=>{
+    const runScore=Math.max(0,Math.min(100,100-((a.run-unit.r)/unit.r)*200));
+    const pshScore=Math.min(100,(a.psh/unit.p)*100);
+    const pulScore=Math.min(100,(a.pul/unit.l)*100);
+    const pct=Math.round((runScore+pshScore+pulScore)/3);
+    return {...a,fitPct:pct};
+  }).sort((a,b)=>b.fitPct-a.fitPct);
+  let html='';
+  scored.slice(0,5).forEach((a,i)=>{
+    const color=a.fitPct>=85?'var(--pri)':a.fitPct>=65?'var(--yellow)':'var(--red)';
+    html+=`<div class="cmp-bar" onclick="viewAthlete(${ath.indexOf(getAthletes().find(x=>x.nm===a.nm))})" style="cursor:pointer">
+      <div class="cmp-n">${i<3?['🥇','🥈','🥉'][i]:i+1+'.'} ${a.emoji} ${a.nm}</div>
+      <div class="cmp-track"><div class="cmp-fill" style="width:${a.fitPct}%;background:linear-gradient(90deg,${color},${color})"></div></div>
+      <div class="cmp-v" style="color:${color}">${a.fitPct}%</div>
+    </div>`;
+  });
+  if(!scored.length)html='<div class="mini">אין חניכים</div>';
+  document.getElementById('recruit-list').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════
+// EXPORT CSV / PDF
+// ═══════════════════════════════════════════════════
 function exportGroupReport(){
-  const ath=ld(K.ATH,DEMO_ATHLETES.slice(0,4));
-  const lines=['שם,גיל,יחידה,יעד,2K,שכ,מתח,ציון,ימי/שבוע,הערה'];
+  const ath=getAthletes();
+  const lines=['שם,גיל,טלפון,יחידה,יעד,2K,שכ,מתח,ישיבות,ציון,ימי/שבוע,פציעות,הערה'];
   ath.forEach(a=>{
     const rm=a.run<900?`${Math.floor(a.run/60)}:${String(a.run%60).padStart(2,'0')}`:'--';
-    lines.push(`${a.nm},${a.age},${a.unit},${a.target},${rm},${a.psh},${a.pul},${a.bar},${a.training_days},"${a.note||''}"`);
+    lines.push(`"${a.nm}",${a.age},"${a.phone||''}",${a.unit},"${a.target}",${rm},${a.psh},${a.pul},${a.si},${a.bar},${a.training_days},"${a.injuries||''}","${a.note||''}"`);
   });
-  const csv=lines.join('\n');
-  const b=new Blob([csv],{type:'text/csv'});
+  const csv='\ufeff'+lines.join('\n'); // BOM for Excel Hebrew
+  const b=new Blob([csv],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');a.href=URL.createObjectURL(b);
   a.download=`combat_fit_group_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();URL.revokeObjectURL(a.href);
-  notify('דוח קבוצה יוצא! 📊');
+  notify('📤 דוח קבוצה יוצא!','p');
 }
+
+function exportAthletePdf(i){
+  const a=getAthletes()[i];if(!a)return;
+  // Build printable HTML and open in new window
+  const u=UNITS[a.unit]||UNITS.gen;
+  const tgtU=Object.values(UNITS).find(uu=>uu.n===a.target)||u;
+  const rm=a.run<900?`${Math.floor(a.run/60)}:${String(a.run%60).padStart(2,'0')}`:'--';
+  const hist=getAthHist(a.nm);
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"/><title>${a.nm} — דוח</title>
+    <style>body{font-family:Arial,sans-serif;padding:30px;color:#222;max-width:700px;margin:0 auto}
+    h1{color:#7c3aed;border-bottom:3px solid #7c3aed;padding-bottom:8px}
+    h2{color:#444;margin-top:25px;border-bottom:1px solid #ddd;padding-bottom:4px}
+    .kpi{display:inline-block;background:#f3f0ff;border:1px solid #ddd;border-radius:8px;padding:10px 16px;margin:5px}
+    .kpi b{display:block;font-size:22px;color:#7c3aed}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{padding:8px;border:1px solid #ddd;text-align:right}
+    th{background:#f3f0ff}
+    .note{background:#fffbeb;border:1px solid #f0d000;padding:10px;border-radius:6px;margin:10px 0}
+    @media print{button{display:none}}
+    </style></head><body>
+    <h1>⚔ Combat Fit IL — דוח חניך</h1>
+    <p>הופק: ${new Date().toLocaleString('he-IL')}</p>
+    <h2>👤 ${a.nm} ${a.emoji}</h2>
+    <p><b>גיל:</b> ${a.age} | <b>גובה:</b> ${a.height||'?'}ס"מ | <b>משקל:</b> ${a.weight||'?'}ק"ג<br/>
+    <b>טלפון:</b> ${a.phone||'-'} | <b>הצטרף:</b> ${a.joined||'-'}<br/>
+    <b>יחידה נוכחית:</b> ${u.n} | <b>יעד גיוס:</b> ${a.target}</p>
+    <h2>📊 ביצועים נוכחיים</h2>
+    <div class="kpi"><b>${rm}</b>2K ריצה</div>
+    <div class="kpi"><b>${a.psh}</b>שכיבות שמיכה</div>
+    <div class="kpi"><b>${a.pul}</b>מתח</div>
+    <div class="kpi"><b>${a.si}</b>ישיבות בטן</div>
+    <div class="kpi"><b>${a.bar}/100</b>ציון בר-אור</div>
+    <div class="kpi"><b>${a.training_days}×/שבוע</b>אימונים</div>
+    <h2>🎯 פערים ליעד ${a.target}</h2>
+    <table>
+      <tr><th>פרמטר</th><th>נוכחי</th><th>יעד</th><th>פער</th></tr>
+      <tr><td>2K ריצה</td><td>${rm}</td><td>${Math.floor(tgtU.r/60)}:${String(tgtU.r%60).padStart(2,'0')}</td><td>${Math.max(0,a.run-tgtU.r)} שנ</td></tr>
+      <tr><td>שכיבות</td><td>${a.psh}</td><td>${tgtU.p}</td><td>${Math.max(0,tgtU.p-a.psh)}</td></tr>
+      <tr><td>מתח</td><td>${a.pul}</td><td>${tgtU.l}</td><td>${Math.max(0,tgtU.l-a.pul)}</td></tr>
+    </table>
+    <h2>📈 התקדמות 8 שבועות (ציון)</h2>
+    <p>${hist.map((v,k)=>`שבוע ${k+1}: <b>${v}</b>`).join(' · ')}</p>
+    <p>שיפור כללי: <b style="color:${hist[7]-hist[0]>=0?'green':'red'}">${hist[7]-hist[0]>=0?'+':''}${hist[7]-hist[0]} נק'</b></p>
+    ${a.injuries?`<h2>🩹 פציעות</h2><div class="note">${a.injuries}</div>`:''}
+    ${a.note?`<h2>📝 הערות מאמן</h2><div class="note">${a.note}</div>`:''}
+    <button onclick="window.print()" style="margin-top:20px;background:#7c3aed;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-size:14px">🖨 הדפס / שמור PDF</button>
+    </body></html>`);
+  w.document.close();
+}
+
+// ═══════════════════════════════════════════════════
+// MONETIZE — Pricing tier modal (for selling)
+// ═══════════════════════════════════════════════════
+function openMonetizeModal(){
+  const body=`
+  <div class="mini" style="margin-bottom:10px">מסלולים מומלצים לחברות כושר קרבי וקבוצות הכנה:</div>
+  <div class="tier-grid">
+    <div class="tier-card">
+      <div class="tier-nm">בסיסי</div>
+      <div class="tier-price">₪29</div>
+      <div class="tier-per">/חניך/חודש</div>
+      <div class="tier-feats">
+        • דשבורד מאמן<br/>
+        • עד 20 חניכים<br/>
+        • מעקב בר-אור<br/>
+        • הודעות לקבוצה
+      </div>
+    </div>
+    <div class="tier-card gold">
+      <div class="tier-nm" style="color:var(--yellow)">⭐ פרו</div>
+      <div class="tier-price" style="color:var(--yellow)">₪49</div>
+      <div class="tier-per">/חניך/חודש</div>
+      <div class="tier-feats">
+        • הכל בבסיסי<br/>
+        • חניכים ללא הגבלה<br/>
+        • צ'אט אישי<br/>
+        • ספריית תוכניות<br/>
+        • דוחות PDF<br/>
+        • נוכחות + ניבוי
+      </div>
+    </div>
+    <div class="tier-card">
+      <div class="tier-nm">ארגוני</div>
+      <div class="tier-price">₪99</div>
+      <div class="tier-per">/חניך/חודש</div>
+      <div class="tier-feats">
+        • הכל בפרו<br/>
+        • מספר מאמנים<br/>
+        • לוגו מותאם<br/>
+        • API + אינטגרציות<br/>
+        • תמיכה 24/7<br/>
+        • הדרכת צוות
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="sh y">💡 חישוב לדוגמה</div>
+    <div class="mini">
+      קבוצה של <strong>30 חניכים במסלול פרו</strong> = <strong style="color:var(--pri)">₪1,470/חודש</strong> = ₪17,640/שנה<br/><br/>
+      חברה עם <strong>5 קבוצות</strong> = <strong style="color:var(--purpleL)">₪88,200/שנה</strong>
+    </div>
+  </div>
+  <div class="card" style="margin-top:8px">
+    <div class="sh c">🎁 מה לכלול בהצעה לסטודיו</div>
+    <div class="mini">
+      • חודש ניסיון חינם לכל החניכים<br/>
+      • הטמעה + הדרכה ב-2 שעות<br/>
+      • לוגו של החברה במסך הראשי<br/>
+      • דוחות חודשיים אוטומטיים להורי החניכים (גילאי 17-18)<br/>
+      • שיתוף ציון ב-WhatsApp / Instagram עם הלוגו שלהם
+    </div>
+  </div>
+  <button class="btn bp" style="margin-top:11px" onclick="copyTxt('Combat Fit IL Pro — מערכת ניהול לחברות כושר קרבי. מסלולים: ₪29-99 לחניך/חודש. צרו קשר!');notify('הועתק! 📋');closeModal()">📋 העתק מסר מכירה</button>`;
+  openModal('💰 מסלולי מכירה',body);
+}
+
 
 // ═══════════════════════════════════════════════════
 // STRENGTH PLAN
