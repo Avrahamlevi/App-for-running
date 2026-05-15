@@ -725,15 +725,23 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
     <div id="cm-setup">
       <div class="card" style="border-color:rgba(255,165,0,.35);background:linear-gradient(180deg,rgba(255,140,0,.06),var(--card))">
         <div style="font-family:var(--fd);font-size:13px;letter-spacing:2px;color:#ff8c00;margin-bottom:2px">🏜 אימון דיונות</div>
-        <div style="font-size:11px;color:var(--txt2);margin-bottom:12px">פקודות אקראיות בסגנון גיבוש — ספרינטים, זחילות, שקי חול</div>
+        <div style="font-size:11px;color:var(--txt2);margin-bottom:12px">פקודות קוליות אקראיות — ספרינטים, זחילות, שקי חול, מנוחות</div>
 
-        <label>⏱ משך האימון</label>
+        <label>⏱ משך כולל</label>
         <select id="cm-dur">
-          <option value="10">10 דקות — חם</option>
-          <option value="20" selected>20 דקות — סטנדרט</option>
-          <option value="30">30 דקות — קשה</option>
+          <option value="10">10 דקות</option>
+          <option value="20" selected>20 דקות</option>
+          <option value="30">30 דקות</option>
           <option value="45">45 דקות — גיבוש</option>
         </select>
+
+        <label>🏃 זמן לכל תרגיל</label>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">
+          <button class="btn" id="et-short" onclick="setExTime('short',this)" style="font-size:11px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">⚡ 15-30שנ</button>
+          <button class="btn" id="et-mid" onclick="setExTime('mid',this)" style="font-size:11px;font-weight:900;background:rgba(255,140,0,.1);border:2px solid #ff8c00;color:#ff8c00">🏃 30-60שנ</button>
+          <button class="btn" id="et-long" onclick="setExTime('long',this)" style="font-size:11px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">💪 60-90שנ</button>
+          <button class="btn" id="et-grind" onclick="setExTime('grind',this)" style="font-size:11px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">💀 90+שנ</button>
+        </div>
 
         <label>🔥 רמת קושי</label>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
@@ -751,50 +759,62 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
           <button class="qaction-btn" id="gear-vest" onclick="toggleGear('vest',this)" style="opacity:.5">🦺 אפוד כובד</button>
         </div>
 
-        <label>🔊 פקודות קוליות</label>
+        <label>🔊 קול</label>
         <select id="cm-voice">
-          <option value="on" selected>מופעל — מדבר</option>
-          <option value="off">כבוי — טקסט בלבד</option>
+          <option value="on" selected>מופעל — מדבר ומונה</option>
+          <option value="cmd">פקודות בלבד</option>
+          <option value="off">כבוי</option>
         </select>
 
-        <button id="cm-start-btn" onclick="startCombatMode()" style="width:100%;margin-top:14px;background:linear-gradient(135deg,#ff8c00,#cc5500);color:#fff;font-size:18px;font-weight:900;border:none;border-radius:14px;padding:18px;box-shadow:0 6px 28px rgba(255,140,0,.45);cursor:pointer;font-family:var(--fd);letter-spacing:1px">
+        <button onclick="startCombatMode()" style="width:100%;margin-top:14px;background:linear-gradient(135deg,#ff8c00,#cc5500);color:#fff;font-size:18px;font-weight:900;border:none;border-radius:14px;padding:18px;box-shadow:0 6px 28px rgba(255,140,0,.45);cursor:pointer;font-family:var(--fd);letter-spacing:1px">
           🏜 התחל אימון דיונות
         </button>
       </div>
     </div>
 
-    <!-- Active screen — shown during training -->
+    <!-- Active screen -->
     <div id="cm-active" style="display:none">
-      <!-- Big command display -->
-      <div id="cm-cmd-card" style="background:linear-gradient(180deg,#1a0a00,#0d0500);border:2px solid #ff8c00;border-radius:16px;padding:20px 16px;margin-bottom:12px;text-align:center;min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(255,140,0,.2)">
-        <div id="cm-cmd-emoji" style="font-size:52px;margin-bottom:10px">🏜</div>
-        <div id="cm-cmd-text" style="font-family:var(--fd);font-size:20px;color:#ff8c00;line-height:1.4;letter-spacing:.5px"></div>
-        <div id="cm-cmd-detail" style="font-size:11px;color:rgba(255,140,0,.6);margin-top:8px;line-height:1.5"></div>
+      <!-- Big countdown circle -->
+      <div style="text-align:center;margin-bottom:10px">
+        <div style="position:relative;display:inline-block;width:160px;height:160px">
+          <svg width="160" height="160" style="transform:rotate(-90deg)">
+            <circle cx="80" cy="80" r="72" fill="none" stroke="rgba(255,140,0,.15)" stroke-width="10"/>
+            <circle id="cm-circle" cx="80" cy="80" r="72" fill="none" stroke="#ff8c00" stroke-width="10"
+              stroke-dasharray="452" stroke-dashoffset="0" stroke-linecap="round"
+              style="transition:stroke-dashoffset .5s linear"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <div id="cm-ex-countdown" style="font-family:var(--fd);font-size:48px;color:#ff8c00;line-height:1">--</div>
+            <div style="font-size:9px;color:rgba(255,140,0,.6);letter-spacing:1px">שניות</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Timer + stats -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+      <!-- Command card -->
+      <div id="cm-cmd-card" style="background:linear-gradient(180deg,#1a0a00,#0d0500);border:2px solid #ff8c00;border-radius:16px;padding:16px;margin-bottom:10px;text-align:center">
+        <div id="cm-cmd-emoji" style="font-size:44px;margin-bottom:8px">🏜</div>
+        <div id="cm-cmd-text" style="font-family:var(--fd);font-size:20px;color:#ff8c00;line-height:1.4"></div>
+        <div id="cm-cmd-detail" style="font-size:11px;color:rgba(255,140,0,.6);margin-top:6px;line-height:1.5"></div>
+      </div>
+
+      <!-- Stats row -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px">
         <div class="rstat" style="background:rgba(255,140,0,.06);border-color:rgba(255,140,0,.2)">
-          <div style="font-family:var(--fd);font-size:28px;color:#ff8c00;line-height:1" id="cm-timer">--:--</div>
+          <div style="font-family:var(--fd);font-size:24px;color:#ff8c00;line-height:1" id="cm-timer">--:--</div>
           <div class="rstat-l">נותר</div>
         </div>
         <div class="rstat">
-          <div style="font-family:var(--fd);font-size:28px;color:var(--pri);line-height:1" id="cm-count">0</div>
+          <div style="font-family:var(--fd);font-size:24px;color:var(--pri);line-height:1" id="cm-count">0</div>
           <div class="rstat-l">פקודות</div>
         </div>
         <div class="rstat">
-          <div style="font-family:var(--fd);font-size:28px;color:var(--yellow);line-height:1" id="cm-next">--</div>
-          <div class="rstat-l">הבא בשנ'</div>
+          <div style="font-family:var(--fd);font-size:24px;color:var(--yellow);line-height:1" id="cm-kcal">0</div>
+          <div class="rstat-l">קלוריות</div>
         </div>
       </div>
 
-      <!-- Countdown bar -->
-      <div style="height:6px;background:var(--card3);border-radius:3px;margin-bottom:12px;overflow:hidden">
-        <div id="cm-bar" style="height:100%;background:linear-gradient(90deg,#ff8c00,#ffaa00);border-radius:3px;transition:width .5s;width:100%"></div>
-      </div>
-
-      <!-- Completed log -->
-      <div id="cm-log" style="max-height:120px;overflow-y:auto;margin-bottom:12px;font-size:10px;color:var(--txt3)"></div>
+      <!-- Log last commands -->
+      <div id="cm-log" style="max-height:100px;overflow-y:auto;margin-bottom:10px;font-size:10px;color:var(--txt3)"></div>
 
       <!-- Controls -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
@@ -963,7 +983,15 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
       <div id="ann-feed-list"></div>
     </div>
 
-    <!-- Recruit Readiness — best athletes for unit -->
+    <!-- Group Progress Chart -->
+    <div class="card pc">
+      <div class="sh p">📈 גרף שיפור קבוצתי</div>
+      <div class="mini" style="margin-bottom:8px">ציון בר-אור ממוצע לפי שבועות האחרונים</div>
+      <svg id="group-chart-svg" viewBox="0 0 380 120" style="width:100%;height:120px;overflow:visible"></svg>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:6px;flex-wrap:wrap" id="group-chart-legend"></div>
+    </div>
+
+    <!-- Recruit readiness -->
     <div class="card pc">
       <div class="sh p">🎯 מועמדי גיוס מובילים</div>
       <div class="mini" style="margin-bottom:8px">סינון לפי יחידת יעד — מי הכי קרוב</div>
@@ -1201,10 +1229,10 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
     <div class="card">
       <div class="sh y">😴 שינה + הידרציה</div>
       <div class="r2">
-        <div><label>שעות שינה</label><input id="sleep-h" type="number" value="8" min="3" max="12" step="0.5"/></div>
-        <div><label>ליטר מים היום</label><input id="water-l" type="number" value="2.5" min="0" max="6" step="0.5"/></div>
+        <div><label>שעות שינה</label><input id="sleep-h" type="number" value="8" min="3" max="12" step="0.5" oninput="calcRecovery()"/></div>
+        <div><label>ליטר מים היום</label><input id="water-l" type="number" value="3" min="0" max="6" step="0.5" oninput="calcRecovery()"/></div>
       </div>
-      <div><label>תחושה כללית</label><select id="feeling"><option value="5">💪 מצוין</option><option value="4" selected>😊 טוב</option><option value="3">😐 בסדר</option><option value="2">😔 עייף</option><option value="1">🤕 לא טוב</option></select></div>
+      <div><label>תחושה כללית</label><select id="feeling" onchange="calcRecovery()"><option value="5" selected>💪 מצוין</option><option value="4">😊 טוב</option><option value="3">😐 בסדר</option><option value="2">😔 עייף</option><option value="1">🤕 לא טוב</option></select></div>
       <button class="btn bcy" onclick="saveRecovery()">💾 שמור וחשב</button>
     </div>
   </div>
@@ -1897,26 +1925,22 @@ function toggleMuscle(id){
   calcRecovery();
 }
 function calcRecovery(){
-  // Read muscle states — default fresh for muscles not yet set
   const allStates=MUSCLES.map(m=>muscleState[m.id]||'fresh');
   const sore=allStates.filter(v=>v==='sore').length;
   const partial=allStates.filter(v=>v==='partial').length;
-  // Muscle score: starts at 100, each sore -18, each partial -6
   const muscleScore=Math.max(0,100-sore*18-partial*6);
 
   const sleep=parseFloat(document.getElementById('sleep-h')?.value||8);
-  const water=parseFloat(document.getElementById('water-l')?.value||2.5);
-  const feel=parseInt(document.getElementById('feeling')?.value||4);
+  const water=parseFloat(document.getElementById('water-l')?.value||3);
+  const feel=parseInt(document.getElementById('feeling')?.value||5);
 
-  // Each factor reaches exactly 100 at best values
-  const sleepScore=sleep>=8?100:sleep>=7?88:sleep>=6?68:sleep>=5?42:15;
-  const waterScore=water>=3?100:water>=2.5?95:water>=2?78:water>=1.5?55:30;
-  const feelScore=feel===5?100:feel===4?88:feel===3?62:feel===2?38:12;
+  // All reach 100 at realistic "good" values
+  const sleepScore=sleep>=8?100:sleep>=7?85:sleep>=6?65:sleep>=5?40:15;
+  const waterScore=water>=2.5?100:water>=2?85:water>=1.5?65:water>=1?40:15;
+  const feelScore=feel>=4?100:feel===3?65:feel===2?38:12;
 
-  // Weighted: muscles 45%, feel 30%, sleep 17%, water 8%
-  // When all best: 100*0.45 + 88*0.30 + 100*0.17 + 95*0.08 = 45+26.4+17+7.6 = 96 (feel=4)
-  // When feel=5 + all best: 100*0.45 + 100*0.30 + 100*0.17 + 100*0.08 = 100 ✓
-  const raw=muscleScore*0.45+feelScore*0.30+sleepScore*0.17+waterScore*0.08;
+  // Simple average — 100% when all at good values (all fresh + 8h sleep + 2.5L + feel≥4)
+  const raw=(muscleScore+sleepScore+waterScore+feelScore)/4;
   const total=Math.min(100,Math.max(0,Math.round(raw)));
 
   const el=document.getElementById('rec-score');
@@ -2180,7 +2204,83 @@ function getAthHist(name){
   return hist[name];
 }
 
-let coachFilterMode='all';
+function renderGroupChart(){
+  const athletes=getAthletes();
+  const svg=document.getElementById('group-chart-svg');
+  const legend=document.getElementById('group-chart-legend');
+  if(!svg||!athletes.length)return;
+
+  const W=380,H=110,PL=28,PR=10,PT=10,PB=22;
+  const chartW=W-PL-PR,chartH=H-PT-PB;
+  const weeks=8;
+
+  // Collect all athletes' history
+  const allData=athletes.map(a=>({
+    nm:a.nm,col:UNITS[a.unit]?.col||'#7c3aed',
+    hist:getAthHist(a.nm),emoji:a.emoji
+  }));
+
+  // Find global min/max
+  const allVals=allData.flatMap(d=>d.hist);
+  const minV=Math.max(0,Math.min(...allVals)-5);
+  const maxV=Math.min(100,Math.max(...allVals)+5);
+  const range=maxV-minV||1;
+
+  let html='';
+  // Grid lines
+  [0,25,50,75,100].forEach(v=>{
+    if(v<minV||v>maxV)return;
+    const y=PT+chartH-(v-minV)/range*chartH;
+    html+=`<line x1="${PL}" y1="${y.toFixed(1)}" x2="${W-PR}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.06)" stroke-width="1"/>`;
+    html+=`<text x="${PL-4}" y="${(y+4).toFixed(1)}" fill="rgba(255,255,255,.3)" font-size="8" text-anchor="end">${v}</text>`;
+  });
+
+  // X axis labels
+  for(let w=0;w<weeks;w++){
+    const x=PL+w/(weeks-1)*chartW;
+    html+=`<text x="${x.toFixed(1)}" y="${H-4}" fill="rgba(255,255,255,.25)" font-size="7.5" text-anchor="middle">ש${w+1}</text>`;
+  }
+
+  // Each athlete line
+  allData.forEach(d=>{
+    // Line
+    let path='';let pts='';
+    d.hist.forEach((v,w)=>{
+      const x=PL+w/(weeks-1)*chartW;
+      const y=PT+chartH-(v-minV)/range*chartH;
+      path+=(w===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';
+      pts+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${d.col}" stroke="var(--card)" stroke-width="1.5" opacity=".9"/>`;
+    });
+    html+=`<path d="${path}" fill="none" stroke="${d.col}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>`;
+    html+=pts;
+    // Last value label
+    const lx=PL+chartW,lv=d.hist[weeks-1];
+    const ly=PT+chartH-(lv-minV)/range*chartH;
+    html+=`<text x="${(lx+4).toFixed(1)}" y="${(ly+4).toFixed(1)}" fill="${d.col}" font-size="8" font-weight="bold">${lv}</text>`;
+  });
+
+  // Average line (dashed)
+  const avgLine=Array.from({length:weeks},(_,w)=>Math.round(allData.reduce((s,d)=>s+d.hist[w],0)/allData.length));
+  let avgPath='';
+  avgLine.forEach((v,w)=>{
+    const x=PL+w/(weeks-1)*chartW;
+    const y=PT+chartH-(v-minV)/range*chartH;
+    avgPath+=(w===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';
+  });
+  html+=`<path d="${avgPath}" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>`;
+
+  svg.innerHTML=html;
+
+  // Legend
+  let lhtml='<span style="font-size:9px;color:var(--txt3);margin-left:8px">-- ממוצע</span>';
+  allData.slice(0,5).forEach(d=>{
+    const trend=d.hist[weeks-1]-d.hist[0];
+    lhtml+=`<span style="font-size:9px;color:${d.col};white-space:nowrap">${d.emoji} ${d.nm.split(' ')[0]} ${trend>=0?'+':''}${trend}</span>`;
+  });
+  legend.innerHTML=lhtml;
+}
+
+
 function coachFilter(mode,el){
   coachFilterMode=mode;
   document.getElementById('coach-filter-tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
@@ -2257,6 +2357,7 @@ function renderCoachGroup(){
   }
   renderRecruitCandidates();
   renderAnnouncements();
+  renderGroupChart();
 }
 
 // ═══════════════════════════════════════════════════
@@ -3791,8 +3892,179 @@ function calcIDFScore(){
 let combatTimer=null,combatCmdTimer=null,combatEndTime=0;
 let combatCmdCount=0,combatNextIn=0,combatPaused=false,combatPauseStart=0,combatPausedMs=0;
 let duneLv='fresh',duneGear=new Set(['bag']),cmTotalSec=0,cmLogArr=[];
+let duneExTime='mid'; // short / mid / long / grind
+let cmExCountdown=0,cmExTotal=0,cmExInterval=null,cmKcal=0;
 
-// ─── Command library — dunes-specific ───
+const ET_RANGES={short:[12,28],mid:[28,58],long:[55,88],grind:[85,150]};
+
+function setExTime(t,btn){
+  duneExTime=t;
+  ['short','mid','long','grind'].forEach(k=>{
+    const b=document.getElementById('et-'+k);
+    if(!b)return;
+    b.style.background='var(--card3)';b.style.border='1px solid var(--b2)';b.style.color='var(--txt)';
+  });
+  btn.style.background='rgba(255,140,0,.1)';btn.style.border='2px solid #ff8c00';btn.style.color='#ff8c00';
+}
+
+function setDuneLv(lv,btn){
+  duneLv=lv;
+  ['fresh','mid','hard','elite'].forEach(l=>{
+    const b=document.getElementById('dlv-'+l);
+    if(!b)return;
+    b.style.background='var(--card3)';b.style.border='1px solid var(--b2)';b.style.color='var(--txt)';
+  });
+  const cols={fresh:'var(--pri)',mid:'var(--yellow)',hard:'var(--orange)',elite:'var(--red)'};
+  const bgs={fresh:'rgba(0,255,136,.08)',mid:'rgba(255,214,10,.08)',hard:'rgba(255,136,0,.08)',elite:'rgba(255,45,85,.08)'};
+  btn.style.background=bgs[lv];btn.style.border=`2px solid ${cols[lv]}`;btn.style.color=cols[lv];
+}
+
+function toggleGear(g,btn){
+  if(duneGear.has(g)){duneGear.delete(g);btn.style.opacity='.5';btn.classList.remove('p');}
+  else{duneGear.add(g);btn.style.opacity='1';btn.classList.add('p');}
+}
+
+function initCombatMode(){
+  setDuneLv('fresh',document.getElementById('dlv-fresh'));
+  setExTime('mid',document.getElementById('et-mid'));
+}
+
+function startCombatMode(){
+  const dur=parseInt(document.getElementById('cm-dur').value||20)*60;
+  combatEndTime=Date.now()+dur*1000;
+  cmTotalSec=dur;
+  combatCmdCount=0;combatPaused=false;combatPausedMs=0;cmLogArr=[];cmKcal=0;
+  document.getElementById('cm-setup').style.display='none';
+  document.getElementById('cm-active').style.display='block';
+  fireNextDuneCmd(true);
+  combatTimer=setInterval(updateCombatTimer,500);
+  logWorkout({type:'combat',name:'אימון דיונות',icon:'🏜',duration:Math.round(dur/60),details:[`רמה: ${duneLv}`,`זמן/תרגיל: ${duneExTime}`]});
+}
+
+function getNextDuneCmd(){
+  const pool=DUNE_CMDS[duneLv]||DUNE_CMDS.mid;
+  let all=[];
+  Object.values(pool).forEach(arr=>arr.forEach(c=>{
+    if(!c.gear||c.gear.every(g=>duneGear.has(g)))all.push(c);
+  }));
+  if(all.length>1&&window._lastDuneCmd)all=all.filter(c=>c.t!==window._lastDuneCmd);
+  return all[Math.floor(Math.random()*all.length)];
+}
+
+function startExCountdown(sec){
+  if(cmExInterval)clearInterval(cmExInterval);
+  cmExTotal=sec;cmExCountdown=sec;
+  updateCountdownUI();
+  cmExInterval=setInterval(()=>{
+    if(combatPaused)return;
+    cmExCountdown--;
+    updateCountdownUI();
+    // Voice countdown at 3,2,1
+    const voice=document.getElementById('cm-voice')?.value;
+    if(voice==='on'&&cmExCountdown<=3&&cmExCountdown>0&&'speechSynthesis' in window){
+      const u=new SpeechSynthesisUtterance(String(cmExCountdown));
+      u.lang='he-IL';u.rate=1.3;u.pitch=1.3;u.volume=1;
+      window.speechSynthesis.speak(u);
+    }
+    if(cmExCountdown<=0){
+      clearInterval(cmExInterval);cmExInterval=null;
+      if(!combatPaused)fireNextDuneCmd();
+    }
+  },1000);
+}
+
+function updateCountdownUI(){
+  const el=document.getElementById('cm-ex-countdown');
+  const circle=document.getElementById('cm-circle');
+  if(el)el.textContent=cmExCountdown;
+  if(circle){
+    const pct=cmExCountdown/cmExTotal;
+    const dashoffset=452*(1-pct);
+    circle.style.strokeDashoffset=dashoffset;
+    circle.style.stroke=cmExCountdown<=5?'#ff2d55':cmExCountdown<=10?'#ff8c00':'#ff8c00';
+  }
+}
+
+function fireNextDuneCmd(first=false){
+  const cmd=getNextDuneCmd();if(!cmd)return;
+  window._lastDuneCmd=cmd.t;
+  combatCmdCount++;
+  document.getElementById('cm-cmd-emoji').textContent=cmd.e;
+  document.getElementById('cm-cmd-text').textContent=cmd.t;
+  document.getElementById('cm-cmd-detail').textContent=cmd.d||'';
+  document.getElementById('cm-count').textContent=combatCmdCount;
+
+  // Pick duration based on ET setting OR use cmd's own range
+  const [minSec,maxSec]=ET_RANGES[duneExTime]||[28,58];
+  const [cmdMin,cmdMax]=cmd.sec||[minSec,maxSec];
+  // Use the larger of (user setting, cmd minimum)
+  const effMin=Math.max(minSec,cmdMin);
+  const effMax=Math.max(maxSec,cmdMax);
+  const sec=Math.floor(Math.random()*(effMax-effMin)+effMin);
+
+  // Calories estimate (rough: 0.15 kcal/sec for intense exercise)
+  const intensity={fresh:0.1,mid:0.15,hard:0.2,elite:0.25}[duneLv]||0.15;
+  cmKcal+=Math.round(sec*intensity);
+  document.getElementById('cm-kcal').textContent=cmKcal;
+
+  // Voice — say command
+  const voice=document.getElementById('cm-voice')?.value;
+  if(voice!=='off'&&'speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    const txt=`${cmd.t}. ${cmd.d||''}`;
+    const u=new SpeechSynthesisUtterance(txt);
+    u.lang='he-IL';u.rate=1.05;u.pitch=1.1;u.volume=1;
+    window.speechSynthesis.speak(u);
+  }
+
+  // Start visual countdown
+  startExCountdown(sec);
+
+  // Log
+  cmLogArr.unshift(`${cmd.e} ${cmd.t} (${sec}שנ)`);
+  const logEl=document.getElementById('cm-log');
+  if(logEl)logEl.innerHTML=cmLogArr.slice(0,8).map((l,i)=>`<div style="opacity:${1-i*.12};padding:2px 0;border-bottom:1px solid var(--b2)">${i===0?'<span style="color:#ff8c00">▶</span> ':'✓ '}${l}</div>`).join('');
+}
+
+function updateCombatTimer(){
+  if(combatPaused)return;
+  const rem=Math.max(0,Math.round((combatEndTime-Date.now()-combatPausedMs)/1000));
+  document.getElementById('cm-timer').textContent=`${Math.floor(rem/60)}:${String(rem%60).padStart(2,'0')}`;
+  if(rem===0)stopCombatMode();
+}
+
+function pauseCombat(){
+  combatPaused=!combatPaused;
+  const btn=document.getElementById('cm-pause-btn');
+  if(combatPaused){
+    combatPauseStart=Date.now();
+    window.speechSynthesis?.pause();
+    if(btn){btn.textContent='▶ המשך';btn.style.color='var(--pri)';}
+  } else {
+    combatPausedMs+=Date.now()-combatPauseStart;
+    window.speechSynthesis?.resume();
+    if(btn){btn.textContent='⏸ השהה';btn.style.color='var(--yellow)';}
+  }
+}
+
+function stopCombatMode(){
+  if(combatTimer){clearInterval(combatTimer);combatTimer=null;}
+  if(cmExInterval){clearInterval(cmExInterval);cmExInterval=null;}
+  window.speechSynthesis?.cancel();
+  document.getElementById('cm-active').style.display='none';
+  document.getElementById('cm-setup').style.display='block';
+  openModal('🏜 אימון הסתיים!',`
+    <div style="text-align:center;padding:12px 0">
+      <div style="font-size:52px;margin-bottom:10px">🏜</div>
+      <div style="font-family:var(--fd);font-size:18px;color:#ff8c00;margin-bottom:16px">כל הכבוד!</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+        <div class="rstat"><div style="font-family:var(--fd);font-size:32px;color:var(--pri)">${combatCmdCount}</div><div class="rstat-l">פקודות</div></div>
+        <div class="rstat"><div style="font-family:var(--fd);font-size:32px;color:#ff8c00">${cmKcal}</div><div class="rstat-l">קלוריות</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--txt2);margin-bottom:16px">אימון דיונות · רמה: ${{fresh:'ירוק',mid:'בינוני',hard:'קשה',elite:'עילית'}[duneLv]}</div>
+      <button class="btn bp" onclick="closeModal()">סגור</button>
+    </div>`);
+}
 const DUNE_CMDS={
   fresh:{
     sprint:[
