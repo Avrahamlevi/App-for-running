@@ -331,11 +331,14 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .recovery-meter{text-align:center;padding:16px;background:var(--card2);border-radius:14px;border:1px solid var(--b1);margin-bottom:10px}
 .recovery-score{font-family:var(--fd);font-size:60px;line-height:1;margin-bottom:4px}
 .recovery-label{font-size:12px;color:var(--txt2);letter-spacing:1px}
-.muscle-body{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
-.muscle-item{background:var(--card2);border-radius:10px;padding:9px 6px;text-align:center;border:1px solid var(--b1);cursor:pointer;transition:.2s;-webkit-tap-highlight-color:transparent}
-.muscle-item.sore{border-color:rgba(255,45,85,.5);background:rgba(255,45,85,.1)}
-.muscle-item.partial{border-color:rgba(255,214,10,.5);background:rgba(255,214,10,.08)}
-.muscle-item.fresh{border-color:rgba(0,255,136,.4);background:rgba(0,255,136,.06)}
+.muscle-body{display:flex;flex-direction:column;gap:6px;margin:6px 0}
+.muscle-item{background:var(--card2);border-radius:10px;padding:11px 14px;border:1px solid var(--b1);cursor:pointer;transition:.2s;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:12px}
+.muscle-item .muscle-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center}
+.muscle-item .muscle-name{flex:1;font-weight:700;font-size:13px}
+.muscle-item .muscle-status{font-size:11px;font-weight:700;white-space:nowrap}
+.muscle-item.sore{border-color:rgba(255,45,85,.5);background:rgba(255,45,85,.08);border-right:3px solid var(--red)}
+.muscle-item.partial{border-color:rgba(255,214,10,.5);background:rgba(255,214,10,.06);border-right:3px solid var(--yellow)}
+.muscle-item.fresh{border-color:rgba(0,255,136,.35);background:rgba(0,255,136,.04);border-right:3px solid var(--pri)}
 .muscle-icon{font-size:22px;margin-bottom:4px}
 .muscle-name{font-size:10px;font-weight:700}
 .muscle-status{font-size:9px;color:var(--txt3);margin-top:2px}
@@ -547,6 +550,8 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
     <button class="tab" onclick="tt('tb-pr',this)">פרופיל</button>
     <button class="tab" onclick="tt('tb-1rm',this)">1RM</button>
     <button class="tab" onclick="tt('tb-nu',this)">תזונה</button>
+    <button class="tab" onclick="tt('tb-idf',this)">🪖 ניקוד צה"ל</button>
+    <button class="tab" onclick="tt('tb-cm',this)">🔴 מצב קרב</button>
   </div>
 
   <div id="tb-br">
@@ -604,37 +609,15 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
       </div>
       <div><label>יחידה מבוקשת</label>
         <select id="pun">
-          <optgroup label="── רגלים ──">
-            <option value="nahal">🌿 נח"ל</option>
-            <option value="golani">🟢 גולני</option>
-            <option value="giv">🔶 גבעתי</option>
-            <option value="kfir">🦁 כפיר</option>
-            <option value="para">🪂 צנחנים</option>
-          </optgroup>
-          <optgroup label="── סיירות ──">
-            <option value="givsay">🦂 סיירת גבעתי</option>
-            <option value="nahalsay">🌵 סיירת נח"ל</option>
-            <option value="tzansay">🪂 סיירת צנחנים</option>
-            <option value="egozsay">🦅 סיירת גולני</option>
-            <option value="haruv">🌿 חרוב</option>
-          </optgroup>
-          <optgroup label="── מיוחדות ──">
-            <option value="oketz">🐕‍🦺 עוקץ</option>
-            <option value="yaalom">💎 יהל"ם</option>
-            <option value="ravmimdi">🛡 רב-מימדית</option>
-          </optgroup>
-          <optgroup label="── קומנדו ──">
-            <option value="duvdevan">🍒 דובדבן</option>
-            <option value="maglan">🎯 מגלן</option>
-            <option value="egoz">💀 אגוז</option>
-            <option value="lotar">🔫 לוט"ר</option>
-          </optgroup>
-          <optgroup label="── עילית ──">
-            <option value="unit669">🚁 יחידה 669</option>
-            <option value="shaldag">🦅 שלדג</option>
-            <option value="shai">🤿 שייטת 13</option>
-            <option value="matkal">🔱 סיירת מטכ"ל</option>
-          </optgroup>
+          <option value="gen">קרבי כללי</option>
+          <option value="nahal">🌿 נח"ל</option>
+          <option value="golani">🟢 גולני</option><option value="para">🪂 צנחנים</option>
+          <option value="giv">🔶 גבעתי</option><option value="kfir">🦁 כפיר</option>
+          <option value="oketz">🐕‍🦺 עוקץ</option><option value="duvdevan">🍒 דובדבן</option>
+          <option value="maglan">🎯 מגלן</option>
+          <option value="egoz">💀 אגוז</option><option value="lotar">🔫 לוט"ר</option>
+          <option value="unit669">🚁 יחידה 669</option><option value="shaldag">🦅 שלדג</option>
+          <option value="shai">🤿 שייטת 13</option><option value="matkal">🔱 סיירת מטכ"ל</option>
         </select>
       </div>
       <div><label>תאריך גיוס משוער</label><input id="pdr" type="date"/></div>
@@ -690,6 +673,81 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
       <div id="nu-res" style="margin-top:10px"></div>
     </div>
   </div>
+
+  <!-- ════ IDF SCORE CALCULATOR ════ -->
+  <div id="tb-idf" style="display:none">
+    <div class="card hot">
+      <div class="sh" style="color:var(--purpleL)">🪖 מחשבון ניקוד צה"לי</div>
+      <div class="mini" style="margin-bottom:10px">הזן תוצאות ותקבל ציון משוקלל לפי דרישות יחידות מיוחדות</div>
+      <div class="r2">
+        <div><label>גיל</label><input id="idf-age" type="number" value="18" min="17" max="25"/></div>
+        <div><label>יחידת יעד</label>
+          <select id="idf-unit">
+            <optgroup label="── רגלים ──">
+              <option value="nahal">נח"ל</option><option value="golani">גולני</option>
+              <option value="giv">גבעתי</option><option value="kfir">כפיר</option>
+              <option value="para">צנחנים</option>
+            </optgroup>
+            <optgroup label="── מיוחדות/קומנדו ──">
+              <option value="oketz">עוקץ</option><option value="duvdevan">דובדבן</option>
+              <option value="maglan">מגלן</option><option value="egoz">אגוז</option>
+              <option value="lotar">לוט"ר</option>
+            </optgroup>
+            <optgroup label="── עילית ──">
+              <option value="unit669">יחידה 669</option><option value="shaldag">שלדג</option>
+              <option value="shai">שייטת 13</option><option value="matkal">סיירת מטכ"ל</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="sh" style="margin-top:10px">📊 תוצאות מבחנים</div>
+      <div class="r2">
+        <div><label>ריצה 2K (ד:ש)</label><input id="idf-run" type="text" placeholder="9:30" value="9:30"/></div>
+        <div><label>שכיבות שמיכה (2 דקות)</label><input id="idf-push" type="number" value="40"/></div>
+      </div>
+      <div class="r2">
+        <div><label>מתח (מקסימום)</label><input id="idf-pull" type="number" value="8"/></div>
+        <div><label>ישיבות בטן (2 דקות)</label><input id="idf-sit" type="number" value="55"/></div>
+      </div>
+      <div class="r2">
+        <div><label>ריצה 3K (ד:ש)</label><input id="idf-run3" type="text" placeholder="13:30"/></div>
+        <div><label>שחייה 400מ (דקות)</label><input id="idf-swim" type="number" value="0" step="0.5"/></div>
+      </div>
+      <button class="btn bp" onclick="calcIDFScore()">🎯 חשב ניקוד</button>
+      <div id="idf-res" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- ════ COMBAT MODE — מצב קרב ════ -->
+  <div id="tb-cm" style="display:none">
+    <div class="card" style="border-color:rgba(255,45,85,.3);background:linear-gradient(180deg,rgba(255,45,85,.04),var(--card))">
+      <div class="sh r" style="color:var(--red)">🔴 מצב קרב — אימון גיבוש</div>
+      <div class="mini" style="margin-bottom:10px">האפליקציה מפעילה פקודות אקראיות קוליות ומוצגות — בדיוק כמו בגיבוש. לחץ התחל ותן הכל.</div>
+      <div class="r2">
+        <div><label>⏱ משך (דקות)</label><select id="cm-dur"><option>10</option><option>15</option><option selected>20</option><option>30</option><option>45</option></select></div>
+        <div><label>🔥 רמת עצימות</label><select id="cm-lv"><option value="easy">מתחיל</option><option value="mid" selected>קרבי</option><option value="hard">גיבוש</option><option value="elite">מטכ"ל</option></select></div>
+      </div>
+      <div><label>🔊 פקודות קוליות</label>
+        <select id="cm-voice">
+          <option value="on" selected>מופעל (מדבר)</option>
+          <option value="off">כבוי (טקסט בלבד)</option>
+        </select>
+      </div>
+      <div id="cm-display" style="display:none;text-align:center;padding:20px 0">
+        <div id="cm-cmd-text" style="font-family:var(--fd);font-size:22px;color:var(--red);line-height:1.3;min-height:80px;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.2);border-radius:13px;margin-bottom:12px"></div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px">
+          <div class="rstat" style="flex:1"><div class="rstat-v yl" id="cm-timer">20:00</div><div class="rstat-l">נותר</div></div>
+          <div class="rstat" style="flex:1"><div class="rstat-v cy" id="cm-count">0</div><div class="rstat-l">פקודות</div></div>
+          <div class="rstat" style="flex:1"><div class="rstat-v or" id="cm-next">--</div><div class="rstat-l">הבאה בשנ'</div></div>
+        </div>
+        <button class="btn br" style="width:100%;font-size:16px;font-weight:900" onclick="stopCombatMode()">⏹ עצור</button>
+      </div>
+      <button id="cm-start-btn" class="btn" style="width:100%;margin-top:10px;background:linear-gradient(135deg,#ff2d55,#c0002a);color:#fff;font-size:16px;font-weight:900;border:none;border-radius:13px;padding:16px;box-shadow:0 4px 20px rgba(255,45,85,.4);cursor:pointer;font-family:var(--fd)" onclick="startCombatMode()">
+        🔴 כנס למצב קרב
+      </button>
+    </div>
+  </div>
+
 </div>
 
 <!-- ══════════════════════ WEEKLY ══════════════════════ -->
@@ -700,34 +758,30 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
     <div class="r2">
       <div><label>יחידה מבוקשת</label>
         <select id="wk-unit">
-          <optgroup label="── רגלים ──">
+          <optgroup label="── כניסה ──">
+            <option value="gen">🪖 קרבי כללי</option>
             <option value="nahal">🌿 נח"ל</option>
+          </optgroup>
+          <optgroup label="── עילית ──">
             <option value="golani">🟢 גולני</option>
+            <option value="para">🪂 צנחנים</option>
             <option value="giv">🔶 גבעתי</option>
             <option value="kfir">🦁 כפיר</option>
-            <option value="para">🪂 צנחנים</option>
           </optgroup>
-          <optgroup label="── סיירות ──">
-            <option value="givsay">🦂 סיירת גבעתי</option>
-            <option value="nahalsay">🌵 סיירת נח"ל</option>
-            <option value="tzansay">🪂 סיירת צנחנים</option>
-            <option value="egozsay">🦅 סיירת גולני</option>
-            <option value="haruv">🌿 חרוב</option>
-          </optgroup>
-          <optgroup label="── מיוחדות ──">
+          <optgroup label="── מובחר ──">
             <option value="oketz">🐕‍🦺 עוקץ</option>
-            <option value="yaalom">💎 יהל"ם</option>
-            <option value="ravmimdi">🛡 רב-מימדית</option>
-          </optgroup>
-          <optgroup label="── קומנדו ──">
             <option value="duvdevan">🍒 דובדבן</option>
             <option value="maglan">🎯 מגלן</option>
+          </optgroup>
+          <optgroup label="── קשה מאוד ──">
             <option value="egoz">💀 אגוז</option>
             <option value="lotar">🔫 לוט"ר</option>
           </optgroup>
-          <optgroup label="── עילית ──">
+          <optgroup label="── עילית מיוחד ──">
             <option value="unit669">🚁 יחידה 669</option>
             <option value="shaldag">🦅 שלדג</option>
+          </optgroup>
+          <optgroup label="── מקסימום ──">
             <option value="shai">🤿 שייטת 13</option>
             <option value="matkal">🔱 סיירת מטכ"ל</option>
           </optgroup>
@@ -943,39 +997,11 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 
     <div class="card cc">
       <div class="sh c">🗺 מסלול ריצה</div>
-      <div class="mini" style="margin-bottom:9px">לחץ על המפה להוספת נקודות · גרור להזזה · לחיצה ימנית למחיקה</div>
+      <div class="mini" style="margin-bottom:9px">חפש מיקום, הוסף נקודות למסלול, ואז הפעל מעקב ריצה</div>
       <div style="display:flex;gap:6px;margin-bottom:8px">
-        <input id="map-search" type="text" placeholder="🔍 חפש מיקום..." style="flex:1" onkeydown="if(event.key==='Enter')searchMapLocation()"/>
+        <input id="map-search" type="text" placeholder="🔍 חפש מיקום..." style="flex:1"/>
         <button class="btn bp bsm" onclick="searchMapLocation()" style="width:60px">חפש</button>
       </div>
-
-      <!-- Auto route generator -->
-      <div style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:10px;margin-bottom:10px">
-        <div style="font-size:11px;font-weight:800;color:var(--purpleL);margin-bottom:8px">⚡ בנה מסלול אוטומטי</div>
-        <div class="r2" style="gap:6px">
-          <div>
-            <label>מרחק (ק"מ)</label>
-            <select id="auto-dist">
-              <option value="2">2 ק"מ</option>
-              <option value="3">3 ק"מ</option>
-              <option value="5" selected>5 ק"מ</option>
-              <option value="8">8 ק"מ</option>
-              <option value="10">10 ק"מ</option>
-              <option value="12">12 ק"מ</option>
-            </select>
-          </div>
-          <div>
-            <label>צורת מסלול</label>
-            <select id="auto-shape">
-              <option value="loop">לולאה (חוזר לנקודה)</option>
-              <option value="outback">הלוך-חזור</option>
-              <option value="oneway">קו ישר</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn bpur" style="width:100%;margin-top:8px" onclick="buildAutoRoute()">🗺 בנה מסלול באזור שלי</button>
-      </div>
-
       <div id="gmap" style="width:100%;height:280px;border-radius:12px;border:1px solid var(--b2);overflow:hidden;background:linear-gradient(180deg,#0d1b2a,#050a14);display:flex;align-items:center;justify-content:center">
         <div id="gmap-loading" style="text-align:center;color:var(--txt2);padding:20px">
           <div style="font-size:40px;margin-bottom:10px">🗺</div>
@@ -983,58 +1009,25 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
           <button class="btn bp" onclick="loadGoogleMap()">📍 טען מפה</button>
         </div>
       </div>
-
-      <!-- Stats -->
       <div class="route-stats" id="route-stats" style="margin-top:10px">
         <div class="rstat"><div class="rstat-v cy" id="rs-dist">0.0</div><div class="rstat-l">ק"מ</div></div>
         <div class="rstat"><div class="rstat-v or" id="rs-time">--:--</div><div class="rstat-l">זמן</div></div>
         <div class="rstat"><div class="rstat-v yl" id="rs-elev">0</div><div class="rstat-l">עלייה מ'</div></div>
         <div class="rstat"><div class="rstat-v" id="rs-cal">0</div><div class="rstat-l">קלוריות</div></div>
       </div>
-
-      <!-- Settings -->
       <div class="r2" style="margin-top:8px">
         <div><label>קצב יעד (ד:ש/ק"מ)</label><input id="rt-pace" type="text" value="5:30" inputmode="numeric" oninput="updateRouteStats()"/></div>
         <div><label>משקל ק"ג</label><input id="rt-wgt" type="number" value="72" oninput="updateRouteStats()"/></div>
       </div>
-
-      <!-- Terrain chips -->
-      <div style="margin-top:8px;margin-bottom:6px">
-        <label>🏔 סוג שטח</label>
-        <div style="display:flex;gap:5px;margin-top:5px;flex-wrap:wrap">
-          <button class="qaction-btn p" id="tr-flat" onclick="setTerrain('flat',this)" style="font-size:10px">🏃 שטח שטוח</button>
-          <button class="qaction-btn" id="tr-hill" onclick="setTerrain('hill',this)" style="font-size:10px">⛰ הרים</button>
-          <button class="qaction-btn" id="tr-trail" onclick="setTerrain('trail',this)" style="font-size:10px">🌲 שבילים</button>
-          <button class="qaction-btn" id="tr-beach" onclick="setTerrain('beach',this)" style="font-size:10px">🏖 חוף</button>
-          <button class="qaction-btn" id="tr-track" onclick="setTerrain('track',this)" style="font-size:10px">🏟 מסלול</button>
-        </div>
-      </div>
-
-      <!-- Map controls -->
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">
         <button class="btn bs bsm" onclick="undoRoutePt()">↩ בטל</button>
         <button class="btn br bsm" onclick="clearRoute()">🗑 נקה</button>
         <button class="btn bp bsm" onclick="saveRoute()">💾 שמור</button>
       </div>
-
       <!-- BIG START RUN BUTTON -->
       <button id="run-start-btn" onclick="startRun()" style="margin-top:10px;width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;font-size:17px;font-weight:900;letter-spacing:1.5px;border:none;border-radius:13px;padding:17px;box-shadow:0 4px 24px rgba(0,255,136,.4);cursor:pointer;font-family:var(--fd)">
         ▶ הפעל מעקב ריצה
       </button>
-    </div>
-
-    <!-- Lap Counter -->
-    <div class="card">
-      <div class="sh c">🔁 ספירת סיבובים</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px">
-        <button onclick="addLap()" style="background:var(--purpleL);border:none;color:#fff;width:56px;height:56px;border-radius:50%;font-size:24px;cursor:pointer;font-weight:900">+</button>
-        <div style="text-align:center">
-          <div style="font-family:var(--fd);font-size:48px;color:var(--pri)" id="lap-count">0</div>
-          <div style="font-size:10px;color:var(--txt3)">סיבובים</div>
-        </div>
-        <button onclick="resetLaps()" style="background:var(--card3);border:1px solid var(--b2);color:var(--txt2);width:56px;height:56px;border-radius:50%;font-size:20px;cursor:pointer">↺</button>
-      </div>
-      <div id="lap-list" style="font-size:11px;color:var(--txt2);max-height:120px;overflow-y:auto;margin-top:4px"></div>
     </div>
 
     <div class="card">
@@ -1214,33 +1207,27 @@ const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}};
 // UNITS — COMPLETE DATABASE
 // ═══════════════════════════════════════════════════
 const UNITS={
-  // ─── רגלים ───
-  gen:    {n:'קרבי כללי',  r:570,p:35,l:7, col:'#6a94aa',emoji:'🪖',tier:1,group:'רגלים',desc:'נקודת הפתיחה — רמת הכניסה לכל תפקיד קרבי בצה"ל'},
-  nahal:  {n:"נח\"ל",      r:570,p:40,l:8, col:'#ffd60a',emoji:'🌿',tier:1,group:'רגלים',desc:'חטיבה עם ייעוד חקלאי וחברתי — שילוב שירות ומשימות קהילה'},
-  golani: {n:'גולני',      r:540,p:45,l:10,col:'#00cc6a',emoji:'🟢',tier:1,group:'רגלים',desc:'חטיבת רגלים ותיקה עם מסורת קרבית — לחימה רגלית, מסעות ועמידות פיזית'},
-  giv:    {n:'גבעתי',      r:540,p:45,l:10,col:'#ff8800',emoji:'🔶',tier:1,group:'רגלים',desc:'חטיבה עם נוכחות מבצעית גבוהה בעזה ויהודה ושומרון'},
-  kfir:   {n:'כפיר',       r:555,p:42,l:9, col:'#ff6600',emoji:'🦁',tier:1,group:'רגלים',desc:'חטיבת חי"ר הגדולה בצה"ל — פעילות שוטפת ביהודה שומרון ובגבולות'},
-  para:   {n:'צנחנים',     r:510,p:50,l:12,col:'#0a84ff',emoji:'🪂',tier:1,group:'רגלים',desc:'לוחמים מצטיינים עם כושר גוף עליון גבוה — חדירה מהאוויר ומסעות קשים'},
-  // ─── סיירות ───
-  givsay: {n:'סיירת גבעתי',r:495,p:55,l:13,col:'#ff4400',emoji:'🦂',tier:2,group:'סיירות',desc:'סיירת גבעתי — פעילות בשטח עירוני ופתוח, לחימה בגבולות'},
-  nahalsay:{n:"סיירת נח\"ל",r:495,p:54,l:13,col:'#9acd32',emoji:'🌵',tier:2,group:'סיירות',desc:'סיירת נח"ל — איסוף מודיעין, גיחות לילה, לחימה'},
-  tzansay:{n:'סיירת צנחנים',r:490,p:56,l:14,col:'#1e90ff',emoji:'🪂',tier:2,group:'סיירות',desc:'סיירת חטיבת הצנחנים — איתור, חילוץ, מבצעי עומק'},
-  egozsay:{n:'סיירת גולני', r:490,p:56,l:14,col:'#228b22',emoji:'🦅',tier:2,group:'סיירות',desc:'סיירת גולני — לוחמה בשטח הררי וסבוך'},
-  haruv:  {n:'חרוב',        r:500,p:53,l:12,col:'#8b6914',emoji:'🌿',tier:2,group:'סיירות',desc:'סיירת כפיר — לחימה ביהודה ושומרון, מסעות לילה'},
-  // ─── מיוחדות ───
-  oketz:  {n:'עוקץ',        r:495,p:56,l:14,col:'#ff8800',emoji:'🐕‍🦺',tier:3,group:'מיוחדות',desc:'יחידת כלבנים מובחרת — שילוב עבודה עם כלב נשק ויכולת לחימה גבוהה'},
-  yaalom: {n:'יהל"ם',       r:490,p:57,l:14,col:'#8b4513',emoji:'💎',tier:3,group:'מיוחדות',desc:'הנדסה קרבית מיוחדת — חבלה, פיצוצים, טיהור מוקשים ונשק כימי'},
-  ravmimdi:{n:'רב-מימדית',  r:500,p:52,l:12,col:'#7b68ee',emoji:'🛡',tier:3,group:'מיוחדות',desc:'יחידת סייבר ולוחמה רב-מימדית — שילוב טכנולוגיה ולחימה'},
-  // ─── קומנדו ───
-  duvdevan:{n:'דובדבן',     r:480,p:60,l:15,col:'#dc143c',emoji:'🍒',tier:4,group:'קומנדו',desc:'יחידת מסתערבים — כניסה לשטחי אויב בלבוש אזרחי, מבצעי מעצר ועצירה'},
-  maglan: {n:'מגלן',        r:475,p:60,l:16,col:'#4b0082',emoji:'🎯',tier:4,group:'קומנדו',desc:'יחידת עומק של חיל הרגלים — לחימה מאחורי קווי האויב ואיתור מטרות'},
-  egoz:   {n:'אגוז',        r:480,p:60,l:15,col:'#ff2d55',emoji:'💀',tier:4,group:'קומנדו',desc:'יחידת לוחמה בשטח הררי וסבוך — מתמחה בלחימה נגד גרילה'},
-  lotar:  {n:'לוט"ר',       r:475,p:62,l:16,col:'#ff1493',emoji:'🔫',tier:4,group:'קומנדו',desc:'יחידה ייחודית — חילוץ חטופים, מניעת פיגועים, לוחמה בטרור'},
+  // ─── כניסה ───
+  gen:    {n:'קרבי כללי',  r:570,p:35,l:7, r3:13,  r5:24,   col:'#6a94aa',emoji:'🪖',tier:1,desc:'נקודת הפתיחה — רמת הכניסה לכל תפקיד קרבי בצה"ל'},
+  nahal:  {n:"נח\"ל",      r:570,p:40,l:8, r3:13,  r5:24,   col:'#ffd60a',emoji:'🌿',tier:1,desc:'חטיבה עם ייעוד חקלאי וחברתי — שילוב שירות ומשימות קהילה'},
   // ─── עילית ───
-  unit669:{n:'יחידה 669',   r:460,p:65,l:18,col:'#00e5ff',emoji:'🚁',tier:5,group:'עילית',desc:'יחידת חילוץ לחימה של חיל האוויר — רפואה טקטית, צניחה וכושר עילית'},
-  shaldag:{n:'שלדג',        r:450,p:68,l:19,col:'#00bcd4',emoji:'🦅',tier:5,group:'עילית',desc:'סיירת חיל האוויר לפעולות עומק — הכנת שדות קרב ומבצעים מאחורי האויב'},
-  shai:   {n:'שייטת 13',    r:450,p:72,l:22,col:'#00e5ff',emoji:'🤿',tier:5,group:'עילית',desc:'זרוע הים המובחרת — גיבוש השחייה הקשה ביותר, כושר ומנטלי ברמה עולמית'},
-  matkal: {n:"סיירת מטכ\"ל",r:450,p:68,l:20,col:'#ff2d55',emoji:'🔱',tier:5,group:'עילית',desc:'ה"סיירת" — מבצעי עומק קיצוניים, פינוי חטופים, גיבוש הנחשב לאחד הקשים בעולם'},
+  golani: {n:'גולני',      r:540,p:45,l:10,r3:12,  r5:22.5, col:'#00cc6a',emoji:'🟢',tier:2,desc:'חטיבת רגלים ותיקה עם מסורת קרבית — לחימה רגלית, מסעות ועמידות פיזית'},
+  para:   {n:'צנחנים',     r:510,p:50,l:12,r3:11.5,r5:22,   col:'#0a84ff',emoji:'🪂',tier:2,desc:'לוחמים מצטיינים עם כושר גוף עליון גבוה — חדירה מהאוויר ומסעות קשים'},
+  giv:    {n:'גבעתי',      r:540,p:45,l:10,r3:12,  r5:22.5, col:'#ff8800',emoji:'🔶',tier:2,desc:'חטיבה עם נוכחות מבצעית גבוהה בעזה ויהודה ושומרון'},
+  kfir:   {n:'כפיר',       r:555,p:42,l:9, r3:12.5,r5:23,   col:'#ff6600',emoji:'🦁',tier:2,desc:'חטיבת חי"ר הגדולה בצה"ל — פעילות שוטפת ביהודה שומרון ובגבולות'},
+  // ─── מובחר ───
+  oketz:  {n:'עוקץ',       r:495,p:56,l:14,r3:11.5,r5:21.5, col:'#ff8800',emoji:'🐕‍🦺',tier:3,desc:'יחידת כלבנים מובחרת — שילוב עבודה עם כלב נשק ויכולת לחימה גבוהה'},
+  duvdevan:{n:'דובדבן',    r:480,p:60,l:15,r3:11,  r5:21,   col:'#dc143c',emoji:'🍒',tier:3,desc:'יחידת מסתערבים — כניסה לשטחי אויב בלבוש אזרחי, מבצעי מעצר ועצירה'},
+  maglan: {n:'מגלן',       r:475,p:60,l:16,r3:11,  r5:20.5, col:'#4b0082',emoji:'🎯',tier:3,desc:'יחידת עומק של חיל הרגלים — לחימה מאחורי קווי האויב ואיתור מטרות'},
+  // ─── קשה מאוד ───
+  egoz:   {n:'אגוז',       r:480,p:60,l:15,r3:11,  r5:21,   col:'#ff2d55',emoji:'💀',tier:4,desc:'יחידת לוחמה בשטח הררי וסבוך — מתמחה בלחימה נגד גרילה'},
+  lotar:  {n:'לוט"ר',      r:475,p:62,l:16,r3:10.5,r5:20,   col:'#ff1493',emoji:'🔫',tier:4,desc:'יחידה ייחודית — חילוץ חטופים, מניעת פיגועים, לוחמה בטרור'},
+  // ─── עילית מיוחד ───
+  unit669:{n:'יחידה 669',  r:460,p:65,l:18,r3:10.5,r5:20,   col:'#00e5ff',emoji:'🚁',tier:5,desc:'יחידת חילוץ לחימה של חיל האוויר — רפואה טקטית, צניחה וכושר עילית'},
+  shaldag:{n:'שלדג',       r:450,p:68,l:19,r3:10,  r5:19.5, col:'#00bcd4',emoji:'🦅',tier:5,desc:'סיירת חיל האוויר לפעולות עומק — הכנת שדות קרב ומבצעים מאחורי האויב'},
+  // ─── מקסימום ───
+  shai:   {n:'שייטת 13',   r:450,p:72,l:22,r3:10,  r5:19,   col:'#00e5ff',emoji:'🤿',tier:6,desc:'זרוע הים המובחרת — גיבוש השחייה הקשה ביותר, כושר ומנטלי ברמה עולמית'},
+  matkal: {n:"סיירת מטכ\"ל",r:450,p:68,l:20,r3:10, r5:19,   col:'#ff2d55',emoji:'🔱',tier:6,desc:'ה"סיירת" — מבצעי עומק קיצוניים, פינוי חטופים, גיבוש הנחשב לאחד הקשים בעולם'},
 };
 
 // ═══════════════════════════════════════════════════
@@ -1372,9 +1359,10 @@ function showPg(p){
   if(p==='train')initMuscleGrid();
 }
 function tt(id,el){
-  ['tb-br','tb-gi','tb-pr','tb-1rm','tb-nu'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
+  ['tb-br','tb-gi','tb-pr','tb-1rm','tb-nu','tb-idf','tb-cm'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
   document.getElementById(id).style.display='block';
   el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
+  if(id==='tb-cm')initCombatMode();
 }
 function trt(id,el){
   ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
@@ -1538,17 +1526,15 @@ function genQuickWorkout(){
 // ═══════════════════════════════════════════════════
 // UNIT TARGETS TABLE
 // ═══════════════════════════════════════════════════
-const GROUP_ORDER=['רגלים','סיירות','מיוחדות','קומנדו','עילית'];
-const GROUP_COLORS={'רגלים':'#00cc6a','סיירות':'#0a84ff','מיוחדות':'#ff8800','קומנדו':'#ff2d55','עילית':'#00e5ff'};
+const TIER_NAMES={1:'🟢 כניסה',2:'🔵 עילית',3:'🟡 מובחר',4:'🔴 קשה מאוד',5:'💀 עילית מיוחד',6:'☠️ מקסימום'};
 function buildUnitTargets(){
   const el=document.getElementById('unit-targets');
   if(!el||el.innerHTML)return;
   let html='';
-  GROUP_ORDER.forEach(grp=>{
-    const us=Object.entries(UNITS).filter(([,u])=>u.group===grp);
+  [1,2,3].forEach(t=>{
+    const us=Object.entries(UNITS).filter(([,u])=>u.tier===t);
     if(!us.length)return;
-    const col=GROUP_COLORS[grp]||'var(--txt3)';
-    html+=`<div style="margin:10px 0 5px;font-size:11px;font-weight:900;color:${col};letter-spacing:.5px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.08)">${grp}</div>`;
+    html+=`<div style="margin:10px 0 5px;font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--txt3);padding:4px 0;border-bottom:1px solid var(--b2)">${TIER_NAMES[t]}</div>`;
     us.forEach(([k,u])=>{
       html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:5px;border:1px solid var(--b1);border-right:3px solid ${u.col}">
         <span style="font-size:22px;flex-shrink:0">${u.emoji}</span>
@@ -1559,7 +1545,34 @@ function buildUnitTargets(){
       </div>`;
     });
   });
+  html+=`<div style="margin-top:10px">
+    <button onclick="toggleEliteUnits(this)" style="width:100%;background:rgba(255,45,85,.08);border:1px solid rgba(255,45,85,.2);color:var(--red);border-radius:10px;padding:10px;font-weight:800;font-size:12px;font-family:var(--fb);cursor:pointer">
+      💀 הצג יחידות עילית (קשה מאוד ומעלה) ▼
+    </button>
+    <div id="elite-units" style="display:none;margin-top:6px">`;
+  [4,5,6].forEach(t=>{
+    const us=Object.entries(UNITS).filter(([,u])=>u.tier===t);
+    if(!us.length)return;
+    html+=`<div style="margin:10px 0 5px;font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--txt3);padding:4px 0;border-bottom:1px solid var(--b2)">${TIER_NAMES[t]}</div>`;
+    us.forEach(([k,u])=>{
+      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:5px;border:1px solid var(--b1);border-right:3px solid ${u.col}">
+        <span style="font-size:22px;flex-shrink:0">${u.emoji}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:900;font-size:13px;color:${u.col}">${u.n}</div>
+          <div style="font-size:10px;color:var(--txt2);margin-top:3px;line-height:1.5">${u.desc}</div>
+        </div>
+      </div>`;
+    });
+  });
+  html+=`</div></div>`;
   el.innerHTML=html;
+}
+function toggleEliteUnits(btn){
+  const el=document.getElementById('elite-units');
+  if(!el)return;
+  const show=el.style.display==='none';
+  el.style.display=show?'block':'none';
+  btn.textContent=show?'💀 הסתר יחידות עילית ▲':'💀 הצג יחידות עילית (קשה מאוד ומעלה) ▼';
 }
 
 // ═══════════════════════════════════════════════════
@@ -1793,55 +1806,69 @@ function initMuscleGrid(){
   const g=document.getElementById('muscle-grid');
   if(!g)return;
   muscleState=ld(K.REC+'_muscles',{});
-  let html='';
   const groups=[
     {label:'🦵 רגליים',ids:['quads','hamstrings','calves','shins','hip']},
     {label:'💪 גוף עליון',ids:['chest','back','lats','shoulders','bicep','tricep']},
     {label:'🫀 צוואר',ids:['neck']},
   ];
+  let html='';
   groups.forEach(grp=>{
     const mList=MUSCLES.filter(m=>grp.ids.includes(m.id));
     if(!mList.length)return;
-    html+=`<div style="font-size:10px;color:var(--txt3);letter-spacing:1px;margin:8px 0 5px;font-weight:700">${grp.label}</div><div class="muscle-body" style="margin-bottom:4px">`;
+    html+=`<div style="font-size:10px;color:var(--txt3);letter-spacing:1px;margin:10px 0 4px;font-weight:700;padding-bottom:4px;border-bottom:1px solid var(--b2)">${grp.label}</div>`;
     mList.forEach(m=>{
       const st=muscleState[m.id]||'fresh';
       const cls=st==='sore'?'sore':st==='partial'?'partial':'fresh';
       const lbl=st==='sore'?'🔴 כואב':st==='partial'?'🟡 חלקי':'🟢 מוכן';
       html+=`<div class="muscle-item ${cls}" id="ms-${m.id}" onclick="toggleMuscle('${m.id}')"><div class="muscle-icon">${m.icon}</div><div class="muscle-name">${m.n}</div><div class="muscle-status">${lbl}</div></div>`;
     });
-    html+=`</div>`;
   });
   g.innerHTML=html;
 }
 function toggleMuscle(id){
+  // Cycle: fresh → sore → partial → fresh
   const cur=muscleState[id]||'fresh';
   muscleState[id]={fresh:'sore',sore:'partial',partial:'fresh'}[cur]||'fresh';
   sv(K.REC+'_muscles',muscleState);
-  initMuscleGrid();calcRecovery();
+  initMuscleGrid();
+  calcRecovery();
 }
 function calcRecovery(){
-  const states=MUSCLES.map(m=>muscleState[m.id]||'fresh');
-  const sore=states.filter(v=>v==='sore').length;
-  const partial=states.filter(v=>v==='partial').length;
-  const muscleScore=Math.max(0,100-sore*18-partial*6);
-  const sleep=parseFloat(document.getElementById('sleep-h')?.value||8);
-  const water=parseFloat(document.getElementById('water-l')?.value||2.5);
-  const feel=parseInt(document.getElementById('feeling')?.value||4);
-  const sleepScore=sleep>=8?100:sleep>=7?88:sleep>=6?68:sleep>=5?42:15;
-  const waterScore=water>=3?100:water>=2.5?95:water>=2?78:water>=1.5?55:30;
-  const feelScore=feel===5?100:feel===4?88:feel===3?62:feel===2?38:12;
-  // 100% when: all fresh + 8h sleep + 3L water + feel=excellent
-  const total=Math.min(100,Math.max(0,Math.round(muscleScore*.45+feelScore*.30+sleepScore*.17+waterScore*.08)));
+  const sore=Object.values(muscleState).filter(v=>v==='sore').length;
+  const partial=Object.values(muscleState).filter(v=>v==='partial').length;
+  const fresh=Object.values(muscleState).filter(v=>v==='fresh'||v===undefined).length;
+  const sleep=parseFloat(document.getElementById('sleep-h')?.value||7);
+  const water=parseFloat(document.getElementById('water-l')?.value||2);
+  const feel=parseInt(document.getElementById('feeling')?.value||3);
+  const sorePenalty=sore*12+partial*5;
+  const sleepScore=sleep>=8?100:sleep>=7?85:sleep>=6?65:sleep>=5?45:25;
+  const waterScore=water>=3?100:water>=2?80:water>=1.5?60:40;
+  const feelScore=feel*20;
+  const total=Math.max(0,Math.min(100,Math.round((sleepScore*.3+waterScore*.2+feelScore*.3)-(sorePenalty*.2))));
   const el=document.getElementById('rec-score');
   const lbl=document.getElementById('rec-label');
   if(el){el.textContent=total+'%';el.style.color=total>=80?'var(--pri)':total>=55?'var(--yellow)':'var(--red)';}
+
+  // Recommended workout based on recovery
   let rec,recColor,recIcon;
-  if(total>=90){rec='💯 כושר מקסימלי — אימון קשה בעצימות מלאה!';recColor='var(--pri)';recIcon='🔥';}
-  else if(total>=75){rec='✅ מוכן לאימון מלא — כוח + ריצה';recColor='var(--pri)';recIcon='💪';}
-  else if(total>=55){rec='⚡ אימון בינוני — ריצה קלה / כוח ממוקד';recColor='var(--yellow)';recIcon='🏃';}
-  else if(total>=35){rec='🧘 מנוחה פעילה — מתיחות, הליכה';recColor='var(--orange)';recIcon='🧘';}
-  else{rec='🛌 מנוחה מלאה — גוף צריך לנוח היום';recColor='var(--red)';recIcon='🛌';}
-  if(lbl){lbl.innerHTML=`<div style="color:${recColor};font-weight:900;font-size:12px;margin-bottom:4px">${recIcon} ${rec}</div><div style="font-size:10px;color:var(--txt3);margin-top:3px">${sore>0?sore+' כואב · ':''} ${partial>0?partial+' חלקי · ':''}שינה ${sleep}ש' · מים ${water}ל'</div>`;}
+  if(total>=80){
+    rec='✅ מוכן לאימון מלא — כוח + ריצה בעצימות גבוהה';
+    recColor='var(--pri)';recIcon='💪';
+  } else if(total>=60){
+    rec='⚡ אימון בינוני — ריצה קלה / כוח על שרירים שמוכנים';
+    recColor='var(--yellow)';recIcon='🏃';
+  } else if(total>=40){
+    rec='🧘 מנוחה פעילה — מתיחות, הליכה, שחייה קלה';
+    recColor='var(--orange)';recIcon='🧘';
+  } else {
+    rec='🛑 מנוחה מלאה — שינה + תזונה + אין אימון היום';
+    recColor='var(--red)';recIcon='🛌';
+  }
+
+  if(lbl){
+    lbl.innerHTML=`<div style="color:${recColor};font-weight:900;font-size:12px;margin-bottom:4px">${recIcon} ${rec}</div>
+    <div style="font-size:10px;color:var(--txt3)">${sore>0?`${sore} שרירים כואבים `:''} ${partial>0?`${partial} חלקית `:''}${fresh>0?`${fresh} מוכנים`:''}</div>`;
+  }
 }
 function saveRecovery(){calcRecovery();notify('שיקום נשמר!','c');}
 
@@ -2278,157 +2305,59 @@ function viewAthlete(i){
 // ═══════════════════════════════════════════════════
 const K_ANOTES='cf7_coach_notes';
 
-const K_ATH_WORKOUTS='cf7_ath_workouts'; // per-athlete coach-assigned workouts
-
 function viewAthleteWorkouts(name){
+  const hist=JSON.parse(localStorage.getItem(K_HIST)||'[]');
   const notes=JSON.parse(localStorage.getItem(K_ANOTES)||'{}');
   const ath=getAthletes().find(a=>a.nm===name);
+  // We show the global history for now (in a real app each athlete would have their own)
+  // For demo — show all history + coach notes for this athlete
   const athNotes=(notes[name]||[]);
-  const athWorkouts=JSON.parse(localStorage.getItem(K_ATH_WORKOUTS)||'{}');
-  const assigned=athWorkouts[name]||[];
 
   let body=`
-  <div class="ath-profile" style="padding:9px;margin-bottom:10px">
-    <div class="ath-profile-av" style="font-size:26px;width:46px;height:46px">${ath?.emoji||'⚔'}</div>
-    <div class="ath-profile-inf">
-      <div class="ath-profile-nm">${name}</div>
-      <div class="ath-profile-mt">${ath?.target||''} | ציון: ${ath?.bar||'--'} | ${ath?.training_days||3}×/שבוע</div>
-    </div>
+  <div class="mini" style="margin-bottom:10px;background:rgba(124,58,237,.08);padding:9px;border-radius:9px;border:1px solid rgba(124,58,237,.2)">
+    👤 ${name} ${ath?.emoji||'⚔'} | ${ath?.target||''} | ציון: ${ath?.bar||'--'}
   </div>`;
-
-  // Quick feedback buttons
-  body+=`<div class="sh p">⚡ פידבק מהיר</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
-    <button class="btn" style="background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--pri)" onclick="quickFeedback('${name.replace(/'/g,"\\'")}','praise','🔥 עבודה מצוינת! המשך ככה')">🔥 עבודה מצוינת</button>
-    <button class="btn" style="background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.25);color:var(--yellow)" onclick="quickFeedback('${name.replace(/'/g,"\\'")}','note','⚡ צריך לעלות קצב — אל תתפשר')">⚡ עלה קצב</button>
-    <button class="btn" style="background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.2);color:var(--red)" onclick="quickFeedback('${name.replace(/'/g,"\\'")}','warning','⚠️ דילגת על אימון — אני רואה את זה')">⚠️ דילג על אימון</button>
-    <button class="btn" style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);color:var(--purpleL)" onclick="quickFeedback('${name.replace(/'/g,"\\'")}','goal','🎯 יעד הגיוס מתקרב — תן הכל')">🎯 יעד מתקרב</button>
-  </div>`;
-
-  // Assigned workouts
-  body+=`<div class="sh y">📅 אימונים שהוקצו (${assigned.length})</div>`;
-  if(assigned.length){
-    assigned.slice(0,6).forEach((w,wi)=>{
-      const done=w.done;
-      body+=`<div style="display:flex;align-items:center;gap:8px;padding:9px;background:${done?'rgba(0,255,136,.06)':'var(--card2)'};border:1px solid ${done?'rgba(0,255,136,.2)':'var(--b1)'};border-radius:9px;margin-bottom:5px">
-        <div style="font-size:18px">${w.icon||'💪'}</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:800;font-size:12px;${done?'text-decoration:line-through;color:var(--txt3)':''}">${w.name}</div>
-          <div style="font-size:10px;color:var(--txt3)">${w.date||''} ${w.note?'· '+w.note:''}</div>
-        </div>
-        <div style="display:flex;gap:4px">
-          <button onclick="toggleAthWorkout('${name.replace(/'/g,"\\'")}',${wi})" style="background:${done?'rgba(255,45,85,.1)':'rgba(0,255,136,.1)'};border:1px solid ${done?'rgba(255,45,85,.3)':'rgba(0,255,136,.3)'};color:${done?'var(--red)':'var(--pri)'};border-radius:7px;padding:4px 7px;font-size:10px;cursor:pointer">${done?'↩':'✓'}</button>
-          <button onclick="removeAthWorkout('${name.replace(/'/g,"\\'")}',${wi})" style="background:rgba(255,45,85,.08);border:1px solid rgba(255,45,85,.2);color:var(--red);border-radius:7px;padding:4px 7px;font-size:10px;cursor:pointer">✕</button>
-        </div>
-      </div>`;
-    });
-  } else {
-    body+=`<div class="mini" style="padding:10px;text-align:center">אין אימונים שהוקצו עדיין</div>`;
-  }
-  body+=`<button class="btn bpur bsm" style="width:100%;margin-bottom:10px" onclick="openAssignWorkout('${name.replace(/'/g,"\\'")}')">➕ הוסף אימון לחניך</button>`;
 
   // Coach notes
-  body+=`<div class="sh c">📝 הערות מאמן (${athNotes.length})</div>`;
   if(athNotes.length){
-    athNotes.slice(0,5).forEach((n,ni)=>{
+    body+=`<div class="sh y">📝 הערות מאמן</div>`;
+    athNotes.slice(0,5).forEach(n=>{
       const d=new Date(n.date).toLocaleDateString('he-IL');
-      const icons={note:'📝',praise:'🌟',warning:'⚠️',goal:'🎯',plan:'📋'};
-      body+=`<div style="background:var(--card2);border:1px solid var(--b1);border-radius:9px;padding:9px;margin-bottom:5px;position:relative">
-        <div style="font-weight:800;font-size:11px;color:var(--purpleL);margin-bottom:3px">${icons[n.type]||'📝'} ${n.type==='praise'?'עידוד':n.type==='warning'?'אזהרה':n.type==='goal'?'יעד':'הערה'}</div>
-        <div style="font-size:11px;line-height:1.5">${n.text}</div>
-        <div style="font-size:9px;color:var(--txt3);margin-top:4px">📆 ${d}</div>
+      body+=`<div class="ann-card" style="margin-bottom:6px">
+        <div class="ann-t" style="color:var(--purpleL)">${n.type==='note'?'📝 הערה':n.type==='praise'?'🌟 עידוד':'📋 הוראה'}</div>
+        <div class="ann-m">${n.text}</div>
+        <div class="ann-d">📆 ${d}</div>
       </div>`;
     });
+  }
+
+  // Recent workouts (global for demo)
+  body+=`<div class="sh c" style="margin-top:8px">💪 אימונים אחרונים</div>`;
+  if(!hist.length){
+    body+=`<div class="mini" style="text-align:center;padding:12px">עדיין לא נרשמו אימונים.</div>`;
   } else {
-    body+=`<div class="mini" style="padding:8px;text-align:center">אין הערות עדיין</div>`;
+    hist.slice(0,10).forEach(h=>{
+      const d=new Date(h.date);
+      body+=`<div class="hist-item ${h.type}" style="margin-bottom:5px">
+        <div class="hist-ic">${h.icon}</div>
+        <div class="hist-i">
+          <div class="hist-t">${h.name}</div>
+          <div class="hist-d">${d.toLocaleDateString('he-IL')} · ${d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})}${h.duration?' · '+h.duration+'ד':''}</div>
+          ${h.details&&h.details.length?`<div style="font-size:10px;color:var(--txt3);margin-top:2px">${h.details.slice(0,3).join(' · ')}</div>`:''}
+        </div>
+        ${h.score?`<div class="hist-v">${h.score}</div>`:''}
+      </div>`;
+    });
   }
 
   body+=`
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+  <div class="r2" style="margin-top:10px;gap:6px">
     <button class="btn bp bsm" onclick="addCoachNote('${name.replace(/'/g,"\\'")}')">📝 הוסף הערה</button>
-    <button class="btn bcy bsm" onclick="chatAthlete(${getAthletes().findIndex(a=>a.nm===name)})">💬 פתח צ'אט</button>
+    <button class="btn bpur bsm" onclick="addNextWorkout('${name.replace(/'/g,"\\'")}')">➕ קבע אימון</button>
   </div>`;
 
-  openModal(`📊 ${name} — פאנל מאמן`,body);
+  openModal(`📜 אימונים — ${name}`,body);
 }
-
-function quickFeedback(name,type,msg){
-  const notes=JSON.parse(localStorage.getItem(K_ANOTES)||'{}');
-  if(!notes[name])notes[name]=[];
-  notes[name].unshift({text:msg,type,date:Date.now()});
-  localStorage.setItem(K_ANOTES,JSON.stringify(notes));
-  const chats=ld(K2.CHAT,{});
-  if(!chats[name])chats[name]=[];
-  chats[name].push({from:'coach',msg,time:Date.now()});
-  sv(K2.CHAT,chats);
-  notify(`📤 פידבק נשלח ל${name}`,'p');
-  viewAthleteWorkouts(name); // refresh
-}
-
-function openAssignWorkout(name){
-  const body=`
-  <div class="mini" style="margin-bottom:10px">הוסף אימון ל${name}:</div>
-  <label>שם האימון</label>
-  <input id="aw-name" type="text" placeholder="לדוגמה: 8×400מ ספרינטים"/>
-  <label>תאריך</label>
-  <input id="aw-date" type="date" value="${new Date().toISOString().slice(0,10)}"/>
-  <label>סוג</label>
-  <select id="aw-type">
-    <option value="🏃">🏃 ריצה</option>
-    <option value="💪">💪 כוח</option>
-    <option value="⚔">⚔ קרבי</option>
-    <option value="🎒">🎒 Ruck</option>
-    <option value="🧘">🧘 שיקום</option>
-  </select>
-  <label>הנחיות / הערות</label>
-  <textarea id="aw-note" rows="3" placeholder="פרטי האימון, קצב מטרה, מספר סטים..."></textarea>
-  <div class="qaction" style="margin-top:8px">
-    <button class="qaction-btn g" onclick="fillAW('8×400מ ספרינטים — 90שנ מנוחה','🏃','')">⚡ ספרינטים</button>
-    <button class="qaction-btn y" onclick="fillAW('ריצה ארוכה 8ק&quot;מ','🏃','קצב 6:30/ק&quot;מ')">🏃 ריצה</button>
-    <button class="qaction-btn p" onclick="fillAW('מתח 5×Max','💪','מנוחה 3 דקות')">💪 מתח</button>
-    <button class="qaction-btn" onclick="fillAW('Circuit קרבי','⚔','6 סיבובים ללא מנוחה')">⚔ Circuit</button>
-    <button class="qaction-btn" onclick="fillAW('Ruck 8ק&quot;מ 12ק&quot;ג','🎒','קצב 8:00/ק&quot;מ')">🎒 Ruck</button>
-  </div>
-  <button class="btn bp" style="margin-top:10px" onclick="saveAssignWorkout('${name.replace(/'/g,"\\'")}')">➕ הוסף לחניך</button>
-  <button class="btn bs" onclick="viewAthleteWorkouts('${name.replace(/'/g,"\\'")}')">← חזור</button>`;
-  openModal(`➕ הוסף אימון — ${name}`,body);
-}
-function fillAW(name,type,note){
-  const n=document.getElementById('aw-name');const t=document.getElementById('aw-type');const nt=document.getElementById('aw-note');
-  if(n)n.value=name;if(t)t.value=type;if(nt)nt.value=note;
-}
-function saveAssignWorkout(name){
-  const n=document.getElementById('aw-name')?.value?.trim();
-  if(!n){notify('הזן שם אימון','y');return;}
-  const d=document.getElementById('aw-date')?.value;
-  const t=document.getElementById('aw-type')?.value||'💪';
-  const nt=document.getElementById('aw-note')?.value?.trim();
-  const aw=JSON.parse(localStorage.getItem(K_ATH_WORKOUTS)||'{}');
-  if(!aw[name])aw[name]=[];
-  aw[name].unshift({name:n,date:d,icon:t,note:nt,done:false,assigned:Date.now()});
-  localStorage.setItem(K_ATH_WORKOUTS,JSON.stringify(aw));
-  // Send chat msg
-  const chats=ld(K2.CHAT,{});if(!chats[name])chats[name]=[];
-  chats[name].push({from:'coach',msg:`📅 אימון חדש ל${d}: ${t} ${n}${nt?' — '+nt:''}`,time:Date.now()});
-  sv(K2.CHAT,chats);
-  notify(`✅ אימון נוסף ל${name}!`,'p');
-  viewAthleteWorkouts(name);
-}
-function toggleAthWorkout(name,idx){
-  const aw=JSON.parse(localStorage.getItem(K_ATH_WORKOUTS)||'{}');
-  if(aw[name]&&aw[name][idx]){aw[name][idx].done=!aw[name][idx].done;}
-  localStorage.setItem(K_ATH_WORKOUTS,JSON.stringify(aw));
-  viewAthleteWorkouts(name);
-}
-function removeAthWorkout(name,idx){
-  const aw=JSON.parse(localStorage.getItem(K_ATH_WORKOUTS)||'{}');
-  if(aw[name])aw[name].splice(idx,1);
-  localStorage.setItem(K_ATH_WORKOUTS,JSON.stringify(aw));
-  notify('🗑 הוסר','r');
-  viewAthleteWorkouts(name);
-}
-
-
 
 function addCoachNote(name,athIdx){
   const body=`
@@ -3258,74 +3187,6 @@ function stopRun(){
     <button class="btn bp" style="margin-top:10px" onclick="closeModal()">סגור</button>`);
 }
 
-// ─── Terrain ───
-let currentTerrain='flat';
-function setTerrain(t,btn){
-  currentTerrain=t;
-  document.querySelectorAll('[id^="tr-"]').forEach(b=>b.classList.remove('p'));
-  btn.classList.add('p');
-  updateRouteStats();
-}
-
-// ─── Lap counter ───
-let lapCount=0,lapTimes=[];
-function addLap(){
-  lapCount++;
-  const now=new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  lapTimes.unshift(`סיבוב ${lapCount} — ${now}`);
-  document.getElementById('lap-count').textContent=lapCount;
-  const ll=document.getElementById('lap-list');
-  if(ll)ll.innerHTML=lapTimes.slice(0,8).map(l=>`<div style="padding:3px 0;border-bottom:1px solid var(--b2)">${l}</div>`).join('');
-}
-function resetLaps(){lapCount=0;lapTimes=[];document.getElementById('lap-count').textContent='0';const ll=document.getElementById('lap-list');if(ll)ll.innerHTML='';}
-
-// ─── Auto route builder ───
-function buildAutoRoute(){
-  if(!gmap||typeof google==='undefined'){loadGoogleMap();setTimeout(buildAutoRoute,2000);return;}
-  const dist=parseFloat(document.getElementById('auto-dist')?.value||5);
-  const shape=document.getElementById('auto-shape')?.value||'loop';
-  const center=gmap.getCenter();
-  if(!center){notify('מפה לא טעונה','y');return;}
-  const lat=center.lat(),lng=center.lng();
-  // Approx: 1 degree lat ≈ 111km, 1 degree lng ≈ 111km * cos(lat)
-  const degPerKm=1/111;
-  const r=dist*degPerKm;
-  clearRoute();
-  const pts=[];
-  if(shape==='loop'){
-    // Octagonal loop
-    const n=8;
-    for(let i=0;i<n;i++){
-      const angle=(i/n)*2*Math.PI-Math.PI/2;
-      const variation=0.85+Math.random()*0.3;
-      pts.push(new google.maps.LatLng(lat+r*Math.sin(angle)*variation,lng+r*Math.cos(angle)*variation/Math.cos(lat*Math.PI/180)));
-    }
-    pts.push(pts[0]); // close loop
-  } else if(shape==='outback'){
-    const n=4;
-    for(let i=0;i<n;i++){
-      const t=i/(n-1);
-      pts.push(new google.maps.LatLng(lat+r*t,lng+r*Math.sin(t*Math.PI)*0.4));
-    }
-    // Back
-    for(let i=n-2;i>=0;i--){
-      const t=i/(n-1);
-      pts.push(new google.maps.LatLng(lat+r*t,lng-r*Math.sin(t*Math.PI)*0.3));
-    }
-  } else {
-    // One way
-    const n=6;
-    for(let i=0;i<n;i++){
-      const t=i/(n-1);
-      pts.push(new google.maps.LatLng(lat+r*t*0.7,lng+r*Math.sin(t*Math.PI*0.8)*0.5));
-    }
-  }
-  pts.forEach(p=>addWaypoint(p));
-  gmap.panTo(center);
-  gmap.setZoom(14);
-  notify(`🗺 מסלול ${dist}ק"מ נוצר!`,'p');
-}
-
 function initRoute(){
   renderSavedRoutes();
   // Auto-load map if already initialized
@@ -3740,6 +3601,193 @@ function buildWorkout(){
 
 function startBuiltWorkout(){
   notify('⏱ אימון התחיל! בהצלחה 💪','p');
+}
+
+// ═══════════════════════════════════════════════════
+// IDF SCORE CALCULATOR
+// ═══════════════════════════════════════════════════
+function parseRunTime(str){
+  if(!str||!str.includes(':'))return 9999;
+  const p=str.split(':');
+  return parseInt(p[0]||99)*60+parseInt(p[1]||99);
+}
+
+function calcIDFScore(){
+  const age=parseInt(document.getElementById('idf-age').value||18);
+  const unitKey=document.getElementById('idf-unit').value;
+  const u=UNITS[unitKey]||UNITS.gen;
+  const run2k=parseRunTime(document.getElementById('idf-run').value||'9:30');
+  const push=parseInt(document.getElementById('idf-push').value||0);
+  const pull=parseInt(document.getElementById('idf-pull').value||0);
+  const sit=parseInt(document.getElementById('idf-sit').value||0);
+  const run3kStr=document.getElementById('idf-run3').value;
+  const run3k=run3kStr?parseRunTime(run3kStr):0;
+  const swim=parseFloat(document.getElementById('idf-swim').value||0);
+
+  // Scoring per event (0-100 each, age-adjusted)
+  const ageFactor=age<=18?1:age<=20?0.98:age<=22?0.96:0.94;
+  // 2K run: 100 at 6:30, 0 at 12:00
+  const run2kScore=Math.max(0,Math.min(100,Math.round(100-(run2k-390)/3)));
+  // Push: 100 at 80, 0 at 15
+  const pushScore=Math.max(0,Math.min(100,Math.round((push-15)/65*100)));
+  // Pull: 100 at 22, 0 at 3
+  const pullScore=Math.max(0,Math.min(100,Math.round((pull-3)/19*100)));
+  // Sit: 100 at 80, 0 at 25
+  const sitScore=Math.max(0,Math.min(100,Math.round((sit-25)/55*100)));
+  // 3K: 100 at 10:30, 0 at 17:00
+  const run3kScore=run3k>0?Math.max(0,Math.min(100,Math.round(100-(run3k-630)/3))):null;
+  // Swim (elite units): 100 under 8 min, 0 at 15 min
+  const swimScore=swim>0?Math.max(0,Math.min(100,Math.round((15-swim)/7*100))):null;
+
+  // Weighted total (unit-based weights)
+  let total,weights;
+  const isElite=u.tier>=5;
+  if(isElite){
+    // Elite: run=35%, pull=25%, push=20%, sit=10%, swim=10%
+    weights={run2k:0.35,pull:0.25,push:0.20,sit:0.10};
+    total=Math.round((run2kScore*weights.run2k+pullScore*weights.pull+pushScore*weights.push+sitScore*weights.sit)*ageFactor);
+    if(swimScore!==null)total=Math.round(total*.9+swimScore*.1);
+  } else {
+    // Standard: run=40%, push=25%, pull=20%, sit=15%
+    total=Math.round((run2kScore*.4+pushScore*.25+pullScore*.2+sitScore*.15)*ageFactor);
+  }
+
+  // Compare to unit standards
+  const r2km=Math.floor(u.r/60),r2ks=u.r%60;
+  const runStatus=run2k<=u.r?'✅':'❌';
+  const pushStatus=push>=u.p?'✅':'❌';
+  const pullStatus=pull>=u.l?'✅':'❌';
+
+  const color=total>=85?'var(--pri)':total>=65?'var(--yellow)':total>=45?'var(--orange)':'var(--red)';
+  const verdict=total>=85?`🏆 מעל הסף — מוכן ל${u.n}!`:total>=70?`⚡ קרוב — עוד שיפור קל`:total>=50?`🏃 בדרך — נדרש שיפור ממשי`:`⚠️ מתחת לסף — עבודה מולטנית`;
+
+  let html=`
+  <div style="text-align:center;background:linear-gradient(135deg,rgba(124,58,237,.1),var(--card2));border:1px solid rgba(124,58,237,.2);border-radius:13px;padding:14px;margin-bottom:12px">
+    <div style="font-size:10px;color:var(--txt3);margin-bottom:4px">${u.emoji} ${u.n} — ניקוד כולל</div>
+    <div style="font-family:var(--fd);font-size:52px;color:${color};line-height:1">${total}</div>
+    <div style="font-size:11px;color:var(--txt2);margin-top:4px">${verdict}</div>
+  </div>
+  <div class="sh p">📊 פירוט לפי קטגוריה</div>`;
+
+  const rows=[
+    {n:'ריצה 2K',got:`${Math.floor(run2k/60)}:${String(run2k%60).padStart(2,'0')}`,req:`${r2km}:${String(r2ks).padStart(2,'0')}`,score:run2kScore,ok:run2k<=u.r},
+    {n:'שכיבות שמיכה',got:push,req:u.p,score:pushScore,ok:push>=u.p},
+    {n:'מתח',got:pull,req:u.l,score:pullScore,ok:pull>=u.l},
+    {n:'ישיבות בטן',got:sit,req:Math.round(u.p*.85),score:sitScore,ok:sit>=Math.round(u.p*.85)},
+  ];
+  if(run3kScore!==null)rows.push({n:'ריצה 3K',got:run3kStr,req:'--',score:run3kScore,ok:run3kScore>=60});
+  if(swimScore!==null)rows.push({n:'שחייה 400מ',got:swim+'דק',req:'<8 דק',score:swimScore,ok:swim>0&&swim<=8});
+
+  rows.forEach(r=>{
+    html+=`<div style="display:flex;align-items:center;gap:8px;padding:9px;background:var(--card2);border-radius:9px;margin-bottom:5px;border:1px solid var(--b1)">
+      <div style="font-size:16px">${r.ok?'✅':'❌'}</div>
+      <div style="flex:1">
+        <div style="font-weight:800;font-size:12px">${r.n}</div>
+        <div style="font-size:10px;color:var(--txt3)">השגת: ${r.got} | דרישה: ${r.req}</div>
+      </div>
+      <div style="text-align:left">
+        <div style="font-family:var(--fd);font-size:18px;color:${r.score>=70?'var(--pri)':r.score>=50?'var(--yellow)':'var(--red)'}">${r.score}</div>
+        <div style="font-size:8px;color:var(--txt3)">נקודות</div>
+      </div>
+    </div>`;
+  });
+
+  // Gap analysis
+  const gaps=rows.filter(r=>!r.ok);
+  if(gaps.length){
+    html+=`<div class="sh y" style="margin-top:10px">📈 מה לשפר</div>`;
+    gaps.forEach(r=>{
+      html+=`<div class="wk wy" style="font-size:11px">🎯 <strong>${r.n}</strong> — שפר לדרישת ${u.n}</div>`;
+    });
+  }
+
+  logWorkout({type:'test',name:`ניקוד צה"ל — ${u.n}`,score:`${total}/100`,icon:'🪖',details:[`2K: ${Math.floor(run2k/60)}:${String(run2k%60).padStart(2,'0')}`,`שכיבות: ${push}`,`מתח: ${pull}`]});
+  document.getElementById('idf-res').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════
+// COMBAT MODE — גיבוש אימון פקודות אקראיות
+// ═══════════════════════════════════════════════════
+let combatTimer=null,combatCmdTimer=null,combatEndTime=0,combatCmdCount=0,combatNextIn=0;
+
+const COMBAT_CMDS={
+  easy:[
+    '💨 ספרינט 20 מטר!','💪 30 שכיבות שמיכה!','🦵 20 סקוואטים!','🏃 ריצה במקום 30 שניות!',
+    '⏸ מנוחה — 15 שניות בלבד!','💪 15 מתח אם יש מתח!','🔄 20 ברפי!','🦵 לונג׳ 10/רגל!',
+  ],
+  mid:[
+    '🔥 ספרינט 50 מטר!','💪 40 שכיבות שמיכה — לא מפסיקים!','🏃 3 דקות ריצה בקצב גבוה!',
+    '⚡ 10 מתח מקסימום!','🔄 20 ברפי בלי עצירה!','🦵 25 סקוואטים קפיצה!',
+    '⏸ שכיבה — 10 שניות מנוחה ואז חוזרים!','💪 נשיאת ביצה — 100 שכיבות!',
+    '🏃 שינוי כיוון ×10!','🔥 פירמידה: 1 ברפי — 2 — 3 — 4 — 5!',
+  ],
+  hard:[
+    '🔴 ספרינט מקסימום 100 מטר!','💀 50 שכיבות שמיכה — עכשיו!','⚡ מתח עד כלות!',
+    '🔴 ברפי ×25 — בלי להפסיק!','💀 3 דקות planק + 2 דקות side plank!',
+    '🔴 100 ישיבות בטן!','⚡ קפיצות טוקסן ×30!','💀 Man Makers ×10!',
+    '🔴 ריצה 400מ בקצב מקסימום!','💀 פירמידה 1-10 ברפי — 55 ברפי!',
+  ],
+  elite:[
+    '☠️ ספרינט ×5 — 100 מטר — מנוחה 30 שניות ביניהם!','☠️ 75 שכיבות שמיכה — 3 דקות!',
+    '☠️ מתח ×20 — אם לא מגיעים, 50 שכיבות יהלום!','☠️ 5 דקות ברפי — לא מפסיקים!',
+    '☠️ 200 ישיבות בטן!','☠️ Bear Crawl 40מ + Sprint 40מ ×5!',
+    '☠️ Muscle-up ×5 או 30 ring dips!','☠️ Sandbag carry 20ק"ג 100מ ×3!',
+  ],
+};
+
+function initCombatMode(){}
+
+function startCombatMode(){
+  const dur=parseInt(document.getElementById('cm-dur').value||20)*60;
+  combatEndTime=Date.now()+dur*1000;
+  combatCmdCount=0;
+  document.getElementById('cm-display').style.display='block';
+  document.getElementById('cm-start-btn').style.display='none';
+  fireNextCombatCmd(true);
+  combatTimer=setInterval(updateCombatTimer,1000);
+  logWorkout({type:'combat',name:'מצב קרב',icon:'🔴',duration:Math.round(dur/60),details:['אימון גיבוש פקודות אקראיות']});
+}
+
+function fireNextCombatCmd(first=false){
+  const lv=document.getElementById('cm-lv').value||'mid';
+  const cmds=COMBAT_CMDS[lv]||COMBAT_CMDS.mid;
+  const cmd=cmds[Math.floor(Math.random()*cmds.length)];
+  combatCmdCount++;
+  document.getElementById('cm-cmd-text').textContent=cmd;
+  document.getElementById('cm-count').textContent=combatCmdCount;
+
+  // Voice
+  if(document.getElementById('cm-voice')?.value==='on'&&'speechSynthesis' in window){
+    const clean=cmd.replace(/[☠️💀🔴⚡💪🏃🦵🔄⏸🔥]/gu,'');
+    const u=new SpeechSynthesisUtterance(clean);
+    u.lang='he-IL';u.rate=1.15;u.pitch=1.1;
+    window.speechSynthesis.speak(u);
+  }
+
+  // Random next cmd in 20-90 sec
+  const nextIn=first?5:Math.floor(Math.random()*(lv==='elite'?30:lv==='hard'?50:lv==='mid'?70:90)+20);
+  combatNextIn=nextIn;
+  document.getElementById('cm-next').textContent=nextIn+'שנ';
+  if(combatCmdTimer)clearTimeout(combatCmdTimer);
+  combatCmdTimer=setTimeout(()=>fireNextCombatCmd(),nextIn*1000);
+}
+
+function updateCombatTimer(){
+  const rem=Math.max(0,Math.round((combatEndTime-Date.now())/1000));
+  combatNextIn=Math.max(0,combatNextIn-1);
+  document.getElementById('cm-timer').textContent=`${Math.floor(rem/60)}:${String(rem%60).padStart(2,'0')}`;
+  document.getElementById('cm-next').textContent=combatNextIn+'שנ';
+  if(rem===0)stopCombatMode();
+}
+
+function stopCombatMode(){
+  if(combatTimer){clearInterval(combatTimer);combatTimer=null;}
+  if(combatCmdTimer){clearTimeout(combatCmdTimer);combatCmdTimer=null;}
+  window.speechSynthesis?.cancel();
+  document.getElementById('cm-display').style.display='none';
+  document.getElementById('cm-start-btn').style.display='block';
+  document.getElementById('cm-cmd-text').textContent='';
+  notify(`🏁 מצב קרב הסתיים! ${combatCmdCount} פקודות!`,'p');
 }
 
 // ═══════════════════════════════════════════════════
