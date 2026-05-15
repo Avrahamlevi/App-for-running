@@ -332,9 +332,10 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .recovery-score{font-family:var(--fd);font-size:60px;line-height:1;margin-bottom:4px}
 .recovery-label{font-size:12px;color:var(--txt2);letter-spacing:1px}
 .muscle-body{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
-.muscle-item{background:var(--card2);border-radius:10px;padding:9px 6px;text-align:center;border:1px solid var(--b1);cursor:pointer;transition:.2s}
-.muscle-item.sore{border-color:rgba(255,45,85,.4);background:rgba(255,45,85,.05)}
-.muscle-item.fresh{border-color:rgba(0,255,136,.3);background:rgba(0,255,136,.04)}
+.muscle-item{background:var(--card2);border-radius:10px;padding:9px 6px;text-align:center;border:1px solid var(--b1);cursor:pointer;transition:.2s;-webkit-tap-highlight-color:transparent}
+.muscle-item.sore{border-color:rgba(255,45,85,.5);background:rgba(255,45,85,.1)}
+.muscle-item.partial{border-color:rgba(255,214,10,.5);background:rgba(255,214,10,.08)}
+.muscle-item.fresh{border-color:rgba(0,255,136,.4);background:rgba(0,255,136,.06)}
 .muscle-icon{font-size:22px;margin-bottom:4px}
 .muscle-name{font-size:10px;font-weight:700}
 .muscle-status{font-size:9px;color:var(--txt3);margin-top:2px}
@@ -806,7 +807,12 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
         <button class="qaction-btn" onclick="openAttendanceWeek()">📅 נוכחות שבועית</button>
         <button class="qaction-btn r" onclick="exportGroupReport()">📤 ייצא CSV</button>
         <button class="qaction-btn" onclick="openMonetizeModal()">💰 מסלולים</button>
-        <button class="qaction-btn" onclick="changeCoachPass()">🔑 סיסמה</button>
+      </div>
+
+      <!-- Settings row — always visible -->
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" style="flex:1;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);color:var(--purpleL);font-weight:900;font-size:12px" onclick="changeCoachPass()">🔑 שנה סיסמת מאמן</button>
+        <button class="btn bs" style="flex:0 0 auto;font-size:12px" onclick="coachMode=false;initCM();notify('יצאת ממצב מאמן','p')">← יציאה</button>
       </div>
     </div>
 
@@ -891,54 +897,63 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 
   <!-- ════ GOOGLE MAPS ROUTE PLANNER ════ -->
   <div id="tr-route" style="display:none">
-    <div class="card cc">
-      <div class="sh c">🗺 מסלול ריצה — Google Maps</div>
-      <div class="mini" style="margin-bottom:9px">חפש מקום, לחץ על המפה להוספת נקודות, גרור נקודות להזזה</div>
+    <!-- Active Run Overlay -->
+    <div id="run-active-bar" style="display:none;background:linear-gradient(135deg,rgba(0,255,136,.12),var(--card2));border:2px solid var(--pri);border-radius:13px;padding:12px;margin-bottom:10px">
+      <div style="font-family:var(--fd);font-size:11px;letter-spacing:2px;color:var(--pri);text-align:center;margin-bottom:10px">⚡ ריצה פעילה</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+        <div class="rstat"><div class="rstat-v cy" id="run-live-dist">0.00</div><div class="rstat-l">ק"מ</div></div>
+        <div class="rstat"><div class="rstat-v yl" id="run-live-time">00:00</div><div class="rstat-l">זמן</div></div>
+        <div class="rstat"><div class="rstat-v or" id="run-live-pace">--:--</div><div class="rstat-l">קצב/ק"מ</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px">
+        <div class="rstat"><div class="rstat-v" id="run-live-cal">0</div><div class="rstat-l">קלוריות</div></div>
+        <div class="rstat"><div class="rstat-v" id="run-live-elev">0</div><div class="rstat-l">עלייה מ'</div></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button id="run-pause-btn" class="btn by" style="flex:1;font-size:14px;font-weight:900" onclick="pauseRun()">⏸ השהה</button>
+        <button class="btn br" style="flex:1;font-size:14px;font-weight:900" onclick="stopRun()">⏹ סיים</button>
+      </div>
+    </div>
 
-      <!-- Search bar -->
+    <div class="card cc">
+      <div class="sh c">🗺 מסלול ריצה</div>
+      <div class="mini" style="margin-bottom:9px">חפש מיקום, הוסף נקודות למסלול, ואז הפעל מעקב ריצה</div>
       <div style="display:flex;gap:6px;margin-bottom:8px">
         <input id="map-search" type="text" placeholder="🔍 חפש מיקום..." style="flex:1"/>
         <button class="btn bp bsm" onclick="searchMapLocation()" style="width:60px">חפש</button>
       </div>
-
-      <!-- Map container -->
-      <div id="gmap" style="width:100%;height:300px;border-radius:12px;border:1px solid var(--b2);overflow:hidden;background:#1a2030;display:flex;align-items:center;justify-content:center">
-        <div id="gmap-loading" style="text-align:center;color:var(--txt2)">
-          <div style="font-size:32px;margin-bottom:8px">🗺</div>
-          <div style="font-size:12px;margin-bottom:12px">לחץ כדי לטעון את המפה</div>
+      <div id="gmap" style="width:100%;height:280px;border-radius:12px;border:1px solid var(--b2);overflow:hidden;background:linear-gradient(180deg,#0d1b2a,#050a14);display:flex;align-items:center;justify-content:center">
+        <div id="gmap-loading" style="text-align:center;color:var(--txt2);padding:20px">
+          <div style="font-size:40px;margin-bottom:10px">🗺</div>
+          <div style="font-size:12px;margin-bottom:14px">לחץ לטעינת Google Maps</div>
           <button class="btn bp" onclick="loadGoogleMap()">📍 טען מפה</button>
         </div>
       </div>
-
-      <!-- Route stats -->
       <div class="route-stats" id="route-stats" style="margin-top:10px">
         <div class="rstat"><div class="rstat-v cy" id="rs-dist">0.0</div><div class="rstat-l">ק"מ</div></div>
         <div class="rstat"><div class="rstat-v or" id="rs-time">--:--</div><div class="rstat-l">זמן</div></div>
         <div class="rstat"><div class="rstat-v yl" id="rs-elev">0</div><div class="rstat-l">עלייה מ'</div></div>
         <div class="rstat"><div class="rstat-v" id="rs-cal">0</div><div class="rstat-l">קלוריות</div></div>
       </div>
-
-      <!-- Settings -->
       <div class="r2" style="margin-top:8px">
         <div><label>קצב יעד (ד:ש/ק"מ)</label><input id="rt-pace" type="text" value="5:30" inputmode="numeric" oninput="updateRouteStats()"/></div>
         <div><label>משקל ק"ג</label><input id="rt-wgt" type="number" value="72" oninput="updateRouteStats()"/></div>
       </div>
-
-      <!-- Actions -->
-      <div class="r2" style="margin-top:8px;gap:6px">
-        <button class="btn bs bsm" onclick="undoRoutePt()">↩ בטל נקודה</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">
+        <button class="btn bs bsm" onclick="undoRoutePt()">↩ בטל</button>
         <button class="btn br bsm" onclick="clearRoute()">🗑 נקה</button>
+        <button class="btn bp bsm" onclick="saveRoute()">💾 שמור</button>
       </div>
-      <button class="btn bp" onclick="saveRoute()" style="margin-top:8px">💾 שמור מסלול</button>
+      <!-- BIG START RUN BUTTON -->
+      <button id="run-start-btn" onclick="startRun()" style="margin-top:10px;width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;font-size:17px;font-weight:900;letter-spacing:1.5px;border:none;border-radius:13px;padding:17px;box-shadow:0 4px 24px rgba(0,255,136,.4);cursor:pointer;font-family:var(--fd)">
+        ▶ הפעל מעקב ריצה
+      </button>
     </div>
 
-    <!-- Splits -->
     <div class="card">
       <div class="sh c">⏱ פיצולי קצב</div>
       <div id="splits-list"><div class="mini" style="text-align:center;padding:10px">הוסף נקודות למסלול</div></div>
     </div>
-
-    <!-- Saved routes -->
     <div class="card">
       <div class="sh y">💾 מסלולים שמורים</div>
       <div id="saved-routes"></div>
@@ -1035,11 +1050,12 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
       <div class="sh c">🧊 מוניטור שיקום</div>
       <div class="recovery-meter">
         <div class="recovery-score" id="rec-score" style="color:var(--pri)">--</div>
-        <div class="recovery-label" id="rec-label">סמן שרירים לחישוב</div>
+        <div class="recovery-label" id="rec-label">סמן מצב שרירים לחישוב</div>
       </div>
+      <div class="mini" style="margin-bottom:8px;text-align:center">לחץ על שריר כדי לעבור בין מצבים: 🔴 כואב → 🟡 התאוששתי חלקית → 🟢 מוכן</div>
       <div class="sh">💪 מצב שרירים</div>
       <div class="muscle-body" id="muscle-grid"></div>
-      <button class="btn bp" onclick="calcRecovery()">🔄 חשב מוכנות</button>
+      <button class="btn bp" onclick="calcRecovery()">🔄 חשב מוכנות + אימון מומלץ</button>
     </div>
     <div class="card">
       <div class="sh y">😴 שינה + הידרציה</div>
@@ -1112,26 +1128,26 @@ const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}};
 // ═══════════════════════════════════════════════════
 const UNITS={
   // ─── כניסה ───
-  gen:    {n:'קרבי כללי',  r:570,p:35,l:7, r3:13,  r5:24,   col:'#6a94aa',emoji:'🪖',tier:1,desc:'סטנדרט קרבי בסיסי — תנאי סף לכל יחידה קרבית'},
-  nahal:  {n:"נח\"ל",      r:570,p:40,l:8, r3:13,  r5:24,   col:'#ffd60a',emoji:'🌿',tier:1,desc:'גדודי רגלים + ייעוד חקלאי — נגיש יחסית'},
+  gen:    {n:'קרבי כללי',  r:570,p:35,l:7, r3:13,  r5:24,   col:'#6a94aa',emoji:'🪖',tier:1,desc:'נקודת הפתיחה — רמת הכניסה לכל תפקיד קרבי בצה"ל'},
+  nahal:  {n:"נח\"ל",      r:570,p:40,l:8, r3:13,  r5:24,   col:'#ffd60a',emoji:'🌿',tier:1,desc:'חטיבה עם ייעוד חקלאי וחברתי — שילוב שירות ומשימות קהילה'},
   // ─── עילית ───
-  golani: {n:'גולני',      r:540,p:45,l:10,r3:12,  r5:22.5, col:'#00cc6a',emoji:'🟢',tier:2,desc:'גדוד רגלים עילית — ריצות ארוכות + כוח + מסעות'},
-  para:   {n:'צנחנים',     r:510,p:50,l:12,r3:11.5,r5:22,   col:'#0a84ff',emoji:'🪂',tier:2,desc:'פלס עילית — מסעות קשים + כוח גוף עליון מצוין'},
-  giv:    {n:'גבעתי',      r:540,p:45,l:10,r3:12,  r5:22.5, col:'#ff8800',emoji:'🔶',tier:2,desc:'חטיבת רגלים — נוכחות בשטח גבוהה'},
-  kfir:   {n:'כפיר',       r:555,p:42,l:9, r3:12.5,r5:23,   col:'#ff6600',emoji:'🦁',tier:2,desc:'חטיבת כפיר — פעילות ביהודה ושומרון'},
+  golani: {n:'גולני',      r:540,p:45,l:10,r3:12,  r5:22.5, col:'#00cc6a',emoji:'🟢',tier:2,desc:'חטיבת רגלים ותיקה עם מסורת קרבית — לחימה רגלית, מסעות ועמידות פיזית'},
+  para:   {n:'צנחנים',     r:510,p:50,l:12,r3:11.5,r5:22,   col:'#0a84ff',emoji:'🪂',tier:2,desc:'לוחמים מצטיינים עם כושר גוף עליון גבוה — חדירה מהאוויר ומסעות קשים'},
+  giv:    {n:'גבעתי',      r:540,p:45,l:10,r3:12,  r5:22.5, col:'#ff8800',emoji:'🔶',tier:2,desc:'חטיבה עם נוכחות מבצעית גבוהה בעזה ויהודה ושומרון'},
+  kfir:   {n:'כפיר',       r:555,p:42,l:9, r3:12.5,r5:23,   col:'#ff6600',emoji:'🦁',tier:2,desc:'חטיבת חי"ר הגדולה בצה"ל — פעילות שוטפת ביהודה שומרון ובגבולות'},
   // ─── מובחר ───
-  oketz:  {n:'עוקץ',       r:495,p:56,l:14,r3:11.5,r5:21.5, col:'#ff8800',emoji:'🐕‍🦺',tier:3,desc:'יחידת כלבנים מובחרת — כושר גבוה + עבודת צוות'},
-  duvdevan:{n:'דובדבן',    r:480,p:60,l:15,r3:11,  r5:21,   col:'#dc143c',emoji:'🍒',tier:3,desc:'יחידת מסתערבים — לחימה בלבוש אזרחי בשטח אויב'},
-  maglan: {n:'מגלן',       r:475,p:60,l:16,r3:11,  r5:20.5, col:'#4b0082',emoji:'🎯',tier:3,desc:'לחימה בעומק שטח אויב — איתור מטרות איכותיות'},
+  oketz:  {n:'עוקץ',       r:495,p:56,l:14,r3:11.5,r5:21.5, col:'#ff8800',emoji:'🐕‍🦺',tier:3,desc:'יחידת כלבנים מובחרת — שילוב עבודה עם כלב נשק ויכולת לחימה גבוהה'},
+  duvdevan:{n:'דובדבן',    r:480,p:60,l:15,r3:11,  r5:21,   col:'#dc143c',emoji:'🍒',tier:3,desc:'יחידת מסתערבים — כניסה לשטחי אויב בלבוש אזרחי, מבצעי מעצר ועצירה'},
+  maglan: {n:'מגלן',       r:475,p:60,l:16,r3:11,  r5:20.5, col:'#4b0082',emoji:'🎯',tier:3,desc:'יחידת עומק של חיל הרגלים — לחימה מאחורי קווי האויב ואיתור מטרות'},
   // ─── קשה מאוד ───
-  egoz:   {n:'אגוז',       r:480,p:60,l:15,r3:11,  r5:21,   col:'#ff2d55',emoji:'💀',tier:4,desc:'לחימה בשטח הררי — נגד גרילה. גיבוש ארוך ומפרך'},
-  lotar:  {n:'לוט"ר',      r:475,p:62,l:16,r3:10.5,r5:20,   col:'#ff1493',emoji:'🔫',tier:4,desc:'לוחמה בטרור — חילוץ חטופים, סיכול פיגועים'},
+  egoz:   {n:'אגוז',       r:480,p:60,l:15,r3:11,  r5:21,   col:'#ff2d55',emoji:'💀',tier:4,desc:'יחידת לוחמה בשטח הררי וסבוך — מתמחה בלחימה נגד גרילה'},
+  lotar:  {n:'לוט"ר',      r:475,p:62,l:16,r3:10.5,r5:20,   col:'#ff1493',emoji:'🔫',tier:4,desc:'יחידה ייחודית — חילוץ חטופים, מניעת פיגועים, לוחמה בטרור'},
   // ─── עילית מיוחד ───
-  unit669:{n:'יחידה 669',  r:460,p:65,l:18,r3:10.5,r5:20,   col:'#00e5ff',emoji:'🚁',tier:5,desc:'חילוץ לחימה — נדרש קורס צניחה + כושר עילית + שחייה'},
-  shaldag:{n:'שלדג',       r:450,p:68,l:19,r3:10,  r5:19.5, col:'#00bcd4',emoji:'🦅',tier:5,desc:'סיירת חיל האוויר — מבצעי עומק, גיבוש מהקשים ביותר'},
+  unit669:{n:'יחידה 669',  r:460,p:65,l:18,r3:10.5,r5:20,   col:'#00e5ff',emoji:'🚁',tier:5,desc:'יחידת חילוץ לחימה של חיל האוויר — רפואה טקטית, צניחה וכושר עילית'},
+  shaldag:{n:'שלדג',       r:450,p:68,l:19,r3:10,  r5:19.5, col:'#00bcd4',emoji:'🦅',tier:5,desc:'סיירת חיל האוויר לפעולות עומק — הכנת שדות קרב ומבצעים מאחורי האויב'},
   // ─── מקסימום ───
-  shai:   {n:'שייטת 13',   r:450,p:72,l:22,r3:10,  r5:19,   col:'#00e5ff',emoji:'🤿',tier:6,desc:'יחידת עילית ימית — הגיבוש הכי קשה בצה"ל. שחייה + כושר מקסימלי'},
-  matkal: {n:"סיירת מטכ\"ל",r:450,p:68,l:20,r3:10, r5:19,   col:'#ff2d55',emoji:'🔱',tier:6,desc:'הסיירת — מבצעי עומק, גיבוש קיצוני. מנטלי 70% מהדרישה'},
+  shai:   {n:'שייטת 13',   r:450,p:72,l:22,r3:10,  r5:19,   col:'#00e5ff',emoji:'🤿',tier:6,desc:'זרוע הים המובחרת — גיבוש השחייה הקשה ביותר, כושר ומנטלי ברמה עולמית'},
+  matkal: {n:"סיירת מטכ\"ל",r:450,p:68,l:20,r3:10, r5:19,   col:'#ff2d55',emoji:'🔱',tier:6,desc:'ה"סיירת" — מבצעי עומק קיצוניים, פינוי חטופים, גיבוש הנחשב לאחד הקשים בעולם'},
 };
 
 // ═══════════════════════════════════════════════════
@@ -1178,7 +1194,7 @@ function openCoachLoginModal(){
   <button class="btn bs" style="margin-top:6px" onclick="closeModal()">ביטול</button>
   <div style="margin-top:14px;padding:10px;background:rgba(124,58,237,.06);border-radius:9px;border:1px solid rgba(124,58,237,.15)">
     <div style="font-size:10px;color:var(--txt3);line-height:1.6">
-      💡 כדי לשנות את הסיסמה — היכנס למאמן ← הגדרות ← שנה סיסמה
+      💡 לשינוי סיסמה: היכנס → בדשבורד המאמן לחץ "🔑 שנה סיסמת מאמן"
     </div>
   </div>`;
   openModal('🔐 אימות מאמן',body);
@@ -1434,28 +1450,48 @@ function buildUnitTargets(){
   const el=document.getElementById('unit-targets');
   if(!el||el.innerHTML)return;
   let html='';
-  const tiers=[1,2,3,4,5,6];
-  tiers.forEach(t=>{
+  [1,2,3].forEach(t=>{
     const us=Object.entries(UNITS).filter(([,u])=>u.tier===t);
     if(!us.length)return;
-    html+=`<div style="margin:8px 0 4px;font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--txt3)">${TIER_NAMES[t]}</div>`;
+    html+=`<div style="margin:10px 0 5px;font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--txt3);padding:4px 0;border-bottom:1px solid var(--b2)">${TIER_NAMES[t]}</div>`;
     us.forEach(([k,u])=>{
-      const m=Math.floor(u.r/60),s=u.r%60;
-      html+=`<div style="display:flex;align-items:center;gap:8px;padding:9px;background:var(--card2);border-radius:10px;margin-bottom:5px;border:1px solid var(--b1);border-right:3px solid ${u.col}">
-        <span style="font-size:20px">${u.emoji}</span>
-        <div style="flex:1">
-          <div style="font-weight:800;font-size:13px;color:${u.col}">${u.n}</div>
-          <div style="font-size:9px;color:var(--txt3);margin-top:2px;line-height:1.4">${u.desc}</div>
-        </div>
-        <div style="text-align:left;font-family:var(--fm);font-size:9px;color:var(--txt2);line-height:1.8">
-          2K: ${m}:${String(s).padStart(2,'0')}<br/>
-          שכ': ${u.p}<br/>
-          מתח: ${u.l}
+      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:5px;border:1px solid var(--b1);border-right:3px solid ${u.col}">
+        <span style="font-size:22px;flex-shrink:0">${u.emoji}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:900;font-size:13px;color:${u.col}">${u.n}</div>
+          <div style="font-size:10px;color:var(--txt2);margin-top:3px;line-height:1.5">${u.desc}</div>
         </div>
       </div>`;
     });
   });
+  html+=`<div style="margin-top:10px">
+    <button onclick="toggleEliteUnits(this)" style="width:100%;background:rgba(255,45,85,.08);border:1px solid rgba(255,45,85,.2);color:var(--red);border-radius:10px;padding:10px;font-weight:800;font-size:12px;font-family:var(--fb);cursor:pointer">
+      💀 הצג יחידות עילית (קשה מאוד ומעלה) ▼
+    </button>
+    <div id="elite-units" style="display:none;margin-top:6px">`;
+  [4,5,6].forEach(t=>{
+    const us=Object.entries(UNITS).filter(([,u])=>u.tier===t);
+    if(!us.length)return;
+    html+=`<div style="margin:10px 0 5px;font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--txt3);padding:4px 0;border-bottom:1px solid var(--b2)">${TIER_NAMES[t]}</div>`;
+    us.forEach(([k,u])=>{
+      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:5px;border:1px solid var(--b1);border-right:3px solid ${u.col}">
+        <span style="font-size:22px;flex-shrink:0">${u.emoji}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:900;font-size:13px;color:${u.col}">${u.n}</div>
+          <div style="font-size:10px;color:var(--txt2);margin-top:3px;line-height:1.5">${u.desc}</div>
+        </div>
+      </div>`;
+    });
+  });
+  html+=`</div></div>`;
   el.innerHTML=html;
+}
+function toggleEliteUnits(btn){
+  const el=document.getElementById('elite-units');
+  if(!el)return;
+  const show=el.style.display==='none';
+  el.style.display=show?'block':'none';
+  btn.textContent=show?'💀 הסתר יחידות עילית ▲':'💀 הצג יחידות עילית (קשה מאוד ומעלה) ▼';
 }
 
 // ═══════════════════════════════════════════════════
@@ -1671,53 +1707,81 @@ function calcNutrition(){
 // RECOVERY MODULE
 // ═══════════════════════════════════════════════════
 const MUSCLES=[
-  {id:'quads',n:'Quads / ירכיים',icon:'🦵'},
-  {id:'hamstrings',n:'הרמסטרינג',icon:'🦿'},
-  {id:'calves',n:'שוקיים',icon:'🦵'},
+  {id:'quads',n:'ירכיים קדמיות (Quads)',icon:'🦵'},
+  {id:'hamstrings',n:'ירכיים אחוריות (Hamstrings)',icon:'🦿'},
+  {id:'calves',n:'שוקיים',icon:'🦴'},
+  {id:'shins',n:'שין ספלינט',icon:'🩹'},
   {id:'chest',n:'חזה',icon:'💪'},
   {id:'back',n:'גב עליון',icon:'🔙'},
-  {id:'lats',n:'לטיסימוס',icon:'🏋'},
+  {id:'lats',n:'גב רחב (Lats)',icon:'🏋'},
   {id:'shoulders',n:'כתפיים',icon:'🏋'},
+  {id:'bicep',n:'יד קדמית (ביספ)',icon:'💪'},
+  {id:'tricep',n:'יד אחורית (טריספ)',icon:'💪'},
   {id:'neck',n:'צוואר',icon:'🫀'},
-  {id:'shins',n:'שין ספלינט',icon:'🦴'},
+  {id:'hip',n:'מפשעה / ירך',icon:'🦵'},
 ];
 let muscleState={};
 function initMuscleGrid(){
   const g=document.getElementById('muscle-grid');
-  if(!g||g.innerHTML)return;
+  if(!g)return;
   muscleState=ld(K.REC+'_muscles',{});
   let html='';
   MUSCLES.forEach(m=>{
-    const st=muscleState[m.id]||'ok';
-    html+=`<div class="muscle-item ${st==='sore'?'sore':'fresh'}" id="ms-${m.id}" onclick="toggleMuscle('${m.id}')">
+    const st=muscleState[m.id]||'fresh';
+    const cls=st==='sore'?'sore':st==='partial'?'partial':'fresh';
+    const lbl=st==='sore'?'🔴 כואב':st==='partial'?'🟡 חלקי':'🟢 מוכן';
+    html+=`<div class="muscle-item ${cls}" id="ms-${m.id}" onclick="toggleMuscle('${m.id}')">
       <div class="muscle-icon">${m.icon}</div>
       <div class="muscle-name">${m.n}</div>
-      <div class="muscle-status">${st==='sore'?'🔴 כואב':'🟢 מוכן'}</div>
+      <div class="muscle-status">${lbl}</div>
     </div>`;
   });
   g.innerHTML=html;
 }
 function toggleMuscle(id){
-  muscleState[id]=muscleState[id]==='sore'?'ok':'sore';
+  // Cycle: fresh → sore → partial → fresh
+  const cur=muscleState[id]||'fresh';
+  muscleState[id]={fresh:'sore',sore:'partial',partial:'fresh'}[cur]||'fresh';
   sv(K.REC+'_muscles',muscleState);
-  const el=document.getElementById('ms-'+id);
   initMuscleGrid();
   calcRecovery();
 }
 function calcRecovery(){
   const sore=Object.values(muscleState).filter(v=>v==='sore').length;
+  const partial=Object.values(muscleState).filter(v=>v==='partial').length;
+  const fresh=Object.values(muscleState).filter(v=>v==='fresh'||v===undefined).length;
   const sleep=parseFloat(document.getElementById('sleep-h')?.value||7);
   const water=parseFloat(document.getElementById('water-l')?.value||2);
   const feel=parseInt(document.getElementById('feeling')?.value||3);
-  const sorePenalty=sore*8;
+  const sorePenalty=sore*12+partial*5;
   const sleepScore=sleep>=8?100:sleep>=7?85:sleep>=6?65:sleep>=5?45:25;
   const waterScore=water>=3?100:water>=2?80:water>=1.5?60:40;
   const feelScore=feel*20;
-  const total=Math.max(0,Math.round((sleepScore*.3+waterScore*.2+feelScore*.25)-(sorePenalty*.25)));
+  const total=Math.max(0,Math.min(100,Math.round((sleepScore*.3+waterScore*.2+feelScore*.3)-(sorePenalty*.2))));
   const el=document.getElementById('rec-score');
   const lbl=document.getElementById('rec-label');
-  if(el){el.textContent=total;el.style.color=total>=80?'var(--pri)':total>=60?'var(--yellow)':'var(--red)';}
-  if(lbl){lbl.textContent=total>=80?'✅ מוכן לאימון קשה!':total>=60?'⚡ אימון בינוני מומלץ':total>=40?'😴 מנוחה פעילה בלבד':'🛑 מנוחה מלאה היום!';}
+  if(el){el.textContent=total+'%';el.style.color=total>=80?'var(--pri)':total>=55?'var(--yellow)':'var(--red)';}
+
+  // Recommended workout based on recovery
+  let rec,recColor,recIcon;
+  if(total>=80){
+    rec='✅ מוכן לאימון מלא — כוח + ריצה בעצימות גבוהה';
+    recColor='var(--pri)';recIcon='💪';
+  } else if(total>=60){
+    rec='⚡ אימון בינוני — ריצה קלה / כוח על שרירים שמוכנים';
+    recColor='var(--yellow)';recIcon='🏃';
+  } else if(total>=40){
+    rec='🧘 מנוחה פעילה — מתיחות, הליכה, שחייה קלה';
+    recColor='var(--orange)';recIcon='🧘';
+  } else {
+    rec='🛑 מנוחה מלאה — שינה + תזונה + אין אימון היום';
+    recColor='var(--red)';recIcon='🛌';
+  }
+
+  if(lbl){
+    lbl.innerHTML=`<div style="color:${recColor};font-weight:900;font-size:12px;margin-bottom:4px">${recIcon} ${rec}</div>
+    <div style="font-size:10px;color:var(--txt3)">${sore>0?`${sore} שרירים כואבים `:''} ${partial>0?`${partial} חלקית `:''}${fresh>0?`${fresh} מוכנים`:''}</div>`;
+  }
 }
 function saveRecovery(){calcRecovery();notify('שיקום נשמר!','c');}
 
@@ -2923,6 +2987,118 @@ function clearHistory(){
 const K_ROUTES='cf7_routes';
 let gmap=null, gmarkers=[], gpolyline=null, gpoly_pts=[], gDirections=null;
 let routePts=[]; // fallback SVG pts
+
+// ═══════════════════════════════════════════════════
+// LIVE RUN TRACKING
+// ═══════════════════════════════════════════════════
+let runActive=false,runPaused=false;
+let runStartTime=0,runPausedMs=0,runPauseStart=0;
+let runTimerInterval=null,runWatchId=null;
+let runPositions=[],runTotalDist=0,runTotalElev=0;
+let runPolyline=null;
+
+function startRun(){
+  const wgt=parseFloat(document.getElementById('rt-wgt')?.value||72);
+  runActive=true;runPaused=false;
+  runStartTime=Date.now();runPausedMs=0;
+  runPositions=[];runTotalDist=0;runTotalElev=0;
+
+  document.getElementById('run-active-bar').style.display='block';
+  document.getElementById('run-start-btn').style.display='none';
+  // Scroll to top of route section
+  document.getElementById('run-active-bar').scrollIntoView({behavior:'smooth',block:'start'});
+
+  // Start GPS tracking
+  if(navigator.geolocation){
+    runWatchId=navigator.geolocation.watchPosition(pos=>{
+      if(runPaused)return;
+      const pt={lat:pos.coords.latitude,lng:pos.coords.longitude,alt:pos.coords.altitude||0,t:Date.now()};
+      if(runPositions.length>0){
+        const prev=runPositions[runPositions.length-1];
+        const segDist=haversine(prev.lat,prev.lng,pt.lat,pt.lng);
+        runTotalDist+=segDist;
+        const elevDelta=(pt.alt||0)-(prev.alt||0);
+        if(elevDelta>0)runTotalElev+=elevDelta;
+        // Draw on map
+        if(gmap&&typeof google!=='undefined'){
+          if(!runPolyline){
+            runPolyline=new google.maps.Polyline({path:[],strokeColor:'#ffd60a',strokeWeight:4,strokeOpacity:.9,map:gmap});
+          }
+          const path=runPolyline.getPath();path.push(new google.maps.LatLng(pt.lat,pt.lng));
+          gmap.panTo({lat:pt.lat,lng:pt.lng});
+        }
+      }
+      runPositions.push(pt);
+      updateLiveUI(wgt);
+    },{enableHighAccuracy:true,maximumAge:2000,timeout:10000});
+  }
+
+  // Timer
+  runTimerInterval=setInterval(()=>{
+    if(!runPaused)updateLiveUI(wgt);
+  },1000);
+
+  notify('▶ ריצה התחילה! בהצלחה 🔥','p');
+}
+
+function haversine(lat1,lng1,lat2,lng2){
+  const R=6371;
+  const dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function updateLiveUI(wgt){
+  const elapsed=Math.round((Date.now()-runStartTime-runPausedMs)/1000);
+  const mins=Math.floor(elapsed/60),secs=elapsed%60;
+  const el=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  el('run-live-dist',runTotalDist.toFixed(2));
+  el('run-live-time',`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`);
+  // Pace
+  if(runTotalDist>0.05&&elapsed>10){
+    const paceS=elapsed/runTotalDist;
+    const pm=Math.floor(paceS/60),ps=Math.round(paceS%60);
+    el('run-live-pace',`${pm}:${String(ps).padStart(2,'0')}`);
+  }
+  const kcal=Math.round(runTotalDist*(wgt*0.072)+runTotalElev*0.15);
+  el('run-live-cal',kcal);
+  el('run-live-elev',Math.round(runTotalElev));
+}
+
+function pauseRun(){
+  if(!runActive)return;
+  runPaused=!runPaused;
+  if(runPaused){runPauseStart=Date.now();document.getElementById('run-pause-btn').textContent='▶ המשך';}
+  else{runPausedMs+=Date.now()-runPauseStart;document.getElementById('run-pause-btn').textContent='⏸ השהה';}
+}
+
+function stopRun(){
+  if(!runActive)return;
+  runActive=false;runPaused=false;
+  if(runTimerInterval){clearInterval(runTimerInterval);runTimerInterval=null;}
+  if(runWatchId){navigator.geolocation.clearWatch(runWatchId);runWatchId=null;}
+  document.getElementById('run-active-bar').style.display='none';
+  document.getElementById('run-start-btn').style.display='block';
+  // Show summary
+  const elapsed=Math.round((Date.now()-runStartTime-runPausedMs)/1000);
+  const mins=Math.floor(elapsed/60),secs=elapsed%60;
+  const wgt=parseFloat(document.getElementById('rt-wgt')?.value||72);
+  const kcal=Math.round(runTotalDist*(wgt*0.072));
+  logWorkout({type:'run',name:'ריצה חיה',score:runTotalDist.toFixed(2)+'ק"מ',icon:'🏃',duration:Math.round(elapsed/60),details:[`${runTotalDist.toFixed(2)}ק"מ`,`${mins}:${String(secs).padStart(2,'0')} זמן`,`${kcal} קלוריות`,`עלייה: ${Math.round(runTotalElev)}מ`]});
+  openModal('✅ ריצה הסתיימה',`
+    <div style="text-align:center;padding:12px 0">
+      <div style="font-size:48px;margin-bottom:10px">🏃</div>
+      <div style="font-family:var(--fd);font-size:40px;color:var(--pri)">${runTotalDist.toFixed(2)}</div>
+      <div style="color:var(--txt3);font-size:12px;margin-bottom:16px">ק"מ</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <div class="rstat"><div class="rstat-v yl">${mins}:${String(secs).padStart(2,'0')}</div><div class="rstat-l">זמן</div></div>
+        <div class="rstat"><div class="rstat-v or">${kcal}</div><div class="rstat-l">קלוריות</div></div>
+        <div class="rstat"><div class="rstat-v">${Math.round(runTotalElev)}</div><div class="rstat-l">עלייה מ'</div></div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--pri)">✅ נשמר בהיסטוריית האימונים!</div>
+    </div>
+    <button class="btn bp" style="margin-top:10px" onclick="closeModal()">סגור</button>`);
+}
 
 function initRoute(){
   renderSavedRoutes();
