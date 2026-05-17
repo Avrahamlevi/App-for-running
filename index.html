@@ -24,7 +24,7 @@
   --rad:12px;
 }
 html,body{height:100%;overflow:hidden}
-body{font-family:var(--fb);background:var(--bg);color:var(--txt);display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative}
+body{font-family:var(--fb);background:var(--bg);color:var(--txt);display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative;min-height:100vh;height:100dvh}
 body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,136,.004) 3px,rgba(0,255,136,.004) 4px);pointer-events:none;z-index:9997}
 
 /* ─── TOP BAR ─── */
@@ -53,10 +53,12 @@ body.cm .ao{display:none!important}
 body.cm .co{display:block!important}
 
 /* ─── CONTENT ─── */
-.content{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
-.pg{display:none;padding:11px;animation:pgIn .2s ease}
+.content{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;width:100%;display:block}
+.pg{display:none;padding:11px;padding-bottom:80px;box-sizing:border-box;width:390px;max-width:100vw}
 .pg.active{display:block}
-@keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.pg{display:none;padding:11px;padding-bottom:80px;width:100%;box-sizing:border-box}
+.pg.active{display:block;animation:pgIn .2s ease}
+@keyframes pgIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
 /* ─── CARDS ─── */
 .card{background:var(--card);border:1px solid var(--b1);border-radius:var(--rad);padding:13px;margin-bottom:10px;position:relative;overflow:hidden}
@@ -720,23 +722,21 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 
   <!-- ════ DUNES COMBAT MODE ════ -->
   <div id="tb-cm" style="display:none">
-
-    <!-- Setup screen -->
     <div id="cm-setup">
       <div class="card" style="border-color:rgba(255,165,0,.35);background:linear-gradient(180deg,rgba(255,140,0,.06),var(--card))">
-        <div style="font-family:var(--fd);font-size:13px;letter-spacing:2px;color:#ff8c00;margin-bottom:2px">🏜 אימון דיונות</div>
-        <div style="font-size:11px;color:var(--txt2);margin-bottom:12px">פקודות קוליות אקראיות — ספרינטים, זחילות, שקי חול, מנוחות</div>
+        <div style="font-family:var(--fd);font-size:14px;letter-spacing:2px;color:#ff8c00;margin-bottom:3px">🏜 אימון דיונות</div>
+        <div style="font-size:11px;color:var(--txt2);margin-bottom:14px">פקודות קוליות אמיתיות בסגנון גיבוש שייטת ומטכ"ל</div>
 
-        <label>⏱ משך כולל</label>
-        <select id="cm-dur">
-          <option value="10">10 דקות</option>
-          <option value="20" selected>20 דקות</option>
-          <option value="30">30 דקות</option>
-          <option value="45">45 דקות — גיבוש</option>
-        </select>
+        <label>⏱ משך האימון</label>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
+          <button class="btn" id="cn-10" onclick="setCmdCount(10,this)" style="font-size:12px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">10 דקות</button>
+          <button class="btn" id="cn-15" onclick="setCmdCount(15,this)" style="font-size:12px;font-weight:900;background:rgba(255,140,0,.1);border:2px solid #ff8c00;color:#ff8c00">15 דקות</button>
+          <button class="btn" id="cn-20" onclick="setCmdCount(20,this)" style="font-size:12px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">20 דקות</button>
+          <button class="btn" id="cn-30" onclick="setCmdCount(30,this)" style="font-size:12px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">30 דקות</button>
+        </div>
 
-        <label>🏃 זמן לכל תרגיל</label>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">
+        <label>⏱ זמן לכל תרגיל</label>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
           <button class="btn" id="et-short" onclick="setExTime('short',this)" style="font-size:11px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">⚡ 15-30שנ</button>
           <button class="btn" id="et-mid" onclick="setExTime('mid',this)" style="font-size:11px;font-weight:900;background:rgba(255,140,0,.1);border:2px solid #ff8c00;color:#ff8c00">🏃 30-60שנ</button>
           <button class="btn" id="et-long" onclick="setExTime('long',this)" style="font-size:11px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">💪 60-90שנ</button>
@@ -744,27 +744,31 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
         </div>
 
         <label>🔥 רמת קושי</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-          <button class="btn" id="dlv-fresh" onclick="setDuneLv('fresh',this)" style="background:rgba(0,255,136,.08);border:2px solid var(--pri);color:var(--pri);font-size:11px;font-weight:900">🟢 ירוק — מתחיל</button>
-          <button class="btn" id="dlv-mid" onclick="setDuneLv('mid',this)" style="background:var(--card3);border:1px solid var(--b2);color:var(--txt);font-size:11px;font-weight:900">🟡 בינוני — קרבי</button>
-          <button class="btn" id="dlv-hard" onclick="setDuneLv('hard',this)" style="background:var(--card3);border:1px solid var(--b2);color:var(--txt);font-size:11px;font-weight:900">🔴 קשה — גיבוש</button>
-          <button class="btn" id="dlv-elite" onclick="setDuneLv('elite',this)" style="background:var(--card3);border:1px solid var(--b2);color:var(--txt);font-size:11px;font-weight:900">💀 עילית — מטכ"ל</button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <button class="btn" id="dlv-fresh" onclick="setDuneLv('fresh',this)" style="background:rgba(0,255,136,.08);border:2px solid var(--pri);color:var(--pri);font-size:11px;font-weight:900">🟢 מתחיל</button>
+          <button class="btn" id="dlv-mid" onclick="setDuneLv('mid',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">🟡 קרבי</button>
+          <button class="btn" id="dlv-hard" onclick="setDuneLv('hard',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">🔴 גיבוש</button>
+          <button class="btn" id="dlv-elite" onclick="setDuneLv('elite',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">💀 שייטת/מטכ"ל</button>
         </div>
 
         <label>🎒 ציוד זמין</label>
-        <div id="cm-gear" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
           <button class="qaction-btn p" id="gear-bag" onclick="toggleGear('bag',this)">🎒 שקי חול</button>
           <button class="qaction-btn" id="gear-jerry" onclick="toggleGear('jerry',this)" style="opacity:.5">🪣 ג'ריקן</button>
-          <button class="qaction-btn" id="gear-rope" onclick="toggleGear('rope',this)" style="opacity:.5">🪢 חבל</button>
           <button class="qaction-btn" id="gear-vest" onclick="toggleGear('vest',this)" style="opacity:.5">🦺 אפוד כובד</button>
+          <button class="qaction-btn" id="gear-partner" onclick="toggleGear('partner',this)" style="opacity:.5">👥 שותף</button>
         </div>
 
         <label>🔊 קול</label>
         <select id="cm-voice">
-          <option value="on" selected>מופעל — מדבר ומונה</option>
-          <option value="cmd">פקודות בלבד</option>
+          <option value="full" selected>מלא — פקודה + ספירה לאחור קולית</option>
+          <option value="cmd">פקודה בלבד</option>
           <option value="off">כבוי</option>
         </select>
+
+        <div id="cm-preview" style="background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.18);border-radius:10px;padding:10px;margin-top:10px;font-size:11px;color:var(--txt2)">
+          💡 <span id="cm-preview-txt">15 פקודות · 30-60שנ כל אחת · ~12-15 דקות</span>
+        </div>
 
         <button onclick="startCombatMode()" style="width:100%;margin-top:14px;background:linear-gradient(135deg,#ff8c00,#cc5500);color:#fff;font-size:18px;font-weight:900;border:none;border-radius:14px;padding:18px;box-shadow:0 6px 28px rgba(255,140,0,.45);cursor:pointer;font-family:var(--fd);letter-spacing:1px">
           🏜 התחל אימון דיונות
@@ -772,60 +776,65 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
       </div>
     </div>
 
-    <!-- Active screen -->
     <div id="cm-active" style="display:none">
-      <!-- Big countdown circle -->
-      <div style="text-align:center;margin-bottom:10px">
-        <div style="position:relative;display:inline-block;width:160px;height:160px">
-          <svg width="160" height="160" style="transform:rotate(-90deg)">
-            <circle cx="80" cy="80" r="72" fill="none" stroke="rgba(255,140,0,.15)" stroke-width="10"/>
-            <circle id="cm-circle" cx="80" cy="80" r="72" fill="none" stroke="#ff8c00" stroke-width="10"
-              stroke-dasharray="452" stroke-dashoffset="0" stroke-linecap="round"
-              style="transition:stroke-dashoffset .5s linear"/>
+      <div style="background:var(--card2);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;gap:10px">
+        <div style="flex:1">
+          <div style="height:9px;background:var(--card3);border-radius:5px;overflow:hidden">
+            <div id="cm-progress-bar" style="height:100%;background:linear-gradient(90deg,#cc5500,#ff8c00,#ffaa00);border-radius:5px;transition:width .6s ease;width:0%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:var(--txt3)">
+            <span>פקודה <span id="cm-cur-num" style="color:#ff8c00;font-weight:900;font-family:var(--fd)">1</span></span>
+            <span id="cm-total-num" style="color:var(--txt)">15 דקות</span>
+          </div>
+        </div>
+        <div style="font-family:var(--fd);font-size:20px;color:#ff8c00" id="cm-timer">00:00</div>
+      </div>
+
+      <div style="text-align:center;margin-bottom:12px">
+        <div style="position:relative;display:inline-block;width:175px;height:175px">
+          <svg width="175" height="175" style="transform:rotate(-90deg)">
+            <circle cx="87" cy="87" r="78" fill="none" stroke="rgba(255,140,0,.1)" stroke-width="12"/>
+            <circle id="cm-circle" cx="87" cy="87" r="78" fill="none" stroke="#ff8c00" stroke-width="12"
+              stroke-dasharray="490" stroke-dashoffset="0" stroke-linecap="round"
+              style="transition:stroke-dashoffset .9s linear,stroke .4s"/>
           </svg>
           <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-            <div id="cm-ex-countdown" style="font-family:var(--fd);font-size:48px;color:#ff8c00;line-height:1">--</div>
-            <div style="font-size:9px;color:rgba(255,140,0,.6);letter-spacing:1px">שניות</div>
+            <div id="cm-ex-countdown" style="font-family:var(--fd);font-size:56px;color:#ff8c00;line-height:1;text-shadow:0 0 20px rgba(255,140,0,.4)">--</div>
+            <div style="font-size:10px;color:rgba(255,140,0,.5);letter-spacing:1px;margin-top:3px">שניות</div>
           </div>
         </div>
       </div>
 
-      <!-- Command card -->
-      <div id="cm-cmd-card" style="background:linear-gradient(180deg,#1a0a00,#0d0500);border:2px solid #ff8c00;border-radius:16px;padding:16px;margin-bottom:10px;text-align:center">
-        <div id="cm-cmd-emoji" style="font-size:44px;margin-bottom:8px">🏜</div>
-        <div id="cm-cmd-text" style="font-family:var(--fd);font-size:20px;color:#ff8c00;line-height:1.4"></div>
-        <div id="cm-cmd-detail" style="font-size:11px;color:rgba(255,140,0,.6);margin-top:6px;line-height:1.5"></div>
+      <div style="background:linear-gradient(180deg,#140800,#080400);border:2px solid #ff8c00;border-radius:16px;padding:16px 14px;margin-bottom:12px;text-align:center;box-shadow:0 0 28px rgba(255,140,0,.12)">
+        <div id="cm-cmd-emoji" style="font-size:48px;margin-bottom:10px;line-height:1">🏜</div>
+        <div id="cm-cmd-text" style="font-family:var(--fd);font-size:21px;color:#ff8c00;line-height:1.4"></div>
+        <div id="cm-cmd-detail" style="font-size:11px;color:rgba(255,140,0,.6);margin-top:8px;line-height:1.6"></div>
       </div>
 
-      <!-- Stats row -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px">
-        <div class="rstat" style="background:rgba(255,140,0,.06);border-color:rgba(255,140,0,.2)">
-          <div style="font-family:var(--fd);font-size:24px;color:#ff8c00;line-height:1" id="cm-timer">--:--</div>
+        <div class="rstat">
+          <div style="font-family:var(--fd);font-size:22px;color:var(--pri);line-height:1" id="cm-count">0</div>
+          <div class="rstat-l">הושלמו</div>
+        </div>
+        <div class="rstat">
+          <div style="font-family:var(--fd);font-size:22px;color:var(--yellow);line-height:1" id="cm-remain-cnt">--:--</div>
           <div class="rstat-l">נותר</div>
         </div>
         <div class="rstat">
-          <div style="font-family:var(--fd);font-size:24px;color:var(--pri);line-height:1" id="cm-count">0</div>
-          <div class="rstat-l">פקודות</div>
-        </div>
-        <div class="rstat">
-          <div style="font-family:var(--fd);font-size:24px;color:var(--yellow);line-height:1" id="cm-kcal">0</div>
+          <div style="font-family:var(--fd);font-size:22px;color:#ff8c00;line-height:1" id="cm-kcal">0</div>
           <div class="rstat-l">קלוריות</div>
         </div>
       </div>
 
-      <!-- Log last commands -->
-      <div id="cm-log" style="max-height:100px;overflow-y:auto;margin-bottom:10px;font-size:10px;color:var(--txt3)"></div>
+      <div id="cm-log" style="max-height:90px;overflow-y:auto;margin-bottom:10px;font-size:10px;color:var(--txt3);background:var(--card2);border-radius:8px;padding:6px 8px;direction:rtl"></div>
 
-      <!-- Controls -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <button id="cm-pause-btn" onclick="pauseCombat()" style="padding:14px;background:rgba(255,214,10,.1);border:1px solid var(--yellow);color:var(--yellow);border-radius:12px;font-size:14px;font-weight:900;cursor:pointer">⏸ השהה</button>
-        <button onclick="stopCombatMode()" style="padding:14px;background:rgba(255,45,85,.1);border:1px solid var(--red);color:var(--red);border-radius:12px;font-size:14px;font-weight:900;cursor:pointer">⏹ סיים</button>
+        <button id="cm-pause-btn" onclick="pauseCombat()" style="padding:14px;background:rgba(255,214,10,.08);border:1px solid var(--yellow);color:var(--yellow);border-radius:12px;font-size:14px;font-weight:900;cursor:pointer">⏸ השהה</button>
+        <button onclick="stopCombatMode()" style="padding:14px;background:rgba(255,45,85,.08);border:1px solid var(--red);color:var(--red);border-radius:12px;font-size:14px;font-weight:900;cursor:pointer">⏹ סיים</button>
       </div>
     </div>
-
   </div>
-
-</div>
+</div><!-- /p-test -->
 
 <!-- ══════════════════════ WEEKLY ══════════════════════ -->
 <div class="pg" id="p-week">
@@ -1296,27 +1305,32 @@ const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}};
 // UNITS — COMPLETE DATABASE
 // ═══════════════════════════════════════════════════
 const UNITS={
-  // ─── כניסה ───
-  gen:    {n:'קרבי כללי',  r:570,p:35,l:7, r3:13,  r5:24,   col:'#6a94aa',emoji:'🪖',tier:1,desc:'נקודת הפתיחה — רמת הכניסה לכל תפקיד קרבי בצה"ל'},
-  nahal:  {n:"נח\"ל",      r:570,p:40,l:8, r3:13,  r5:24,   col:'#ffd60a',emoji:'🌿',tier:1,desc:'חטיבת רגלים קרבית — לחימה בגבולות ובמוצבים, עם שנת שירות חקלאי-חברתי'},
-  // ─── עילית ───
-  golani: {n:'גולני',      r:540,p:45,l:10,r3:12,  r5:22.5, col:'#00cc6a',emoji:'🟢',tier:2,desc:'חטיבת רגלים ותיקה עם מסורת קרבית — לחימה רגלית, מסעות ועמידות פיזית'},
-  para:   {n:'צנחנים',     r:510,p:50,l:12,r3:11.5,r5:22,   col:'#0a84ff',emoji:'🪂',tier:2,desc:'לוחמים מצטיינים עם כושר גוף עליון גבוה — חדירה מהאוויר ומסעות קשים'},
-  giv:    {n:'גבעתי',      r:540,p:45,l:10,r3:12,  r5:22.5, col:'#ff8800',emoji:'🔶',tier:2,desc:'חטיבה עם נוכחות מבצעית גבוהה בעזה ויהודה ושומרון'},
-  kfir:   {n:'כפיר',       r:555,p:42,l:9, r3:12.5,r5:23,   col:'#ff6600',emoji:'🦁',tier:2,desc:'חטיבת חי"ר הגדולה בצה"ל — פעילות שוטפת ביהודה שומרון ובגבולות'},
-  // ─── מובחר ───
-  oketz:  {n:'עוקץ',       r:495,p:56,l:14,r3:11.5,r5:21.5, col:'#ff8800',emoji:'🐕‍🦺',tier:3,desc:'יחידת כלבנים מובחרת — שילוב עבודה עם כלב נשק ויכולת לחימה גבוהה'},
-  duvdevan:{n:'דובדבן',    r:480,p:60,l:15,r3:11,  r5:21,   col:'#dc143c',emoji:'🍒',tier:3,desc:'יחידת מסתערבים — כניסה לשטחי אויב בלבוש אזרחי, מבצעי מעצר ועצירה'},
-  maglan: {n:'מגלן',       r:475,p:60,l:16,r3:11,  r5:20.5, col:'#4b0082',emoji:'🎯',tier:3,desc:'יחידת עומק של חיל הרגלים — לחימה מאחורי קווי האויב ואיתור מטרות'},
-  // ─── קשה מאוד ───
-  egoz:   {n:'אגוז',       r:480,p:60,l:15,r3:11,  r5:21,   col:'#ff2d55',emoji:'💀',tier:4,desc:'יחידת לוחמה בשטח הררי וסבוך — מתמחה בלחימה נגד גרילה'},
-  lotar:  {n:'לוט"ר',      r:475,p:62,l:16,r3:10.5,r5:20,   col:'#ff1493',emoji:'🔫',tier:4,desc:'יחידה ייחודית — חילוץ חטופים, מניעת פיגועים, לוחמה בטרור'},
-  // ─── עילית מיוחד ───
-  unit669:{n:'יחידה 669',  r:460,p:65,l:18,r3:10.5,r5:20,   col:'#00e5ff',emoji:'🚁',tier:5,desc:'יחידת חילוץ לחימה של חיל האוויר — רפואה טקטית, צניחה וכושר עילית'},
-  shaldag:{n:'שלדג',       r:450,p:68,l:19,r3:10,  r5:19.5, col:'#00bcd4',emoji:'🦅',tier:5,desc:'סיירת חיל האוויר לפעולות עומק — הכנת שדות קרב ומבצעים מאחורי האויב'},
-  // ─── מקסימום ───
-  shai:   {n:'שייטת 13',   r:450,p:72,l:22,r3:10,  r5:19,   col:'#00e5ff',emoji:'🤿',tier:6,desc:'זרוע הים המובחרת — גיבוש השחייה הקשה ביותר, כושר ומנטלי ברמה עולמית'},
-  matkal: {n:"סיירת מטכ\"ל",r:450,p:68,l:20,r3:10, r5:19,   col:'#ff2d55',emoji:'🔱',tier:6,desc:'ה"סיירת" — מבצעי עומק קיצוניים, פינוי חטופים, גיבוש הנחשב לאחד הקשים בעולם'},
+  // גדודים
+  nahal:   {n:"נח\"ל",        r:570,p:40,l:8, r3:13.0,r5:24.0,col:'#ffd60a',emoji:'🌿',group:'גדודים',desc:'חטיבת רגלים קרבית — לחימה שוטפת בגבולות ובמוצבים'},
+  golani:  {n:'גולני',        r:540,p:45,l:10,r3:12.0,r5:22.5,col:'#00cc6a',emoji:'🟢',group:'גדודים',desc:'חטיבת רגלים מובחרת — מסורת קרבית ארוכה, מסעות ועמידות פיזית'},
+  kfir:    {n:'כפיר',         r:555,p:42,l:9, r3:12.5,r5:23.0,col:'#ff6600',emoji:'🦁',group:'גדודים',desc:'חטיבת חי"ר הגדולה בצה"ל — פעילות שוטפת ביהודה, שומרון ובגבולות'},
+  para:    {n:'צנחנים',       r:510,p:50,l:12,r3:11.5,r5:22.0,col:'#0a84ff',emoji:'🪂',group:'גדודים',desc:'לוחמי פלס עילית — יכולת חדירה מהאוויר, מסעות קשים וכוח גוף עליון'},
+  giv:     {n:'גבעתי',        r:540,p:45,l:10,r3:12.0,r5:22.5,col:'#ff8800',emoji:'🔶',group:'גדודים',desc:'חטיבה עם נוכחות מבצעית גבוהה — עזה, יהודה ושומרון'},
+  // סיירות חי"ר
+  nahalsay:{n:"סיירת נח\"ל",  r:495,p:54,l:13,r3:11.5,r5:21.5,col:'#9acd32',emoji:'🌵',group:'סיירות',desc:'גיחות לילה, איסוף מודיעין ולחימה בגבולות'},
+  egozsay: {n:'סיירת גולני',  r:495,p:55,l:13,r3:11.5,r5:21.5,col:'#228b22',emoji:'🦅',group:'סיירות',desc:'לוחמה בשטח הררי וסבוך, סיור ואיסוף מודיעין'},
+  givsay:  {n:'סיירת גבעתי',  r:495,p:55,l:13,r3:11.5,r5:21.5,col:'#ff4400',emoji:'🦂',group:'סיירות',desc:'לחימה בשטח עירוני ופתוח, מבצעי לילה'},
+  haruv:   {n:'חרוב',         r:500,p:53,l:12,r3:12.0,r5:22.0,col:'#8b6914',emoji:'🌿',group:'סיירות',desc:'סיירת כפיר — לחימה ביהודה ושומרון, מסעות לילה'},
+  tzansay: {n:'סיירת צנחנים', r:490,p:56,l:14,r3:11.5,r5:21.0,col:'#1e90ff',emoji:'🪂',group:'סיירות',desc:'מבצעי חדירה, חילוץ ועומק בשטח אויב'},
+  // יחידות מיוחדות
+  oketz:   {n:'עוקץ',         r:495,p:56,l:14,r3:11.5,r5:21.5,col:'#ff8800',emoji:'🐕‍🦺',group:'מיוחדות',desc:'יחידת כלבנים מובחרת — שילוב כלב נשק ויכולת לחימה גבוהה'},
+  lotar:   {n:'לוט"ר',        r:475,p:62,l:16,r3:11.0,r5:21.0,col:'#ff1493',emoji:'🔫',group:'מיוחדות',desc:'לוחמה בטרור — חילוץ חטופים, מניעת פיגועים, סיכול מבצעים'},
+  yaalom:  {n:'יהל"ם',        r:490,p:57,l:14,r3:11.5,r5:21.0,col:'#8b4513',emoji:'💎',group:'מיוחדות',desc:'הנדסה קרבית מיוחדת — חבלה, פיצוצים, טיהור מוקשים ונשק כימי'},
+  // קומנדו
+  duvdevan:{n:'דובדבן',       r:480,p:60,l:15,r3:11.0,r5:21.0,col:'#dc143c',emoji:'🍒',group:'קומנדו',desc:'יחידת מסתערבים — חדירה לשטחי אויב בלבוש אזרחי, מבצעי מעצר'},
+  maglan:  {n:'מגלן',         r:475,p:60,l:16,r3:11.0,r5:20.5,col:'#4b0082',emoji:'🎯',group:'קומנדו',desc:'לחימה בעומק שטח האויב — איתור ומיקוד מטרות איכותיות'},
+  egoz:    {n:'אגוז',         r:480,p:60,l:15,r3:11.0,r5:21.0,col:'#ff2d55',emoji:'💀',group:'קומנדו',desc:'לחימה בשטח הררי וסבוך — מתמחה בלחימה נגד גרילה וטרור'},
+  // עילית
+  unit669: {n:'יחידה 669',    r:460,p:65,l:18,r3:10.5,r5:20.0,col:'#00e5ff',emoji:'🚁',group:'עילית',desc:'חילוץ לחימה של חיל האוויר — רפואה טקטית, צניחה וכושר עילית'},
+  shaldag: {n:'שלדג',         r:450,p:68,l:19,r3:10.0,r5:19.5,col:'#00bcd4',emoji:'🦅',group:'עילית',desc:'סיירת חיל האוויר לפעולות עומק — מבצעים מאחורי קווי האויב'},
+  shai:    {n:'שייטת 13',     r:450,p:72,l:22,r3:10.0,r5:19.0,col:'#00e5ff',emoji:'🤿',group:'עילית',desc:'זרוע הים המובחרת — גיבוש השחייה הקשה ביותר בצה"ל'},
+  matkal:  {n:"סיירת מטכ\"ל", r:450,p:68,l:20,r3:10.0,r5:19.0,col:'#ff2d55',emoji:'🔱',group:'עילית',desc:'הסיירת — מבצעי עומק קיצוניים ופינוי חטופים, גיבוש מהקשים בעולם'},
+  gen:{n:'קרבי כללי',r:570,p:35,l:7,r3:13.0,r5:24.0,col:'#6a94aa',emoji:'🪖',group:'_',desc:''},
 };
 
 // ═══════════════════════════════════════════════════
@@ -1437,9 +1451,12 @@ function notify(msg,type=''){
 // ═══════════════════════════════════════════════════
 const PAGES=['dash','test','week','lb','train','ai'];
 function showPg(p){
+  const cw=document.querySelector('.content')?.offsetWidth||390;
   PAGES.forEach(x=>{
-    document.getElementById('p-'+x)?.classList.toggle('active',x===p);
-    document.getElementById('n-'+x)?.classList.toggle('on',x===p);
+    const el=document.getElementById('p-'+x);
+    const on=x===p;
+    if(el){el.classList.toggle('active',on);if(on){el.style.width=cw+'px';el.style.minWidth=cw+'px';}else{el.style.width='';}}
+    document.getElementById('n-'+x)?.classList.toggle('on',on);
   });
   if(p==='dash')refreshDash();
   if(p==='test'){buildUnitTargets();initMuscleGrid();}
@@ -1616,53 +1633,36 @@ function genQuickWorkout(){
 // ═══════════════════════════════════════════════════
 // UNIT TARGETS TABLE
 // ═══════════════════════════════════════════════════
-const TIER_NAMES={1:'🟢 כניסה',2:'🔵 עילית',3:'🟡 מובחר',4:'🔴 קשה מאוד',5:'💀 עילית מיוחד',6:'☠️ מקסימום'};
 function buildUnitTargets(){
   const el=document.getElementById('unit-targets');
-  if(!el||el.innerHTML)return;
+  if(!el)return;
+  el.innerHTML=''; // always rebuild
+  // Exact display order as specified
+  const ORDER=[
+    {key:'nahal'},    {key:'golani'},  {key:'kfir'},
+    {key:'para'},     {key:'giv'},
+    {key:'nahalsay'}, {key:'egozsay'},{key:'givsay'},
+    {key:'haruv'},    {key:'tzansay'},
+    {key:'oketz'},    {key:'lotar'},  {key:'yaalom'},
+    {key:'duvdevan'}, {key:'maglan'}, {key:'egoz'},
+    {key:'unit669'},  {key:'shaldag'},{key:'shai'},  {key:'matkal'},
+  ];
   let html='';
-  [1,2,3].forEach(t=>{
-    const us=Object.entries(UNITS).filter(([,u])=>u.tier===t);
-    if(!us.length)return;
-    html+=`<div style="margin:10px 0 5px;font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--txt3);padding:4px 0;border-bottom:1px solid var(--b2)">${TIER_NAMES[t]}</div>`;
-    us.forEach(([k,u])=>{
-      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:5px;border:1px solid var(--b1);border-right:3px solid ${u.col}">
-        <span style="font-size:22px;flex-shrink:0">${u.emoji}</span>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:900;font-size:13px;color:${u.col}">${u.n}</div>
-          <div style="font-size:10px;color:var(--txt2);margin-top:3px;line-height:1.5">${u.desc}</div>
-        </div>
-      </div>`;
-    });
+  ORDER.forEach(({key})=>{
+    const u=UNITS[key];if(!u||!u.desc)return;
+    html+=`<div style="display:flex;align-items:center;gap:11px;padding:11px 12px;background:var(--card2);border-radius:11px;margin-bottom:6px;border:1px solid var(--b1);border-right:3px solid ${u.col}">
+      <span style="font-size:22px;flex-shrink:0;width:30px;text-align:center">${u.emoji}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:900;font-size:13px;color:${u.col}">${u.n}</div>
+        <div style="font-size:10px;color:var(--txt2);margin-top:3px;line-height:1.5">${u.desc}</div>
+      </div>
+    </div>`;
   });
-  html+=`<div style="margin-top:10px">
-    <button onclick="toggleEliteUnits(this)" style="width:100%;background:rgba(255,45,85,.08);border:1px solid rgba(255,45,85,.2);color:var(--red);border-radius:10px;padding:10px;font-weight:800;font-size:12px;font-family:var(--fb);cursor:pointer">
-      💀 הצג יחידות עילית (קשה מאוד ומעלה) ▼
-    </button>
-    <div id="elite-units" style="display:none;margin-top:6px">`;
-  [4,5,6].forEach(t=>{
-    const us=Object.entries(UNITS).filter(([,u])=>u.tier===t);
-    if(!us.length)return;
-    html+=`<div style="margin:10px 0 5px;font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--txt3);padding:4px 0;border-bottom:1px solid var(--b2)">${TIER_NAMES[t]}</div>`;
-    us.forEach(([k,u])=>{
-      html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:10px;margin-bottom:5px;border:1px solid var(--b1);border-right:3px solid ${u.col}">
-        <span style="font-size:22px;flex-shrink:0">${u.emoji}</span>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:900;font-size:13px;color:${u.col}">${u.n}</div>
-          <div style="font-size:10px;color:var(--txt2);margin-top:3px;line-height:1.5">${u.desc}</div>
-        </div>
-      </div>`;
-    });
-  });
-  html+=`</div></div>`;
   el.innerHTML=html;
 }
-function toggleEliteUnits(btn){
-  const el=document.getElementById('elite-units');
-  if(!el)return;
-  const show=el.style.display==='none';
-  el.style.display=show?'block':'none';
-  btn.textContent=show?'💀 הסתר יחידות עילית ▲':'💀 הצג יחידות עילית (קשה מאוד ומעלה) ▼';
+function setProfileUnit(k){
+  const pun=document.getElementById('pun');const wun=document.getElementById('wk-unit');
+  if(pun)pun.value=k;if(wun)wun.value=k;
 }
 
 // ═══════════════════════════════════════════════════
@@ -1753,7 +1753,7 @@ function saveProf(){
       <div class="sg"><div class="sb"><div class="sv" style="color:${u.col};font-size:18px">${m}:${String(s).padStart(2,'0')}</div><div class="sl">2ק"מ</div></div><div class="sb cb"><div class="sv" style="font-size:18px">${u.p}</div><div class="sl">שכיבות</div></div><div class="sb cy2"><div class="sv" style="font-size:18px">${u.l}</div><div class="sl">מתח</div></div></div>
       <div class="mini">📏 3ק"מ מתחת ל-${u.r3} דקות | 5ק"מ מתחת ל-${u.r5} דקות</div>
       <div class="mini" style="margin-top:6px">
-        ${u.tier>=5?'<span class="bd br2">⚠️ גיבוש מאוד קשה — הכנה של שנה מינימום</span>':u.tier>=3?'<span class="bd by2">💪 נדרשת הכנה מוקדשת 6+ חודשים</span>':'<span class="bd bg">✅ ניתן להגיע בהכנה של 3-4 חודשים</span>'}
+        ${u.group==='עילית'?'<span class="bd br2">⚠️ גיבוש מאוד קשה — הכנה של שנה מינימום</span>':u.group==='קומנדו'||u.group==='יחידות מיוחדות'?'<span class="bd by2">💪 נדרשת הכנה מוקדשת 6+ חודשים</span>':'<span class="bd bg">✅ ניתן להגיע בהכנה של 3-4 חודשים</span>'}
       </div>
     </div>`;
   notify(`פרופיל נשמר — ${u.n} ${u.emoji}`);
@@ -2002,8 +2002,8 @@ const WEEK_PLANS={
   ]},
 };
 ['golani','para','giv','nahal','kfir'].forEach(k=>{WEEK_PLANS[k]=WEEK_PLANS.gen;});
-['shai','unit669','shaldag','egoz','maglan','duvdevan','lotar'].forEach(k=>{WEEK_PLANS[k]=WEEK_PLANS.matkal;});
-['oketz'].forEach(k=>{WEEK_PLANS[k]=WEEK_PLANS.matkal;});
+['shai','unit669','shaldag','egoz','maglan','duvdevan','lotar','oketz','yaalom'].forEach(k=>{WEEK_PLANS[k]=WEEK_PLANS.matkal;});
+['nahalsay','egozsay','givsay','haruv','tzansay'].forEach(k=>{WEEK_PLANS[k]=WEEK_PLANS.gen;});
 
 let wkBuilt=false;
 function buildWeekPlan(){
@@ -2058,7 +2058,7 @@ function buildWeekPlan(){
   html+='</div>';
   document.getElementById('week-plan-out').innerHTML=html;
   wkBuilt=true;
-  if(isToday)notify('תוכנית שבועית נוצרה!');
+  notify('📅 תוכנית שבועית נוצרה!');
 }
 function toggleDay(i){document.getElementById('dc'+i)?.classList.toggle('open');}
 function markDayDone(i,key){
@@ -3822,7 +3822,7 @@ function calcIDFScore(){
 
   // Weighted total (unit-based weights)
   let total,weights;
-  const isElite=u.tier>=5;
+  const isElite=u.group==='עילית';
   if(isElite){
     // Elite: run=35%, pull=25%, push=20%, sit=10%, swim=10%
     weights={run2k:0.35,pull:0.25,push:0.20,sit:0.10};
@@ -3889,34 +3889,140 @@ function calcIDFScore(){
 // ═══════════════════════════════════════════════════
 // DUNES TRAINING MODE — אימון דיונות
 // ═══════════════════════════════════════════════════
-let combatTimer=null,combatCmdTimer=null,combatEndTime=0;
-let combatCmdCount=0,combatNextIn=0,combatPaused=false,combatPauseStart=0,combatPausedMs=0;
-let duneLv='fresh',duneGear=new Set(['bag']),cmTotalSec=0,cmLogArr=[];
-let duneExTime='mid'; // short / mid / long / grind
-let cmExCountdown=0,cmExTotal=0,cmExInterval=null,cmKcal=0;
+
+
+// ═══════════════════════════════════════════════════
+// DUNES TRAINING — אימון דיונות
+// ═══════════════════════════════════════════════════
+let duneLv='fresh',duneGear=new Set(['bag']);
+let duneExTime='mid',duneDurMin=15;
+let combatTimer=null,cmExInterval=null;
+let combatPaused=false,combatPauseStart=0,combatPausedMs=0;
+let combatCmdCount=0,cmKcal=0,cmLogArr=[];
+let combatStartTime=0,cmExCountdown=0,cmExTotal=0;
 
 const ET_RANGES={short:[12,28],mid:[28,58],long:[55,88],grind:[85,150]};
 
-function setExTime(t,btn){
-  duneExTime=t;
-  ['short','mid','long','grind'].forEach(k=>{
-    const b=document.getElementById('et-'+k);
-    if(!b)return;
+// ─── Genuine IDF training commands — no gym exercises ───
+const DUNE_CMDS={
+  fresh:[
+    // ספרינטים
+    {t:'ספרינט 30 מטר',  d:'מקסימום מהירות — ידיים על הגוף',       e:'💨',sec:[20,35]},
+    {t:'ספרינט 50 מטר',  d:'קצב גבוה — לא תאט לפני הסיום',          e:'💨',sec:[25,40]},
+    {t:'ספרינט פיגזג',   d:'20מ ימינה — עצור — 20מ שמאלה — ×2',    e:'⚡',sec:[40,55]},
+    {t:'ריצה בדיונה מעלה',d:'עד הפסגה — ירידה הליכה מהירה',         e:'🏔',sec:[35,55]},
+    // זחילות
+    {t:'זחילה 20 מטר',   d:'בטן — מרפקים — שמור על גוף נמוך',      e:'🐛',sec:[40,65]},
+    {t:'זחילה קרבית 15מ',d:'על המרפקים — ראש נמוך — לא מרים גוף',   e:'🐛',sec:[35,55]},
+    {t:'Bear Crawl 20מ', d:'ידיים ורגליים — מהר ככל האפשר',          e:'🐻',sec:[30,50]},
+    // שקי חול
+    {t:'נשיאת שק 30 מטר',d:'שק על הכתף — ריצה — גב ישר',            e:'🎒',sec:[25,40],gear:['bag']},
+    {t:'שק מעל הראש 20שנ',d:'ידיים ישרות — שק בגובה הראש — עמוד דום',e:'🎒',sec:[18,25],gear:['bag']},
+    // שכיבות ומתח
+    {t:'30 שכיבות שמיכה',d:'גוף ישר — חזה לרצפה בכל חזרה',          e:'💪',sec:[55,80]},
+    {t:'15 מתח',         d:'עד כלות — מנוחה 10שנ ואז ממשיך',         e:'🏋',sec:[50,80]},
+    {t:'20 ברפי',        d:'ברפי מלא עם קפיצה — לא מפסיק',           e:'🔄',sec:[60,90]},
+    // מנוחה
+    {t:'מנוחה — 15 שניות',d:'שב — שתה מים — נשום עמוק',              e:'⏸',sec:[13,17]},
+    {t:'הליכה מהירה 30מ',d:'ידיים על עורף — לא מנוחה מלאה',          e:'🚶',sec:[20,35]},
+  ],
+  mid:[
+    // ספרינטים
+    {t:'ספרינט 100 מטר',   d:'מקסימום — לא תישאר כלום בגוף',         e:'💨',sec:[18,30]},
+    {t:'3 ספרינטים 50מ',   d:'20שנ מנוחה בלבד ביניהם — ×3',           e:'⚡',sec:[25,38]},
+    {t:'ספרינט על הדיונה ×3',d:'3 ריצות מעלה מלאות — ירידה הליכה',   e:'🏔',sec:[40,60]},
+    {t:'ספרינט הלוך-חזור', d:'40מ קדימה — עצור — 40מ חזרה — ×2',     e:'💨',sec:[30,45]},
+    // זחילות
+    {t:'זחילה קרבית 40מ',  d:'בטן לרצפה — מרפקים — ממשיך בלי לעצור', e:'🐛',sec:[70,100]},
+    {t:'זחילה עם שק 20מ',  d:'שק קל על הגב — זחל קדימה',              e:'🐛',sec:[55,80],gear:['bag']},
+    {t:'Bear Crawl 30מ',   d:'ידיים ורגליים — אל תיגע ברכיים לרצפה',  e:'🐻',sec:[40,60]},
+    // שקי חול
+    {t:'נשיאת שק 60 מטר',  d:'שק על הכתף — ריצה — לא הליכה',          e:'🎒',sec:[35,55],gear:['bag']},
+    {t:'2 שקים 30 מטר',    d:'שק בכל יד — ריצה',                       e:'🎒',sec:[30,45],gear:['bag']},
+    {t:'שק על הגב 40מ ריצה',d:'כמו Ruck — גב ישר — קצב גבוה',         e:'🎒',sec:[35,55],gear:['bag']},
+    {t:'ג\'ריקן 20מ ×3',   d:'ג\'ריקן מלא — הלוך-חזור 3 פעמים',       e:'🪣',sec:[45,65],gear:['jerry']},
+    // שכיבות ומתח
+    {t:'50 שכיבות שמיכה',  d:'לא עוצרים — אם נגמרת פצל ל-2 סטים',    e:'💪',sec:[90,130]},
+    {t:'20 מתח',           d:'מקסימום — מנוחה 10שנ בין סטים',          e:'🏋',sec:[80,120]},
+    {t:'30 ברפי',          d:'מהר — כל חזרה עם קפיצה מלאה',            e:'🔄',sec:[90,130]},
+    // מנוחה
+    {t:'מנוחה — 10 שניות',d:'על הרגליים — שתה — נשום',                 e:'⏸',sec:[8,12]},
+  ],
+  hard:[
+    // ספרינטים
+    {t:'ספרינט 100מ × 5',  d:'15שנ מנוחה בלבד בין ספרינטים',           e:'💨',sec:[18,28]},
+    {t:'ספרינט + זחילה + ספרינט',d:'ספרינט 30מ — זחל 20מ — ספרינט 30מ',e:'🔥',sec:[30,45]},
+    {t:'ריצה בדיונה × 5',  d:'5 ריצות מעלה ברצף — הורד בין ריצה לריצה',e:'🏔',sec:[35,55]},
+    {t:'ספרינט עם שק × 3', d:'ספרינט 40מ עם שק — 20שנ מנוחה — ×3',    e:'🔥',sec:[30,48],gear:['bag']},
+    // זחילות
+    {t:'זחילה קרבית 60מ',  d:'לא מרים את הגוף — ממשיך לאורך כל הדרך', e:'🐛',sec:[100,150]},
+    {t:'זחילה עם שק 40מ',  d:'שק על הגב — בטן לרצפה — ממשיך',          e:'🐛',sec:[100,150],gear:['bag']},
+    // שקי חול / נשיאות
+    {t:'נשיאת שק 100 מטר', d:'שק על הכתף — ריצה — לא הליכה',           e:'🎒',sec:[45,70],gear:['bag']},
+    {t:'שק על הראש 60מ',   d:'ידיים על השק — ריצה — גב ישר',           e:'💀',sec:[40,60],gear:['bag']},
+    {t:'2 שקים 50מ',       d:'שק אחד על כל כתף — ריצה',                e:'🎒',sec:[35,55],gear:['bag']},
+    {t:'ג\'ריקן + שק 50מ', d:'ג\'ריקן בידיים + שק על הגב — ריצה',      e:'🪣',sec:[40,65],gear:['bag','jerry']},
+    {t:'אפוד כובד ספרינטים',d:'ספרינט 50מ × 5 עם אפוד — 15שנ מנוחה',  e:'🦺',sec:[25,40],gear:['vest']},
+    // שכיבות
+    {t:'75 שכיבות שמיכה',  d:'לא עוצרים — אם נגמרת — ברכיים',          e:'💪',sec:[130,180]},
+    {t:'20 מתח',           d:'מקסימום — מנוחה 10שנ ואז ממשיך',          e:'🏋',sec:[100,150]},
+    {t:'50 ברפי',          d:'לא מפסיקים — פירמידה 1-10',               e:'🔄',sec:[140,200]},
+    // מנוחה
+    {t:'מנוחה — 8 שניות',  d:'עמוד ישר — נשום — חזרה מיד',             e:'⏸',sec:[6,10]},
+  ],
+  elite:[
+    // ספרינטים
+    {t:'ספרינט 100מ × 8',  d:'10שנ מנוחה בלבד — שמונה פעמים',          e:'☠️',sec:[15,22]},
+    {t:'ספרינט + זחילה × 3',d:'ספרינט 40מ — זחל 30מ — ×3 ברצף',       e:'☠️',sec:[25,38]},
+    {t:'ריצה בדיונה × 8',  d:'8 ריצות מעלה מלאות — הורד 15שנ בלבד',   e:'☠️',sec:[30,45]},
+    {t:'ספרינטים 200מ',    d:'ספרינט 200מ מלא — קצב מקסימום',           e:'☠️',sec:[40,55]},
+    // זחילות
+    {t:'זחילה קרבית 80מ',  d:'בטן לרצפה — לא מרים את הגוף כלל',        e:'☠️',sec:[130,200]},
+    {t:'זחילה עם שק 60מ',  d:'שק כבד על הגב — בטן לרצפה — ממשיך',     e:'☠️',sec:[130,200],gear:['bag']},
+    // נשיאות
+    {t:'2 שקים 100מ',      d:'שק על כל כתף — ריצה — לא הליכה',         e:'☠️',sec:[45,65],gear:['bag']},
+    {t:'שק + אפוד 60מ',    d:'שק על הגב + אפוד כובד — ריצה',           e:'☠️',sec:[40,60],gear:['bag','vest']},
+    {t:'ג\'ריקן + שק + ספרינט',d:'ג\'ריקן בידיים + שק + ספרינט 30מ ×4',e:'☠️',sec:[35,55],gear:['bag','jerry']},
+    // שכיבות
+    {t:'100 שכיבות שמיכה', d:'5 דקות. תגמור.',                          e:'☠️',sec:[200,300]},
+    {t:'30 מתח',           d:'ממשיך — מנוחה 10שנ בלבד בין סטים',        e:'☠️',sec:[150,250]},
+    {t:'100 ברפי',         d:'ללא עצירה. ללא תירוצים.',                  e:'☠️',sec:[250,360]},
+    {t:'זחילה + שכיבות × 5',d:'זחל 20מ — 20 שכיבות — ×5 ברצף',        e:'☠️',sec:[120,180]},
+    // שותפים
+    {t:'שותף: נשיאת אדם',  d:'רץ עם שותף על הגב 20מ — החלף',           e:'👥',sec:[30,50],gear:['partner']},
+    // מנוחה
+    {t:'מנוחה — 5 שניות',  d:'רק 5 שניות — חזרה מיד',                   e:'⏸',sec:[4,6]},
+  ],
+};
+
+function setCmdCount(n,btn){
+  duneDurMin=n;
+  document.querySelectorAll('[id^="cn-"]').forEach(b=>{
     b.style.background='var(--card3)';b.style.border='1px solid var(--b2)';b.style.color='var(--txt)';
   });
   btn.style.background='rgba(255,140,0,.1)';btn.style.border='2px solid #ff8c00';btn.style.color='#ff8c00';
+  updateCombatPreview();
+}
+
+function setExTime(t,btn){
+  duneExTime=t;
+  document.querySelectorAll('[id^="et-"]').forEach(b=>{
+    b.style.background='var(--card3)';b.style.border='1px solid var(--b2)';b.style.color='var(--txt)';
+  });
+  btn.style.background='rgba(255,140,0,.1)';btn.style.border='2px solid #ff8c00';btn.style.color='#ff8c00';
+  updateCombatPreview();
 }
 
 function setDuneLv(lv,btn){
   duneLv=lv;
   ['fresh','mid','hard','elite'].forEach(l=>{
-    const b=document.getElementById('dlv-'+l);
-    if(!b)return;
+    const b=document.getElementById('dlv-'+l);if(!b)return;
     b.style.background='var(--card3)';b.style.border='1px solid var(--b2)';b.style.color='var(--txt)';
   });
   const cols={fresh:'var(--pri)',mid:'var(--yellow)',hard:'var(--orange)',elite:'var(--red)'};
   const bgs={fresh:'rgba(0,255,136,.08)',mid:'rgba(255,214,10,.08)',hard:'rgba(255,136,0,.08)',elite:'rgba(255,45,85,.08)'};
   btn.style.background=bgs[lv];btn.style.border=`2px solid ${cols[lv]}`;btn.style.color=cols[lv];
+  updateCombatPreview();
 }
 
 function toggleGear(g,btn){
@@ -3924,34 +4030,91 @@ function toggleGear(g,btn){
   else{duneGear.add(g);btn.style.opacity='1';btn.classList.add('p');}
 }
 
+function updateCombatPreview(){
+  const [min,max]=ET_RANGES[duneExTime]||[28,58];
+  const avgSec=(min+max)/2;
+  const totalMin=duneDurMin;
+  const lbl={short:'15-30שנ',mid:'30-60שנ',long:'60-90שנ',grind:'90+שנ'}[duneExTime];
+  const lv={fresh:'מתחיל',mid:'קרבי',hard:'גיבוש',elite:'שייטת/מטכ"ל'}[duneLv];
+  const el=document.getElementById('cm-preview-txt');
+  if(el)el.textContent=`${duneDurMin} דקות · ${lbl} לכל תרגיל · רמה: ${lv}`;
+}
+
 function initCombatMode(){
   setDuneLv('fresh',document.getElementById('dlv-fresh'));
   setExTime('mid',document.getElementById('et-mid'));
+  setCmdCount(15,document.getElementById('cn-15')); // 15 minutes default
 }
 
 function startCombatMode(){
-  const dur=parseInt(document.getElementById('cm-dur').value||20)*60;
-  combatEndTime=Date.now()+dur*1000;
-  cmTotalSec=dur;
   combatCmdCount=0;combatPaused=false;combatPausedMs=0;cmLogArr=[];cmKcal=0;
+  combatStartTime=Date.now();
+  combatEndTime=Date.now()+duneDurMin*60*1000;
   document.getElementById('cm-setup').style.display='none';
   document.getElementById('cm-active').style.display='block';
-  fireNextDuneCmd(true);
+  document.getElementById('cm-total-num').textContent=duneDurMin+'ד';
   combatTimer=setInterval(updateCombatTimer,500);
-  logWorkout({type:'combat',name:'אימון דיונות',icon:'🏜',duration:Math.round(dur/60),details:[`רמה: ${duneLv}`,`זמן/תרגיל: ${duneExTime}`]});
+  fireNextDuneCmd(true);
+  logWorkout({type:'combat',name:'אימון דיונות',icon:'🏜',duration:duneDurMin,details:[`${duneDurMin} דקות`,`רמה: ${duneLv}`]});
 }
 
 function getNextDuneCmd(){
   const pool=DUNE_CMDS[duneLv]||DUNE_CMDS.mid;
-  let all=[];
-  Object.values(pool).forEach(arr=>arr.forEach(c=>{
-    if(!c.gear||c.gear.every(g=>duneGear.has(g)))all.push(c);
-  }));
+  let all=pool.filter(c=>!c.gear||c.gear.every(g=>duneGear.has(g)));
   if(all.length>1&&window._lastDuneCmd)all=all.filter(c=>c.t!==window._lastDuneCmd);
+  if(!all.length)all=pool;
   return all[Math.floor(Math.random()*all.length)];
 }
 
-function startExCountdown(sec){
+function fireNextDuneCmd(first=false){
+  const cmd=getNextDuneCmd();if(!cmd)return;
+  window._lastDuneCmd=cmd.t;
+  combatCmdCount++;
+
+  // Update UI
+  document.getElementById('cm-cmd-emoji').textContent=cmd.e;
+  document.getElementById('cm-cmd-text').textContent=cmd.t;
+  document.getElementById('cm-cmd-detail').textContent=cmd.d||'';
+  document.getElementById('cm-count').textContent=combatCmdCount;
+  const remSec=Math.max(0,Math.round((combatEndTime-Date.now()-combatPausedMs)/1000));
+  const remEl=document.getElementById('cm-remain-cnt');
+  if(remEl)remEl.textContent=Math.floor(remSec/60)+':'+(String(remSec%60).padStart(2,'0'));
+  document.getElementById('cm-cur-num').textContent=combatCmdCount;
+  // Progress bar — time based
+  const elapsed=Date.now()-combatStartTime-combatPausedMs;
+  const pct=Math.min(100,(elapsed/(duneDurMin*60*1000))*100);
+  const pb=document.getElementById('cm-progress-bar');if(pb)pb.style.width=pct+'%';
+
+  // Pick duration
+  const [min,max]=ET_RANGES[duneExTime]||[28,58];
+  const [cmin,cmax]=cmd.sec||[min,max];
+  const sec=Math.floor(Math.random()*(Math.max(max,cmax)-Math.max(min,cmin))+Math.max(min,cmin));
+
+  // Calories
+  const rate={fresh:.1,mid:.16,hard:.22,elite:.28}[duneLv]||.16;
+  cmKcal+=Math.round(sec*rate);
+  document.getElementById('cm-kcal').textContent=cmKcal;
+
+  // Voice — speak command
+  const voice=document.getElementById('cm-voice')?.value||'full';
+  if(voice!=='off'&&'speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    const txt=cmd.t+(cmd.d?'. '+cmd.d:'');
+    const u=new SpeechSynthesisUtterance(txt);
+    u.lang='he-IL';u.rate=1.05;u.pitch=1.1;u.volume=1;
+    window.speechSynthesis.speak(u);
+  }
+
+  // Log
+  cmLogArr.unshift(`${cmd.e} ${cmd.t} (${sec}שנ)`);
+  const logEl=document.getElementById('cm-log');
+  if(logEl)logEl.innerHTML=cmLogArr.slice(0,8).map((l,i)=>`<div style="padding:2px 0;border-bottom:1px solid var(--b2);opacity:${i===0?1:0.85-i*.1}">${i===0?'▶ ':'✓ '}${l}</div>`).join('');
+
+  // Start countdown
+  startExCountdown(sec,voice);
+}
+
+function startExCountdown(sec,voice){
   if(cmExInterval)clearInterval(cmExInterval);
   cmExTotal=sec;cmExCountdown=sec;
   updateCountdownUI();
@@ -3959,17 +4122,13 @@ function startExCountdown(sec){
     if(combatPaused)return;
     cmExCountdown--;
     updateCountdownUI();
-    // Voice countdown at 3,2,1
-    const voice=document.getElementById('cm-voice')?.value;
-    if(voice==='on'&&cmExCountdown<=3&&cmExCountdown>0&&'speechSynthesis' in window){
+    // Vocal 3-2-1
+    if(voice==='full'&&cmExCountdown<=3&&cmExCountdown>0&&'speechSynthesis' in window){
       const u=new SpeechSynthesisUtterance(String(cmExCountdown));
-      u.lang='he-IL';u.rate=1.3;u.pitch=1.3;u.volume=1;
+      u.lang='he-IL';u.rate=1.4;u.pitch=1.3;u.volume=1;
       window.speechSynthesis.speak(u);
     }
-    if(cmExCountdown<=0){
-      clearInterval(cmExInterval);cmExInterval=null;
-      if(!combatPaused)fireNextDuneCmd();
-    }
+    if(cmExCountdown<=0){clearInterval(cmExInterval);cmExInterval=null;if(!combatPaused)fireNextDuneCmd();}
   },1000);
 }
 
@@ -3979,58 +4138,19 @@ function updateCountdownUI(){
   if(el)el.textContent=cmExCountdown;
   if(circle){
     const pct=cmExCountdown/cmExTotal;
-    const dashoffset=452*(1-pct);
-    circle.style.strokeDashoffset=dashoffset;
-    circle.style.stroke=cmExCountdown<=5?'#ff2d55':cmExCountdown<=10?'#ff8c00':'#ff8c00';
+    circle.style.strokeDashoffset=(490*(1-pct)).toFixed(1);
+    circle.style.stroke=cmExCountdown<=5?'#ff2d55':cmExCountdown<=10?'#ffaa00':'#ff8c00';
   }
-}
-
-function fireNextDuneCmd(first=false){
-  const cmd=getNextDuneCmd();if(!cmd)return;
-  window._lastDuneCmd=cmd.t;
-  combatCmdCount++;
-  document.getElementById('cm-cmd-emoji').textContent=cmd.e;
-  document.getElementById('cm-cmd-text').textContent=cmd.t;
-  document.getElementById('cm-cmd-detail').textContent=cmd.d||'';
-  document.getElementById('cm-count').textContent=combatCmdCount;
-
-  // Pick duration based on ET setting OR use cmd's own range
-  const [minSec,maxSec]=ET_RANGES[duneExTime]||[28,58];
-  const [cmdMin,cmdMax]=cmd.sec||[minSec,maxSec];
-  // Use the larger of (user setting, cmd minimum)
-  const effMin=Math.max(minSec,cmdMin);
-  const effMax=Math.max(maxSec,cmdMax);
-  const sec=Math.floor(Math.random()*(effMax-effMin)+effMin);
-
-  // Calories estimate (rough: 0.15 kcal/sec for intense exercise)
-  const intensity={fresh:0.1,mid:0.15,hard:0.2,elite:0.25}[duneLv]||0.15;
-  cmKcal+=Math.round(sec*intensity);
-  document.getElementById('cm-kcal').textContent=cmKcal;
-
-  // Voice — say command
-  const voice=document.getElementById('cm-voice')?.value;
-  if(voice!=='off'&&'speechSynthesis' in window){
-    window.speechSynthesis.cancel();
-    const txt=`${cmd.t}. ${cmd.d||''}`;
-    const u=new SpeechSynthesisUtterance(txt);
-    u.lang='he-IL';u.rate=1.05;u.pitch=1.1;u.volume=1;
-    window.speechSynthesis.speak(u);
-  }
-
-  // Start visual countdown
-  startExCountdown(sec);
-
-  // Log
-  cmLogArr.unshift(`${cmd.e} ${cmd.t} (${sec}שנ)`);
-  const logEl=document.getElementById('cm-log');
-  if(logEl)logEl.innerHTML=cmLogArr.slice(0,8).map((l,i)=>`<div style="opacity:${1-i*.12};padding:2px 0;border-bottom:1px solid var(--b2)">${i===0?'<span style="color:#ff8c00">▶</span> ':'✓ '}${l}</div>`).join('');
 }
 
 function updateCombatTimer(){
   if(combatPaused)return;
-  const rem=Math.max(0,Math.round((combatEndTime-Date.now()-combatPausedMs)/1000));
-  document.getElementById('cm-timer').textContent=`${Math.floor(rem/60)}:${String(rem%60).padStart(2,'0')}`;
-  if(rem===0)stopCombatMode();
+  const elapsed=Math.round((Date.now()-combatStartTime-combatPausedMs)/1000);
+  const m=Math.floor(elapsed/60),s=elapsed%60;
+  const el=document.getElementById('cm-timer');
+  if(el)el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const rem=combatEndTime-Date.now()-combatPausedMs;
+  if(rem<=0)stopCombatMode();
 }
 
 function pauseCombat(){
@@ -4053,245 +4173,25 @@ function stopCombatMode(){
   window.speechSynthesis?.cancel();
   document.getElementById('cm-active').style.display='none';
   document.getElementById('cm-setup').style.display='block';
+  const elapsed=Math.round((Date.now()-combatStartTime-combatPausedMs)/1000);
+  const m=Math.floor(elapsed/60),s=elapsed%60;
+  const done=combatCmdCount;
+  const pct=100;
   openModal('🏜 אימון הסתיים!',`
-    <div style="text-align:center;padding:12px 0">
+    <div style="text-align:center;padding:10px 0">
       <div style="font-size:52px;margin-bottom:10px">🏜</div>
-      <div style="font-family:var(--fd);font-size:18px;color:#ff8c00;margin-bottom:16px">כל הכבוד!</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
-        <div class="rstat"><div style="font-family:var(--fd);font-size:32px;color:var(--pri)">${combatCmdCount}</div><div class="rstat-l">פקודות</div></div>
-        <div class="rstat"><div style="font-family:var(--fd);font-size:32px;color:#ff8c00">${cmKcal}</div><div class="rstat-l">קלוריות</div></div>
+      <div style="font-family:var(--fd);font-size:16px;color:#ff8c00;margin-bottom:14px">כל הכבוד!</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px">
+        <div class="rstat"><div style="font-family:var(--fd);font-size:30px;color:var(--pri)">${done}/${duneCmdCount}</div><div class="rstat-l">פקודות</div></div>
+        <div class="rstat"><div style="font-family:var(--fd);font-size:30px;color:#ff8c00">${cmKcal}</div><div class="rstat-l">קלוריות</div></div>
+        <div class="rstat"><div style="font-family:var(--fd);font-size:30px;color:var(--yellow)">${m}:${String(s).padStart(2,'0')}</div><div class="rstat-l">זמן</div></div>
+        <div class="rstat"><div style="font-family:var(--fd);font-size:30px;color:var(--purpleL)">${pct}%</div><div class="rstat-l">השלמה</div></div>
       </div>
-      <div style="font-size:11px;color:var(--txt2);margin-bottom:16px">אימון דיונות · רמה: ${{fresh:'ירוק',mid:'בינוני',hard:'קשה',elite:'עילית'}[duneLv]}</div>
+      <div style="font-size:11px;color:var(--txt2);margin-bottom:12px">רמה: ${{fresh:'מתחיל 🟢',mid:'קרבי 🟡',hard:'גיבוש 🔴',elite:'שייטת/מטכ"ל 💀'}[duneLv]}</div>
       <button class="btn bp" onclick="closeModal()">סגור</button>
     </div>`);
 }
-const DUNE_CMDS={
-  fresh:{
-    sprint:[
-      {t:'ספרינט 30 מטר',d:'עלה על הדיונה ורוץ בלי לעצור',e:'💨',sec:[30,50]},
-      {t:'ספרינט פיגזג',d:'ספרינט 20 מטר ימינה — עצור — 20 שמאלה',e:'💨',sec:[40,60]},
-      {t:'2 ספרינטים על הדיונה',d:'מעלה ומטה פעמיים ברצף',e:'🏃',sec:[40,65]},
-    ],
-    crawl:[
-      {t:'זחילה 20 מטר',d:'זחל על הבטן קדימה — שמור על גוף נמוך',e:'🐛',sec:[50,80]},
-      {t:'זחילת곰 (Bear Crawl)',d:'ידיים ורגליים — 15 מטר קדימה',e:'🐻',sec:[40,65]},
-    ],
-    bodyweight:[
-      {t:'30 שכיבות שמיכה',d:'בצע בקצב קבוע — כל גוף לרצפה',e:'💪',sec:[60,90]},
-      {t:'20 ברפי',d:'ברפי מלא — קפיצה מעל הראש בכל חזרה',e:'🔄',sec:[60,90]},
-      {t:'25 סקוואטים',d:'עמוק — ירכיים מקבילות לרצפה',e:'🦵',sec:[40,65]},
-      {t:'40 ישיבות בטן',d:'ידיים מאחורי הראש — ברכיים כפופות',e:'🎯',sec:[60,80]},
-    ],
-    rest:[
-      {t:'מנוחה — 20 שניות',d:'שב — שתה — נשום עמוק',e:'⏸',sec:[18,22]},
-      {t:'הליכה 30 מטר',d:'הליכה מהירה — לא מנוחה מלאה',e:'🚶',sec:[25,35]},
-    ],
-  },
-  mid:{
-    sprint:[
-      {t:'ספרינט 60 מטר',d:'מקסימום — אל תאט',e:'💨',sec:[25,40]},
-      {t:'3 ספרינטים 40 מטר',d:'30 שניות מנוחה ביניהם — קצב גבוה',e:'⚡',sec:[30,45]},
-      {t:'ספרינט עם שק',d:'קח שק חול — ספרינט 20 מטר הלוך-חזור',e:'🎒',sec:[35,55],gear:['bag']},
-      {t:'ריצה בדיונה מעלה ×3',d:'כל פעם עד הפסגה — ירידה הליכה',e:'🏔',sec:[45,70]},
-    ],
-    crawl:[
-      {t:'זחילה 40 מטר',d:'בטן — מרפקים — שמור על גוף שטוח',e:'🐛',sec:[60,90]},
-      {t:'זחילה עם שק על הגב',d:'קח שק חול קל — זחל 20 מטר',e:'🐛',sec:[60,100],gear:['bag']},
-      {t:'Bear Crawl 30 מטר',d:'ידיים ורגליים — מהר ככל האפשר',e:'🐻',sec:[45,70]},
-      {t:'Leopard Crawl',d:'זחילה גבוהה — ברכיים לא נוגעות ברצפה — 25 מטר',e:'🐆',sec:[50,75]},
-    ],
-    bag:[
-      {t:'נשיאת שק 50 מטר',d:'שק על הכתף — ריצה — לא הליכה',e:'🎒',sec:[30,50],gear:['bag']},
-      {t:'שק מעל הראש — 30 שניות',d:'ידיים ישרות — שק בגובה הראש — עמוד',e:'🎒',sec:[28,35],gear:['bag']},
-      {t:'נשיאת שק על הגב 30 מטר',d:'כמו Ruck — גב ישר — ריצה',e:'🎒',sec:[35,55],gear:['bag']},
-      {t:'ספרינט עם 2 שקים',d:'שק בכל יד — 20 מטר הלוך',e:'🎒',sec:[25,40],gear:['bag']},
-    ],
-    bodyweight:[
-      {t:'50 שכיבות שמיכה',d:'ריצף! לא מפסיקים — אם צריך פצל ל-2',e:'💪',sec:[80,120]},
-      {t:'15 מתח',d:'עד כלות — אם אין מתח: 40 שכיבות יהלום',e:'🏋',sec:[60,90]},
-      {t:'30 ברפי',d:'מהר — כל חזרה עם קפיצה מלאה',e:'🔄',sec:[80,120]},
-      {t:'פירמידה: 1-5 ברפי',d:'1, 2, 3, 4, 5 — ספרינט 10מ ביניהם',e:'🔺',sec:[60,100]},
-    ],
-    rest:[
-      {t:'מנוחה — 10 שניות',d:'על הרגליים — שתה — נשום',e:'⏸',sec:[8,12]},
-    ],
-  },
-  hard:{
-    sprint:[
-      {t:'ספרינט 100 מטר מקסימום',d:'הכל — אל תשאיר כלום',e:'💨',sec:[20,32]},
-      {t:'5 ספרינטים 50 מטר',d:'20 שניות מנוחה בלבד — חמש פעמים',e:'⚡',sec:[20,30]},
-      {t:'ספרינט עם שק + ברפי',d:'ספרינט 40מ, 10 ברפי, ספרינט חזרה',e:'🔥',sec:[30,50],gear:['bag']},
-      {t:'ריצה בדיונה ×5',d:'5 ריצות מעלה — הורד בין ריצה לריצה',e:'🏔',sec:[35,55]},
-    ],
-    crawl:[
-      {t:'זחילה 60 מטר',d:'ממשיך — לא עוצר — גוף לרצפה',e:'🐛',sec:[90,130]},
-      {t:'זחילת קרב 40מ',d:'זחל על מרפקים ובטן — שק על הגב',e:'🎖',sec:[90,140],gear:['bag']},
-      {t:'Bear Crawl 50 מטר',d:'מהר מאוד — ידיים ורגליים',e:'🐻',sec:[55,85]},
-    ],
-    bag:[
-      {t:'נשיאת שק 100 מטר',d:'שק על הכתף — ריצה — לא הליכה',e:'🎒',sec:[40,70],gear:['bag']},
-      {t:'ג\'ריקן 20 מטר הלוך-חזור ×3',d:'ג\'ריקן מלא בכל יד — ריצה',e:'🪣',sec:[45,70],gear:['jerry']},
-      {t:'שק על הראש — נשיאה 50 מטר',d:'ידיים על השק — ריצה — גב ישר',e:'💀',sec:[35,55],gear:['bag']},
-      {t:'שניים נושאים שק ×3',d:'שק על כתפיים של שניים — ספרינט 30מ',e:'🎒',sec:[30,50],gear:['bag']},
-    ],
-    bodyweight:[
-      {t:'75 שכיבות שמיכה',d:'ריצף — אם לא מגיע, שכיבות ברכיים',e:'💪',sec:[120,180]},
-      {t:'20 מתח',d:'מקסימום — מנוחה 10 שנ ואז ממשיך',e:'🏋',sec:[90,140]},
-      {t:'50 ברפי',d:'55 ברפי = פירמידה 1-10 — עכשיו!',e:'🔄',sec:[120,180]},
-      {t:'Man-Makers ×10',d:'שכיבה + 2 טוויסט + ברפי — עם משקלות',e:'⚔',sec:[90,130]},
-    ],
-    rest:[
-      {t:'מנוחה — 8 שניות בלבד',d:'עמוד ישר — נשום — חזרה מיד',e:'⏸',sec:[6,10]},
-    ],
-  },
-  elite:{
-    sprint:[
-      {t:'ספרינט 100מ — 5 פעמים',d:'10 שניות מנוחה בלבד ביניהם',e:'☠️',sec:[15,25]},
-      {t:'Sprint + Crawl + Sprint',d:'ספרינט 30מ — זחל 20מ — ספרינט 30מ',e:'☠️',sec:[20,35]},
-    ],
-    crawl:[
-      {t:'זחילת קרב 80 מטר',d:'לא מרים את הגוף — שק על הגב',e:'☠️',sec:[120,180],gear:['bag']},
-      {t:'Combat Crawl Circuit',d:'זחל 25מ — 15 ברפי — זחל חזרה — ×3',e:'☠️',sec:[90,150]},
-    ],
-    bag:[
-      {t:'נשיאת 2 שקים 100 מטר',d:'שק אחד על כל כתף — ריצה לא הליכה',e:'☠️',sec:[40,60],gear:['bag']},
-      {t:'ג\'ריקן + שק — 50 מטר',d:'ג\'ריקן בידיים + שק על הגב — ריצה',e:'☠️',sec:[40,65],gear:['bag','jerry']},
-      {t:'אפוד כובד + ספרינטים ×8',d:'50 מטר בכל ספרינט — אפוד על הגוף',e:'☠️',sec:[25,40],gear:['vest']},
-    ],
-    bodyweight:[
-      {t:'100 שכיבות שמיכה',d:'5 דקות. תגמור.',e:'☠️',sec:[200,300]},
-      {t:'50 מתח + 100 שכיבות',d:'מחלק איך שרוצה — לא יוצא עד שמסיים',e:'☠️',sec:[200,360]},
-      {t:'100 ברפי',d:'ללא עצירה. ללא תירוצים.',e:'☠️',sec:[200,360]},
-    ],
-    rest:[
-      {t:'5 שניות — חזרה',d:'',e:'⏸',sec:[4,6]},
-    ],
-  },
-};
-
-function setDuneLv(lv,btn){
-  duneLv=lv;
-  ['fresh','mid','hard','elite'].forEach(l=>{
-    const b=document.getElementById('dlv-'+l);
-    if(!b)return;
-    b.style.background='var(--card3)';b.style.border='1px solid var(--b2)';b.style.color='var(--txt)';
-  });
-  const cols={fresh:'var(--pri)',mid:'var(--yellow)',hard:'var(--orange)',elite:'var(--red)'};
-  const bgs={fresh:'rgba(0,255,136,.08)',mid:'rgba(255,214,10,.08)',hard:'rgba(255,136,0,.08)',elite:'rgba(255,45,85,.08)'};
-  btn.style.background=bgs[lv];btn.style.border=`2px solid ${cols[lv]}`;btn.style.color=cols[lv];
-}
-
-function toggleGear(g,btn){
-  if(duneGear.has(g)){duneGear.delete(g);btn.style.opacity='.5';btn.classList.remove('p');}
-  else{duneGear.add(g);btn.style.opacity='1';btn.classList.add('p');}
-}
-
-function initCombatMode(){
-  setDuneLv('fresh',document.getElementById('dlv-fresh'));
-}
-
-function startCombatMode(){
-  const dur=parseInt(document.getElementById('cm-dur').value||20)*60;
-  combatEndTime=Date.now()+dur*1000;
-  cmTotalSec=dur;
-  combatCmdCount=0;combatPaused=false;combatPausedMs=0;cmLogArr=[];
-  document.getElementById('cm-setup').style.display='none';
-  document.getElementById('cm-active').style.display='block';
-  fireNextDuneCmd(true);
-  combatTimer=setInterval(updateCombatTimer,500);
-  logWorkout({type:'combat',name:'אימון דיונות',icon:'🏜',duration:Math.round(dur/60),details:[`רמה: ${duneLv}`,`ציוד: ${[...duneGear].join(', ')}`]});
-}
-
-function getNextDuneCmd(){
-  const pool=DUNE_CMDS[duneLv]||DUNE_CMDS.mid;
-  // Build eligible commands (gear check)
-  let all=[];
-  Object.values(pool).forEach(arr=>arr.forEach(c=>{
-    if(!c.gear||c.gear.every(g=>duneGear.has(g)))all.push(c);
-  }));
-  // Avoid repeating last cmd
-  if(all.length>1&&window._lastDuneCmd){all=all.filter(c=>c.t!==window._lastDuneCmd);}
-  return all[Math.floor(Math.random()*all.length)];
-}
-
-function fireNextDuneCmd(first=false){
-  const cmd=getNextDuneCmd();if(!cmd)return;
-  window._lastDuneCmd=cmd.t;
-  combatCmdCount++;
-  document.getElementById('cm-cmd-emoji').textContent=cmd.e;
-  document.getElementById('cm-cmd-text').textContent=cmd.t;
-  document.getElementById('cm-cmd-detail').textContent=cmd.d||'';
-  document.getElementById('cm-count').textContent=combatCmdCount;
-
-  // Voice
-  if(document.getElementById('cm-voice')?.value==='on'&&'speechSynthesis' in window){
-    window.speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(cmd.t+'. '+cmd.d);
-    u.lang='he-IL';u.rate=1.1;u.pitch=1.15;u.volume=1;
-    window.speechSynthesis.speak(u);
-  }
-
-  // Log
-  cmLogArr.unshift(`${cmd.e} ${cmd.t}`);
-  const logEl=document.getElementById('cm-log');
-  if(logEl)logEl.innerHTML=cmLogArr.slice(0,8).map((l,i)=>`<div style="opacity:${1-i*.12};padding:2px 0;border-bottom:1px solid var(--b2)">${i===0?'<span style="color:#ff8c00">→</span> ':'✓ '}${l}</div>`).join('');
-
-  // Duration for this exercise + countdown bar
-  const [minSec,maxSec]=cmd.sec||[30,60];
-  const nextIn=first?4:Math.floor(Math.random()*(maxSec-minSec)+minSec);
-  combatNextIn=nextIn;
-  document.getElementById('cm-next').textContent=nextIn;
-
-  // Animate countdown bar
-  const bar=document.getElementById('cm-bar');
-  if(bar){bar.style.transition='none';bar.style.width='100%';setTimeout(()=>{bar.style.transition=`width ${nextIn}s linear`;bar.style.width='0%';},50);}
-
-  if(combatCmdTimer)clearTimeout(combatCmdTimer);
-  combatCmdTimer=setTimeout(()=>{if(!combatPaused)fireNextDuneCmd();},nextIn*1000);
-}
-
-function updateCombatTimer(){
-  if(combatPaused)return;
-  const rem=Math.max(0,Math.round((combatEndTime-Date.now()-combatPausedMs)/1000));
-  combatNextIn=Math.max(0,combatNextIn-.5);
-  document.getElementById('cm-timer').textContent=`${Math.floor(rem/60)}:${String(rem%60).padStart(2,'0')}`;
-  document.getElementById('cm-next').textContent=Math.ceil(combatNextIn);
-  if(rem===0)stopCombatMode();
-}
-
-function pauseCombat(){
-  combatPaused=!combatPaused;
-  const btn=document.getElementById('cm-pause-btn');
-  if(combatPaused){
-    combatPauseStart=Date.now();
-    window.speechSynthesis?.pause();
-    if(btn)btn.textContent='▶ המשך';
-    if(btn)btn.style.color='var(--pri)';
-    if(combatCmdTimer){clearTimeout(combatCmdTimer);combatCmdTimer=null;}
-  } else {
-    combatPausedMs+=Date.now()-combatPauseStart;
-    window.speechSynthesis?.resume();
-    if(btn)btn.textContent='⏸ השהה';
-    if(btn)btn.style.color='var(--yellow)';
-    fireNextDuneCmd();
-  }
-}
-
-function stopCombatMode(){
-  if(combatTimer){clearInterval(combatTimer);combatTimer=null;}
-  if(combatCmdTimer){clearTimeout(combatCmdTimer);combatCmdTimer=null;}
-  window.speechSynthesis?.cancel();
-  document.getElementById('cm-active').style.display='none';
-  document.getElementById('cm-setup').style.display='block';
-  notify(`🏜 אימון דיונות הסתיים! ${combatCmdCount} פקודות!`,'p');
-}
-
-// ═══════════════════════════════════════════════════
-// STRENGTH PLAN
-// ═══════════════════════════════════════════════════
-const STR={
-  field:{
-    combat:[
+const STR={field:{combat:[
       {n:'כוח פלג עליון',ex:['שכיבות ×20','שכיבות יהלום ×15','שכיבות רחבות ×20','Pike Push-up ×12','Dips כיסא ×15','Superman ×20']},
       {n:'כוח פלג תחתון',ex:['סקוואט קפיצה ×15','לאנג הליכה ×24','Bulgarian Split ×12/רגל','Hip Thrust חד-רגל ×12','Step-up ×15/רגל']},
       {n:'ליבה קרבית',ex:['פלאנק 4×60שנ','Dead Bug 3×12','Hollow Hold 3×35שנ','Russian Twist ×20','Leg Raises ×12','Bear Crawl 20מ']},
@@ -4370,54 +4270,7 @@ function buildRun(){
 // ═══════════════════════════════════════════════════
 // HIIT ENGINE
 // ═══════════════════════════════════════════════════
-const HIITLIB={
-  recruit:['שכיבות ×15','קפיצות ×20','Mountain Climbers ×20','פלאנק 35שנ','High Knees ×30','Jumping Jacks ×30','Squats ×20','Lunges ×16','Superman ×15','Crunches ×25'],
-  combat:['ברפיז ×10','שכיבות קפיצה ×12','סקוואט קפיצה ×15','מתח ×8','Sprawl ×10','לאנג קפיצה ×12','Bear Crawl 15מ','Box Jump ×10','Plank-to-Push ×12','Tuck Jump ×12'],
-  elite:['ברפיז + קפיצה ×12','מתח ×12','שכיבות חד-יד ×8','Tuck Jump ×15','Bear Crawl 20מ','שכ עצירה ×10','L-Sit 20שנ','Muscle-up ×5'],
-};
 let hiitData=null,hiitInt=null,hiitI=0;
-function genHiit(){
-  const type=document.getElementById('htype').value;
-  const dur=parseInt(document.getElementById('hdur').value);
-  const lvl=document.getElementById('hlvl').value;
-  const pool=HIITLIB[lvl];let sets=[];
-  if(type==='tabata'){for(let i=0;i<8;i++)sets.push({ex:pool[i%pool.length],w:20,r:10});}
-  else if(type==='emom'){for(let i=0;i<dur;i++)sets.push({ex:pool[i%pool.length],w:45,r:15});}
-  else if(type==='amrap'){for(let i=0;i<6;i++)sets.push({ex:pool[i%pool.length]+' — כמה שאפשר',w:dur*10,r:0});}
-  else if(type==='pyramid'){[5,10,15,20,15,10,5].forEach((n,i)=>sets.push({ex:pool[i%pool.length]+' ×'+n,w:n*3+10,r:n*2}));}
-  else{for(let i=0;i<Math.floor(dur/3);i++){sets.push({ex:pool[i%pool.length],w:40,r:20});sets.push({ex:pool[(i+4)%pool.length],w:35,r:25});}}
-  hiitData={sets};
-  let html=`<div class="card"><div class="sh">🔥 ${type.toUpperCase()} | ${lvl} | ${sets.length} סטים</div>`;
-  sets.forEach((s,i)=>{html+=`<div class="sr" id="hs${i}"><div class="snum">${i+1}</div><div class="sex">${s.ex}</div><div class="sinf" id="hi${i}">${s.w}שנ${s.r>0?` / ${s.r}שנ`:' AMRAP'}</div></div>`;});
-  html+='</div>';
-  document.getElementById('hi-out').innerHTML=html;
-  document.getElementById('hstart').style.display='block';
-  document.getElementById('hstop').style.display='none';
-  hiitI=0;
-}
-function startHiit(){if(!hiitData)return;document.getElementById('hstart').style.display='none';document.getElementById('hstop').style.display='block';hiitI=0;runHSet();}
-function runHSet(){
-  if(!hiitData||hiitI>=hiitData.sets.length){notify('HIIT הסתיים! 🔥');document.getElementById('hstart').style.display='block';document.getElementById('hstop').style.display='none';return;}
-  document.querySelectorAll('.sr').forEach((e,i)=>{e.classList.toggle('on',i===hiitI);e.classList.toggle('done',i<hiitI);const n=e.querySelector('.snum');if(n)n.classList.toggle('dn',i<hiitI);});
-  const s=hiitData.sets[hiitI];let rem=s.w;
-  hiitInt=setInterval(()=>{rem--;const el=document.getElementById('hi'+hiitI);if(el)el.textContent=rem+'שנ עבודה';if(rem<=0){clearInterval(hiitInt);if(s.r>0){let r2=s.r;hiitInt=setInterval(()=>{r2--;const e2=document.getElementById('hi'+hiitI);if(e2)e2.textContent=r2+'שנ מנוחה';if(r2<=0){clearInterval(hiitInt);hiitI++;runHSet();}},1000);}else{hiitI++;runHSet();}}},1000);
-}
-function stopHiit(){clearInterval(hiitInt);document.getElementById('hstart').style.display='block';document.getElementById('hstop').style.display='none';}
-
-// ═══════════════════════════════════════════════════
-// TIMER
-// ═══════════════════════════════════════════════════
-let tInt=null,tRun=false,tCur=0;
-function onTM(){document.getElementById('tiv-r').style.display=['iv','tab'].includes(document.getElementById('tmode').value)?'grid':'none';}
-const fmtT=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
-function startTmr(){
-  if(tRun)return;tRun=true;
-  const mode=document.getElementById('tmode').value,dsp=document.getElementById('tdsp'),ph=document.getElementById('tph');
-  if(mode==='sw'){tCur=0;tInt=setInterval(()=>{tCur++;dsp.textContent=fmtT(tCur);},1000);}
-  else if(mode==='cd'){tCur=parseInt(document.getElementById('tsecs').value||60);tInt=setInterval(()=>{tCur--;dsp.textContent=fmtT(tCur);dsp.className='td'+(tCur<=5?' warn':tCur<=10?' rest':'');if(tCur<=0){clearInterval(tInt);tRun=false;notify('⏱ זמן!','y');}},1000);}
-  else if(mode==='tab'){let cur=20,p='w',rnd=1;ph.textContent='סבב 1/8 — עבודה';tInt=setInterval(()=>{cur--;dsp.textContent=fmtT(cur);dsp.className='td'+(p==='r'?' rest':'')+(cur<=3?' warn':'');if(cur<=0){if(p==='w'){p='r';cur=10;ph.textContent=`סבב ${rnd}/8 — מנוחה`;}else{rnd++;if(rnd>8){clearInterval(tInt);tRun=false;notify('טאבאטה! 🔥');return;}p='w';cur=20;ph.textContent=`סבב ${rnd}/8 — עבודה`;}}},1000);}
-  else{const w=parseInt(document.getElementById('twrk').value||40),r=parseInt(document.getElementById('trst').value||20);let cur=w,p='w';ph.textContent='עבודה';tInt=setInterval(()=>{cur--;dsp.textContent=fmtT(cur);dsp.className='td'+(p==='r'?' rest':'')+(cur<=3?' warn':'');if(cur<=0){if(p==='w'){p='r';cur=r;ph.textContent='מנוחה';}else{p='w';cur=w;ph.textContent='עבודה';}}},1000);}
-}
 function pauseTmr(){clearInterval(tInt);tRun=false;}
 function resetTmr(){clearInterval(tInt);tRun=false;tCur=0;document.getElementById('tdsp').textContent='00:00';document.getElementById('tdsp').className='td';document.getElementById('tph').textContent='לחץ התחל';}
 
