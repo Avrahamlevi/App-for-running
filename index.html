@@ -1360,7 +1360,8 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 // ═══════════════════════════════════════════════════
 const K={R:'cf7r',S:'cf7s',P:'cf7p',PR:'cf7pr',WT:'cf7wt',LB:'cf7lb',WD:'cf7wd',CM:'cf7cm',ATH:'cf7ath',REC:'cf7rec'};
 const ld=(k,d)=>{try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):d;}catch{return d;}};
-const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+const SYNC_KEYS=['cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7lb','cf7ath','cf7_profile','cf7_workout_history','cf7_ath_workouts','cf7_coach_notes','cf7_att','cf7rec'];;
 
 // ═══════════════════════════════════════════════════
 // UNITS — COMPLETE DATABASE
@@ -2325,33 +2326,78 @@ function addLbEntry(){
   renderLeaderboard();notify(`${nm} נוסף לדירוג! 🏆`);
 }
 
-function renderLeaderboard(){
-  const all=ld(K.LB,[]);
+async function renderLeaderboard(){
   const pr=ld(K.PR,{});
   const pg=ld(K.P,[]);
   const myScore=pg.length?parseInt(pg[0].bar||0):0;
+  const myName=pr.name||(window._fbUser?.displayName)||'אתה';
+
+  // If Firebase connected — pull public leaderboard from Firestore
+  if(window._pullLBScores){
+    // Push my score first if I have one
+    if(myScore>0&&window._fbUID&&window._pushLBScore){
+      window._pushLBScore(myName,myScore,pr.unit||'gen');
+    }
+    try{
+      const fbList=await window._pullLBScores();
+      if(fbList&&fbList.length>0){
+        const list=fbList.map(e=>({
+          nm:e.name||'לוחם',sc:e.score||0,unit:e.unit||'gen',
+          emoji:UNITS[e.unit]?.emoji||'⚔',
+          isMe:e.uid===window._fbUID,
+          run:e.run||999,psh:e.push||0,pul:e.pull||0
+        })).sort((a,b)=>b.sc-a.sc);
+        renderLBList(list,true);
+        return;
+      }
+    }catch(e){console.warn('LB pull:',e);}
+  }
+
+  // Fallback: local leaderboard
+  const all=ld(K.LB,[]);
   let list=[...all];
   if(myScore>0){
-    list.push({nm:pr.name||'אתה',sc:myScore,run:parseInt(pg[0].run||999),psh:parseInt(pg[0].psh||0),pul:parseInt(pg[0].pul||0),unit:pr.unit||'gen',emoji:'⚔',isMe:true});
+    const existing=list.findIndex(e=>e.nm===myName);
+    const myEntry={nm:myName,sc:myScore,run:parseInt(pg[0].run||999),psh:parseInt(pg[0].psh||0),pul:parseInt(pg[0].pul||0),unit:pr.unit||'gen',emoji:'⚔',isMe:true};
+    if(existing>=0)list[existing]={...list[existing],...myEntry};
+    else list.push(myEntry);
   }
   list.sort((a,b)=>b.sc-a.sc);
+  renderLBList(list,false);
+  if(coachMode)renderCoachGroup();
+}
+
+function renderLBList(list,isCloud){
   if(!list.length){
-    document.getElementById('lb-out').innerHTML=`<div class="card" style="text-align:center;padding:20px"><div style="font-size:32px;margin-bottom:8px">🏆</div><div class="mini">הוסף את עצמך ואת חבריך לתחרות!</div></div>`;
+    document.getElementById('lb-out').innerHTML=`<div class="card" style="text-align:center;padding:20px">
+      <div style="font-size:32px;margin-bottom:8px">🏆</div>
+      <div class="mini">${isCloud?'היה הראשון בלידרבורד!':'הוסף את עצמך לתחרות!'}</div>
+      ${isCloud?'':'<div class="mini" style="margin-top:8px;opacity:.6">💡 הירשם לחשבון כדי להתחרות עם כולם בזמן אמת</div>'}
+    </div>`;
     return;
   }
   const medals=['gold','silver','bronze'];
   const rankEmoji=i=>i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
-  let html=`<div class="card"><div class="sh">📊 דירוג ${lbPeriod==='week'?'שבועי':lbPeriod==='month'?'חודשי':'כל הזמן'}</div>`;
+  let html=`<div class="card">
+    <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
+      <span>📊 לידרבורד ${isCloud?'☁️ חי':'מקומי'}</span>
+      ${isCloud?'<span style="font-size:10px;color:var(--pri);background:rgba(0,255,136,.1);padding:2px 8px;border-radius:8px">כל המשתמשים</span>':'<span style="font-size:10px;color:var(--txt3)">המכשיר שלך בלבד</span>'}
+    </div>`;
+  if(!isCloud){
+    html+=`<div style="font-size:11px;color:var(--yellow);background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2);border-radius:8px;padding:8px;margin-bottom:10px">
+      ☁️ הירשם לחשבון כדי לראות לידרבורד של כל השחקנים
+    </div>`;
+  }
   list.slice(0,20).forEach((e,i)=>{
     const medal=medals[i]||'';
     const u=UNITS[e.unit]||UNITS.gen;
-    const rm=e.run<900?`${Math.floor(e.run/60)}:${String(e.run%60).padStart(2,'0')}`:'--';
+    const rm=e.run&&e.run<900?`${Math.floor(e.run/60)}:${String(e.run%60).padStart(2,'0')}`:'--';
     html+=`<div class="lb-row ${medal} ${e.isMe?'me-row':''}">
       <div class="lb-rnk ${medal}">${rankEmoji(i)}</div>
-      <div class="lb-av">${e.emoji}</div>
+      <div class="lb-av">${e.emoji||'⚔'}</div>
       <div class="lb-inf">
         <div class="lb-nm">${e.nm}${e.isMe?' (אני)':''}</div>
-        <div class="lb-sub" style="color:${u.col}">${u.n} | 2K:${rm} שכ:${e.psh} מתח:${e.pul}</div>
+        <div class="lb-sub" style="color:${u.col}">${u.n}${rm!=='--'?' | 2K:'+rm:''}</div>
       </div>
       <div class="lb-sc">
         <div class="lb-sc-n">${e.sc}</div>
@@ -2361,7 +2407,6 @@ function renderLeaderboard(){
   });
   html+='</div>';
   document.getElementById('lb-out').innerHTML=html;
-  if(coachMode)renderCoachGroup();
 }
 
 // ═══════════════════════════════════════════════════
@@ -4564,7 +4609,8 @@ import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,
   onAuthStateChanged,signOut,updateProfile,
   GoogleAuthProvider,signInWithPopup}
   from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import{getFirestore,doc,setDoc,getDoc,serverTimestamp}
+import{getFirestore,doc,setDoc,getDoc,serverTimestamp,
+  collection,getDocs,query,orderBy,limit}
   from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const FC={
@@ -4575,53 +4621,83 @@ const FC={
   messagingSenderId:"YOUR_SENDER_ID",
   appId:            "YOUR_APP_ID"
 };
-// Guard: do nothing if config not filled
-if(FC.apiKey.startsWith('YOUR_')){
-  console.info('Firebase: config not set — running in local mode');
-} else {
+
+if(!FC.apiKey.startsWith('YOUR_')){
   try{
     const app=initializeApp(FC);
     const auth=getAuth(app);
     const db=getFirestore(app);
     window._FB={auth,db,doc,setDoc,getDoc,serverTimestamp,
+      collection,getDocs,query,orderBy,limit,
       signInWithEmailAndPassword,createUserWithEmailAndPassword,
       signOut,updateProfile,GoogleAuthProvider,signInWithPopup};
 
-    const SKEYS=['cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7_profile',
-                 'cf7_workout_history','cf7_ath_workouts','cf7_coach_notes'];
+    // ══ PRIVATE keys (saved under /users/<uid>) ══
+    const PRIVATE_KEYS=[
+      'cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7ath','cf7rec',
+      'cf7_profile','cf7_workout_history','cf7_ath_workouts',
+      'cf7_coach_notes','cf7_att'
+    ];
+    // ══ PUBLIC keys (shared leaderboard under /leaderboard/<uid>) ══
+    // Leaderboard entry: name + score only — no personal data
 
-    // Sync DOWN
+    // Sync DOWN from Firestore to localStorage (called on login)
     async function syncDown(uid){
       try{
         const snap=await getDoc(doc(db,'users',uid));
         if(snap.exists()){
           const d=snap.data();
-          SKEYS.forEach(k=>{if(d[k]!=null)localStorage.setItem(k,d[k]);});
-          if(typeof refreshDash==='function')refreshDash();
-          if(typeof notify==='function')notify('☁️ נתונים סונכרנו!','p');
-        } else { syncUp(uid); }
+          PRIVATE_KEYS.forEach(k=>{if(d[k]!=null)localStorage.setItem(k,d[k]);});
+          if(typeof refreshDash==='function') setTimeout(refreshDash,200);
+          if(typeof notify==='function') notify('☁️ נתונים סונכרנו!','p');
+        } else {
+          syncUp(uid); // First login — push local data up
+        }
       }catch(e){console.warn('syncDown:',e);}
     }
 
-    // Sync UP (debounced)
+    // Sync UP private data to Firestore (debounced, called on every save)
     let _st=null;
-    window._syncUp=()=>{clearTimeout(_st);_st=setTimeout(()=>syncUp(window._fbUID),2000);};
+    window._syncUp=()=>{clearTimeout(_st);_st=setTimeout(()=>syncUp(window._fbUID),2500);};
     async function syncUp(uid){
       if(!uid)return;
       try{
-        const d={uid,ts:serverTimestamp()};
-        SKEYS.forEach(k=>{try{const v=localStorage.getItem(k);if(v!=null)d[k]=v;}catch{}});
+        const d={uid,ts:serverTimestamp(),displayName:window._fbUser?.displayName||''};
+        PRIVATE_KEYS.forEach(k=>{try{const v=localStorage.getItem(k);if(v!=null)d[k]=v;}catch{}});
         await setDoc(doc(db,'users',uid),d,{merge:true});
         const dot=document.getElementById('sync-dot');
-        if(dot){dot.style.background='var(--pri)';setTimeout(()=>dot.style.background='rgba(255,255,255,.15)',3000);}
+        if(dot){dot.style.background='var(--pri)';dot.title='נשמר ✅';
+          setTimeout(()=>{dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';},3000);}
       }catch(e){console.warn('syncUp:',e);}
     }
 
-    // Patch localStorage writes to auto-sync
-    const _lsSet=localStorage.setItem.bind(localStorage);
-    localStorage.setItem=function(k,v){_lsSet(k,v);if(window._fbUID&&SKEYS.includes(k))window._syncUp&&window._syncUp();};
+    // Push leaderboard score to PUBLIC collection (name + score only)
+    window._pushLBScore=async(name,score,unit)=>{
+      if(!window._fbUID)return;
+      try{
+        await setDoc(doc(db,'leaderboard',window._fbUID),
+          {name,score,unit,ts:serverTimestamp()},{merge:true});
+      }catch(e){console.warn('pushLB:',e);}
+    };
 
-    // Auth state
+    // Pull leaderboard from PUBLIC collection (all users)
+    window._pullLBScores=async()=>{
+      if(!window._FB)return null;
+      try{
+        const q=query(collection(db,'leaderboard'),orderBy('score','desc'),limit(50));
+        const snap=await getDocs(q);
+        return snap.docs.map(d=>({...d.data(),uid:d.id}));
+      }catch(e){console.warn('pullLB:',e);return null;}
+    };
+
+    // Patch localStorage.setItem to auto-sync private keys
+    const _lsSet=localStorage.setItem.bind(localStorage);
+    localStorage.setItem=function(k,v){
+      _lsSet(k,v);
+      if(window._fbUID&&PRIVATE_KEYS.includes(k)) window._syncUp&&window._syncUp();
+    };
+
+    // Auth state listener
     onAuthStateChanged(auth,user=>{
       window._fbUser=user||null;
       window._fbUID=user?.uid||null;
@@ -4632,93 +4708,26 @@ if(FC.apiKey.startsWith('YOUR_')){
         const name=user.displayName||user.email?.split('@')[0]||'משתמש';
         if(badge){badge.textContent='👤 '+name;badge.style.display='flex';}
         if(abtn)abtn.style.display='none';
-        if(dot){dot.style.background='rgba(0,255,136,.5)';dot.title='מחובר ✅';}
+        if(dot){dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';}
         syncDown(user.uid);
       } else {
         if(badge)badge.style.display='none';
         if(abtn)abtn.style.display='block';
-        if(dot){dot.style.background='rgba(255,255,255,.15)';dot.title='לא מחובר';}
-        // Show auth modal on first load (if not skipped)
+        if(dot){dot.style.background='rgba(255,255,255,.1)';dot.title='לא מחובר';}
         if(!localStorage.getItem('cf7_skip_auth')){
-          setTimeout(()=>{const m=document.getElementById('auth-modal');if(m)m.style.display='block';},800);
+          setTimeout(()=>{
+            const m=document.getElementById('auth-modal');
+            if(m)m.style.display='block';
+          },800);
         }
       }
     });
 
-    // Expose sign out for user menu
     window._fbSignOut=()=>signOut(auth);
+    console.info('Firebase: initialized ✅');
   }catch(e){console.warn('Firebase init:',e);}
-}
-
-// ─── Auth UI functions ───────────────────────────
-let _aMode='l';
-function aTab(m){
-  _aMode=m;
-  const isR=m==='r';
-  document.getElementById('a-name-row').style.display=isR?'block':'none';
-  document.getElementById('a-sub').textContent=isR?'הרשם':'כניסה';
-  document.getElementById('abt-l').style.cssText=isR?'flex:1;padding:8px;border:none;border-radius:8px;font-weight:900;font-size:12px;cursor:pointer;background:transparent;color:var(--txt2);transition:.2s':'flex:1;padding:8px;border:none;border-radius:8px;font-weight:900;font-size:12px;cursor:pointer;background:var(--pri);color:#000;transition:.2s';
-  document.getElementById('abt-r').style.cssText=isR?'flex:1;padding:8px;border:none;border-radius:8px;font-weight:900;font-size:12px;cursor:pointer;background:var(--pri);color:#000;transition:.2s':'flex:1;padding:8px;border:none;border-radius:8px;font-weight:900;font-size:12px;cursor:pointer;background:transparent;color:var(--txt2);transition:.2s';
-  document.getElementById('a-err').style.display='none';
-}
-async function aSubmit(){
-  if(!window._FB){notify('Firebase לא מוגדר עדיין','y');return;}
-  const email=document.getElementById('a-email').value.trim();
-  const pass=document.getElementById('a-pass').value;
-  const name=document.getElementById('a-name').value.trim();
-  const errEl=document.getElementById('a-err');
-  errEl.style.display='none';
-  if(!email||!pass){errEl.textContent='מלא אימייל וסיסמה';errEl.style.display='block';return;}
-  const btn=document.getElementById('a-sub');btn.textContent='...';btn.disabled=true;
-  try{
-    const {auth,signInWithEmailAndPassword,createUserWithEmailAndPassword,updateProfile}=window._FB;
-    let cred;
-    if(_aMode==='r'){
-      cred=await createUserWithEmailAndPassword(auth,email,pass);
-      if(name)await updateProfile(cred.user,{displayName:name});
-    } else {
-      cred=await signInWithEmailAndPassword(auth,email,pass);
-    }
-    document.getElementById('auth-modal').style.display='none';
-    notify('👋 ברוך הבא, '+(cred.user.displayName||email.split('@')[0])+'!','p');
-  }catch(e){
-    const m={'auth/email-already-in-use':'אימייל כבר קיים','auth/invalid-email':'אימייל לא תקין',
-             'auth/weak-password':'סיסמה חלשה (6+ תווים)','auth/wrong-password':'סיסמה שגויה',
-             'auth/user-not-found':'משתמש לא נמצא','auth/invalid-credential':'פרטים שגויים'};
-    errEl.textContent=m[e.code]||e.message;errEl.style.display='block';
-  }
-  btn.textContent=_aMode==='r'?'הרשם':'כניסה';btn.disabled=false;
-}
-async function aGoogle(){
-  if(!window._FB){notify('Firebase לא מוגדר','y');return;}
-  try{
-    const {auth,GoogleAuthProvider,signInWithPopup}=window._FB;
-    await signInWithPopup(auth,new GoogleAuthProvider());
-    document.getElementById('auth-modal').style.display='none';
-  }catch(e){
-    const e2=document.getElementById('a-err');
-    e2.textContent='Google נכשל: '+e.message;e2.style.display='block';
-  }
-}
-function aSkip(){
-  localStorage.setItem('cf7_skip_auth','1');
-  document.getElementById('auth-modal').style.display='none';
-}
-function openUserMenu(){
-  const user=window._fbUser;
-  if(!user){document.getElementById('auth-modal').style.display='block';return;}
-  const name=user.displayName||user.email||'משתמש';
-  openModal('👤 החשבון שלי',`
-    <div style="text-align:center;padding:10px 0">
-      <div style="font-size:36px;margin-bottom:8px">👤</div>
-      <div style="font-weight:900;font-size:14px;margin-bottom:3px">${name}</div>
-      <div style="font-size:11px;color:var(--txt3);margin-bottom:14px">${user.email||''}</div>
-      <div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.15);border-radius:9px;padding:10px;font-size:11px;margin-bottom:14px;line-height:1.6">
-        ☁️ הנתונים שלך מסונכרנים בענן<br/>גלוי מכל מכשיר עם אותו חשבון
-      </div>
-      <button class="btn bp bsm" style="width:100%;margin-bottom:8px" onclick="window._syncUp&&window._syncUp();notify('מסנכרן...','c')">🔄 סנכרן עכשיו</button>
-      <button class="btn br bsm" style="width:100%" onclick="window._fbSignOut&&window._fbSignOut().then(()=>{notify('התנתקת','r');closeModal();})">🚪 התנתק</button>
-    </div>`);
+} else {
+  console.info('Firebase: running in LOCAL mode (config not filled)');
 }
 </script>
 </body>
