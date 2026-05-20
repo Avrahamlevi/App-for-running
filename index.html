@@ -458,6 +458,9 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .leaflet-tile{filter:invert(1) hue-rotate(180deg) brightness(0.9) saturate(0.8)}
 .leaflet-control-attribution{font-size:8px;opacity:.5}
 </style>
+
+<!-- Netlify Identity — free auth, no credit card -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
@@ -486,6 +489,32 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 <!-- ══════════════════════ DASHBOARD ══════════════════════ -->
 <div class="pg active" id="p-dash">
   <div id="cd-box"></div>
+
+      <!-- ═══ קרב סקור יומי ═══ -->
+      <div class="card" style="background:linear-gradient(135deg,rgba(255,45,85,.08),var(--card));border-color:rgba(255,45,85,.25)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="sh r" style="margin:0">🎯 מדד קרביות יומי</div>
+          <div id="combat-score-ring" style="font-family:var(--fd);font-size:28px;color:var(--red)">--</div>
+        </div>
+        <div id="combat-score-bar" style="height:6px;background:var(--card3);border-radius:3px;margin:10px 0;overflow:hidden">
+          <div id="combat-score-fill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--red),var(--orange));border-radius:3px;transition:width 1.2s ease"></div>
+        </div>
+        <div id="combat-score-label" style="font-size:11px;color:var(--txt2)">טוען...</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
+          <div style="text-align:center;background:var(--card2);border-radius:9px;padding:8px">
+            <div id="cs-run" style="font-family:var(--fd);font-size:18px;color:var(--pri)">--</div>
+            <div style="font-size:9px;color:var(--txt3)">ריצה</div>
+          </div>
+          <div style="text-align:center;background:var(--card2);border-radius:9px;padding:8px">
+            <div id="cs-str" style="font-family:var(--fd);font-size:18px;color:var(--yellow)">--</div>
+            <div style="font-size:9px;color:var(--txt3)">כוח</div>
+          </div>
+          <div style="text-align:center;background:var(--card2);border-radius:9px;padding:8px">
+            <div id="cs-rec" style="font-family:var(--fd);font-size:18px;color:var(--orange)">--</div>
+            <div style="font-size:9px;color:var(--txt3)">שיקום</div>
+          </div>
+        </div>
+      </div>
 
   <!-- Progress rings row -->
   <div class="card hot" style="padding:14px 10px">
@@ -561,6 +590,8 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
     <button class="tab" onclick="tt('tb-nu',this)">תזונה</button>
     <button class="tab" onclick="tt('tb-idf',this)">🪖 ניקוד צה"ל</button>
     <button class="tab" onclick="tt('tb-cm',this)">🔴 מצב קרב</button>
+    <button class="tab" onclick="tt('tb-pred',this)">🎯 מתי מוכן</button>
+    <button class="tab" onclick="tt('tb-cert',this)">🏅 תעודה</button>
   </div>
 
   <div id="tb-br">
@@ -894,6 +925,63 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
       </div>
     </div>
   </div>
+
+  <!-- ════ TAB: מתי אתה מוכן ════ -->
+  <div id="tb-pred" style="display:none">
+    <div class="card hot">
+      <div class="sh">🎯 מתי תהיה מוכן לגיבוש?</div>
+      <div class="mini" style="margin-bottom:12px">הכנס תוצאות נוכחיות ← תאריך יעד + תוכנית אישית</div>
+      <div style="background:var(--card2);border-radius:12px;padding:12px;margin-bottom:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div onclick="this.querySelector('input').focus()" style="background:var(--card3);border-radius:9px;padding:10px;text-align:center">
+            <div style="font-size:9px;color:var(--txt3)">ריצה 2K (דקות)</div>
+            <input id="pred-run" type="number" inputmode="decimal" step="0.1" placeholder="9.5" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:26px;color:var(--pri);width:100%;outline:none" oninput="calcReadiness()"/>
+          </div>
+          <div onclick="this.querySelector('input').focus()" style="background:var(--card3);border-radius:9px;padding:10px;text-align:center">
+            <div style="font-size:9px;color:var(--txt3)">מתח (חזרות)</div>
+            <input id="pred-pull" type="number" inputmode="numeric" placeholder="8" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:26px;color:var(--yellow);width:100%;outline:none" oninput="calcReadiness()"/>
+          </div>
+          <div onclick="this.querySelector('input').focus()" style="background:var(--card3);border-radius:9px;padding:10px;text-align:center">
+            <div style="font-size:9px;color:var(--txt3)">שכיבות (חזרות)</div>
+            <input id="pred-push" type="number" inputmode="numeric" placeholder="35" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:26px;color:var(--yellow);width:100%;outline:none" oninput="calcReadiness()"/>
+          </div>
+          <div onclick="this.querySelector('input').focus()" style="background:var(--card3);border-radius:9px;padding:10px;text-align:center">
+            <div style="font-size:9px;color:var(--txt3)">ריצה 3K (דקות)</div>
+            <input id="pred-run3" type="number" inputmode="decimal" step="0.1" placeholder="13" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:26px;color:var(--orange);width:100%;outline:none" oninput="calcReadiness()"/>
+          </div>
+        </div>
+      </div>
+      <label>🎖 יחידת יעד</label>
+      <select id="pred-unit" onchange="calcReadiness()" style="margin-bottom:10px">
+        <option value="golani">גולני</option><option value="para">צנחנים</option>
+        <option value="egoz">אגוז</option><option value="duvdevan">דובדבן</option>
+        <option value="shai">שייטת 13</option><option value="matkal">סיירת מטכ"ל</option>
+      </select>
+      <label>⏰ שעות אימון בשבוע</label>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
+        <button class="btn" id="hrs-3" onclick="setPredHrs(3,this)" style="font-size:11px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">3 שעות</button>
+        <button class="btn" id="hrs-6" onclick="setPredHrs(6,this)" style="font-size:11px;font-weight:900;background:rgba(0,255,136,.1);border:2px solid var(--pri);color:var(--pri)">6 שעות</button>
+        <button class="btn" id="hrs-10" onclick="setPredHrs(10,this)" style="font-size:11px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">10 שעות</button>
+        <button class="btn" id="hrs-15" onclick="setPredHrs(15,this)" style="font-size:11px;font-weight:900;background:var(--card3);border:1px solid var(--b2)">15+ שעות</button>
+      </div>
+      <div id="pred-result"></div>
+    </div>
+  </div>
+
+  <!-- ════ TAB: תעודת כושר קרבי ════ -->
+  <div id="tb-cert" style="display:none">
+    <div class="card hot">
+      <div class="sh">🏅 תעודת כושר קרבי</div>
+      <div class="mini" style="margin-bottom:12px">תעודה אישית עם כל הנתונים שלך — שתף, שמור, הגאה</div>
+      <button class="btn bp" style="width:100%;margin-bottom:12px" onclick="generateCert()">🏅 צור תעודה אישית</button>
+      <div id="cert-preview" style="display:none">
+        <canvas id="cert-canvas" style="width:100%;border-radius:12px;border:1px solid var(--b2)"></canvas>
+        <button class="btn bp" style="width:100%;margin-top:10px" onclick="downloadCert()">💾 הורד תמונה</button>
+        <button class="btn bs bsm" style="width:100%;margin-top:6px" onclick="shareCert()">📤 שתף</button>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /p-test -->
 
 <!-- ══════════════════════ WEEKLY ══════════════════════ -->
@@ -1258,6 +1346,15 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
         <button class="qaction-btn" onclick="filterHist('test')">🎯 מבחנים</button>
       </div>
       <div id="hist-summary" style="margin-bottom:10px"></div>
+      
+      <!-- Progress Chart -->
+      <div class="card" style="margin-bottom:10px">
+        <div class="sh p">📈 גרף התקדמות</div>
+        <div class="mini" style="margin-bottom:8px">בר-אור לאורך זמן</div>
+        <svg id="prog-chart" viewBox="0 0 360 100" style="width:100%;height:100px;overflow:visible">
+          <text x="180" y="55" fill="rgba(255,255,255,.2)" font-size="12" text-anchor="middle">בצע מבחן בר-אור לראות גרף</text>
+        </svg>
+      </div>
       <div id="hist-list"></div>
       <button class="btn br bsm" style="margin-top:8px" onclick="confirmClearHistory()">🗑 נקה היסטוריה</button>
     </div>
@@ -1313,6 +1410,28 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
   <div class="pgh"><span>🤖</span> מאמן AI</div>
   <div class="card hot">
     <div class="sh">⚙ פרטים אישיים</div>
+      <!-- Mental Combat Training -->
+      <div class="card" style="border-color:rgba(124,58,237,.3);background:linear-gradient(180deg,rgba(124,58,237,.06),var(--card));margin-top:10px">
+        <div class="sh p">🧠 אימון מנטל קרבי</div>
+        <div class="mini" style="margin-bottom:12px">טכניקות שמשמשות לוחמי עילית — בניית חוסן מנטלי</div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <button class="btn" onclick="startMentalEx('breathing')" style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);padding:12px;font-size:12px;font-weight:700">
+            💨 נשימה טקטית<br/><span style="font-size:9px;color:var(--txt3)">4-7-8 / Box breathing</span>
+          </button>
+          <button class="btn" onclick="startMentalEx('focus')" style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);padding:12px;font-size:12px;font-weight:700">
+            🎯 ריכוז לחץ<br/><span style="font-size:9px;color:var(--txt3)">Stress inoculation</span>
+          </button>
+          <button class="btn" onclick="startMentalEx('visualization')" style="background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.2);padding:12px;font-size:12px;font-weight:700">
+            🌄 ויזואליזציה<br/><span style="font-size:9px;color:var(--txt3)">Mental rehearsal</span>
+          </button>
+          <button class="btn" onclick="startMentalEx('cold')" style="background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.2);padding:12px;font-size:12px;font-weight:700">
+            🧊 חשיפה לחץ<br/><span style="font-size:9px;color:var(--txt3)">Cold exposure protocol</span>
+          </button>
+        </div>
+        
+        <div id="mental-exercise" style="display:none"></div>
+      </div>
     <div class="r2">
       <div><label>גיל</label><input id="ai-age" type="number" value="18" min="14" max="30"/></div>
       <div><label>משקל (ק"ג)</label><input id="weight" type="number" value="70"/></div>
@@ -1355,6 +1474,21 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 
 <script>
 'use strict';
+var muscleState={};
+const MUSCLES=[
+  {id:'quads',n:'ירכיים קדמיות (Quads)',icon:'🦵'},
+  {id:'hamstrings',n:'ירכיים אחוריות (Hamstrings)',icon:'🦴'},
+  {id:'calves',n:'שוקיים',icon:'🦴'},
+  {id:'shins',n:'שין ספלינט',icon:'🩹'},
+  {id:'hip',n:'מפשעה / ירך',icon:'🦵'},
+  {id:'chest',n:'חזה',icon:'💪'},
+  {id:'back',n:'גב עליון',icon:'🔙'},
+  {id:'lats',n:'גב רחב (Lats)',icon:'🏋'},
+  {id:'shoulders',n:'כתפיים',icon:'💪'},
+  {id:'bicep',n:'ביספס',icon:'💪'},
+  {id:'tricep',n:'טריספס',icon:'💪'},
+  {id:'neck',n:'צוואר',icon:'🫀'},
+];
 // ═══════════════════════════════════════════════════
 // STORAGE
 // ═══════════════════════════════════════════════════
@@ -1520,14 +1654,14 @@ function showPg(p){
     if(el){el.classList.toggle('active',on);if(on){el.style.width=cw+'px';el.style.minWidth=cw+'px';}else{el.style.width='';}}
     document.getElementById('n-'+x)?.classList.toggle('on',on);
   });
-  if(p==='dash')refreshDash();
+  if(p==='dash'){refreshDash();setTimeout(function(){if(typeof calcCombatScore==='function')calcCombatScore();},500);}
   if(p==='test'){buildUnitTargets();initMuscleGrid();}
   if(p==='lb'){refreshShareCard();renderLeaderboard();}
   if(p==='week')buildWeekPlan();
   if(p==='train')initMuscleGrid();
 }
 function tt(id,el){
-  ['tb-br','tb-gi','tb-pr','tb-1rm','tb-nu','tb-idf','tb-cm'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
+  ['tb-br','tb-gi','tb-pr','tb-1rm','tb-nu','tb-idf','tb-cm','tb-pred','tb-cert'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
   document.getElementById(id).style.display='block';
   el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
   if(id==='tb-cm')initCombatMode();
@@ -1537,7 +1671,7 @@ function trt(id,el){
   document.getElementById(id).style.display='block';
   el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
   if(id==='tr-route')initRoute();
-  if(id==='tr-hist')renderHistory();
+  if(id==='tr-hist'){renderHistory();setTimeout(renderProgressChart,300);}
   if(id==='tr-build')initBuilder();
   if(id==='tr-rec'){initMuscleGrid();setTimeout(calcRecovery,50);}
 }
@@ -2023,79 +2157,61 @@ function calc1RM(){
 // NUTRITION CALCULATOR
 // ═══════════════════════════════════════════════════
 function calcNutrition(){
-  const wt=parseFloat(document.getElementById('nu-wt').value||70);
-  const goal=document.getElementById('nu-goal').value;
-  const inten=document.getElementById('nu-int').value;
-  const actM={light:1.4,mid:1.6,heavy:1.8}[inten];
-  const bmr=wt*24;const tdee=bmr*actM;
-  const calAdj={build:tdee+300,lean:tdee-200,endure:tdee}[goal];
-  const prot=Math.round(wt*2.1);
-  const fat=Math.round(calAdj*.25/9);
-  const carb=Math.round((calAdj-prot*4-fat*9)/4);
+  const wt=parseFloat(document.getElementById('nu-wt')?.value||70);
+  const goal=document.getElementById('nu-goal')?.value||'lean';
+  const intensity=document.getElementById('nu-int')?.value||'mid';
+  
+  // TDEE calculation
+  const actMult={light:1.375,mid:1.55,heavy:1.725}[intensity]||1.55;
+  const bmr=Math.round(10*wt+6.25*175-5*20+5); // simplified Mifflin
+  const tdee=Math.round(bmr*actMult);
+  
+  const targets={
+    build:{cal:tdee+350,prot:Math.round(wt*2.2),carb:Math.round(wt*4),fat:Math.round(wt*1)},
+    lean: {cal:tdee-200,prot:Math.round(wt*2.4),carb:Math.round(wt*3),fat:Math.round(wt*0.9)},
+    endure:{cal:tdee+100,prot:Math.round(wt*1.8),carb:Math.round(wt*5),fat:Math.round(wt*0.8)},
+  };
+  const t=targets[goal]||targets.lean;
+  
+  // Military meal plan
   const meals=[
-    {n:'🌅 ארוחת בוקר',cal:Math.round(calAdj*.25),icon:'🍳',mac:`חלבון ${Math.round(prot*.25)}גר | פחמ' ${Math.round(carb*.3)}גר`,items:'ביצים, שיבולת שועל, בננה'},
-    {n:'⚡ לפני אימון',cal:Math.round(calAdj*.15),icon:'🍌',mac:`פחמ' ${Math.round(carb*.2)}גר | חלבון ${Math.round(prot*.1)}גר`,items:'בננה, לחם מלא, דבש'},
-    {n:'💪 אחרי אימון',cal:Math.round(calAdj*.2),icon:'🥤',mac:`חלבון ${Math.round(prot*.35)}גר | פחמ' ${Math.round(carb*.25)}גר`,items:'שייק חלבון, אורז, עוף'},
-    {n:'🍽️ צהריים',cal:Math.round(calAdj*.25),icon:'🥗',mac:`חלבון ${Math.round(prot*.3)}גר | שומן ${Math.round(fat*.5)}גר`,items:'עוף/טונה, ירקות, אורז/בטטה'},
-    {n:'🌙 ערב',cal:Math.round(calAdj*.15),icon:'🥩',mac:`חלבון ${Math.round(prot*.2)}גר | שומן ${Math.round(fat*.5)}גר`,items:'קוטג, ביצים, ירקות'},
+    {time:'06:00',name:'ארוחת בוקר קרבית',items:['5 ביצים מקושקשות','קוואקר 100ג עם בננה','לחם מלא 2 פרוסות + גבינה לבנה']},
+    {time:'09:30',name:'ארוחת ביניים',items:['גביע קוטג\' 5%','חופן אגוזים','תפוח ירוק']},
+    {time:'13:00',name:'צהריים — עיקרית',items:['חזה עוף 200ג / טונה 2 קופסאות','אורז בסמטי 200ג מבושל','ירקות מאודים + שמן זית']},
+    {time:'16:00',name:'לפני אימון',items:['בננה + כף חמאת בוטנים','אבקת חלבון + מים (אופציונלי)']},
+    {time:'19:00',name:'אחרי אימון',items:['חלבון 40ג (בשר / דג / אבקה)','בטטה 200ג','סלט ירקות גדול']},
+    {time:'21:30',name:'ערב — קל',items:['גביע יוגורט יווני','חופן שקדים','מלפפון + גמבה']},
   ];
-  let html=`<div class="card">
-    <div class="sh o">🔥 ${Math.round(calAdj)} קלוריות/יום</div>
-    <div style="margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span>🥩 חלבון: <strong style="color:var(--pri)">${prot}גר</strong></span><span>${Math.round(prot*4)} קל</span></div>
-      <div class="macro-bar"><div class="macro-fill" style="width:${prot*4/calAdj*100}%;background:var(--pri)"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span>🌾 פחמ': <strong style="color:var(--yellow)">${carb}גר</strong></span><span>${Math.round(carb*4)} קל</span></div>
-      <div class="macro-bar"><div class="macro-fill" style="width:${carb*4/calAdj*100}%;background:var(--yellow)"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span>🥑 שומן: <strong style="color:var(--orange)">${fat}גר</strong></span><span>${Math.round(fat*9)} קל</span></div>
-      <div class="macro-bar"><div class="macro-fill" style="width:${fat*9/calAdj*100}%;background:var(--orange)"></div></div>
+  
+  let html=`
+    <div style="background:linear-gradient(135deg,rgba(255,140,0,.08),var(--card2));border:1px solid rgba(255,140,0,.2);border-radius:13px;padding:14px;margin-bottom:12px">
+      <div style="font-size:10px;color:var(--txt3);margin-bottom:4px">יעד יומי — ${{build:'בניית שריר',lean:'כושר + חיטוב',endure:'סיבולת'}[goal]}</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center">
+        <div><div style="font-family:var(--fd);font-size:22px;color:#ff8c00">${t.cal}</div><div style="font-size:9px;color:var(--txt3)">קלוריות</div></div>
+        <div><div style="font-family:var(--fd);font-size:22px;color:var(--red)">${t.prot}ג</div><div style="font-size:9px;color:var(--txt3)">חלבון</div></div>
+        <div><div style="font-family:var(--fd);font-size:22px;color:var(--pri)">${t.carb}ג</div><div style="font-size:9px;color:var(--txt3)">פחמימות</div></div>
+        <div><div style="font-family:var(--fd);font-size:22px;color:var(--yellow)">${t.fat}ג</div><div style="font-size:9px;color:var(--txt3)">שומן</div></div>
+      </div>
     </div>
-    ${meals.map(m=>`<div class="meal-row"><div class="meal-icon">${m.icon}</div><div class="meal-info"><div class="meal-name">${m.n}</div><div class="meal-macros">${m.mac} | ${m.items}</div></div><div class="meal-cal">${m.cal}</div></div>`).join('')}
+    <div class="sh o" style="margin-bottom:8px">🍽 תפריט קרבי יומי</div>`;
+  
+  meals.forEach(m=>{
+    html+=`<div style="background:var(--card2);border-radius:10px;padding:10px;margin-bottom:7px;border:1px solid var(--b1)">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <div style="font-family:var(--fd);font-size:11px;color:var(--orange);flex-shrink:0">${m.time}</div>
+        <div style="font-weight:800;font-size:12px">${m.name}</div>
+      </div>
+      ${m.items.map(i=>`<div style="font-size:11px;color:var(--txt2);padding:1px 0">• ${i}</div>`).join('')}
+    </div>`;
+  });
+  
+  html+=`<div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.15);border-radius:9px;padding:10px;font-size:11px;color:var(--txt2);margin-top:4px">
+    💧 מים: ${Math.round(wt*0.04)} ל׳ ביום מינימום | לפני שינה: קזאין/קוטג׳
   </div>`;
+  
   document.getElementById('nu-res').innerHTML=html;
 }
 
-// ═══════════════════════════════════════════════════
-// RECOVERY MODULE
-// ═══════════════════════════════════════════════════
-const MUSCLES=[
-  {id:'quads',n:'ירכיים קדמיות (Quads)',icon:'🦵'},
-  {id:'hamstrings',n:'ירכיים אחוריות (Hamstrings)',icon:'🦿'},
-  {id:'calves',n:'שוקיים',icon:'🦴'},
-  {id:'shins',n:'שין ספלינט',icon:'🩹'},
-  {id:'chest',n:'חזה',icon:'💪'},
-  {id:'back',n:'גב עליון',icon:'🔙'},
-  {id:'lats',n:'גב רחב (Lats)',icon:'🏋'},
-  {id:'shoulders',n:'כתפיים',icon:'🏋'},
-  {id:'bicep',n:'יד קדמית (ביספ)',icon:'💪'},
-  {id:'tricep',n:'יד אחורית (טריספ)',icon:'💪'},
-  {id:'neck',n:'צוואר',icon:'🫀'},
-  {id:'hip',n:'מפשעה / ירך',icon:'🦵'},
-];
-let muscleState={};
-function initMuscleGrid(){
-  const g=document.getElementById('muscle-grid');
-  if(!g)return;
-  muscleState=ld(K.REC+'_muscles',{});
-  const groups=[
-    {label:'🦵 רגליים',ids:['quads','hamstrings','calves','shins','hip']},
-    {label:'💪 גוף עליון',ids:['chest','back','lats','shoulders','bicep','tricep']},
-    {label:'🫀 צוואר',ids:['neck']},
-  ];
-  let html='';
-  groups.forEach(grp=>{
-    const mList=MUSCLES.filter(m=>grp.ids.includes(m.id));
-    if(!mList.length)return;
-    html+=`<div style="font-size:10px;color:var(--txt3);letter-spacing:1px;margin:10px 0 4px;font-weight:700;padding-bottom:4px;border-bottom:1px solid var(--b2)">${grp.label}</div>`;
-    mList.forEach(m=>{
-      const st=muscleState[m.id]||'fresh';
-      const cls=st==='sore'?'sore':st==='partial'?'partial':'fresh';
-      const lbl=st==='sore'?'🔴 כואב':st==='partial'?'🟡 חלקי':'🟢 מוכן';
-      html+=`<div class="muscle-item ${cls}" id="ms-${m.id}" onclick="toggleMuscle('${m.id}')"><div class="muscle-icon">${m.icon}</div><div class="muscle-name">${m.n}</div><div class="muscle-status">${lbl}</div></div>`;
-    });
-  });
-  g.innerHTML=html;
-  calcRecovery();
-}
 function toggleMuscle(id){
   // Cycle: fresh → sore → partial → fresh
   const cur=muscleState[id]||'fresh';
@@ -4566,41 +4682,465 @@ if(pr.unit){document.getElementById('wk-unit').value=pr.unit;document.getElement
 setTimeout(()=>{const pg=ld(K.P,[]);if(pg.length)updateRings(pg[0]);},300);
 refreshDash();buildUnitTargets();refreshShareCard();renderLeaderboard();
 if(coachMode)renderCoachGroup();
+
+// ═══════════════════════════════════════════════════
+// MENTAL TRAINING
+// ═══════════════════════════════════════════════════
+var _mentalTimer=null;
+var MENTAL_EX={
+  breathing:{title:'💨 נשימה טקטית Box Breathing',desc:'טכניקה של Navy SEALs להרגעה תחת לחץ.',phases:['שאף','החזק','נשוף','החזק'],secs:[4,4,4,4],rounds:4,color:'var(--pri)',tip:'מומלץ לפני אימון קשה או מבחן'},
+  focus:{title:'🎯 פרוטוקול ריכוז לחץ',desc:'3 שאלות שמחזירות ריכוז מיידי.',steps:['מה אני שולט בו עכשיו?','מה הצעד הבא הקטן ביותר?','בחר: לפעול או לתת לפחד לפעול?'],color:'var(--purpleL)'},
+  visualization:{title:'🌄 Mental Rehearsal',desc:'טכניקה של ספורטאי עילית ולוחמים.',steps:['עצום עיניים. נשום עמוק 3 פעמים.','דמיין את הגיבוש / המבחן בפירוט.','ראה את עצמך מצליח — רגש, תחושה, קצב.','חזור 3 פעמים. פתח עיניים מוכן.'],color:'var(--orange)'},
+  cold:{title:'🧊 פרוטוקול חשיפה לקור',desc:'מגביר דופמין ועמידות לחץ.',steps:['11 דקות מקלחת קרה בשבוע','2-3 מפגשים — מים קרים כמה שתוכל','שמור על נשימה רגועה — לא מהירה','ספור עד 10 לפני שאתה יוצא'],color:'#00e5ff'}
+};
+
+function startMentalEx(type){
+  var ex=MENTAL_EX[type];
+  if(!ex)return;
+  var el=document.getElementById('mental-exercise');
+  if(!el)return;
+  el.style.display='block';
+  if(type==='breathing'){
+    el.innerHTML='<div style="text-align:center;padding:16px;background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.15);border-radius:12px">'
+      +'<div style="font-weight:900;font-size:13px;color:'+ex.color+';margin-bottom:4px">'+ex.title+'</div>'
+      +'<div style="font-size:10px;color:var(--txt2);margin-bottom:16px">'+ex.desc+'</div>'
+      +'<div id="breath-circle" style="width:100px;height:100px;border-radius:50%;border:3px solid '+ex.color+';margin:0 auto 14px;display:flex;align-items:center;justify-content:center;transition:transform 4s ease-in-out;font-family:var(--fd);font-size:13px;color:'+ex.color+'">שאף</div>'
+      +'<div id="breath-count" style="font-size:11px;color:var(--txt3)">סיבוב 1 מתוך '+ex.rounds+'</div>'
+      +'<div style="font-size:10px;color:var(--txt3);margin-top:10px;font-style:italic">'+ex.tip+'</div>'
+      +'<button class="btn br bsm" style="margin-top:12px" onclick="stopMental()">סיים</button></div>';
+    runBreathing(0,0,ex);
+  } else {
+    var stepsHTML=ex.steps.map(function(s,i){
+      return '<div style="display:flex;gap:10px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:6px">'
+        +'<div style="font-family:var(--fd);font-size:16px;color:'+ex.color+';flex-shrink:0">'+(i+1)+'</div>'
+        +'<div style="font-size:12px;color:var(--txt);line-height:1.5">'+s+'</div></div>';
+    }).join('');
+    el.innerHTML='<div style="padding:14px;background:rgba(0,0,0,.15);border:1px solid var(--b2);border-radius:12px">'
+      +'<div style="font-weight:900;font-size:13px;color:'+ex.color+';margin-bottom:4px">'+ex.title+'</div>'
+      +'<div style="font-size:10px;color:var(--txt2);margin-bottom:12px">'+ex.desc+'</div>'
+      +stepsHTML
+      +'<button class="btn bs bsm" style="margin-top:8px;width:100%" onclick="stopMental()">✅ סיימתי</button></div>';
+  }
+}
+
+function runBreathing(phase,round,ex){
+  if(round>=ex.rounds){
+    var c=document.getElementById('breath-circle');
+    if(c){c.textContent='✅';c.style.transform='scale(1)';}
+    var cnt=document.getElementById('breath-count');
+    if(cnt)cnt.textContent='כל הכבוד! '+ex.rounds+' סיבובים הושלמו 🎯';
+    notify('נשימה טקטית הושלמה 🧘','p');
+    return;
+  }
+  var circle=document.getElementById('breath-circle');
+  var cnt2=document.getElementById('breath-count');
+  if(!circle)return;
+  var labels=['שאף','החזק','נשוף','החזק'];
+  var scales=[1.4,1.4,0.8,0.8];
+  circle.textContent=labels[phase];
+  circle.style.transform='scale('+scales[phase]+')';
+  if(cnt2)cnt2.textContent='סיבוב '+(round+1)+' מתוך '+ex.rounds+' — '+labels[phase]+' '+ex.secs[phase]+'שנ';
+  _mentalTimer=setTimeout(function(){
+    var np=(phase+1)%4;
+    var nr=np===0?round+1:round;
+    runBreathing(np,nr,ex);
+  },ex.secs[phase]*1000);
+}
+
+function stopMental(){
+  clearTimeout(_mentalTimer);
+  var el=document.getElementById('mental-exercise');
+  if(el)el.style.display='none';
+}
+
+// ═══════════════════════════════════════════════════
+// PROGRESS CHART
+// ═══════════════════════════════════════════════════
+function renderProgressChart(){
+  var pg=ld(K.P,[]);
+  var svg=document.getElementById('prog-chart');
+  if(!svg||!pg.length)return;
+  var scores=pg.slice(0,8).reverse().map(function(p){return parseInt(p.bar||0);});
+  if(scores.every(function(s){return s===0;}))return;
+  var W=360,H=100,PAD=20;
+  var maxV=Math.max.apply(null,scores.concat([60]));
+  var minV=Math.max(0,Math.min.apply(null,scores)-10);
+  var html='';
+  [40,60,80,100].forEach(function(v){
+    if(v<minV||v>maxV)return;
+    var y=PAD+(H-PAD*2)*(1-(v-minV)/(maxV-minV));
+    html+='<line x1="'+PAD+'" y1="'+y.toFixed(1)+'" x2="'+(W-PAD)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.06)" stroke-width="1"/>';
+    html+='<text x="'+(PAD-4)+'" y="'+(y+4).toFixed(1)+'" fill="rgba(255,255,255,.3)" font-size="9" text-anchor="end">'+v+'</text>';
+  });
+  var pts=scores.map(function(s,i){
+    var x=PAD+i/(scores.length-1||1)*(W-PAD*2);
+    var y=PAD+(H-PAD*2)*(1-(s-minV)/(maxV-minV));
+    return {x:x,y:y,s:s};
+  });
+  var pathD=pts.map(function(p,i){return (i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1);}).join(' ');
+  var areaD=pathD+' L'+pts[pts.length-1].x+' '+(H-PAD)+' L'+PAD+' '+(H-PAD)+' Z';
+  html+='<path d="'+areaD+'" fill="rgba(0,255,136,.08)"/>';
+  html+='<path d="'+pathD+'" fill="none" stroke="var(--pri)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  pts.forEach(function(p){
+    html+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4" fill="var(--pri)" stroke="var(--card)" stroke-width="2"/>';
+    html+='<text x="'+p.x.toFixed(1)+'" y="'+(p.y-8).toFixed(1)+'" fill="var(--pri)" font-size="9" text-anchor="middle" font-weight="bold">'+p.s+'</text>';
+  });
+  if(scores.length>1){
+    var trend=scores[scores.length-1]-scores[0];
+    var trendTxt=trend>0?'↑ +'+trend+' שיפור 🔥':trend<0?'↓ '+trend+' ירידה':'→ יציב';
+    var trendCol=trend>0?'var(--pri)':trend<0?'var(--red)':'var(--yellow)';
+    html+='<text x="'+(W-PAD)+'" y="15" fill="'+trendCol+'" font-size="10" text-anchor="end" font-weight="bold">'+trendTxt+'</text>';
+  }
+  svg.innerHTML=html;
+}
+
+
+function initMuscleGrid(){
+  var el=document.getElementById('muscle-grid');
+  if(!el)return;
+  muscleState=ld(K.REC+'_muscles',{});
+  var groups=[
+    {label:'🦵 רגליים',ids:['quads','hamstrings','calves','shins','hip']},
+    {label:'💪 גוף עליון',ids:['chest','back','lats','shoulders','bicep','tricep']},
+    {label:'🫀 צוואר',ids:['neck']},
+  ];
+  var out='';
+  groups.forEach(function(grp){
+    var mList=MUSCLES.filter(function(m){return grp.ids.indexOf(m.id)>=0;});
+    if(!mList.length)return;
+    out+='<div style="font-size:10px;color:var(--txt3);letter-spacing:1px;margin:10px 0 4px;font-weight:700;padding-bottom:4px;border-bottom:1px solid var(--b2)">'+grp.label+'</div>';
+    mList.forEach(function(m){
+      var st=muscleState[m.id]||'fresh';
+      var cls=st==='sore'?'sore':st==='partial'?'partial':'fresh';
+      var lbl=st==='sore'?'🔴 כואב':st==='partial'?'🟡 חלקי':'🟢 מוכן';
+      out+='<div class="muscle-item '+cls+'" data-mid="'+m.id+'" onclick="toggleMuscle(this.dataset.mid)">'+
+        '<div class="muscle-icon">'+m.icon+'</div>'+
+        '<div class="muscle-name">'+m.n+'</div>'+
+        '<div class="muscle-status">'+lbl+'</div></div>';
+    });
+  });
+  el.innerHTML=out;
+  calcRecovery();
+}
+
+// ═══════════════════════════════════════════════════
+// READINESS PREDICTOR — מתי תהיה מוכן לגיבוש
+// ═══════════════════════════════════════════════════
+var _predHrs = 6;
+
+function setPredHrs(n, btn) {
+  _predHrs = n;
+  ['hrs-3','hrs-6','hrs-10','hrs-15'].forEach(function(id) {
+    var b = document.getElementById(id);
+    if (!b) return;
+    b.style.background = 'var(--card3)';
+    b.style.border = '1px solid var(--b2)';
+    b.style.color = 'var(--txt)';
+  });
+  btn.style.background = 'rgba(0,255,136,.1)';
+  btn.style.border = '2px solid var(--pri)';
+  btn.style.color = 'var(--pri)';
+  calcReadiness();
+}
+
+function calcReadiness() {
+  var run = parseFloat(document.getElementById('pred-run')?.value || 0);
+  var pull = parseInt(document.getElementById('pred-pull')?.value || 0);
+  var push = parseInt(document.getElementById('pred-push')?.value || 0);
+  var run3 = parseFloat(document.getElementById('pred-run3')?.value || 0);
+  var unitKey = document.getElementById('pred-unit')?.value || 'golani';
+  var u = UNITS[unitKey] || UNITS.golani;
+
+  if (!run && !pull && !push) return;
+
+  // Calculate gaps to target
+  var targetRun = u.r / 60; // convert to minutes
+  var targetPull = u.l;
+  var targetPush = u.p;
+  var targetRun3 = u.r3 || 13;
+
+  // Gap as percentage of what's needed
+  var gaps = [];
+  if (run > 0) {
+    var runGapPct = Math.max(0, (run - targetRun) / targetRun); // how far over target
+    gaps.push({ name: 'ריצה 2K', current: run + "'", target: targetRun.toFixed(1) + "'", gapPct: runGapPct, ok: run <= targetRun });
+  }
+  if (pull > 0) {
+    var pullGapPct = Math.max(0, (targetPull - pull) / targetPull);
+    gaps.push({ name: 'מתח', current: pull, target: targetPull, gapPct: pullGapPct, ok: pull >= targetPull });
+  }
+  if (push > 0) {
+    var pushGapPct = Math.max(0, (targetPush - push) / targetPush);
+    gaps.push({ name: 'שכיבות', current: push, target: targetPush, gapPct: pushGapPct, ok: push >= targetPush });
+  }
+  if (run3 > 0 && u.r3) {
+    var r3GapPct = Math.max(0, (run3 - targetRun3) / targetRun3);
+    gaps.push({ name: 'ריצה 3K', current: run3 + "'", target: targetRun3 + "'", gapPct: r3GapPct, ok: run3 <= targetRun3 });
+  }
+
+  if (!gaps.length) return;
+
+  // Improvement rate per week based on training hours
+  var weeklyImprovement = { 3: 0.015, 6: 0.025, 10: 0.04, 15: 0.055 }[_predHrs] || 0.025;
+
+  // Weeks needed = worst gap / weekly improvement
+  var maxGap = Math.max.apply(null, gaps.map(function(g) { return g.gapPct; }));
+  var weeksNeeded = maxGap > 0 ? Math.ceil(maxGap / weeklyImprovement) : 0;
+  weeksNeeded = Math.max(weeksNeeded, 1);
+
+  var readyDate = new Date();
+  readyDate.setDate(readyDate.getDate() + weeksNeeded * 7);
+  var dateStr = readyDate.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  var allOk = gaps.every(function(g) { return g.ok; });
+  var pct = allOk ? 100 : Math.round(Math.max(0, 100 - maxGap * 100));
+
+  var color = allOk ? 'var(--pri)' : pct >= 70 ? 'var(--yellow)' : pct >= 40 ? 'var(--orange)' : 'var(--red)';
+
+  var html = '<div style="text-align:center;background:linear-gradient(135deg,rgba(124,58,237,.08),var(--card2));border:1px solid rgba(124,58,237,.2);border-radius:13px;padding:16px;margin-bottom:12px">';
+  if (allOk) {
+    html += '<div style="font-size:42px;margin-bottom:8px">🏆</div>';
+    html += '<div style="font-family:var(--fd);font-size:24px;color:var(--pri)">מוכן עכשיו!</div>';
+    html += '<div style="font-size:12px;color:var(--txt2);margin-top:6px">עובר את דרישות ' + u.n + '</div>';
+  } else {
+    html += '<div style="font-size:11px;color:var(--txt3);margin-bottom:4px">תאריך מוכנות משוערת</div>';
+    html += '<div style="font-family:var(--fd);font-size:22px;color:' + color + ';margin-bottom:4px">' + dateStr + '</div>';
+    html += '<div style="font-size:12px;color:var(--txt2)">עוד ' + weeksNeeded + ' שבועות | ' + _predHrs + ' שעות/שבוע</div>';
+    html += '<div style="height:6px;background:var(--card3);border-radius:3px;margin:10px 0;overflow:hidden">';
+    html += '<div style="height:100%;width:' + pct + '%;background:' + color + ';border-radius:3px;transition:width 1s"></div></div>';
+    html += '<div style="font-size:11px;color:var(--txt2)">' + pct + '% מוכן ל' + u.n + '</div>';
+  }
+  html += '</div>';
+
+  // Gap analysis per metric
+  html += '<div class="sh y" style="margin-bottom:8px">📊 מה צריך לשפר</div>';
+  gaps.forEach(function(g) {
+    html += '<div style="display:flex;align-items:center;gap:8px;padding:9px;background:var(--card2);border-radius:9px;margin-bottom:6px;border:1px solid ' + (g.ok ? 'rgba(0,255,136,.2)' : 'var(--b1)') + '">';
+    html += '<div style="font-size:16px">' + (g.ok ? '✅' : '🎯') + '</div>';
+    html += '<div style="flex:1"><div style="font-weight:800;font-size:12px">' + g.name + ': ' + g.current + '</div>';
+    html += '<div style="font-size:10px;color:var(--txt3)">יעד ' + u.n + ': ' + g.target + '</div></div>';
+    if (!g.ok) {
+      var wks = Math.ceil(g.gapPct / weeklyImprovement);
+      html += '<div style="font-size:10px;color:var(--orange);text-align:left">~' + wks + ' שבועות</div>';
+    }
+    html += '</div>';
+  });
+
+  // Weekly training plan
+  html += '<div class="sh p" style="margin-top:10px;margin-bottom:8px">📅 תוכנית ' + weeksNeeded + ' שבועות</div>';
+  var plan = [
+    { weeks: '1-2', focus: 'בסיס — נפח נמוך, טכניקה', emoji: '🏃' },
+    { weeks: '3-4', focus: 'עצימות — הוספת מהירות', emoji: '⚡' },
+    { weeks: '5-6', focus: 'שיא — מבחנים ותרגולים', emoji: '🔥' },
+    { weeks: '7', focus: 'הפחתה — מנוחה לפני גיבוש', emoji: '🧘' }
+  ];
+  if (weeksNeeded <= 4) plan = plan.slice(0, 2);
+  plan.forEach(function(p) {
+    html += '<div style="display:flex;gap:10px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:5px">';
+    html += '<div style="font-size:20px">' + p.emoji + '</div>';
+    html += '<div><div style="font-weight:800;font-size:11px">שבועות ' + p.weeks + '</div>';
+    html += '<div style="font-size:10px;color:var(--txt2)">' + p.focus + '</div></div></div>';
+  });
+
+  document.getElementById('pred-result').innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════
+// COMBAT CERTIFICATE — תעודת כושר קרבי
+// ═══════════════════════════════════════════════════
+function generateCert() {
+  var pr = ld(K.PR, {});
+  var pg = ld(K.P, []);
+  var name = pr.name || window._fbUser?.displayName || 'לוחם';
+  var unitKey = pr.unit || 'golani';
+  var u = UNITS[unitKey] || UNITS.golani;
+  var score = pg.length ? parseInt(pg[0].bar || 0) : 0;
+  var run = pg.length && pg[0].run ? Math.floor(pg[0].run/60)+':'+(String(pg[0].run%60).padStart(2,'0')) : '--';
+  var pull = pg.length ? (pg[0].pul || '--') : '--';
+  var push = pg.length ? (pg[0].psh || '--') : '--';
+  var date = new Date().toLocaleDateString('he-IL');
+
+  var canvas = document.getElementById('cert-canvas');
+  if (!canvas) return;
+  canvas.width = 800; canvas.height = 500;
+  var ctx = canvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#020405';
+  ctx.fillRect(0, 0, 800, 500);
+
+  // Border
+  ctx.strokeStyle = '#00ff88';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(12, 12, 776, 476);
+  ctx.strokeStyle = 'rgba(0,255,136,.3)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(20, 20, 760, 460);
+
+  // Header
+  ctx.fillStyle = '#00ff88';
+  ctx.font = 'bold 14px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('COMBAT FIT IL — IDF ELITE SYSTEM', 400, 55);
+
+  ctx.fillStyle = 'rgba(0,255,136,.3)';
+  ctx.fillRect(50, 65, 700, 1);
+
+  // Title
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 32px Arial';
+  ctx.fillText('תעודת כושר קרבי', 400, 115);
+
+  // Name
+  ctx.fillStyle = '#00ff88';
+  ctx.font = 'bold 28px Arial';
+  ctx.fillText(name, 400, 165);
+
+  // Unit
+  ctx.fillStyle = u.col || '#ffd60a';
+  ctx.font = 'bold 18px Arial';
+  ctx.fillText(u.emoji + '  ' + u.n, 400, 200);
+
+  // Divider
+  ctx.fillStyle = 'rgba(255,255,255,.1)';
+  ctx.fillRect(100, 220, 600, 1);
+
+  // Stats
+  var stats = [
+    { label: 'ציון בר-אור', value: score > 0 ? score + '/100' : '--', color: score >= 80 ? '#00ff88' : score >= 60 ? '#ffd60a' : '#ff6600' },
+    { label: 'ריצה 2K', value: run, color: '#ffffff' },
+    { label: 'מתח', value: String(pull), color: '#ffd60a' },
+    { label: 'שכיבות', value: String(push), color: '#ffd60a' },
+  ];
+
+  stats.forEach(function(s, i) {
+    var x = 150 + i * 160;
+    ctx.fillStyle = 'rgba(255,255,255,.05)';
+    ctx.beginPath();
+    ctx.roundRect(x - 65, 235, 130, 80, 8);
+    ctx.fill();
+    ctx.fillStyle = s.color;
+    ctx.font = 'bold 24px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(s.value, x, 275);
+    ctx.fillStyle = 'rgba(255,255,255,.5)';
+    ctx.font = '11px Arial';
+    ctx.fillText(s.label, x, 298);
+  });
+
+  // Footer
+  ctx.fillStyle = 'rgba(0,255,136,.3)';
+  ctx.fillRect(50, 340, 700, 1);
+  ctx.fillStyle = 'rgba(255,255,255,.4)';
+  ctx.font = '12px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('הונפקה ב-' + date + ' | combatfit.netlify.app', 400, 380);
+
+  // Watermark
+  ctx.fillStyle = 'rgba(0,255,136,.04)';
+  ctx.font = 'bold 120px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('ELITE', 400, 450);
+
+  document.getElementById('cert-preview').style.display = 'block';
+}
+
+function downloadCert() {
+  var canvas = document.getElementById('cert-canvas');
+  if (!canvas) return;
+  var link = document.createElement('a');
+  var pr = ld(K.PR, {});
+  link.download = 'combat-fit-' + (pr.name || 'certificate') + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  notify('✅ התעודה הורדה!', 'p');
+}
+
+function shareCert() {
+  var canvas = document.getElementById('cert-canvas');
+  if (!canvas) return;
+  if (navigator.share && navigator.canShare) {
+    canvas.toBlob(function(blob) {
+      var file = new File([blob], 'combat-fit-cert.png', { type: 'image/png' });
+      navigator.share({ title: 'תעודת כושר קרבי — Combat Fit IL', files: [file] })
+        .catch(function() { downloadCert(); });
+    });
+  } else {
+    downloadCert();
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// WEEK BEFORE GIBUSH — שבוע לפני הגיבוש
+// ═══════════════════════════════════════════════════
+function initPreGibushWeek() {
+  // Add button to weekly plan if unit is elite
+  var pr = ld(K.PR, {});
+  var unitKey = pr.unit || 'gen';
+  var u = UNITS[unitKey] || {};
+  if (!u.group || u.group !== 'עילית' && u.group !== 'קומנדו') return;
+
+  var weekOut = document.getElementById('week-plan-out');
+  if (!weekOut) return;
+  // Prepend a special card
+  var card = document.createElement('div');
+  card.className = 'card';
+  card.style.borderColor = 'rgba(255,45,85,.4)';
+  card.style.background = 'linear-gradient(180deg,rgba(255,45,85,.06),var(--card))';
+  card.innerHTML = '<div class="sh r">🔴 פרוטוקול שבוע לפני הגיבוש</div>'
+    + '<div style="font-size:11px;color:var(--txt2);margin-bottom:10px">לפי גישת עילית: <strong>הפחתה</strong> — לא הוספה</div>'
+    + [
+        { day: 'יום 7 לפני', act: '🏃 ריצה בינונית 5K — קצב נוח', type: 'run' },
+        { day: 'יום 6 לפני', act: '💪 כוח קל — 50% מהמשקל הרגיל', type: 'str' },
+        { day: 'יום 5 לפני', act: '🏃 ריצה מהירה 3K — בדוק קצב גיבוש', type: 'run' },
+        { day: 'יום 4 לפני', act: '🧘 מנוחה פעילה — מתיחות + 20 מתח', type: 'rest' },
+        { day: 'יום 3 לפני', act: '⚡ ספרינטים × 6 + 30 שכיבות', type: 'speed' },
+        { day: 'יום 2 לפני', act: '🛌 מנוחה מלאה — שינה 9+ שעות', type: 'sleep' },
+        { day: 'יום לפני', act: '🚶 הליכה 20 דקות + ויזואליזציה', type: 'easy' },
+      ].map(function(d) {
+        var col = { run:'var(--pri)', str:'var(--yellow)', rest:'var(--orange)', speed:'var(--red)', sleep:'#00e5ff', easy:'rgba(0,255,136,.6)' }[d.type];
+        return '<div style="display:flex;gap:10px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:5px">'
+          + '<div style="font-size:10px;color:' + col + ';font-weight:800;white-space:nowrap;min-width:70px">' + d.day + '</div>'
+          + '<div style="font-size:11px;color:var(--txt)">' + d.act + '</div></div>';
+      }).join('')
+    + '<div style="margin-top:10px;font-size:10px;color:var(--txt3);padding:8px;background:rgba(255,214,10,.04);border:1px solid rgba(255,214,10,.15);border-radius:8px">💡 אכל יותר פחמימות ב-3 הימים האחרונים · שתה 4+ ליטר · שינה 9 שעות</div>';
+  weekOut.insertBefore(card, weekOut.firstChild);
+}
+
+
+function toggleMuscle(id){
+  if(!muscleState)muscleState={};
+  muscleState[id]=muscleState[id]==='sore'?'fresh':muscleState[id]==='partial'?'sore':'partial';
+  sv(K.REC+'_muscles',muscleState);
+  initMuscleGrid();
+}
+
+// ═══════════════════════════════════════════════════
+// COMBAT SCORE
+// ═══════════════════════════════════════════════════
+function calcCombatScore(){
+  var pg=ld(K.P,[]);
+  var runScore=pg.length?Math.min(100,parseInt(pg[0].bar||0)):0;
+  var strData=ld('cf7_str_last',{});
+  var strScore=strData.score||0;
+  var recEl=document.getElementById('rec-score');
+  var recPct=recEl?parseInt(recEl.textContent)||50:50;
+  var total=Math.round(runScore*0.4+strScore*0.35+recPct*0.25);
+  var el=document.getElementById('combat-score-ring');
+  var fill=document.getElementById('combat-score-fill');
+  var lbl=document.getElementById('combat-score-label');
+  if(el){el.textContent=total;el.style.color=total>=80?'var(--pri)':total>=60?'var(--yellow)':total>=40?'var(--orange)':'var(--red)';}
+  if(fill)setTimeout(function(){fill.style.width=total+'%';},100);
+  if(lbl)lbl.textContent=total>=80?'🔥 מוכן ללחימה — ביצועי שיא':total>=60?'✅ רמה גבוהה — קדימה':total>=40?'⚡ בינוני — שיפור אפשרי':'🔴 צריך מנוחה';
+  var csRun=document.getElementById('cs-run');
+  var csStr=document.getElementById('cs-str');
+  var csRec=document.getElementById('cs-rec');
+  if(csRun)csRun.textContent=runScore||'--';
+  if(csStr)csStr.textContent=strScore||'--';
+  if(csRec)csRec.textContent=recPct+'%';
+}
+
 </script>
-
-<!-- ═══════════════════════════════════════════════════
-     FIREBASE — Multi-user sync
-     Replace the 6 YOUR_* values with your Firebase project config
-     ═══════════════════════════════════════════════════ -->
-
-<!-- Auth Modal -->
-<div id="auth-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:20000;overflow-y:auto;padding:20px">
-  <div style="max-width:360px;margin:30px auto;background:var(--card);border:1px solid var(--b2);border-radius:18px;padding:24px">
-    <div style="text-align:center;margin-bottom:18px">
-      <div style="font-family:var(--fd);font-size:20px;color:var(--pri);letter-spacing:2px">COMBAT FIT</div>
-      <div style="font-size:11px;color:var(--txt2);margin-top:3px">הרשם כדי לשמור נתונים בענן</div>
-    </div>
-    <div style="display:flex;gap:4px;background:var(--card2);border-radius:10px;padding:4px;margin-bottom:14px">
-      <button id="abt-l" onclick="aTab('l')" style="flex:1;padding:8px;border:none;border-radius:8px;font-weight:900;font-size:12px;cursor:pointer;background:var(--pri);color:#000;transition:.2s">כניסה</button>
-      <button id="abt-r" onclick="aTab('r')" style="flex:1;padding:8px;border:none;border-radius:8px;font-weight:900;font-size:12px;cursor:pointer;background:transparent;color:var(--txt2);transition:.2s">הרשמה</button>
-    </div>
-    <div id="a-name-row" style="display:none"><label style="font-size:11px;color:var(--txt2)">שם</label><input id="a-name" type="text" placeholder="ישראל כהן" style="margin-bottom:8px"/></div>
-    <label style="font-size:11px;color:var(--txt2)">אימייל</label>
-    <input id="a-email" type="email" placeholder="mail@example.com" style="margin-bottom:8px" autocomplete="email"/>
-    <label style="font-size:11px;color:var(--txt2)">סיסמה (6+ תווים)</label>
-    <input id="a-pass" type="password" placeholder="••••••••" style="margin-bottom:14px" autocomplete="current-password"/>
-    <div id="a-err" style="display:none;background:rgba(255,45,85,.1);border:1px solid rgba(255,45,85,.3);border-radius:8px;padding:8px;font-size:11px;color:var(--red);margin-bottom:10px;text-align:center"></div>
-    <button id="a-sub" onclick="aSubmit()" class="btn bp" style="width:100%;font-size:14px;font-weight:900;padding:13px;margin-bottom:10px">כניסה</button>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-      <div style="flex:1;height:1px;background:var(--b2)"></div><span style="font-size:10px;color:var(--txt3)">או</span><div style="flex:1;height:1px;background:var(--b2)"></div>
-    </div>
-    <button onclick="aGoogle()" style="width:100%;padding:11px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;font-size:12px;font-weight:700;color:var(--txt);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
-      <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      Google
-    </button>
-    <button onclick="aSkip()" style="width:100%;padding:9px;background:transparent;border:none;font-size:11px;color:var(--txt3);cursor:pointer">המשך ללא חשבון (שמירה מקומית בלבד)</button>
-  </div>
-</div>
 
 <!-- Firebase SDK (ES module) -->
 <script type="module">
@@ -4614,121 +5154,102 @@ import{getFirestore,doc,setDoc,getDoc,serverTimestamp,
   from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const FC={
-  apiKey:           "YOUR_API_KEY",
-  authDomain:       "YOUR_PROJECT.firebaseapp.com",
-  projectId:        "YOUR_PROJECT_ID",
-  storageBucket:    "YOUR_PROJECT.appspot.com",
-  messagingSenderId:"YOUR_SENDER_ID",
-  appId:            "YOUR_APP_ID"
+  apiKey:           "AIzaSyAWcDNu_VJojA-wS_f-BbFcSyW56KSE5Ng",
+  authDomain:       "app-for-army.firebaseapp.com",
+  projectId:        "app-for-army",
+  storageBucket:    "app-for-army.firebasestorage.app",
+  messagingSenderId:"1023834576325",
+  appId:            "1:1023834576325:web:4cfa5653d257245ae267ac"
 };
 
-if(!FC.apiKey.startsWith('YOUR_')){
-  try{
-    const app=initializeApp(FC);
-    const auth=getAuth(app);
-    const db=getFirestore(app);
-    window._FB={auth,db,doc,setDoc,getDoc,serverTimestamp,
-      collection,getDocs,query,orderBy,limit,
-      signInWithEmailAndPassword,createUserWithEmailAndPassword,
-      signOut,updateProfile,GoogleAuthProvider,signInWithPopup};
+try{
+  const app=initializeApp(FC);
+  const auth=getAuth(app);
+  const db=getFirestore(app);
+  window._FB={auth,db,doc,setDoc,getDoc,serverTimestamp,
+    collection,getDocs,query,orderBy,limit,
+    signInWithEmailAndPassword,createUserWithEmailAndPassword,
+    signOut,updateProfile,GoogleAuthProvider,signInWithPopup};
 
-    // ══ PRIVATE keys (saved under /users/<uid>) ══
-    const PRIVATE_KEYS=[
-      'cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7ath','cf7rec',
-      'cf7_profile','cf7_workout_history','cf7_ath_workouts',
-      'cf7_coach_notes','cf7_att'
-    ];
-    // ══ PUBLIC keys (shared leaderboard under /leaderboard/<uid>) ══
-    // Leaderboard entry: name + score only — no personal data
+  const PRIVATE_KEYS=[
+    'cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7ath','cf7rec',
+    'cf7lb','cf7_profile','cf7_workout_history','cf7_ath_workouts',
+    'cf7_coach_notes','cf7_att','cf7rec_muscles'
+  ];
 
-    // Sync DOWN from Firestore to localStorage (called on login)
-    async function syncDown(uid){
-      try{
-        const snap=await getDoc(doc(db,'users',uid));
-        if(snap.exists()){
-          const d=snap.data();
-          PRIVATE_KEYS.forEach(k=>{if(d[k]!=null)localStorage.setItem(k,d[k]);});
-          if(typeof refreshDash==='function') setTimeout(refreshDash,200);
-          if(typeof notify==='function') notify('☁️ נתונים סונכרנו!','p');
-        } else {
-          syncUp(uid); // First login — push local data up
-        }
-      }catch(e){console.warn('syncDown:',e);}
-    }
+  async function syncDown(uid){
+    try{
+      const snap=await getDoc(doc(db,'users',uid));
+      if(snap.exists()){
+        const d=snap.data();
+        PRIVATE_KEYS.forEach(k=>{if(d[k]!=null)localStorage.setItem(k,d[k]);});
+        if(typeof refreshDash==='function')setTimeout(refreshDash,200);
+        if(typeof notify==='function')notify('☁️ נתונים סונכרנו!','p');
+      } else { syncUp(uid); }
+    }catch(e){console.warn('syncDown:',e);}
+  }
 
-    // Sync UP private data to Firestore (debounced, called on every save)
-    let _st=null;
-    window._syncUp=()=>{clearTimeout(_st);_st=setTimeout(()=>syncUp(window._fbUID),2500);};
-    async function syncUp(uid){
-      if(!uid)return;
-      try{
-        const d={uid,ts:serverTimestamp(),displayName:window._fbUser?.displayName||''};
-        PRIVATE_KEYS.forEach(k=>{try{const v=localStorage.getItem(k);if(v!=null)d[k]=v;}catch{}});
-        await setDoc(doc(db,'users',uid),d,{merge:true});
-        const dot=document.getElementById('sync-dot');
-        if(dot){dot.style.background='var(--pri)';dot.title='נשמר ✅';
-          setTimeout(()=>{dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';},3000);}
-      }catch(e){console.warn('syncUp:',e);}
-    }
-
-    // Push leaderboard score to PUBLIC collection (name + score only)
-    window._pushLBScore=async(name,score,unit)=>{
-      if(!window._fbUID)return;
-      try{
-        await setDoc(doc(db,'leaderboard',window._fbUID),
-          {name,score,unit,ts:serverTimestamp()},{merge:true});
-      }catch(e){console.warn('pushLB:',e);}
-    };
-
-    // Pull leaderboard from PUBLIC collection (all users)
-    window._pullLBScores=async()=>{
-      if(!window._FB)return null;
-      try{
-        const q=query(collection(db,'leaderboard'),orderBy('score','desc'),limit(50));
-        const snap=await getDocs(q);
-        return snap.docs.map(d=>({...d.data(),uid:d.id}));
-      }catch(e){console.warn('pullLB:',e);return null;}
-    };
-
-    // Patch localStorage.setItem to auto-sync private keys
-    const _lsSet=localStorage.setItem.bind(localStorage);
-    localStorage.setItem=function(k,v){
-      _lsSet(k,v);
-      if(window._fbUID&&PRIVATE_KEYS.includes(k)) window._syncUp&&window._syncUp();
-    };
-
-    // Auth state listener
-    onAuthStateChanged(auth,user=>{
-      window._fbUser=user||null;
-      window._fbUID=user?.uid||null;
-      const badge=document.getElementById('fb-badge');
-      const abtn=document.getElementById('auth-top-btn');
+  let _st=null;
+  window._syncUp=()=>{clearTimeout(_st);_st=setTimeout(()=>syncUp(window._fbUID),2500);};
+  async function syncUp(uid){
+    if(!uid)return;
+    try{
+      const d={uid,ts:serverTimestamp()};
+      PRIVATE_KEYS.forEach(k=>{try{const v=localStorage.getItem(k);if(v!=null)d[k]=v;}catch{}});
+      await setDoc(doc(db,'users',uid),d,{merge:true});
       const dot=document.getElementById('sync-dot');
-      if(user){
-        const name=user.displayName||user.email?.split('@')[0]||'משתמש';
-        if(badge){badge.textContent='👤 '+name;badge.style.display='flex';}
-        if(abtn)abtn.style.display='none';
-        if(dot){dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';}
-        syncDown(user.uid);
-      } else {
-        if(badge)badge.style.display='none';
-        if(abtn)abtn.style.display='block';
-        if(dot){dot.style.background='rgba(255,255,255,.1)';dot.title='לא מחובר';}
-        if(!localStorage.getItem('cf7_skip_auth')){
-          setTimeout(()=>{
-            const m=document.getElementById('auth-modal');
-            if(m)m.style.display='block';
-          },800);
-        }
-      }
-    });
+      if(dot){dot.style.background='var(--pri)';dot.title='נשמר ✅';
+        setTimeout(()=>{dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';},3000);}
+    }catch(e){console.warn('syncUp:',e);}
+  }
 
-    window._fbSignOut=()=>signOut(auth);
-    console.info('Firebase: initialized ✅');
-  }catch(e){console.warn('Firebase init:',e);}
-} else {
-  console.info('Firebase: running in LOCAL mode (config not filled)');
-}
+  window._pushLBScore=async(name,score,unit)=>{
+    if(!window._fbUID)return;
+    try{await setDoc(doc(db,'leaderboard',window._fbUID),{name,score,unit,ts:serverTimestamp()},{merge:true});}
+    catch(e){console.warn('pushLB:',e);}
+  };
+
+  window._pullLBScores=async()=>{
+    try{
+      const q=query(collection(db,'leaderboard'),orderBy('score','desc'),limit(50));
+      const snap=await getDocs(q);
+      return snap.docs.map(d=>({...d.data(),uid:d.id}));
+    }catch(e){return null;}
+  };
+
+  const _lsSet=localStorage.setItem.bind(localStorage);
+  localStorage.setItem=function(k,v){
+    _lsSet(k,v);
+    if(window._fbUID&&PRIVATE_KEYS.includes(k))window._syncUp&&window._syncUp();
+  };
+
+  onAuthStateChanged(auth,user=>{
+    window._fbUser=user||null;
+    window._fbUID=user?.uid||null;
+    const badge=document.getElementById('fb-badge');
+    const abtn=document.getElementById('auth-top-btn');
+    const dot=document.getElementById('sync-dot');
+    if(user){
+      const name=user.displayName||user.email?.split('@')[0]||'לוחם';
+      if(badge){badge.textContent='👤 '+name;badge.style.display='flex';}
+      if(abtn)abtn.style.display='none';
+      if(dot){dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';}
+      const m=document.getElementById('auth-modal');if(m)m.style.display='none';
+      syncDown(user.uid);
+    } else {
+      if(badge)badge.style.display='none';
+      if(abtn)abtn.style.display='block';
+      if(dot){dot.style.background='rgba(255,255,255,.1)';dot.title='לא מחובר';}
+      if(!localStorage.getItem('cf7_skip_auth')){
+        setTimeout(()=>{const m=document.getElementById('auth-modal');if(m)m.style.display='block';},800);
+      }
+    }
+  });
+
+  window._fbSignOut=()=>signOut(auth);
+  console.info('Firebase ✅ app-for-army');
+}catch(e){console.warn('Firebase init:',e);}
 </script>
+
 </body>
 </html>
