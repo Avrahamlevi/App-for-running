@@ -476,10 +476,13 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
   </div>
   <div class="top-right">
     <span class="coach-badge">🎖 COACH</span>
+    <div id="msg-badge" onclick="openInbox()" style="display:none;background:var(--red);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:900;text-align:center;line-height:18px;cursor:pointer;flex-shrink:0;position:relative">0</div>
     <div id="sync-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);cursor:pointer;transition:.3s;flex-shrink:0" title="מצב שמירה" onclick="typeof openUserMenu==='function'&&openUserMenu()"></div>
     <div class="live-dot"></div>
     <div class="clk" id="clock">00:00</div>
     <button id="auth-top-btn" onclick="document.getElementById('auth-modal').style.display='block'" style="display:none;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--pri);border-radius:8px;padding:4px 8px;font-size:10px;font-weight:800;cursor:pointer">☁ כניסה</button><div id="fb-badge" onclick="openUserMenu()" style="display:none;align-items:center;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);border-radius:16px;padding:3px 9px;font-size:10px;font-weight:800;color:var(--pri);cursor:pointer;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+    <button id="theme-btn" onclick="toggleTheme()" style="background:none;border:none;font-size:18px;cursor:pointer;padding:2px 4px;flex-shrink:0" title="שנה מצב תצוגה">🌙</button>
+    <button id="install-btn" onclick="installPWA()" style="display:none;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--pri);border-radius:8px;padding:4px 9px;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap">📲 התקן</button>
     <button class="mode-btn" id="mode-btn" onclick="toggleCM()">🎖 מאמן</button>
   </div>
 </div>
@@ -551,7 +554,24 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
   <div class="card">
     <div class="sh">🔥 אימונים השבוע</div>
     <div class="wt" id="week-tracker"></div>
-    <div class="mini" id="week-note" style="text-align:center;margin-top:4px"></div>
+
+      <!-- ══ STREAK + COMPETITION ══ -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="card" style="background:linear-gradient(135deg,rgba(255,140,0,.08),var(--card));border-color:rgba(255,140,0,.3);margin:0">
+          <div style="font-size:10px;color:var(--orange);font-weight:900;margin-bottom:4px">🔥 רצף ימים</div>
+          <div id="streak-num" style="font-family:var(--fd);font-size:44px;color:#ff8c00;line-height:1">0</div>
+          <div id="streak-sub" style="font-size:9px;color:var(--txt3);margin-top:3px">לא אומן היום</div>
+          <div style="display:flex;gap:3px;margin-top:8px" id="streak-dots"></div>
+          <div id="streak-best" style="font-size:9px;color:var(--txt3);margin-top:4px">שיא: 0</div>
+        </div>
+        <div class="card" style="background:linear-gradient(135deg,rgba(10,132,255,.08),var(--card));border-color:rgba(10,132,255,.3);margin:0">
+          <div style="font-size:10px;color:var(--cyan);font-weight:900;margin-bottom:4px">⚔️ אתגר שבועי</div>
+          <div id="weekly-ch-name" style="font-size:11px;font-weight:700;color:var(--txt);margin-bottom:6px;line-height:1.3">טוען...</div>
+          <div id="weekly-ch-rank" style="font-family:var(--fd);font-size:28px;color:#4dd0e1;line-height:1">--</div>
+          <div style="font-size:9px;color:var(--txt3)">הדירוג שלך</div>
+          <button onclick="showPg('lb');setTimeout(()=>document.querySelector('#lb-tabs .tab:last-child')?.click(),300)" style="width:100%;margin-top:8px;padding:6px;background:rgba(10,132,255,.1);border:1px solid rgba(10,132,255,.2);color:var(--cyan);border-radius:7px;font-size:10px;font-weight:800;cursor:pointer">השתתף ⚔️</button>
+        </div>
+      </div>    <div class="mini" id="week-note" style="text-align:center;margin-top:4px"></div>
     <div style="margin-top:8px"><div class="sh y">📅 30 יום אחרונים</div><div class="heat-grid" id="heat-grid"></div></div>
   </div>
 
@@ -591,7 +611,6 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
     <button class="tab" onclick="tt('tb-idf',this)">🪖 ניקוד צה"ל</button>
     <button class="tab" onclick="tt('tb-cm',this)">🔴 מצב קרב</button>
     <button class="tab" onclick="tt('tb-pred',this)">🎯 מתי מוכן</button>
-    <button class="tab" onclick="tt('tb-cert',this)">🏅 תעודה</button>
   </div>
 
   <div id="tb-br">
@@ -839,6 +858,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
           <button class="btn" id="dlv-fresh" onclick="setDuneLv('fresh',this)" style="background:rgba(0,255,136,.08);border:2px solid var(--pri);color:var(--pri);font-size:11px;font-weight:900">🟢 מתחיל</button>
           <button class="btn" id="dlv-mid" onclick="setDuneLv('mid',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">🟡 קרבי</button>
           <button class="btn" id="dlv-hard" onclick="setDuneLv('hard',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">🔴 גיבוש</button>
+          <button class="btn" id="dlv-gibush" onclick="setDuneLv('gibush',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">💀 שייטת</button>
           <button class="btn" id="dlv-elite" onclick="setDuneLv('elite',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">💀 שייטת/מטכ"ל</button>
         </div>
 
@@ -953,9 +973,36 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
       </div>
       <label>🎖 יחידת יעד</label>
       <select id="pred-unit" onchange="calcReadiness()" style="margin-bottom:10px">
-        <option value="golani">גולני</option><option value="para">צנחנים</option>
-        <option value="egoz">אגוז</option><option value="duvdevan">דובדבן</option>
-        <option value="shai">שייטת 13</option><option value="matkal">סיירת מטכ"ל</option>
+        <optgroup label="── גדודים ──">
+          <option value="nahal">🌿 נח"ל</option>
+          <option value="golani">🟢 גולני</option>
+          <option value="kfir">🦁 כפיר</option>
+          <option value="para">🪂 צנחנים</option>
+          <option value="giv">🔶 גבעתי</option>
+        </optgroup>
+        <optgroup label="── סיירות חי"ר ──">
+          <option value="nahalsay">🌵 סיירת נח"ל</option>
+          <option value="egozsay">🦅 סיירת גולני</option>
+          <option value="givsay">🦂 סיירת גבעתי</option>
+          <option value="haruv">🌿 חרוב</option>
+          <option value="tzansay">🪂 סיירת צנחנים</option>
+        </optgroup>
+        <optgroup label="── יחידות מיוחדות ──">
+          <option value="oketz">🐕 עוקץ</option>
+          <option value="lotar">🔫 לוט"ר</option>
+          <option value="yaalom">💎 יהל"ם</option>
+        </optgroup>
+        <optgroup label="── קומנדו ──">
+          <option value="duvdevan">🍒 דובדבן</option>
+          <option value="maglan">🎯 מגלן</option>
+          <option value="egoz">💀 אגוז</option>
+        </optgroup>
+        <optgroup label="── עילית ──">
+          <option value="unit669">🚁 יחידה 669</option>
+          <option value="shaldag">🦅 שלדג</option>
+          <option value="shai">🤿 שייטת 13</option>
+          <option value="matkal">🔱 סיירת מטכ"ל</option>
+        </optgroup>
       </select>
       <label>⏰ שעות אימון בשבוע</label>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
@@ -966,21 +1013,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
       </div>
       <div id="pred-result"></div>
     </div>
-  </div>
-
-  <!-- ════ TAB: תעודת כושר קרבי ════ -->
-  <div id="tb-cert" style="display:none">
-    <div class="card hot">
-      <div class="sh">🏅 תעודת כושר קרבי</div>
-      <div class="mini" style="margin-bottom:12px">תעודה אישית עם כל הנתונים שלך — שתף, שמור, הגאה</div>
-      <button class="btn bp" style="width:100%;margin-bottom:12px" onclick="generateCert()">🏅 צור תעודה אישית</button>
-      <div id="cert-preview" style="display:none">
-        <canvas id="cert-canvas" style="width:100%;border-radius:12px;border:1px solid var(--b2)"></canvas>
-        <button class="btn bp" style="width:100%;margin-top:10px" onclick="downloadCert()">💾 הורד תמונה</button>
-        <button class="btn bs bsm" style="width:100%;margin-top:6px" onclick="shareCert()">📤 שתף</button>
-      </div>
-    </div>
-  </div>
+  </div>  </div>
 
 </div><!-- /p-test -->
 
@@ -1074,6 +1107,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
   </div>
   <div class="r2" style="margin-bottom:10px">
     <button class="btn bp" onclick="sharePerf()">📱 שתף ביצועים</button>
+    <button class="btn bs" onclick="exportReport()">📤 ייצא דוח</button>
     <button class="btn bs" onclick="refreshShareCard()">🔄 רענן כרטיס</button>
   </div>
 
@@ -1082,6 +1116,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
     <button class="tab on" onclick="lbTab('week',this)">שבוע</button>
     <button class="tab" onclick="lbTab('month',this)">חודש</button>
     <button class="tab" onclick="lbTab('all',this)">הכל</button>
+    <button class="tab" onclick="lbTab('challenge',this)">⚔️ אתגר</button>
   </div>
 
   <!-- Add competitor -->
@@ -1109,6 +1144,26 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 
   <div id="lb-out"></div>
 
+  <!-- Challenge card — shown when challenge tab selected -->
+  <div id="lb-challenge-card" style="display:none">
+    <div class="card" style="border-color:rgba(255,45,85,.3);background:linear-gradient(135deg,rgba(255,45,85,.06),var(--card))">
+      <div class="sh r">⚔️ אתגר שבועי</div>
+      <div id="ch-title" style="font-weight:900;font-size:14px;margin-bottom:4px">טוען...</div>
+      <div id="ch-desc" style="font-size:10px;color:var(--txt3);margin-bottom:12px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:9px;padding:10px;text-align:center">
+          <div style="font-size:9px;color:var(--txt3)">התוצאה שלי</div>
+          <input id="challenge-score" type="number" inputmode="decimal" step="0.1" placeholder="0" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:28px;color:var(--red);width:100%;outline:none"/>
+        </div>
+        <div style="background:var(--card2);border-radius:9px;padding:10px;text-align:center">
+          <div style="font-size:9px;color:var(--txt3)">הדירוג שלי</div>
+          <div id="challenge-rank" style="font-family:var(--fd);font-size:28px;color:var(--yellow)">--</div>
+        </div>
+      </div>
+      <button onclick="submitChallenge()" class="btn br" style="width:100%;margin-bottom:12px">⚔️ הגש תוצאה</button>
+      <div id="challenge-lb"></div>
+    </div>
+  </div>
   <!-- ═══ COACH ONLY: Full coaching dashboard ═══ -->
   <div class="co">
     <!-- KPI overview -->
@@ -1183,6 +1238,8 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
     <button class="tab" onclick="trt('tr-hist',this)">📜 היסטוריה</button>
     <button class="tab" onclick="trt('tr-tmr',this)">⏱ טיימר</button>
     <button class="tab" onclick="trt('tr-rec',this)">🩹 שיקום</button>
+    <button class="tab" onclick="trt('tr-body',this)">📏 מידות</button>
+    <button class="tab" onclick="trt('tr-hr',this)">❤️ דופק</button>
   </div>
 
   <div id="tr-str">
@@ -1256,36 +1313,69 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
         </div>
         <div id="leaflet-map" style="width:100%;height:100%;display:none"></div>
       </div>
-      <div class="route-stats" id="route-stats" style="margin-top:10px">
-        <div class="rstat"><div class="rstat-v cy" id="rs-dist">0.0</div><div class="rstat-l">ק"מ</div></div>
-        <div class="rstat"><div class="rstat-v or" id="rs-time">--:--</div><div class="rstat-l">זמן</div></div>
-        <div class="rstat"><div class="rstat-v yl" id="rs-elev">0</div><div class="rstat-l">עלייה מ'</div></div>
-        <div class="rstat"><div class="rstat-v" id="rs-cal">0</div><div class="rstat-l">קלוריות</div></div>
-      </div>
-      <div class="r2" style="margin-top:8px">
-        <div><label>קצב יעד (ד:ש/ק"מ)</label><input id="rt-pace" type="text" value="5:30" inputmode="numeric" oninput="updateRouteStats()"/></div>
-        <div><label>משקל ק"ג</label><input id="rt-wgt" type="number" value="72" oninput="updateRouteStats()"/></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">
-        <button class="btn bs bsm" onclick="undoRoutePt()">↩ בטל</button>
-        <button class="btn br bsm" onclick="clearRoute()">🗑 נקה</button>
-        <button class="btn bp bsm" onclick="saveRoute()">💾 שמור</button>
-      </div>
-      <!-- BIG START RUN BUTTON -->
-      <button id="run-start-btn" onclick="startRun()" style="margin-top:10px;width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;font-size:17px;font-weight:900;letter-spacing:1.5px;border:none;border-radius:13px;padding:17px;box-shadow:0 4px 24px rgba(0,255,136,.4);cursor:pointer;font-family:var(--fd)">
-        ▶ הפעל מעקב ריצה
-      </button>
-    </div>
+      <div id="route-stats" style="margin-top:10px">
+        <!-- MapRunner-style live stats -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <div style="background:var(--card2);border-radius:12px;padding:12px;text-align:center;border:1px solid var(--b1)">
+            <div style="font-size:9px;color:var(--txt3);margin-bottom:2px">מרחק</div>
+            <div class="rstat-v cy" id="rs-dist" style="font-family:var(--fd);font-size:32px;line-height:1;color:var(--cyan)">0.0</div>
+            <div style="font-size:10px;color:var(--txt3)">ק"מ</div>
+          </div>
+          <div style="background:var(--card2);border-radius:12px;padding:12px;text-align:center;border:1px solid var(--b1)">
+            <div style="font-size:9px;color:var(--txt3);margin-bottom:2px">זמן</div>
+            <div class="rstat-v or" id="rs-time" style="font-family:var(--fd);font-size:32px;line-height:1;color:var(--orange)">--:--</div>
+            <div style="font-size:10px;color:var(--txt3)">דקות</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+          <div style="background:var(--card2);border-radius:10px;padding:10px;text-align:center">
+            <div style="font-size:9px;color:var(--txt3)">קצב</div>
+            <div id="rs-pace" style="font-family:var(--fd);font-size:20px;color:var(--pri)">--:--</div>
+            <div style="font-size:8px;color:var(--txt3)">דק/ק"מ</div>
+          </div>
+          <div style="background:var(--card2);border-radius:10px;padding:10px;text-align:center">
+            <div style="font-size:9px;color:var(--txt3)">עלייה</div>
+            <div id="rs-elev" style="font-family:var(--fd);font-size:20px;color:var(--yellow)">0</div>
+            <div style="font-size:8px;color:var(--txt3)">מטרים</div>
+          </div>
+          <div style="background:var(--card2);border-radius:10px;padding:10px;text-align:center">
+            <div style="font-size:9px;color:var(--txt3)">קלוריות</div>
+            <div id="rs-cal" style="font-family:var(--fd);font-size:20px;color:var(--red)">0</div>
+            <div style="font-size:8px;color:var(--txt3)">kcal</div>
+          </div>
+        </div>
 
-    <div class="card">
-      <div class="sh c">⏱ פיצולי קצב</div>
-      <div id="splits-list"><div class="mini" style="text-align:center;padding:10px">הוסף נקודות למסלול</div></div>
-    </div>
-    <div class="card">
-      <div class="sh y">💾 מסלולים שמורים</div>
-      <div id="saved-routes"></div>
-    </div>
-  </div>
+        <!-- Splits per KM -->
+        <div id="rs-splits-bar" style="display:none;background:var(--card2);border-radius:10px;padding:10px;margin-bottom:10px">
+          <div style="font-size:10px;color:var(--txt3);margin-bottom:6px">קצב לק"מ (פיצולים)</div>
+          <div id="rs-splits-chart" style="display:flex;align-items:flex-end;gap:4px;height:40px"></div>
+          <div id="rs-splits-labels" style="display:flex;gap:4px;margin-top:3px"></div>
+        </div>
+
+        <div class="r2" style="margin-top:8px">
+          <div><label>קצב יעד (ד:ש/ק"מ)</label><input id="rt-pace" type="text" value="5:30" inputmode="numeric" oninput="refreshLPolyline()"/></div>
+          <div><label>משקל ק"ג</label><input id="rt-wgt" type="number" value="72" oninput="refreshLPolyline()"/></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">
+          <button class="btn bs bsm" onclick="undoRoutePt()">↩ בטל</button>
+          <button class="btn br bsm" onclick="clearRoute()">🗑 נקה</button>
+          <button class="btn bp bsm" onclick="saveRoute()">💾 שמור</button>
+        </div>
+        <!-- RUN START BUTTON -->
+        <button id="run-start-btn" onclick="startRun()" style="margin-top:10px;width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;font-size:17px;font-weight:900;letter-spacing:1.5px;border:none;border-radius:13px;padding:17px;box-shadow:0 4px 24px rgba(0,255,136,.4);cursor:pointer;font-family:var(--fd)">
+          ▶ הפעל מעקב ריצה GPS
+        </button>
+        <!-- LIVE RUN STATUS -->
+        <div id="live-run-bar" style="display:none;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);border-radius:12px;padding:12px;margin-top:10px;text-align:center">
+          <div style="font-size:11px;color:var(--pri);font-weight:900;margin-bottom:6px">🔴 ריצה פעילה</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <div><div id="lr-dist" style="font-family:var(--fd);font-size:24px;color:var(--pri)">0.0</div><div style="font-size:9px;color:var(--txt3)">ק"מ</div></div>
+            <div><div id="lr-pace" style="font-family:var(--fd);font-size:24px;color:var(--yellow)">--:--</div><div style="font-size:9px;color:var(--txt3)">קצב</div></div>
+            <div><div id="lr-time" style="font-family:var(--fd);font-size:24px;color:var(--orange)">0:00</div><div style="font-size:9px;color:var(--txt3)">זמן</div></div>
+          </div>
+          <button onclick="stopRun()" style="margin-top:10px;width:100%;padding:10px;background:rgba(255,45,85,.1);border:1px solid var(--red);color:var(--red);border-radius:10px;font-size:13px;font-weight:900;cursor:pointer">⏹ עצור ושמור</button>
+        </div>
+      </div>
 
   <!-- ════ WORKOUT BUILDER ════ -->
   <div id="tr-build" style="display:none">
@@ -1405,6 +1495,95 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
   </div>
 </div>
 
+  <!-- ════ BODY MEASUREMENTS ════ -->
+  <div id="tr-body" style="display:none">
+    <div class="card">
+      <div class="sh p">📏 מדידות גוף ומעקב</div>
+      <div class="mini" style="margin-bottom:12px">עקוב אחר שינויים בהרכב הגוף לאורך זמן</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;cursor:pointer">
+          <div style="font-size:9px;color:var(--txt3);margin-bottom:3px">⚖️ משקל (ק"ג)</div>
+          <input id="bm-weight" type="number" inputmode="decimal" step="0.1" placeholder="72" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:30px;color:var(--pri);width:100%;outline:none" oninput="calcBMI()"/>
+        </div>
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;cursor:pointer">
+          <div style="font-size:9px;color:var(--txt3);margin-bottom:3px">📐 גובה (ס"מ)</div>
+          <input id="bm-height" type="number" inputmode="numeric" placeholder="175" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:30px;color:var(--yellow);width:100%;outline:none" oninput="calcBMI()"/>
+        </div>
+      </div>
+      <div id="bmi-result" style="display:none;text-align:center;background:linear-gradient(135deg,rgba(0,255,136,.06),var(--card2));border:1px solid rgba(0,255,136,.15);border-radius:12px;padding:14px;margin-bottom:12px">
+        <div style="font-size:9px;color:var(--txt3);margin-bottom:3px">BMI — מדד מסת גוף</div>
+        <div id="bmi-val" style="font-family:var(--fd);font-size:44px;color:var(--pri);line-height:1">--</div>
+        <div id="bmi-label" style="font-size:11px;color:var(--txt2);margin-top:4px"></div>
+        <div style="height:5px;background:linear-gradient(90deg,#4dd0e1,var(--pri),var(--yellow),var(--orange),var(--red));border-radius:3px;margin:8px 0;position:relative">
+          <div id="bmi-indicator" style="position:absolute;top:-3px;width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--card);transition:left .8s;left:50%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--txt3)"><span>חסר 18.5</span><span>תקין 25</span><span>עודף 30</span><span>השמנה</span></div>
+      </div>
+      <div class="sh y" style="margin-bottom:8px">📐 היקפים (ס"מ)</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:9px;padding:9px;text-align:center"><div style="font-size:8px;color:var(--txt3)">חזה</div><input id="bm-chest" type="number" inputmode="numeric" placeholder="--" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:20px;color:var(--txt);width:100%;outline:none"/></div>
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:9px;padding:9px;text-align:center"><div style="font-size:8px;color:var(--txt3)">מותניים</div><input id="bm-waist" type="number" inputmode="numeric" placeholder="--" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:20px;color:var(--txt);width:100%;outline:none"/></div>
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:9px;padding:9px;text-align:center"><div style="font-size:8px;color:var(--txt3)">ירכיים</div><input id="bm-hips" type="number" inputmode="numeric" placeholder="--" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:20px;color:var(--txt);width:100%;outline:none"/></div>
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:9px;padding:9px;text-align:center"><div style="font-size:8px;color:var(--txt3)">זרוע י'</div><input id="bm-arm" type="number" inputmode="numeric" placeholder="--" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:20px;color:var(--txt);width:100%;outline:none"/></div>
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:9px;padding:9px;text-align:center"><div style="font-size:8px;color:var(--txt3)">ירך י'</div><input id="bm-thigh" type="number" inputmode="numeric" placeholder="--" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:20px;color:var(--txt);width:100%;outline:none"/></div>
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:9px;padding:9px;text-align:center"><div style="font-size:8px;color:var(--txt3)">שוק י'</div><input id="bm-calf" type="number" inputmode="numeric" placeholder="--" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:20px;color:var(--txt);width:100%;outline:none"/></div>
+      </div>
+      <button class="btn bp" style="width:100%;margin-bottom:10px" onclick="saveMeasurements()">💾 שמור מדידה</button>
+      <div id="bm-history"></div>
+    </div>
+  </div>
+
+  <!-- ════ HEART RATE ZONES ════ -->
+  <div id="tr-hr" style="display:none">
+    <div class="card">
+      <div class="sh r">❤️ אזורי דופק + VO2max</div>
+      <div class="mini" style="margin-bottom:12px">חישוב אזורי אימון אישיים לפי פרמולת Karvonen</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;cursor:pointer">
+          <div style="font-size:9px;color:var(--txt3);margin-bottom:3px">🎂 גיל</div>
+          <input id="hr-age" type="number" inputmode="numeric" placeholder="20" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:32px;color:var(--pri);width:100%;outline:none" oninput="calcHRZones()"/>
+        </div>
+        <div onclick="this.querySelector('input').focus()" style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;cursor:pointer">
+          <div style="font-size:9px;color:var(--txt3);margin-bottom:3px">❤️ דופק מנוחה</div>
+          <input id="hr-rest" type="number" inputmode="numeric" placeholder="60" style="background:transparent;border:none;text-align:center;font-family:var(--fd);font-size:32px;color:var(--red);width:100%;outline:none" oninput="calcHRZones()"/>
+        </div>
+      </div>
+      <div id="hr-zones-result"></div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div class="sh y">🫁 מחשבון VO2max</div>
+      <div class="mini" style="margin-bottom:10px">יכולת אירובית מקסימלית — אינדיקטור כושר קרדיווסקולרי</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div><label>זמן ריצה 2K (דק:שנ)</label><input id="vo2-time" type="text" placeholder="8:30" inputmode="decimal"/></div>
+        <div><label>קצב לב בסיום</label><input id="vo2-hr" type="number" inputmode="numeric" placeholder="180"/></div>
+      </div>
+      <button class="btn bp" style="width:100%" onclick="calcVO2max()">🫁 חשב VO2max</button>
+      <div id="vo2-result" style="margin-top:10px"></div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div class="sh p">⏱ טיימר אינטרוול דופק</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div><label>אזור יעד</label>
+          <select id="hr-zone-target">
+            <option value="2">Zone 2 — בסיס (60-70%)</option>
+            <option value="3">Zone 3 — אירובי (70-80%)</option>
+            <option value="4" selected>Zone 4 — סף (80-90%)</option>
+            <option value="5">Zone 5 — מקסימום (90%+)</option>
+          </select>
+        </div>
+        <div><label>משך (דקות)</label>
+          <select id="hr-interval-dur"><option>10</option><option selected>20</option><option>30</option><option>45</option></select>
+        </div>
+      </div>
+      <button class="btn bp" style="width:100%" onclick="startHRInterval()">❤️ התחל אימון דופק</button>
+      <div id="hr-interval-display" style="display:none;margin-top:12px"></div>
+    </div>
+  </div>
+
+
+</div><!-- /p-train body -->
+</div><!-- /p-train -->
+
 <!-- ══════════════════════ AI COACH ══════════════════════ -->
 <div class="pg" id="p-ai">
   <div class="pgh"><span>🤖</span> מאמן AI</div>
@@ -1475,6 +1654,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 <script>
 'use strict';
 var muscleState={};
+var coachFilterMode='all';
 const MUSCLES=[
   {id:'quads',n:'ירכיים קדמיות (Quads)',icon:'🦵'},
   {id:'hamstrings',n:'ירכיים אחוריות (Hamstrings)',icon:'🦴'},
@@ -1661,13 +1841,13 @@ function showPg(p){
   if(p==='train')initMuscleGrid();
 }
 function tt(id,el){
-  ['tb-br','tb-gi','tb-pr','tb-1rm','tb-nu','tb-idf','tb-cm','tb-pred','tb-cert'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
+  ['tb-br','tb-gi','tb-pr','tb-1rm','tb-nu','tb-idf','tb-cm','tb-pred'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
   document.getElementById(id).style.display='block';
   el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
   if(id==='tb-cm')initCombatMode();
 }
 function trt(id,el){
-  ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
+  ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
   document.getElementById(id).style.display='block';
   el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
   if(id==='tr-route')initRoute();
@@ -2485,44 +2665,22 @@ async function renderLeaderboard(){
 
 function renderLBList(list,isCloud){
   if(!list.length){
-    document.getElementById('lb-out').innerHTML=`<div class="card" style="text-align:center;padding:20px">
-      <div style="font-size:32px;margin-bottom:8px">🏆</div>
-      <div class="mini">${isCloud?'היה הראשון בלידרבורד!':'הוסף את עצמך לתחרות!'}</div>
-      ${isCloud?'':'<div class="mini" style="margin-top:8px;opacity:.6">💡 הירשם לחשבון כדי להתחרות עם כולם בזמן אמת</div>'}
-    </div>`;
+    document.getElementById('lb-out').innerHTML='<div class="card" style="text-align:center;padding:20px"><div style="font-size:32px;margin-bottom:8px">🏆</div><div class="mini">'+(isCloud?'היה הראשון בלידרבורד!':'הוסף את עצמך!')+' </div>'+(isCloud?'':'<div class="mini" style="margin-top:8px;opacity:.6">💡 הירשם לחשבון לתחרות בזמן אמת</div>')+'</div>';
     return;
   }
-  const medals=['gold','silver','bronze'];
-  const rankEmoji=i=>i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
-  let html=`<div class="card">
-    <div class="sh" style="display:flex;align-items:center;justify-content:space-between">
-      <span>📊 לידרבורד ${isCloud?'☁️ חי':'מקומי'}</span>
-      ${isCloud?'<span style="font-size:10px;color:var(--pri);background:rgba(0,255,136,.1);padding:2px 8px;border-radius:8px">כל המשתמשים</span>':'<span style="font-size:10px;color:var(--txt3)">המכשיר שלך בלבד</span>'}
-    </div>`;
-  if(!isCloud){
-    html+=`<div style="font-size:11px;color:var(--yellow);background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2);border-radius:8px;padding:8px;margin-bottom:10px">
-      ☁️ הירשם לחשבון כדי לראות לידרבורד של כל השחקנים
-    </div>`;
-  }
-  list.slice(0,20).forEach((e,i)=>{
-    const medal=medals[i]||'';
-    const u=UNITS[e.unit]||UNITS.gen;
-    const rm=e.run&&e.run<900?`${Math.floor(e.run/60)}:${String(e.run%60).padStart(2,'0')}`:'--';
-    html+=`<div class="lb-row ${medal} ${e.isMe?'me-row':''}">
-      <div class="lb-rnk ${medal}">${rankEmoji(i)}</div>
-      <div class="lb-av">${e.emoji||'⚔'}</div>
-      <div class="lb-inf">
-        <div class="lb-nm">${e.nm}${e.isMe?' (אני)':''}</div>
-        <div class="lb-sub" style="color:${u.col}">${u.n}${rm!=='--'?' | 2K:'+rm:''}</div>
-      </div>
-      <div class="lb-sc">
-        <div class="lb-sc-n">${e.sc}</div>
-        <div class="lb-dl eq">/ 100</div>
-      </div>
-    </div>`;
+  var periodLabel={week:'השבוע',month:'החודש',all:'כל הזמן'}[_lbPeriod]||'כל הזמן';
+  var medals=['gold','silver','bronze'];
+  var rankEmoji=function(i){return i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'';};
+  var html2='<div class="card"><div class="sh" style="display:flex;align-items:center;justify-content:space-between"><span>📊 דירוג — '+periodLabel+'</span>'+(isCloud?'<span style="font-size:10px;color:var(--pri);background:rgba(0,255,136,.1);padding:2px 8px;border-radius:8px">☁️ חי</span>':'<span style="font-size:10px;color:var(--txt3)">מקומי</span>')+'</div>';
+  if(!isCloud)html2+='<div style="font-size:11px;color:var(--yellow);background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2);border-radius:8px;padding:8px;margin-bottom:10px">☁️ הירשם לחשבון לדירוג של כל השחקנים</div>';
+  list.slice(0,20).forEach(function(e,i){
+    var medal=medals[i]||'';
+    var u=UNITS[e.unit]||UNITS.gen||{n:'קרבי',col:'#888'};
+    var rm=e.run&&e.run<900?Math.floor(e.run/60)+':'+String(e.run%60).padStart(2,'0'):'--';
+    html2+='<div class="lb-row '+medal+' '+(e.isMe?'me-row':'')+'"><div class="lb-rnk '+medal+'">'+rankEmoji(i)+'</div><div class="lb-av">'+(e.emoji||'⚔')+'</div><div class="lb-inf"><div class="lb-nm">'+e.nm+(e.isMe?' (אני)':'')+'</div><div class="lb-sub" style="color:'+u.col+'">'+u.n+(rm!=='--'?' | 2K:'+rm:'')+'</div></div><div class="lb-sc"><div class="lb-sc-n">'+e.sc+'</div><div class="lb-dl eq">/ 100</div></div></div>';
   });
-  html+='</div>';
-  document.getElementById('lb-out').innerHTML=html;
+  html2+='</div>';
+  document.getElementById('lb-out').innerHTML=html2;
 }
 
 // ═══════════════════════════════════════════════════
@@ -3285,19 +3443,20 @@ function sendPlanToAthlete(i){openSendPlanModal();}
 // ANNOUNCEMENTS (broadcast)
 // ═══════════════════════════════════════════════════
 function openAnnouncementModal(){
-  const body=`
-  <div class="mini" style="margin-bottom:10px">הודעה זו תוצג לכל החניכים במצב ספורטאי:</div>
-  <label>כותרת</label><input id="ann-t" type="text" placeholder="כותרת קצרה (למשל: אימון מבחן ביום שישי)" maxlength="60"/>
-  <label>תוכן</label><textarea id="ann-m" rows="4" placeholder="פרטי ההודעה..." maxlength="400"></textarea>
-  <div class="qaction" style="margin-top:10px">
-    <button class="qaction-btn y" onclick="quickAnn('🎯 אימון מבחן ביום שישי 06:00 בפארק','הביאו מים + מד דופק. נמדוד 2K + שכיבות + מתח. תהיו בכושר!')">🎯 מבחן</button>
-    <button class="qaction-btn r" onclick="quickAnn('⚠️ אימון מבוטל היום','בגלל גשם, נדחה למחר באותה שעה')">⚠️ ביטול</button>
-    <button class="qaction-btn g" onclick="quickAnn('🎉 כל הכבוד!','השבוע יצא מצוין! המשיכו ככה!')">🎉 שבח</button>
-    <button class="qaction-btn p" onclick="quickAnn('📅 לוח השבוע','ראשון/שלישי/חמישי — אימונים. שישי — מבחן')">📅 לוח</button>
-  </div>
-  <button class="btn bo" style="margin-top:11px" onclick="sendAnnouncement()">📢 פרסם לכל החניכים</button>
-  <button class="btn bs" onclick="closeModal()">ביטול</button>`;
-  openModal('📢 הודעה לקבוצה',body);
+  openModal('📢 הודעה לכל החניכים',`
+    <div style="padding:10px 0">
+      <div style="font-size:11px;color:var(--txt2);margin-bottom:10px">ההודעה תישלח לכל החניכים ותוצג להם בכניסה הבאה</div>
+      <label>סוג</label>
+      <select id="ann-type" style="margin-bottom:10px">
+        <option value="announcement">📢 הודעה כללית</option>
+        <option value="plan">🎯 תוכנית אימונים</option>
+        <option value="feedback">📊 פידבק קבוצתי</option>
+        <option value="alert">⚠️ התראה חשובה</option>
+      </select>
+      <label>תוכן ההודעה</label>
+      <textarea id="ann-text" placeholder="כתוב הודעה לכל הקבוצה..." style="width:100%;height:90px;padding:10px;background:var(--card2);border:1px solid var(--b1);border-radius:10px;color:var(--txt);font-size:12px;resize:none;box-sizing:border-box;margin-bottom:12px"></textarea>
+      <button class="btn bp" style="width:100%" onclick="sendGroupAnnouncement()">📢 שלח לכל הקבוצה</button>
+    </div>`);
 }
 function quickAnn(t,m){
   document.getElementById('ann-t').value=t;
@@ -3453,7 +3612,68 @@ function exportAthletePdf(i){
     ${a.injuries?`<h2>🩹 פציעות</h2><div class="note">${a.injuries}</div>`:''}
     ${a.note?`<h2>📝 הערות מאמן</h2><div class="note">${a.note}</div>`:''}
     <button onclick="window.print()" style="margin-top:20px;background:#7c3aed;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-size:14px">🖨 הדפס / שמור PDF</button>
-    </body></html>`);
+    
+<!-- ═══ MESSAGE INBOX MODAL ═══ -->
+<div id="inbox-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:19000;overflow-y:auto;padding:16px">
+  <div style="max-width:400px;margin:0 auto">
+    <div style="background:var(--card);border:1px solid var(--b2);border-radius:16px;padding:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-family:var(--fd);font-size:16px;color:var(--pri)">📨 הודעות מהמאמן</div>
+        <button onclick="closeInbox()" style="background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer">✕</button>
+      </div>
+      <div id="inbox-list">
+        <div style="text-align:center;padding:20px;color:var(--txt3)">טוען הודעות...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ COACH MESSAGE MODAL ═══ -->
+<div id="coach-msg-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:19000;overflow-y:auto;padding:16px">
+  <div style="max-width:400px;margin:0 auto">
+    <div style="background:var(--card);border:1px solid rgba(124,58,237,.3);border-radius:16px;padding:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div style="font-family:var(--fd);font-size:15px;color:var(--purpleL)">📤 שלח הודעה</div>
+        <button onclick="closeCoachMsg()" style="background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer">✕</button>
+      </div>
+      <div id="coach-msg-to" style="background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:8px;font-size:12px;color:var(--purpleL);margin-bottom:12px">אל: </div>
+
+      <label>סוג הודעה</label>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
+        <button id="mtype-message" onclick="setMsgType('message',this)" style="font-size:10px;font-weight:900;padding:8px;border-radius:8px;border:2px solid var(--purpleL);background:rgba(124,58,237,.1);color:var(--purpleL);cursor:pointer">💬 הודעה</button>
+        <button id="mtype-feedback" onclick="setMsgType('feedback',this)" style="font-size:10px;font-weight:900;padding:8px;border-radius:8px;border:1px solid var(--b2);background:var(--card3);cursor:pointer">📊 פידבק</button>
+        <button id="mtype-plan" onclick="setMsgType('plan',this)" style="font-size:10px;font-weight:900;padding:8px;border-radius:8px;border:1px solid var(--b2);background:var(--card3);cursor:pointer">🎯 תוכנית</button>
+        <button id="mtype-praise" onclick="setMsgType('praise',this)" style="font-size:10px;font-weight:900;padding:8px;border-radius:8px;border:1px solid var(--b2);background:var(--card3);cursor:pointer">🏆 עידוד</button>
+      </div>
+
+      <!-- Quick message templates -->
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px" id="msg-templates">
+        <div onclick="setMsgTemplate(this)" style="font-size:10px;padding:4px 8px;background:var(--card2);border-radius:6px;cursor:pointer;border:1px solid var(--b1)">כל הכבוד על האימון! 💪</div>
+        <div onclick="setMsgTemplate(this)" style="font-size:10px;padding:4px 8px;background:var(--card2);border-radius:6px;cursor:pointer;border:1px solid var(--b1)">צריך לשפר את הריצה 🏃</div>
+        <div onclick="setMsgTemplate(this)" style="font-size:10px;padding:4px 8px;background:var(--card2);border-radius:6px;cursor:pointer;border:1px solid var(--b1)">אימון מחר בשעה 07:00 📅</div>
+        <div onclick="setMsgTemplate(this)" style="font-size:10px;padding:4px 8px;background:var(--card2);border-radius:6px;cursor:pointer;border:1px solid var(--b1)">מחר יש מבחן 3K ⚡</div>
+      </div>
+
+      <textarea id="coach-msg-text" placeholder="כתוב הודעה למתאמן..." style="width:100%;height:100px;padding:10px;background:var(--card2);border:1px solid var(--b1);border-radius:10px;color:var(--txt);font-size:13px;resize:none;box-sizing:border-box;margin-bottom:12px" rows="4"></textarea>
+
+      <button onclick="sendCoachMessage()" class="btn bp" style="width:100%;font-size:14px;font-weight:900;padding:14px">📤 שלח הודעה</button>
+    </div>
+  </div>
+</div>
+
+
+// PWA Service Worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    var swCode = 'const C="cfil-v2";self.addEventListener("install",e=>e.waitUntil(caches.open(C).then(c=>c.add("/"))));self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k))))));';
+    var blob = new Blob([swCode], {type:'application/javascript'});
+    navigator.serviceWorker.register(URL.createObjectURL(blob))
+      .then(function(){ console.log('SW OK'); })
+      .catch(function(e){ console.warn('SW:',e); });
+  });
+}
+
+</body></html>`);
   w.document.close();
 }
 
@@ -3650,47 +3870,116 @@ let runPositions=[],runTotalDist=0,runTotalElev=0;
 let runPolyline=null;
 
 function startRun(){
-  const wgt=parseFloat(document.getElementById('rt-wgt')?.value||72);
-  runActive=true;runPaused=false;
-  runStartTime=Date.now();runPausedMs=0;
-  runPositions=[];runTotalDist=0;runTotalElev=0;
-
-  document.getElementById('run-active-bar').style.display='block';
-  document.getElementById('run-start-btn').style.display='none';
-  // Scroll to top of route section
-  document.getElementById('run-active-bar').scrollIntoView({behavior:'smooth',block:'start'});
-
-  // Start GPS tracking
-  if(navigator.geolocation){
-    runWatchId=navigator.geolocation.watchPosition(pos=>{
-      if(runPaused)return;
-      const pt={lat:pos.coords.latitude,lng:pos.coords.longitude,alt:pos.coords.altitude||0,t:Date.now()};
-      if(runPositions.length>0){
-        const prev=runPositions[runPositions.length-1];
-        const segDist=haversine(prev.lat,prev.lng,pt.lat,pt.lng);
-        runTotalDist+=segDist;
-        const elevDelta=(pt.alt||0)-(prev.alt||0);
-        if(elevDelta>0)runTotalElev+=elevDelta;
-        // Draw on map
-        if(gmap&&typeof google!=='undefined'){
-          if(!runPolyline){
-            runPolyline=new google.maps.Polyline({path:[],strokeColor:'#ffd60a',strokeWeight:4,strokeOpacity:.9,map:gmap});
-          }
-          const path=runPolyline.getPath();path.push(new google.maps.LatLng(pt.lat,pt.lng));
-          gmap.panTo({lat:pt.lat,lng:pt.lng});
-        }
-      }
-      runPositions.push(pt);
-      updateLiveUI(wgt);
-    },{enableHighAccuracy:true,maximumAge:2000,timeout:10000});
+  if(!navigator.geolocation){notify('GPS לא זמין במכשיר זה','r');return;}
+  if(!window._lmap){loadLeafletMap();setTimeout(startRun,1500);return;}
+  // Show live run bar
+  var liveBar=document.getElementById('live-run-bar');
+  var startBtn=document.getElementById('run-start-btn');
+  if(liveBar) liveBar.style.display='block';
+  if(startBtn) startBtn.style.display='none';
+  window._runActive=true;
+  window._runStart=Date.now();
+  window._runPts=[];
+  window._runDist=0;
+  window._runLastPos=null;
+  window._runPaceWindow=[];
+  // Create live run polyline (yellow)
+  if(window._lmap){
+    if(window._runPoly) window._runPoly.remove();
+    window._runPoly=L.polyline([],{color:'#ffd60a',weight:5,opacity:.9}).addTo(window._lmap);
   }
-
-  // Timer
-  runTimerInterval=setInterval(()=>{
-    if(!runPaused)updateLiveUI(wgt);
+  // Start GPS watch
+  window._gpsWatch=navigator.geolocation.watchPosition(function(pos){
+    onGPSUpdate(pos);
+  },function(err){
+    notify('שגיאת GPS: '+err.message,'r');
+  },{enableHighAccuracy:true,maximumAge:2000,timeout:15000});
+  // Run clock
+  clearInterval(window._runClockID);
+  window._runClockID=setInterval(function(){
+    if(!window._runActive)return;
+    var elapsed=Math.floor((Date.now()-window._runStart)/1000);
+    var m=Math.floor(elapsed/60),s=elapsed%60;
+    var ltEl=document.getElementById('lr-time');
+    if(ltEl) ltEl.textContent=m+':'+(String(s).padStart(2,'0'));
   },1000);
+  notify('🔴 מעקב GPS פעיל — צא לרוץ!','p');
+}
 
-  notify('▶ ריצה התחילה! בהצלחה 🔥','p');
+function onGPSUpdate(pos){
+  var lat=pos.coords.latitude, lng=pos.coords.longitude;
+  var accuracy=pos.coords.accuracy;
+  if(accuracy>50) return; // Filter bad readings
+  var latlng=L.latLng(lat,lng);
+  window._runPts.push(latlng);
+  // Update polyline
+  if(window._runPoly) window._runPoly.setLatLngs(window._runPts);
+  if(window._lmap) window._lmap.panTo(latlng);
+  // Add user marker
+  if(!window._runMarker){
+    window._runMarker=L.circleMarker(latlng,{radius:8,fillColor:'#ffd60a',fillOpacity:1,color:'#fff',weight:2}).addTo(window._lmap);
+  } else {
+    window._runMarker.setLatLng(latlng);
+  }
+  // Calculate distance from last point
+  if(window._runLastPos){
+    var R=6371,dLat=(lat-window._runLastPos.lat)*Math.PI/180,dLng=(lng-window._runLastPos.lng)*Math.PI/180;
+    var x=Math.sin(dLat/2)**2+Math.cos(window._runLastPos.lat*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.sin(dLng/2)**2;
+    var d=R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+    if(d>0.002) { // Filter noise < 2m
+      window._runDist+=d;
+      window._runPaceWindow.push({d:d,t:pos.timestamp});
+    }
+  }
+  window._runLastPos={lat,lng,ts:pos.timestamp};
+  // Update UI
+  var dist=window._runDist;
+  var elapsed=(Date.now()-window._runStart)/1000;
+  var paceSec=dist>0?elapsed/dist:0;
+  var pm=Math.floor(paceSec/60),ps=Math.round(paceSec%60);
+  var kcal=Math.round(dist*72*0.072);
+  var el=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  el('lr-dist',dist.toFixed(2));
+  el('lr-pace',dist>0.1?pm+':'+(String(ps).padStart(2,'0')):'--:--');
+  // Also update route stats
+  el('rs-dist',dist.toFixed(2));
+  var m2=Math.floor(elapsed/60),s2=Math.round(elapsed%60);
+  el('rs-time',m2+':'+(String(s2).padStart(2,'0')));
+  el('rs-cal',kcal);
+  el('rs-pace',dist>0.1?pm+':'+(String(ps).padStart(2,'0')):'--:--');
+  // KM milestone notifications
+  var km=Math.floor(dist);
+  if(km>0&&km!=window._runLastKM){
+    window._runLastKM=km;
+    var kPaceSec=elapsed/dist;
+    var kpm=Math.floor(kPaceSec/60),kps=Math.round(kPaceSec%60);
+    notify('📍 '+km+'ק"מ | קצב: '+kpm+':'+(String(kps).padStart(2,'0'))+'/ק"מ','c');
+    if(window._runPoly){
+      L.divIcon({html:'<div style="background:var(--pri);color:#000;border-radius:4px;padding:1px 4px;font-size:10px;font-weight:900">'+km+'km</div>',className:'',iconSize:[30,16]});
+    }
+  }
+}
+
+function stopRun(){
+  window._runActive=false;
+  if(window._gpsWatch) navigator.geolocation.clearWatch(window._gpsWatch);
+  clearInterval(window._runClockID);
+  var liveBar=document.getElementById('live-run-bar');
+  var startBtn=document.getElementById('run-start-btn');
+  if(liveBar) liveBar.style.display='none';
+  if(startBtn) startBtn.style.display='block';
+  if(window._runMarker){window._runMarker.remove();window._runMarker=null;}
+  // Save run
+  var dist=window._runDist||0;
+  if(dist>0.1){
+    var elapsed=Math.round((Date.now()-window._runStart)/1000);
+    var paceSec=elapsed/dist;
+    logWorkout({type:'run',name:'ריצה GPS '+dist.toFixed(2)+'ק"מ',
+      score:dist.toFixed(2)+'ק"מ',icon:'📍',duration:Math.round(elapsed/60),
+      dist:dist.toFixed(2),pace:Math.floor(paceSec/60)+':'+(String(Math.round(paceSec%60)).padStart(2,'0'))});
+    notify('✅ ריצה '+dist.toFixed(2)+'ק"מ נשמרה!','p');
+  }
+  window._runPts=[];window._runDist=0;window._runLastKM=0;
 }
 
 function haversine(lat1,lng1,lat2,lng2){
@@ -3792,25 +4081,61 @@ function addWaypoint(latlng){
 }
 
 function refreshLPolyline(){
-  const pts=window._lmarkers||[];
+  var pts=window._lmarkers||[];
   if(window._lpoly)window._lpoly.setLatLngs(pts);
-  let dist=0;
-  for(let i=1;i<pts.length;i++){
-    const a=pts[i-1],b=pts[i];
-    const R=6371,dLat=(b.lat-a.lat)*Math.PI/180,dLng=(b.lng-a.lng)*Math.PI/180;
-    const x=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
-    dist+=R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+  var dist=0;
+  var segDists=[];
+  for(var i=1;i<pts.length;i++){
+    var a=pts[i-1],b=pts[i];
+    var R=6371,dLat=(b.lat-a.lat)*Math.PI/180,dLng=(b.lng-a.lng)*Math.PI/180;
+    var x=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
+    var d=R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+    dist+=d;segDists.push(d);
   }
-  const elev=Math.round(dist*65);
-  const pace=parsePace(document.getElementById('rt-pace')?.value||'5:30');
-  const wgt=parseFloat(document.getElementById('rt-wgt')?.value||72);
-  const secs=dist*pace;const m=Math.floor(secs/60),s=Math.round(secs%60);
-  const kcal=Math.round(dist*(wgt*0.072)+elev*0.15);
-  const el=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  var elev=Math.round(dist*65);
+  var paceStr=document.getElementById('rt-pace')?.value||'5:30';
+  var pace=parsePace(paceStr);
+  var wgt=parseFloat(document.getElementById('rt-wgt')?.value||72);
+  var secs=dist*pace;
+  var m=Math.floor(secs/60),s=Math.round(secs%60);
+  var kcal=Math.round(dist*(wgt*0.072)+elev*0.15);
+  var el=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
   el('rs-dist',dist.toFixed(2));
   el('rs-time',dist>0?m+':'+(String(s).padStart(2,'0')):'--:--');
-  el('rs-elev',elev);el('rs-cal',kcal);
+  el('rs-elev',elev);
+  el('rs-cal',kcal);
+  // Pace display
+  var paceEl=document.getElementById('rs-pace');
+  if(paceEl)paceEl.textContent=paceStr;
+  // KM splits visualization
+  updateSplitsChart(segDists,pace);
   renderSplits(dist,pace);
+}
+
+function updateSplitsChart(segDists,pace){
+  // Accumulate into full KMs
+  var kmPaces=[];
+  var acc=0;
+  for(var i=0;i<segDists.length;i++) acc+=segDists[i];
+  if(acc<0.5) return;
+  // Simple: show pace for each 0.5km chunk
+  var chunks=Math.floor(acc/0.5);
+  for(var c=0;c<Math.min(chunks,10);c++) kmPaces.push(pace);
+  var bar=document.getElementById('rs-splits-chart');
+  var lbl=document.getElementById('rs-splits-labels');
+  var wrap=document.getElementById('rs-splits-bar');
+  if(!bar||!kmPaces.length) return;
+  if(wrap) wrap.style.display='block';
+  var maxP=Math.max.apply(null,kmPaces)*1.1;
+  bar.innerHTML=kmPaces.map(function(p,i){
+    var h=Math.max(4,Math.round((p/maxP)*36));
+    var col=p<=pace*0.95?'var(--pri)':p<=pace?'var(--yellow)':'var(--orange)';
+    return '<div style="flex:1;background:'+col+';border-radius:3px 3px 0 0;height:'+h+'px;align-self:flex-end"></div>';
+  }).join('');
+  if(lbl) lbl.innerHTML=kmPaces.map(function(p,i){
+    var m2=Math.floor(p/60),s2=Math.round(p%60);
+    return '<div style="flex:1;font-size:7px;color:var(--txt3);text-align:center">'+(i*0.5+0.5).toFixed(1)+'</div>';
+  }).join('');
 }
 
 function searchMapLocation(){
@@ -4176,94 +4501,139 @@ const ET_RANGES={short:[12,28],mid:[28,58],long:[55,88],grind:[85,150]};
 
 // ─── Genuine IDF training commands — no gym exercises ───
 const DUNE_CMDS={
-  fresh:[
-    // ספרינטים
-    {t:'ספרינט 30 מטר',  d:'מקסימום מהירות — ידיים על הגוף',       e:'💨',sec:[20,35]},
-    {t:'ספרינט 50 מטר',  d:'קצב גבוה — לא תאט לפני הסיום',          e:'💨',sec:[25,40]},
-    {t:'ספרינט פיגזג',   d:'20מ ימינה — עצור — 20מ שמאלה — ×2',    e:'⚡',sec:[40,55]},
-    {t:'ריצה בדיונה מעלה',d:'עד הפסגה — ירידה הליכה מהירה',         e:'🏔',sec:[35,55]},
-    // זחילות
-    {t:'זחילה 20 מטר',   d:'בטן — מרפקים — שמור על גוף נמוך',      e:'🐛',sec:[40,65]},
-    {t:'זחילה קרבית 15מ',d:'על המרפקים — ראש נמוך — לא מרים גוף',   e:'🐛',sec:[35,55]},
-    {t:'Bear Crawl 20מ', d:'ידיים ורגליים — מהר ככל האפשר',          e:'🐻',sec:[30,50]},
-    // שקי חול
-    {t:'נשיאת שק 30 מטר',d:'שק על הכתף — ריצה — גב ישר',            e:'🎒',sec:[25,40],gear:['bag']},
-    {t:'שק מעל הראש 20שנ',d:'ידיים ישרות — שק בגובה הראש — עמוד דום',e:'🎒',sec:[18,25],gear:['bag']},
-    // שכיבות ומתח
-    {t:'30 שכיבות שמיכה',d:'גוף ישר — חזה לרצפה בכל חזרה',          e:'💪',sec:[55,80]},
-    {t:'15 מתח',         d:'עד כלות — מנוחה 10שנ ואז ממשיך',         e:'🏋',sec:[50,80]},
-    {t:'20 ברפי',        d:'ברפי מלא עם קפיצה — לא מפסיק',           e:'🔄',sec:[60,90]},
-    // מנוחה
-    {t:'מנוחה — 15 שניות',d:'שב — שתה מים — נשום עמוק',              e:'⏸',sec:[13,17]},
-    {t:'הליכה מהירה 30מ',d:'ידיים על עורף — לא מנוחה מלאה',          e:'🚶',sec:[20,35]},
-  ],
-  mid:[
-    // ספרינטים
-    {t:'ספרינט 100 מטר',   d:'מקסימום — לא תישאר כלום בגוף',         e:'💨',sec:[18,30]},
-    {t:'3 ספרינטים 50מ',   d:'20שנ מנוחה בלבד ביניהם — ×3',           e:'⚡',sec:[25,38]},
-    {t:'ספרינט על הדיונה ×3',d:'3 ריצות מעלה מלאות — ירידה הליכה',   e:'🏔',sec:[40,60]},
-    {t:'ספרינט הלוך-חזור', d:'40מ קדימה — עצור — 40מ חזרה — ×2',     e:'💨',sec:[30,45]},
-    // זחילות
-    {t:'זחילה קרבית 40מ',  d:'בטן לרצפה — מרפקים — ממשיך בלי לעצור', e:'🐛',sec:[70,100]},
-    {t:'זחילה עם שק 20מ',  d:'שק קל על הגב — זחל קדימה',              e:'🐛',sec:[55,80],gear:['bag']},
-    {t:'Bear Crawl 30מ',   d:'ידיים ורגליים — אל תיגע ברכיים לרצפה',  e:'🐻',sec:[40,60]},
-    // שקי חול
-    {t:'נשיאת שק 60 מטר',  d:'שק על הכתף — ריצה — לא הליכה',          e:'🎒',sec:[35,55],gear:['bag']},
-    {t:'2 שקים 30 מטר',    d:'שק בכל יד — ריצה',                       e:'🎒',sec:[30,45],gear:['bag']},
-    {t:'שק על הגב 40מ ריצה',d:'כמו Ruck — גב ישר — קצב גבוה',         e:'🎒',sec:[35,55],gear:['bag']},
-    {t:'ג\'ריקן 20מ ×3',   d:'ג\'ריקן מלא — הלוך-חזור 3 פעמים',       e:'🪣',sec:[45,65],gear:['jerry']},
-    // שכיבות ומתח
-    {t:'50 שכיבות שמיכה',  d:'לא עוצרים — אם נגמרת פצל ל-2 סטים',    e:'💪',sec:[90,130]},
-    {t:'20 מתח',           d:'מקסימום — מנוחה 10שנ בין סטים',          e:'🏋',sec:[80,120]},
-    {t:'30 ברפי',          d:'מהר — כל חזרה עם קפיצה מלאה',            e:'🔄',sec:[90,130]},
-    // מנוחה
-    {t:'מנוחה — 10 שניות',d:'על הרגליים — שתה — נשום',                 e:'⏸',sec:[8,12]},
-  ],
-  hard:[
-    // ספרינטים
-    {t:'ספרינט 100מ × 5',  d:'15שנ מנוחה בלבד בין ספרינטים',           e:'💨',sec:[18,28]},
-    {t:'ספרינט + זחילה + ספרינט',d:'ספרינט 30מ — זחל 20מ — ספרינט 30מ',e:'🔥',sec:[30,45]},
-    {t:'ריצה בדיונה × 5',  d:'5 ריצות מעלה ברצף — הורד בין ריצה לריצה',e:'🏔',sec:[35,55]},
-    {t:'ספרינט עם שק × 3', d:'ספרינט 40מ עם שק — 20שנ מנוחה — ×3',    e:'🔥',sec:[30,48],gear:['bag']},
-    // זחילות
-    {t:'זחילה קרבית 60מ',  d:'לא מרים את הגוף — ממשיך לאורך כל הדרך', e:'🐛',sec:[100,150]},
-    {t:'זחילה עם שק 40מ',  d:'שק על הגב — בטן לרצפה — ממשיך',          e:'🐛',sec:[100,150],gear:['bag']},
-    // שקי חול / נשיאות
-    {t:'נשיאת שק 100 מטר', d:'שק על הכתף — ריצה — לא הליכה',           e:'🎒',sec:[45,70],gear:['bag']},
-    {t:'שק על הראש 60מ',   d:'ידיים על השק — ריצה — גב ישר',           e:'💀',sec:[40,60],gear:['bag']},
-    {t:'2 שקים 50מ',       d:'שק אחד על כל כתף — ריצה',                e:'🎒',sec:[35,55],gear:['bag']},
-    {t:'ג\'ריקן + שק 50מ', d:'ג\'ריקן בידיים + שק על הגב — ריצה',      e:'🪣',sec:[40,65],gear:['bag','jerry']},
-    {t:'אפוד כובד ספרינטים',d:'ספרינט 50מ × 5 עם אפוד — 15שנ מנוחה',  e:'🦺',sec:[25,40],gear:['vest']},
-    // שכיבות
-    {t:'75 שכיבות שמיכה',  d:'לא עוצרים — אם נגמרת — ברכיים',          e:'💪',sec:[130,180]},
-    {t:'20 מתח',           d:'מקסימום — מנוחה 10שנ ואז ממשיך',          e:'🏋',sec:[100,150]},
-    {t:'50 ברפי',          d:'לא מפסיקים — פירמידה 1-10',               e:'🔄',sec:[140,200]},
-    // מנוחה
-    {t:'מנוחה — 8 שניות',  d:'עמוד ישר — נשום — חזרה מיד',             e:'⏸',sec:[6,10]},
-  ],
-  elite:[
-    // ספרינטים
-    {t:'ספרינט 100מ × 8',  d:'10שנ מנוחה בלבד — שמונה פעמים',          e:'☠️',sec:[15,22]},
-    {t:'ספרינט + זחילה × 3',d:'ספרינט 40מ — זחל 30מ — ×3 ברצף',       e:'☠️',sec:[25,38]},
-    {t:'ריצה בדיונה × 8',  d:'8 ריצות מעלה מלאות — הורד 15שנ בלבד',   e:'☠️',sec:[30,45]},
-    {t:'ספרינטים 200מ',    d:'ספרינט 200מ מלא — קצב מקסימום',           e:'☠️',sec:[40,55]},
-    // זחילות
-    {t:'זחילה קרבית 80מ',  d:'בטן לרצפה — לא מרים את הגוף כלל',        e:'☠️',sec:[130,200]},
-    {t:'זחילה עם שק 60מ',  d:'שק כבד על הגב — בטן לרצפה — ממשיך',     e:'☠️',sec:[130,200],gear:['bag']},
-    // נשיאות
-    {t:'2 שקים 100מ',      d:'שק על כל כתף — ריצה — לא הליכה',         e:'☠️',sec:[45,65],gear:['bag']},
-    {t:'שק + אפוד 60מ',    d:'שק על הגב + אפוד כובד — ריצה',           e:'☠️',sec:[40,60],gear:['bag','vest']},
-    {t:'ג\'ריקן + שק + ספרינט',d:'ג\'ריקן בידיים + שק + ספרינט 30מ ×4',e:'☠️',sec:[35,55],gear:['bag','jerry']},
-    // שכיבות
-    {t:'100 שכיבות שמיכה', d:'5 דקות. תגמור.',                          e:'☠️',sec:[200,300]},
-    {t:'30 מתח',           d:'ממשיך — מנוחה 10שנ בלבד בין סטים',        e:'☠️',sec:[150,250]},
-    {t:'100 ברפי',         d:'ללא עצירה. ללא תירוצים.',                  e:'☠️',sec:[250,360]},
-    {t:'זחילה + שכיבות × 5',d:'זחל 20מ — 20 שכיבות — ×5 ברצף',        e:'☠️',sec:[120,180]},
-    // שותפים
-    {t:'שותף: נשיאת אדם',  d:'רץ עם שותף על הגב 20מ — החלף',           e:'👥',sec:[30,50],gear:['partner']},
-    // מנוחה
-    {t:'מנוחה — 5 שניות',  d:'רק 5 שניות — חזרה מיד',                   e:'⏸',sec:[4,6]},
-  ],
+  fresh:{
+    easy:[
+      {t:'ריצה קלה 800מ בקצב נוח — תנשום עמוק',d:180,e:'🏃'},
+      {t:'20 שכיבות שמיר — איטי, מלא',d:60,e:'💪'},
+      {t:'פלאנק 60 שניות — גב ישר',d:60,e:'⏱'},
+      {t:'30 ג\'אמפינג ג\'קס — קצב בינוני',d:40,e:'⚡'},
+      {t:'20 מתח — או עד כישלון',d:60,e:'🔝'},
+      {t:'הליכה מהירה 400מ',d:120,e:'🚶'},
+    ],
+    mid:[
+      {t:'ריצה 1K בקצב אחיד',d:240,e:'🏃'},
+      {t:'זחילת קרבית 30מ קדימה-אחורה × 3',d:90,e:'🪖'},
+      {t:'50 שכיבות שמיר',d:90,e:'💪'},
+      {t:'25 מתח',d:90,e:'🔝'},
+      {t:'ריצה 400מ בקצב גבוה',d:100,e:'⚡'},
+      {t:'פלאנק 90 שניות',d:90,e:'⏱'},
+      {t:'20 ברפי',d:60,e:'🔄'},
+      {t:'ריצה 1K — ספרינט שלישי אחרון',d:240,e:'🔥'},
+    ],
+    hard:[
+      {t:'ריצה 2K בקצב גיבוש',d:500,e:'🏃'},
+      {t:'זחילת קרבית 50מ × 4',d:180,e:'🪖'},
+      {t:'75 שכיבות שמיר — הפסקות של 10',d:180,e:'💪'},
+      {t:'30 מתח — הפסקות של 5',d:180,e:'🔝'},
+      {t:'50 ברפי ברצף',d:240,e:'🔄'},
+      {t:'ריצה 400מ × 3 עם 60 שנ הפסקה',d:400,e:'⚡'},
+      {t:'פלאנק 2 דקות',d:120,e:'⏱'},
+      {t:'ריצה 1.5K — דחיפה מקסימלית',d:380,e:'🔥'},
+    ],
+    gibush:[
+      {t:'ריצה 3K ברצף — קצב גיבוש',d:780,e:'🏃'},
+      {t:'זחילת קרבית 100מ × 3 — ללא הפסקה',d:360,e:'🪖'},
+      {t:'100 שכיבות שמיר',d:240,e:'💪'},
+      {t:'40 מתח — מינימום 5 בסט',d:240,e:'🔝'},
+      {t:'ספרינט 200מ × 6 — הפסקה 30 שנ',d:480,e:'⚡'},
+      {t:'100 ברפי ברצף',d:480,e:'🔄'},
+      {t:'זחילת ברזל 50מ × 4',d:240,e:'🪖'},
+      {t:'פלאנק 3 דקות — אל תכנע',d:180,e:'⏱'},
+      {t:'ריצה 2K סיום — תן הכל',d:520,e:'🔥'},
+    ]
+  },
+  bag:{
+    easy:[
+      {t:'ריצה עם שק 20 ק"ג — 1K נוח',d:300,e:'🎒'},
+      {t:'30 שכיבות עם שק על הגב',d:90,e:'💪'},
+      {t:'עלייה וירידה מדרגות 3 קומות × 5',d:180,e:'🏋'},
+    ],
+    mid:[
+      {t:'ריצה עם שק 20 ק"ג — 2K',d:600,e:'🎒'},
+      {t:'50 שכיבות עם שק',d:150,e:'💪'},
+      {t:'זחילת שק — 30מ × 4',d:180,e:'🪖'},
+      {t:'20 סקוואט עם שק + 20 לאנג\'',d:90,e:'🏋'},
+    ],
+    hard:[
+      {t:'מסע 5K עם שק 30 ק"ג',d:1800,e:'🎒'},
+      {t:'100 שכיבות עם שק',d:300,e:'💪'},
+      {t:'שק מעל הראש 30 הרמות',d:90,e:'🏋'},
+      {t:'ריצה 1K עם שק + זחילה 50מ × 3',d:600,e:'🔥'},
+    ],
+    gibush:[
+      {t:'מסע לילה 10K עם שק 30 ק"ג',d:3600,e:'🎒'},
+      {t:'150 שכיבות עם שק — הפסקות 10',d:450,e:'💪'},
+      {t:'שק על הראש — הליכה 200מ × 5',d:600,e:'🏋'},
+      {t:'ריצה 3K עם שק',d:1080,e:'🔥'},
+    ]
+  },
+  jerry:{
+    easy:[
+      {t:'נשיאת ג\'ריקן 20 ל\' — 200מ הלוך חזור',d:120,e:'🪣'},
+      {t:'20 הרמות ג\'ריקן מהרצפה',d:60,e:'🏋'},
+    ],
+    mid:[
+      {t:'ריצה עם ג\'ריקן 20 ל\' — 500מ',d:180,e:'🪣'},
+      {t:'30 כפיפות עם ג\'ריקן',d:90,e:'💪'},
+      {t:'ג\'ריקן מעל הראש 20 פעמים',d:60,e:'🏋'},
+    ],
+    hard:[
+      {t:'ריצה עם ג\'ריקן 20 ל\' — 1K',d:360,e:'🪣'},
+      {t:'ג\'ריקן מעבר — 2 אנשים 50מ × 6',d:240,e:'🤝'},
+      {t:'50 הרמות ג\'ריקן',d:150,e:'🏋'},
+      {t:'זחילה + ג\'ריקן 30מ × 4',d:180,e:'🪖'},
+    ],
+    gibush:[
+      {t:'ריצה עם ג\'ריקן 2 ל\' — 2K',d:720,e:'🪣'},
+      {t:'ג\'ריקן מסירה — 500מ הלוך חזור × 4',d:600,e:'🤝'},
+      {t:'100 הרמות ג\'ריקן',d:300,e:'🏋'},
+    ]
+  },
+  vest:{
+    easy:[
+      {t:'ריצה עם אפוד 10 ק"ג — 1K',d:300,e:'🦺'},
+      {t:'30 שכיבות עם אפוד',d:90,e:'💪'},
+    ],
+    mid:[
+      {t:'ריצה עם אפוד 15 ק"ג — 2K',d:600,e:'🦺'},
+      {t:'50 שכיבות עם אפוד',d:150,e:'💪'},
+      {t:'20 מתח עם אפוד',d:120,e:'🔝'},
+    ],
+    hard:[
+      {t:'ריצה עם אפוד 20 ק"ג — 3K',d:900,e:'🦺'},
+      {t:'75 שכיבות עם אפוד',d:240,e:'💪'},
+      {t:'30 מתח עם אפוד',d:180,e:'🔝'},
+      {t:'ספרינט 200מ × 5 עם אפוד',d:400,e:'⚡'},
+    ],
+    gibush:[
+      {t:'מסע 8K עם אפוד 25 ק"ג',d:2880,e:'🦺'},
+      {t:'100 שכיבות עם אפוד',d:300,e:'💪'},
+      {t:'40 מתח עם אפוד',d:240,e:'🔝'},
+      {t:'ריצה 2K עם אפוד — לסיום',d:720,e:'🔥'},
+    ]
+  },
+  buddy:{
+    easy:[
+      {t:'ריצת שותף — 1K ביחד',d:300,e:'👥'},
+      {t:'שכיבות בצמד — כל אחד בתורו, 20 חזרות',d:120,e:'💪'},
+    ],
+    mid:[
+      {t:'נשיאת שותף 50מ × 4 — מחליפים',d:240,e:'👥'},
+      {t:'ריצת ממסר 400מ × 4',d:360,e:'🏃'},
+      {t:'פלאנק כפול — ידיים על כתפי שותף',d:60,e:'⏱'},
+    ],
+    hard:[
+      {t:'נשיאת שותף 100מ × 6',d:480,e:'👥'},
+      {t:'ריצה 3K בזוג — זוכים יחד',d:780,e:'🏃'},
+      {t:'50 שכיבות + שותף על הגב',d:180,e:'💪'},
+      {t:'זחילה תחת חבל × 4 בצמד',d:180,e:'🪖'},
+    ],
+    gibush:[
+      {t:'מסע 6K נשיאת שותף לסירוגין',d:2160,e:'👥'},
+      {t:'100 שכיבות בצמד — בסנכרון',d:300,e:'💪'},
+      {t:'ריצת עם נשיאה 2K — מחליפים כל 200מ',d:720,e:'🔥'},
+    ]
+  }
 };
 
 function setCmdCount(n,btn){
@@ -5108,6 +5478,669 @@ function initPreGibushWeek() {
 }
 
 
+
+// ═══════════════════════════════════════════════════
+// MESSAGING SYSTEM
+// ═══════════════════════════════════════════════════
+var _currentMsgTarget = {uid:'', name:''};
+var _currentMsgType = 'message';
+
+function openInbox(){
+  var modal = document.getElementById('inbox-modal');
+  if(modal) modal.style.display = 'block';
+  loadInboxMessages();
+}
+
+function closeInbox(){
+  var modal = document.getElementById('inbox-modal');
+  if(modal) modal.style.display = 'none';
+}
+
+async function loadInboxMessages(){
+  var list = document.getElementById('inbox-list');
+  if(!list) return;
+  
+  if(!window._fbUID){
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt3)">התחבר לחשבון כדי לראות הודעות</div>';
+    return;
+  }
+  
+  list.innerHTML = '<div style="text-align:center;padding:16px;color:var(--txt3)">טוען...</div>';
+  
+  // Try Firebase
+  if(window._getMessagesForAthlete){
+    try{
+      var msgs = await window._getMessagesForAthlete(window._fbUID);
+      if(!msgs || msgs.length === 0){
+        list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt3);font-size:12px">אין הודעות עדיין<br/>המאמן שלך יכול לשלוח לך הודעות</div>';
+        return;
+      }
+      var html = '';
+      msgs.forEach(function(msg){
+        var typeEmoji = {message:'💬',plan:'🎯',feedback:'📊',praise:'🏆',announcement:'📢',alert:'⚠️'}[msg.type]||'💬';
+        var typeColor = {message:'var(--purpleL)',plan:'var(--pri)',feedback:'var(--yellow)',praise:'var(--orange)',announcement:'var(--pri)',alert:'var(--red)'}[msg.type]||'var(--purpleL)';
+        var timeStr = msg.ts?.toDate ? msg.ts.toDate().toLocaleDateString('he-IL') : '';
+        html += '<div style="background:var(--card2);border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid var(--b1);border-right:3px solid '+typeColor+'">';
+        html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
+        html += '<div style="font-size:11px;font-weight:900;color:'+typeColor+'">'+typeEmoji+' '+msg.fromName+'</div>';
+        html += '<div style="font-size:9px;color:var(--txt3)">'+timeStr+'</div></div>';
+        html += '<div style="font-size:13px;color:var(--txt);line-height:1.5">'+msg.text+'</div>';
+        if(!msg.read && window._markMessageRead) window._markMessageRead(msg.id);
+        html += '</div>';
+      });
+      list.innerHTML = html;
+      // Clear badge
+      var badge = document.getElementById('msg-badge');
+      if(badge){ badge.style.display='none'; badge.textContent=''; }
+      return;
+    }catch(e){ console.warn('loadInbox:',e); }
+  }
+  
+  // Fallback: local coach notes
+  var notes = ld('cf7_coach_notes', {});
+  var localMsgs = Object.values(notes).flat();
+  if(!localMsgs.length){
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--txt3)">אין הודעות</div>';
+    return;
+  }
+  var html = localMsgs.slice(-10).reverse().map(function(m){
+    return '<div style="background:var(--card2);border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid var(--b1)">'
+      + '<div style="font-size:11px;color:var(--purpleL);margin-bottom:4px">💬 מהמאמן</div>'
+      + '<div style="font-size:13px;color:var(--txt)">'+m+'</div></div>';
+  }).join('');
+  list.innerHTML = html;
+}
+
+function openCoachMsg(athleteName, athleteUid){
+  _currentMsgTarget = {uid: athleteUid||'', name: athleteName||'חניך'};
+  _currentMsgType = 'message';
+  var modal = document.getElementById('coach-msg-modal');
+  var toEl = document.getElementById('coach-msg-to');
+  var textEl = document.getElementById('coach-msg-text');
+  if(!modal) return;
+  if(toEl) toEl.textContent = 'אל: ' + athleteName;
+  if(textEl) textEl.value = '';
+  modal.style.display = 'block';
+}
+
+function closeCoachMsg(){
+  var modal = document.getElementById('coach-msg-modal');
+  if(modal) modal.style.display = 'none';
+}
+
+function setMsgType(type, btn){
+  _currentMsgType = type;
+  ['message','feedback','plan','praise'].forEach(function(t){
+    var b = document.getElementById('mtype-'+t);
+    if(!b) return;
+    b.style.border = '1px solid var(--b2)';
+    b.style.background = 'var(--card3)';
+    b.style.color = 'var(--txt)';
+  });
+  var colors = {message:'var(--purpleL)',feedback:'var(--yellow)',plan:'var(--pri)',praise:'var(--orange)'};
+  btn.style.border = '2px solid '+colors[type];
+  btn.style.background = 'rgba(124,58,237,.1)';
+  btn.style.color = colors[type];
+}
+
+function setMsgTemplate(el){
+  var textEl = document.getElementById('coach-msg-text');
+  if(textEl) textEl.value = el.textContent;
+}
+
+async function sendCoachMessage(){
+  var text = document.getElementById('coach-msg-text')?.value?.trim();
+  if(!text){ notify('כתוב הודעה לפני שליחה','y'); return; }
+  
+  var coachName = ld(K.PR, {}).name || 'מאמן';
+  var coachId = window._fbUID || 'local';
+  
+  // Try Firebase first
+  if(window._sendMessageToAthlete && _currentMsgTarget.uid && window._fbUID){
+    await window._sendMessageToAthlete(_currentMsgTarget.uid, coachId, coachName, text, _currentMsgType);
+  } else {
+    // Fallback: store in local coach notes
+    var notes = ld('cf7_coach_notes', {});
+    var key = _currentMsgTarget.name;
+    if(!notes[key]) notes[key] = [];
+    notes[key].push({text: text, type: _currentMsgType, ts: Date.now(), from: coachName});
+    sv('cf7_coach_notes', notes);
+    notify('✅ הודעה נשמרה (לא מחובר לענן)', 'p');
+  }
+  
+  closeCoachMsg();
+  renderCoachGroup();
+}
+
+async function sendGroupAnnouncement(){
+  var text = document.getElementById('ann-text')?.value?.trim();
+  var type = document.getElementById('ann-type')?.value || 'announcement';
+  if(!text){ notify('כתוב הודעה לפני שליחה','y'); return; }
+  
+  var coachName = ld(K.PR, {}).name || 'מאמן';
+  
+  if(window._sendAnnouncement && window._fbUID){
+    await window._sendAnnouncement(window._fbUID, coachName, text, 'all');
+  } else {
+    // Local fallback — save as general announcement
+    var ann = ld('cf7_announcements', []);
+    ann.unshift({text, type, from: coachName, ts: Date.now()});
+    sv('cf7_announcements', ann.slice(0, 20));
+    notify('📢 הודעה נשמרה!', 'p');
+  }
+  closeModal();
+}
+
+// ═══════════════════════════════════════════════════
+// ATHLETE PROFILE PAGE (modal)
+// ═══════════════════════════════════════════════════
+async function viewAthleteProfile(athleteId, athleteName){
+  // Try to get live data from Firestore
+  var data = null;
+  if(window._getAthleteData && athleteId){
+    data = await window._getAthleteData(athleteId);
+  }
+  
+  var pg = data ? JSON.parse(data.cf7p||'[]') : [];
+  var pr = data ? JSON.parse(data.cf7pr||'{}') : {};
+  var hist = data ? JSON.parse(data.cf7_workout_history||'[]') : [];
+  var score = pg.length ? parseInt(pg[0].bar||0) : '--';
+  var unitKey = pr.unit || 'gen';
+  var u = UNITS[unitKey] || UNITS.gen || {n:'קרבי',col:'#888',emoji:'⚔'};
+  var lastWorkout = hist.length ? new Date(hist[0].date||hist[0].ts||Date.now()).toLocaleDateString('he-IL') : 'לא ידוע';
+  var notes = ld('cf7_coach_notes', {})[athleteName] || [];
+  
+  openModal('👤 '+athleteName, 
+    '<div style="text-align:center;margin-bottom:14px">'
+    + '<div style="font-size:36px;margin-bottom:6px">'+u.emoji+'</div>'
+    + '<div style="font-weight:900;font-size:16px;color:'+u.col+'">'+u.n+'</div>'
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">'
+    + '<div class="rstat"><div style="font-family:var(--fd);font-size:28px;color:var(--pri)">'+score+'</div><div class="rstat-l">ציון בר-אור</div></div>'
+    + '<div class="rstat"><div style="font-family:var(--fd);font-size:22px;color:var(--yellow)">'+hist.length+'</div><div class="rstat-l">אימונים</div></div>'
+    + '</div>'
+    + '<div style="font-size:11px;color:var(--txt3);margin-bottom:12px;text-align:center">אחרון: '+lastWorkout+'</div>'
+    + (notes.length ? '<div class="sh p" style="margin-bottom:6px">📝 הערות מאמן</div>'
+      + notes.slice(-3).map(function(n){
+          var txt = typeof n === 'string' ? n : n.text || '';
+          var ts = typeof n === 'object' && n.ts ? new Date(n.ts).toLocaleDateString('he-IL') : '';
+          return '<div style="background:var(--card2);border-radius:8px;padding:8px;margin-bottom:5px;font-size:11px;color:var(--txt)">'
+            + (ts ? '<div style="font-size:9px;color:var(--txt3);margin-bottom:2px">'+ts+'</div>' : '')
+            + txt + '</div>';
+        }).join('') : '')
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">'
+    + '<button class="btn bp" onclick="openCoachMsg(\''+athleteName+'\',\''+athleteId+'\');closeModal()">📤 שלח הודעה</button>'
+    + '<button class="btn bs" onclick="closeModal()">סגור</button>'
+    + '</div>'
+  );
+}
+
+
+
+// ═══════════════════════════════════════════════════
+// DARK / LIGHT THEME TOGGLE
+// ═══════════════════════════════════════════════════
+var _lightVars = ':root{--bg:#f0f2f5;--card:#ffffff;--card2:#f5f7fa;--card3:#e8ecf0;--txt:#0d1117;--txt2:#4a5568;--txt3:#718096;--b1:rgba(0,0,0,.1);--b2:rgba(0,0,0,.15)}';
+var _darkLink = null;
+var _isLight = false;
+
+function toggleTheme(){
+  _isLight = !_isLight;
+  var btn = document.getElementById('theme-btn');
+  if(_isLight){
+    if(!_darkLink){ _darkLink = document.createElement('style'); _darkLink.id='light-theme'; document.head.appendChild(_darkLink); }
+    _darkLink.textContent = _lightVars;
+    if(btn) btn.textContent = '☀️';
+    localStorage.setItem('cf7_theme','light');
+  } else {
+    var existing = document.getElementById('light-theme');
+    if(existing) existing.textContent = '';
+    if(btn) btn.textContent = '🌙';
+    localStorage.setItem('cf7_theme','dark');
+  }
+}
+// Apply saved theme on load
+(function(){
+  if(localStorage.getItem('cf7_theme')==='light'){ setTimeout(toggleTheme,100); }
+})();
+
+// ═══════════════════════════════════════════════════
+// PWA INSTALL
+// ═══════════════════════════════════════════════════
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault(); window._installPrompt = e;
+  var btn = document.getElementById('install-btn');
+  if(btn) btn.style.display = 'inline-block';
+});
+
+function installPWA(){
+  if(window._installPrompt){
+    window._installPrompt.prompt();
+    window._installPrompt.userChoice.then(function(r){
+      if(r.outcome==='accepted'){ notify('📲 Combat Fit הותקן!','p'); document.getElementById('install-btn').style.display='none'; }
+    });
+  } else {
+    // iOS instructions
+    openModal('📲 התקן על iPhone',
+      '<div style="text-align:center;padding:10px">'
+      +'<div style="font-size:40px;margin-bottom:12px">📱</div>'
+      +'<div style="font-weight:900;font-size:14px;margin-bottom:10px">כיצד להתקין על iPhone</div>'
+      +'<div style="text-align:right;font-size:12px;line-height:2;color:var(--txt2)">'
+      +'1️⃣ לחץ על כפתור השיתוף <strong>⬆️</strong> בספארי<br/>'
+      +'2️⃣ גלול למטה ולחץ <strong>"הוסף למסך הבית"</strong><br/>'
+      +'3️⃣ לחץ <strong>"הוסף"</strong><br/>'
+      +'✅ Combat Fit יופיע על מסך הבית!'
+      +'</div></div>');
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// STREAK TRACKER
+// ═══════════════════════════════════════════════════
+function calcStreak(){
+  var wt = ld(K.WT, {});
+  var hist = ld('cf7_workout_history', []);
+  var today = new Date().toISOString().slice(0,10);
+  var trained = new Set();
+  Object.keys(wt).forEach(function(d){ if(wt[d]==='done') trained.add(d); });
+  hist.forEach(function(h){ var d=(h.date||h.ts||'').slice(0,10); if(d) trained.add(d); });
+
+  var streak = 0;
+  var startDay = trained.has(today) ? 0 : 1;
+  for(var i = startDay; i < 365; i++){
+    var dk = new Date(Date.now() - i*86400000).toISOString().slice(0,10);
+    if(trained.has(dk)) streak++;
+    else if(i > startDay) break;
+  }
+
+  var best = Math.max(ld('cf7_streak',{best:0}).best||0, streak);
+  sv('cf7_streak',{current:streak,best:best});
+
+  var numEl = document.getElementById('streak-num');
+  var subEl = document.getElementById('streak-sub');
+  var bestEl = document.getElementById('streak-best');
+  var dotsEl = document.getElementById('streak-dots');
+
+  if(numEl){ numEl.textContent = streak; numEl.style.color = streak>=14?'var(--red)':streak>=7?'#ff8c00':streak>=3?'var(--yellow)':'var(--txt3)'; }
+  if(subEl) subEl.textContent = streak===0?'אמן היום!':streak<3?'התחלה! המשך כך':streak<7?streak+' ימים 💪':streak<14?'🔥 '+streak+' ימים!':'☠️ '+streak+' ימים!';
+  if(bestEl) bestEl.textContent = 'שיא: '+best+' ימים';
+
+  if(dotsEl){
+    var dots='';
+    for(var j=6;j>=0;j--){
+      var dk2=new Date(Date.now()-j*86400000).toISOString().slice(0,10);
+      var on=trained.has(dk2);
+      dots+='<div style="width:22px;height:22px;border-radius:50%;background:'+(on?'#ff8c00':'var(--card3)')+';border:1px solid '+(j===0?'var(--pri)':'transparent')+';flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px">'+(on?'🔥':'')+'</div>';
+    }
+    dotsEl.innerHTML=dots;
+  }
+
+  // Update weekly challenge rank display
+  var ch = getWeeklyChallenge();
+  var chName = document.getElementById('weekly-ch-name');
+  if(chName) chName.textContent = ch.name;
+  var entries = ld('cf7_ch_'+ch.id, []);
+  var pr = ld(K.PR,{});
+  var myEntry = entries.find(function(e){ return e.name===(pr.name||'אני'); });
+  var chRank = document.getElementById('weekly-ch-rank');
+  if(chRank) chRank.textContent = myEntry ? '#'+(entries.indexOf(myEntry)+1) : '--';
+}
+
+// ═══════════════════════════════════════════════════
+// BMI + BODY MEASUREMENTS
+// ═══════════════════════════════════════════════════
+function calcBMI(){
+  var w = parseFloat(document.getElementById('bm-weight')?.value||0);
+  var h = parseFloat(document.getElementById('bm-height')?.value||0);
+  if(!w||!h) return;
+  var bmi = Math.round(w/(h/100)/(h/100)*10)/10;
+  var res = document.getElementById('bmi-result');
+  if(res) res.style.display='block';
+  var v = document.getElementById('bmi-val');
+  var l = document.getElementById('bmi-label');
+  var ind = document.getElementById('bmi-indicator');
+  var col = bmi<18.5?'#4dd0e1':bmi<=24.9?'var(--pri)':bmi<=29.9?'var(--orange)':'var(--red)';
+  if(v){ v.textContent=bmi; v.style.color=col; }
+  if(l) l.textContent = bmi<18.5?'⬇️ תת-משקל — אכול יותר חלבון':bmi<=24.9?'✅ משקל אידאלי ללוחם קרבי':bmi<=29.9?'⚠️ עודף קל — שפר תזונה':'🔴 השמנה — נדרש שינוי';
+  if(ind){ var pct=Math.max(2,Math.min(98,((bmi-15)/25)*100)); ind.style.left=pct+'%'; }
+}
+
+function saveMeasurements(){
+  var d = {
+    date:new Date().toISOString().slice(0,10), ts:Date.now(),
+    weight:parseFloat(document.getElementById('bm-weight')?.value||0),
+    height:parseFloat(document.getElementById('bm-height')?.value||0),
+    chest:parseInt(document.getElementById('bm-chest')?.value||0),
+    waist:parseInt(document.getElementById('bm-waist')?.value||0),
+    hips:parseInt(document.getElementById('bm-hips')?.value||0),
+    arm:parseInt(document.getElementById('bm-arm')?.value||0),
+    thigh:parseInt(document.getElementById('bm-thigh')?.value||0),
+    calf:parseInt(document.getElementById('bm-calf')?.value||0),
+  };
+  if(!d.weight){ notify('הכנס לפחות משקל','y'); return; }
+  var h = ld('cf7_measurements',[]);
+  h.unshift(d); sv('cf7_measurements',h.slice(0,60));
+  renderMeasurementsHistory();
+  notify('✅ מדידה נשמרה!','p');
+}
+
+function renderMeasurementsHistory(){
+  var el = document.getElementById('bm-history');
+  if(!el) return;
+  var h = ld('cf7_measurements',[]);
+  if(!h.length){ el.innerHTML='<div class="mini" style="text-align:center;padding:12px">אין היסטוריה עדיין</div>'; return; }
+  var bmiOf = function(m){ return m.weight&&m.height?(m.weight/Math.pow(m.height/100,2)).toFixed(1):'--'; };
+  var html2 = '<div class="sh p" style="margin-bottom:8px">📊 היסטוריה</div>';
+  if(h.length>=2){
+    var diff=(h[0].weight-h[1].weight).toFixed(1);
+    var col=diff<0?'var(--pri)':diff>0?'var(--orange)':'var(--txt2)';
+    html2+='<div style="background:var(--card2);border-radius:9px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:var(--txt2)">שינוי ממדידה קודמת</span><span style="font-family:var(--fd);font-size:20px;color:'+col+'">'+(diff>0?'+':'')+diff+'ק"ג</span></div>';
+  }
+  h.slice(0,6).forEach(function(m){
+    var bmi=bmiOf(m);
+    html2+='<div style="background:var(--card2);border-radius:9px;padding:10px;margin-bottom:6px;border:1px solid var(--b1)">'
+      +'<div style="display:flex;justify-content:space-between;margin-bottom:4px">'
+      +'<span style="font-size:10px;color:var(--txt3)">'+new Date(m.ts).toLocaleDateString('he-IL')+'</span>'
+      +'<span style="font-family:var(--fd);font-size:16px;color:var(--pri)">'+(m.weight||'--')+'ק"ג</span></div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:5px">'
+      +(m.chest?'<span style="font-size:9px;background:rgba(0,255,136,.06);padding:2px 7px;border-radius:4px">חזה:'+m.chest+'</span>':'')
+      +(m.waist?'<span style="font-size:9px;background:rgba(255,214,10,.06);padding:2px 7px;border-radius:4px">מותן:'+m.waist+'</span>':'')
+      +(m.hips?'<span style="font-size:9px;background:rgba(255,140,0,.06);padding:2px 7px;border-radius:4px">ירך:'+m.hips+'</span>':'')
+      +'<span style="font-size:9px;background:rgba(10,132,255,.06);padding:2px 7px;border-radius:4px">BMI:'+bmi+'</span>'
+      +'</div></div>';
+  });
+  el.innerHTML=html2;
+}
+
+// ═══════════════════════════════════════════════════
+// HEART RATE ZONES + VO2MAX
+// ═══════════════════════════════════════════════════
+function calcHRZones(){
+  var age = parseInt(document.getElementById('hr-age')?.value||0);
+  var rest = parseInt(document.getElementById('hr-rest')?.value||60);
+  var el = document.getElementById('hr-zones-result');
+  if(!el||!age) return;
+  var maxHR = 220-age;
+  var hrr = maxHR-rest;
+  var zones=[
+    {n:1,name:'שיקום פעיל',pct:[50,60],col:'#4dd0e1',e:'🧘',desc:'ריצה קלה מאוד — שיקום'},
+    {n:2,name:'בסיס אירובי',pct:[60,70],col:'var(--pri)',e:'🏃',desc:'Zone 2 — בניית בסיס קרדיו'},
+    {n:3,name:'אירובי גבוה',pct:[70,80],col:'var(--yellow)',e:'⚡',desc:'שיפור יכולת אירובית'},
+    {n:4,name:'סף אנאירובי',pct:[80,90],col:'var(--orange)',e:'🔥',desc:'ריצת גיבוש — סף לקטט'},
+    {n:5,name:'מקסימום',pct:[90,100],col:'var(--red)',e:'☠️',desc:'ספרינטים — VO2max'},
+  ];
+  var html3='<div style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;margin-bottom:12px">'
+    +'<div style="font-size:9px;color:var(--txt3)">דופק מקסימלי (220-גיל)</div>'
+    +'<div style="font-family:var(--fd);font-size:44px;color:var(--red);line-height:1">'+maxHR+'</div>'
+    +'<div style="font-size:10px;color:var(--txt2)">פעימות/דקה</div></div>';
+  zones.forEach(function(z){
+    var lo=Math.round(rest+hrr*z.pct[0]/100);
+    var hi=Math.round(rest+hrr*z.pct[1]/100);
+    html3+='<div style="background:var(--card2);border-radius:10px;padding:11px;margin-bottom:6px;border:1px solid var(--b1);border-right:3px solid '+z.col+'">'
+      +'<div style="display:flex;align-items:center;gap:9px">'
+      +'<div style="font-size:18px">'+z.e+'</div>'
+      +'<div style="flex:1"><div style="font-weight:800;font-size:11px;color:'+z.col+'">Zone '+z.n+' — '+z.name+'</div>'
+      +'<div style="font-size:9px;color:var(--txt2);margin-top:2px">'+z.desc+'</div>'
+      +'<div style="height:3px;background:var(--card3);border-radius:2px;margin-top:5px;overflow:hidden"><div style="height:100%;width:'+((z.pct[1]-z.pct[0])*3)+'%;background:'+z.col+';border-radius:2px"></div></div>'
+      +'</div>'
+      +'<div style="text-align:left;flex-shrink:0"><div style="font-family:var(--fd);font-size:15px;color:'+z.col+'">'+lo+'–'+hi+'</div>'
+      +'<div style="font-size:8px;color:var(--txt3)">bpm</div></div></div></div>';
+  });
+  el.innerHTML=html3;
+}
+
+var _hrTimerID = null;
+function startHRInterval(){
+  var age=parseInt(document.getElementById('hr-age')?.value||0);
+  var rest=parseInt(document.getElementById('hr-rest')?.value||60);
+  var zone=parseInt(document.getElementById('hr-zone-target')?.value||4);
+  var dur=parseInt(document.getElementById('hr-interval-dur')?.value||20);
+  if(!age){ notify('הכנס גיל תחילה','y'); return; }
+  var maxHR=220-age, hrr=maxHR-rest;
+  var zPcts=[[50,60],[60,70],[70,80],[80,90],[90,100]][zone-1];
+  var lo=Math.round(rest+hrr*zPcts[0]/100), hi=Math.round(rest+hrr*zPcts[1]/100);
+  var endTs=Date.now()+dur*60000;
+  var disp=document.getElementById('hr-interval-display');
+  if(disp){
+    disp.style.display='block';
+    disp.innerHTML='<div style="text-align:center;background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.2);border-radius:12px;padding:16px">'
+      +'<div style="font-size:11px;color:var(--txt2)">Zone '+zone+' | שמור על דופק:</div>'
+      +'<div style="font-family:var(--fd);font-size:30px;color:var(--red);margin:6px 0">'+lo+' – '+hi+' bpm</div>'
+      +'<div id="hr-cd" style="font-family:var(--fd);font-size:40px;color:var(--pri)">'+dur+':00</div>'
+      +'<button onclick="stopHRInterval()" style="margin-top:10px;padding:8px 20px;background:rgba(255,45,85,.1);border:1px solid var(--red);color:var(--red);border-radius:8px;cursor:pointer;font-size:12px;font-weight:700">⏹ עצור</button></div>';
+    if(_hrTimerID) clearInterval(_hrTimerID);
+    _hrTimerID=setInterval(function(){
+      var rem=Math.max(0,Math.round((endTs-Date.now())/1000));
+      var cd=document.getElementById('hr-cd');
+      if(cd) cd.textContent=Math.floor(rem/60)+':'+String(rem%60).padStart(2,'0');
+      if(rem===0){ clearInterval(_hrTimerID); notify('❤️ אימון דופק הסתיים!','p'); }
+    },1000);
+  }
+  notify('❤️ Zone '+zone+' — '+lo+'-'+hi+' bpm | '+dur+' דקות','c');
+}
+function stopHRInterval(){
+  if(_hrTimerID){ clearInterval(_hrTimerID); _hrTimerID=null; }
+  var d=document.getElementById('hr-interval-display');
+  if(d) d.style.display='none';
+}
+
+function calcVO2max(){
+  var timeStr=document.getElementById('vo2-time')?.value||'';
+  var hrEnd=parseInt(document.getElementById('vo2-hr')?.value||0);
+  var el=document.getElementById('vo2-result');
+  if(!el) return;
+  var parts=timeStr.split(':');
+  var secs=parts.length===2?parseInt(parts[0])*60+parseInt(parts[1]):parseFloat(timeStr)*60;
+  if(!secs||secs<60){ notify('הכנס זמן ריצה תקין','y'); return; }
+  // Cooper-based VO2max estimation from 2K time
+  var distKm=2;
+  var minPerKm=(secs/60)/distKm;
+  var vo2=(-4.60+0.182258*distKm*1000/secs*60+0.000104*Math.pow(distKm*1000/secs*60,2));
+  // Simpler: VO2max ≈ 483/minPerKm (from Cooper formula variant)
+  var vo2simple=Math.round(483/minPerKm);
+  var vo2 = Math.min(85, Math.max(25, vo2simple));
+  var level=vo2>=60?'🔥 עילית — ספורטאי מקצועי':vo2>=52?'⚡ גבוה מאוד — רמת קרבי עילית':vo2>=46?'✅ טוב — רמת לוחם גיבוש':vo2>=40?'⚠️ ממוצע — יש מה לשפר':'🔴 נמוך — נדרשת תוכנית סיבולת';
+  var col=vo2>=52?'var(--pri)':vo2>=46?'var(--yellow)':vo2>=40?'var(--orange)':'var(--red)';
+  el.innerHTML='<div style="text-align:center;background:linear-gradient(135deg,rgba(0,229,255,.06),var(--card2));border:1px solid rgba(0,229,255,.15);border-radius:12px;padding:14px;margin-top:8px">'
+    +'<div style="font-size:9px;color:var(--txt3)">VO2max משוער</div>'
+    +'<div style="font-family:var(--fd);font-size:48px;color:'+col+';line-height:1">'+vo2+'</div>'
+    +'<div style="font-size:9px;color:var(--txt2)">ml/kg/min</div>'
+    +'<div style="font-size:12px;color:'+col+';font-weight:900;margin-top:8px">'+level+'</div>'
+    +'<div style="font-size:10px;color:var(--txt3);margin-top:6px">יעד לגיבוש: 50+ | יעד לעילית: 58+</div></div>';
+}
+
+// ═══════════════════════════════════════════════════
+// COMPETITION / WEEKLY CHALLENGE
+// ═══════════════════════════════════════════════════
+var _WEEKLY_CHS=[
+  {id:'run2k',name:'🏃 ריצה 2K — מי הכי מהיר?',unit:'שניות',low:true,target:480,tip:'זמן בשניות (8:00 = 480)'},
+  {id:'pullups',name:'💪 מתח — מי עושה הכי הרבה?',unit:'חזרות',low:false,target:15,tip:'כמות חזרות'},
+  {id:'pushups',name:'💪 שכיבות — מי עושה הכי הרבה?',unit:'חזרות',low:false,target:50,tip:'כמות חזרות'},
+  {id:'plank',name:'⏱ פלאנק — מי מחזיק הכי הרבה?',unit:'שניות',low:false,target:120,tip:'זמן בשניות'},
+  {id:'burpees',name:'🔄 ברפי — 50 ברפי, מי הכי מהיר?',unit:'שניות',low:true,target:180,tip:'זמן בשניות'},
+  {id:'run5k',name:'🏃 ריצה 5K — מי הכי מהיר?',unit:'שניות',low:true,target:1320,tip:'זמן בשניות (22:00 = 1320)'},
+];
+
+function getWeeklyChallenge(){
+  var wk=Math.floor(Date.now()/(7*24*3600*1000));
+  return _WEEKLY_CHS[wk%_WEEKLY_CHS.length];
+}
+
+var _lbPeriod='week';
+function lbTab(period,btn){
+  _lbPeriod=period;
+  document.querySelector('#lb-tabs .tab.on')?.classList.remove('on');
+  if(btn)btn.classList.add('on');
+  var cc=document.getElementById('lb-challenge-card');
+  if(period==='challenge'){
+    if(cc)cc.style.display='block';
+    renderWeeklyChallengeView();
+  } else {
+    if(cc)cc.style.display='none';
+    renderLeaderboard();
+  }
+}
+
+function renderWeeklyChallengeView(){
+  var ch=getWeeklyChallenge();
+  var t=document.getElementById('ch-title'), d=document.getElementById('ch-desc');
+  if(t) t.textContent=ch.name;
+  if(d) d.textContent=ch.tip+' | יעד: '+ch.target+' '+ch.unit;
+  renderChallengeLB();
+}
+
+function renderChallengeLB(){
+  var ch=getWeeklyChallenge();
+  var entries=ld('cf7_ch_'+ch.id,[]);
+  var lbEl=document.getElementById('challenge-lb');
+  if(!lbEl) return;
+  if(!entries.length){ lbEl.innerHTML='<div style="text-align:center;padding:16px;color:var(--txt3)">היה הראשון שמגיש תוצאה!</div>'; return; }
+  var medals=['🥇','🥈','🥉'];
+  var pr=ld(K.PR,{});
+  var myName=pr.name||'אני';
+  lbEl.innerHTML=entries.slice(0,10).map(function(e,i){
+    var u=UNITS[e.unit]||UNITS.gen||{n:'קרבי',col:'#888'};
+    var isMe=e.name===myName;
+    return '<div style="display:flex;align-items:center;gap:8px;padding:9px;background:'+(isMe?'rgba(0,255,136,.06)':'var(--card2)')+';border-radius:9px;margin-bottom:5px;border:1px solid '+(isMe?'rgba(0,255,136,.3)':'var(--b1)')+'">'
+      +'<div style="font-size:18px">'+(medals[i]||(i+1))+'</div>'
+      +'<div style="flex:1"><div style="font-weight:800;font-size:12px">'+e.name+(isMe?' (אני)':'')+'</div>'
+      +'<div style="font-size:9px;color:'+u.col+'">'+u.n+'</div></div>'
+      +'<div style="font-family:var(--fd);font-size:16px;color:var(--red)">'+e.score+'<span style="font-size:9px;color:var(--txt3)"> '+ch.unit+'</span></div></div>';
+  }).join('');
+}
+
+function submitChallenge(){
+  var score=parseFloat(document.getElementById('challenge-score')?.value||0);
+  if(!score){ notify('הכנס תוצאה','y'); return; }
+  var ch=getWeeklyChallenge();
+  var key='cf7_ch_'+ch.id;
+  var pr=ld(K.PR,{});
+  var name=pr.name||'לוחם';
+  var entries=ld(key,[]).filter(function(e){ return e.name!==name; });
+  entries.push({name:name,score:score,unit:pr.unit||'gen',ts:Date.now()});
+  entries.sort(function(a,b){ return ch.low?a.score-b.score:b.score-a.score; });
+  sv(key,entries.slice(0,50));
+  var myRank=entries.findIndex(function(e){ return e.name===name; })+1;
+  var rankEl=document.getElementById('challenge-rank');
+  if(rankEl) rankEl.textContent='#'+myRank;
+  renderChallengeLB();
+  notify('⚔️ תוצאה הוגשה! דירוג #'+myRank,'p');
+}
+
+// ═══════════════════════════════════════════════════
+// RACE TIME PREDICTOR (VO2max based)
+// ═══════════════════════════════════════════════════
+function predictRaceTimes(known_dist_km, known_time_sec){
+  // Riegel formula: T2 = T1 * (D2/D1)^1.06
+  var races=[
+    {dist:1,name:'1K'},
+    {dist:1.5,name:'1.5K'},
+    {dist:2,name:'2K'},
+    {dist:3,name:'3K'},
+    {dist:5,name:'5K'},
+    {dist:10,name:'10K'},
+  ];
+  return races.map(function(r){
+    var pred=known_time_sec*Math.pow(r.dist/known_dist_km,1.06);
+    var m=Math.floor(pred/60), s=Math.round(pred%60);
+    return {name:r.name,time:m+':'+(s<10?'0'+s:s),secs:pred};
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// EXPORT PROGRESS REPORT
+// ═══════════════════════════════════════════════════
+function exportReport(){
+  try{
+    var pr=ld(K.PR,{});
+    var pg=ld(K.P,[]);
+    var hist=ld('cf7_workout_history',[]);
+    var meas=ld('cf7_measurements',[]);
+    var streak=ld('cf7_streak',{current:0,best:0});
+    var name=pr.name||'לוחם';
+    var unitKey=pr.unit||'gen';
+    var u=(typeof UNITS!=='undefined'&&UNITS[unitKey])||{n:'קרבי',col:'#888',emoji:'⚔'};
+    var score=pg.length?parseInt(pg[0].bar||0):0;
+    var date=new Date().toLocaleDateString('he-IL');
+    var lines=[
+      'COMBAT FIT IL — דוח התקדמות',
+      '=====================================',
+      'שם: '+name,
+      'יחידה: '+u.n,
+      'תאריך: '+date,
+      '',
+      'ציון בר-אור: '+score+'/100',
+      'רצף אימונים: '+(streak.current||0)+' ימים (שיא: '+(streak.best||0)+')',
+      'סהכ אימונים: '+hist.length,
+    ];
+    if(meas.length){
+      var m=meas[0];
+      lines.push('');
+      lines.push('מדידות אחרונות ('+new Date(m.ts).toLocaleDateString('he-IL')+'):');
+      if(m.weight)lines.push('  משקל: '+m.weight+'קג');
+      if(m.waist)lines.push('  מותניים: '+m.waist+'סמ');
+      if(m.chest)lines.push('  חזה: '+m.chest+'סמ');
+    }
+    if(hist.length){
+      lines.push('');
+      lines.push('10 אימונים אחרונים:');
+      hist.slice(0,10).forEach(function(h){
+        var d=new Date(h.date||h.ts||Date.now()).toLocaleDateString('he-IL');
+        lines.push('  '+d+' - '+(h.name||h.type||'אימון'));
+      });
+    }
+    var content=lines.join('\n');
+    var blob=new Blob([content],{type:'text/plain;charset=utf-8'});
+    var link=document.createElement('a');
+    link.href=URL.createObjectURL(blob);
+    link.download='combat-fit-'+date.replace(/\//g,'-')+'.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    notify('📤 הדוח הורד!','p');
+  }catch(e){
+    console.error('exportReport:',e);
+    notify('שגיאה בייצוא: '+e.message.slice(0,40),'r');
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// HOOK INTO refreshDash for streak
+// ═══════════════════════════════════════════════════
+var _origRefreshDash = typeof refreshDash==='function' ? refreshDash : function(){};
+refreshDash = function(){
+  _origRefreshDash();
+  setTimeout(calcStreak, 500);
+};
+
+// Also hook trt for new tabs
+var _origTrt2 = typeof trt==='function' ? trt : function(){};
+trt = function(id, el){
+  if(id==='tr-body'){
+    var all=['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr'];
+    all.forEach(function(x){var e=document.getElementById(x);if(e)e.style.display='none';});
+    var t=document.getElementById('tr-body');if(t)t.style.display='block';
+    if(el){el.closest('.tabs').querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
+    var pr2=ld(K.PR,{});
+    var wEl=document.getElementById('bm-weight'),hEl=document.getElementById('bm-height');
+    var ms=ld('cf7_measurements',[]);
+    if(ms.length&&wEl&&!wEl.value){wEl.value=ms[0].weight;if(hEl&&ms[0].height)hEl.value=ms[0].height;calcBMI();}
+    renderMeasurementsHistory();
+    return;
+  }
+  if(id==='tr-hr'){
+    var all2=['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr'];
+    all2.forEach(function(x){var e=document.getElementById(x);if(e)e.style.display='none';});
+    var t2=document.getElementById('tr-hr');if(t2)t2.style.display='block';
+    if(el){el.closest('.tabs').querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
+    var pr3=ld(K.PR,{});
+    var ageEl=document.getElementById('hr-age');
+    if(ageEl&&pr3.age&&!ageEl.value){ageEl.value=pr3.age;calcHRZones();}
+    return;
+  }
+  _origTrt2(id, el);
+};
+
 function toggleMuscle(id){
   if(!muscleState)muscleState={};
   muscleState[id]=muscleState[id]==='sore'?'fresh':muscleState[id]==='partial'?'sore':'partial';
@@ -5142,74 +6175,154 @@ function calcCombatScore(){
 
 </script>
 
-<!-- Firebase SDK (ES module) -->
+<!-- Firebase SDK — Full multi-user system -->
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,
-  onAuthStateChanged,signOut,updateProfile,
-  GoogleAuthProvider,signInWithPopup}
+  onAuthStateChanged,signOut,updateProfile,GoogleAuthProvider,signInWithPopup}
   from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import{getFirestore,doc,setDoc,getDoc,serverTimestamp,
-  collection,getDocs,query,orderBy,limit}
+  collection,getDocs,query,orderBy,limit,where,
+  onSnapshot,addDoc,updateDoc,deleteDoc,arrayUnion}
   from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const FC={
-  apiKey:           "AIzaSyAWcDNu_VJojA-wS_f-BbFcSyW56KSE5Ng",
-  authDomain:       "app-for-army.firebaseapp.com",
-  projectId:        "app-for-army",
-  storageBucket:    "app-for-army.firebasestorage.app",
+  apiKey:"AIzaSyAWcDNu_VJojA-wS_f-BbFcSyW56KSE5Ng",
+  authDomain:"app-for-army.firebaseapp.com",
+  projectId:"app-for-army",
+  storageBucket:"app-for-army.firebasestorage.app",
   messagingSenderId:"1023834576325",
-  appId:            "1:1023834576325:web:4cfa5653d257245ae267ac"
+  appId:"1:1023834576325:web:4cfa5653d257245ae267ac"
 };
 
+let app,auth,db;
 try{
-  const app=initializeApp(FC);
-  const auth=getAuth(app);
-  const db=getFirestore(app);
-  window._FB={auth,db,doc,setDoc,getDoc,serverTimestamp,
-    collection,getDocs,query,orderBy,limit,
-    signInWithEmailAndPassword,createUserWithEmailAndPassword,
-    signOut,updateProfile,GoogleAuthProvider,signInWithPopup};
+  app=initializeApp(FC);
+  auth=getAuth(app);
+  db=getFirestore(app);
 
-  const PRIVATE_KEYS=[
-    'cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7ath','cf7rec',
-    'cf7lb','cf7_profile','cf7_workout_history','cf7_ath_workouts',
-    'cf7_coach_notes','cf7_att','cf7rec_muscles'
-  ];
+  // ═══ PRIVATE DATA KEYS (synced per user) ═══
+  const PRIVATE=['cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7lb','cf7ath','cf7rec',
+    'cf7_profile','cf7_workout_history','cf7_ath_workouts','cf7_att'];
 
+  // ═══ SYNC DOWN: Firestore → localStorage ═══
   async function syncDown(uid){
     try{
       const snap=await getDoc(doc(db,'users',uid));
       if(snap.exists()){
         const d=snap.data();
-        PRIVATE_KEYS.forEach(k=>{if(d[k]!=null)localStorage.setItem(k,d[k]);});
+        PRIVATE.forEach(k=>{if(d[k]!=null)localStorage.setItem(k,d[k]);});
         if(typeof refreshDash==='function')setTimeout(refreshDash,200);
         if(typeof notify==='function')notify('☁️ נתונים סונכרנו!','p');
-      } else { syncUp(uid); }
+        // Also listen for messages FROM coach
+        listenForMessages(uid);
+      } else {
+        syncUp(uid);
+      }
     }catch(e){console.warn('syncDown:',e);}
   }
 
+  // ═══ SYNC UP: localStorage → Firestore ═══
   let _st=null;
-  window._syncUp=()=>{clearTimeout(_st);_st=setTimeout(()=>syncUp(window._fbUID),2500);};
-  async function syncUp(uid){
-    if(!uid)return;
+  window._syncUp=function(){clearTimeout(_st);_st=setTimeout(()=>doSyncUp(),2500);};
+  async function doSyncUp(){
+    const uid=window._fbUID; if(!uid)return;
     try{
-      const d={uid,ts:serverTimestamp()};
-      PRIVATE_KEYS.forEach(k=>{try{const v=localStorage.getItem(k);if(v!=null)d[k]=v;}catch{}});
+      const d={uid,ts:serverTimestamp(),
+        displayName:window._fbUser?.displayName||'',
+        email:window._fbUser?.email||''};
+      PRIVATE.forEach(k=>{try{const v=localStorage.getItem(k);if(v!=null)d[k]=v;}catch{}});
+      // Also sync latest score for leaderboard
+      const pg=JSON.parse(localStorage.getItem('cf7p')||'[]');
+      if(pg.length){d._latestScore=parseInt(pg[0].bar||0);d._unit=JSON.parse(localStorage.getItem('cf7pr')||'{}').unit||'gen';}
       await setDoc(doc(db,'users',uid),d,{merge:true});
       const dot=document.getElementById('sync-dot');
-      if(dot){dot.style.background='var(--pri)';dot.title='נשמר ✅';
-        setTimeout(()=>{dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';},3000);}
+      if(dot){dot.style.background='var(--pri)';setTimeout(()=>dot.style.background='rgba(0,255,136,.3)',3000);}
     }catch(e){console.warn('syncUp:',e);}
   }
 
-  window._pushLBScore=async(name,score,unit)=>{
+  // ═══ PATCH localStorage.setItem → auto-sync ═══
+  const _lsSet=localStorage.setItem.bind(localStorage);
+  localStorage.setItem=function(k,v){_lsSet(k,v);if(window._fbUID&&PRIVATE.includes(k))window._syncUp?.();};
+
+  // ═══ MESSAGES: Coach → Athlete ═══
+  window._sendMessageToAthlete=async function(athleteId,coachId,coachName,text,type){
+    // type: 'message' | 'plan' | 'feedback' | 'announcement'
+    if(!athleteId||!text)return;
+    try{
+      await addDoc(collection(db,'messages'),{
+        to:athleteId, from:coachId, fromName:coachName||'מאמן',
+        text, type:type||'message', read:false,
+        ts:serverTimestamp()
+      });
+      if(typeof notify==='function')notify('✅ הודעה נשלחה!','p');
+    }catch(e){console.warn('sendMsg:',e);if(typeof notify==='function')notify('שגיאה בשליחה','r');}
+  };
+
+  window._getMessagesForAthlete=async function(athleteId){
+    try{
+      const q=query(collection(db,'messages'),where('to','==',athleteId),orderBy('ts','desc'),limit(20));
+      const snap=await getDocs(q);
+      return snap.docs.map(d=>({id:d.id,...d.data()}));
+    }catch(e){console.warn('getMsgs:',e);return [];}
+  };
+
+  window._markMessageRead=async function(msgId){
+    try{await updateDoc(doc(db,'messages',msgId),{read:true});}catch{}
+  };
+
+  window._sendAnnouncement=async function(coachId,coachName,text,targetGroup){
+    // Send to all athletes in a group
+    if(!text)return;
+    try{
+      const athletesSnap=await getDocs(collection(db,'athletes_'+coachId));
+      const batch=[];
+      athletesSnap.docs.forEach(d=>{
+        batch.push(addDoc(collection(db,'messages'),{
+          to:d.data().uid||d.id, from:coachId, fromName:coachName||'מאמן',
+          text, type:'announcement', read:false,
+          ts:serverTimestamp()
+        }));
+      });
+      await Promise.all(batch);
+      if(typeof notify==='function')notify('📢 הודעה נשלחה לכל החניכים!','p');
+    }catch(e){
+      // Fallback: store in announcements collection
+      await addDoc(collection(db,'announcements'),{
+        coachId, coachName:coachName||'מאמן', text,
+        targetGroup:targetGroup||'all', ts:serverTimestamp()
+      });
+      if(typeof notify==='function')notify('📢 הודעה פורסמה!','p');
+    }
+  };
+
+  // ═══ LISTEN for incoming messages (real-time) ═══
+  let _msgUnsub=null;
+  function listenForMessages(uid){
+    if(_msgUnsub)_msgUnsub();
+    try{
+      const q=query(collection(db,'messages'),where('to','==',uid),where('read','==',false));
+      _msgUnsub=onSnapshot(q,snap=>{
+        const count=snap.docs.length;
+        const badge=document.getElementById('msg-badge');
+        if(badge)badge.textContent=count>0?count:'';
+        badge?.style&&(badge.style.display=count>0?'block':'none');
+        if(count>0&&typeof notify==='function'){
+          const latest=snap.docs[snap.docs.length-1]?.data();
+          if(latest)notify('📨 הודעה מ'+latest.fromName+': '+latest.text.slice(0,30),'p');
+        }
+      });
+    }catch(e){console.warn('listenMsgs:',e);}
+  }
+
+  // ═══ PUBLIC LEADERBOARD ═══
+  window._pushLBScore=async function(name,score,unit){
     if(!window._fbUID)return;
     try{await setDoc(doc(db,'leaderboard',window._fbUID),{name,score,unit,ts:serverTimestamp()},{merge:true});}
     catch(e){console.warn('pushLB:',e);}
   };
 
-  window._pullLBScores=async()=>{
+  window._pullLBScores=async function(){
     try{
       const q=query(collection(db,'leaderboard'),orderBy('score','desc'),limit(50));
       const snap=await getDocs(q);
@@ -5217,12 +6330,16 @@ try{
     }catch(e){return null;}
   };
 
-  const _lsSet=localStorage.setItem.bind(localStorage);
-  localStorage.setItem=function(k,v){
-    _lsSet(k,v);
-    if(window._fbUID&&PRIVATE_KEYS.includes(k))window._syncUp&&window._syncUp();
+  // ═══ COACH: Get athletes data from Firestore ═══
+  window._getAthleteData=async function(athleteUid){
+    if(!athleteUid)return null;
+    try{
+      const snap=await getDoc(doc(db,'users',athleteUid));
+      return snap.exists()?snap.data():null;
+    }catch(e){return null;}
   };
 
+  // ═══ AUTH STATE ═══
   onAuthStateChanged(auth,user=>{
     window._fbUser=user||null;
     window._fbUID=user?.uid||null;
@@ -5234,7 +6351,6 @@ try{
       if(badge){badge.textContent='👤 '+name;badge.style.display='flex';}
       if(abtn)abtn.style.display='none';
       if(dot){dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';}
-      const m=document.getElementById('auth-modal');if(m)m.style.display='none';
       syncDown(user.uid);
     } else {
       if(badge)badge.style.display='none';
@@ -5246,8 +6362,12 @@ try{
     }
   });
 
+  window._FB={auth,db,doc,setDoc,getDoc,collection,getDocs,addDoc,updateDoc,
+    query,where,orderBy,limit,onSnapshot,serverTimestamp,
+    signInWithEmailAndPassword,createUserWithEmailAndPassword,
+    signOut,updateProfile,GoogleAuthProvider,signInWithPopup};
   window._fbSignOut=()=>signOut(auth);
-  console.info('Firebase ✅ app-for-army');
+  console.info('Firebase: initialized ✅');
 }catch(e){console.warn('Firebase init:',e);}
 </script>
 
