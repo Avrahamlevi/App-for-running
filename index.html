@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- 
 ══════════════════════════════════════════════════
-COMBAT FIT IL PRO v8 — IDF ELITE SYSTEM
+COMBAT FIT IL PRO v9 — IDF ELITE SYSTEM
 ══════════════════════════════════════════════════
 DEPLOY TO VERCEL:
 1. Push this file as index.html to GitHub repo
@@ -31,7 +31,7 @@ PDF Export: jsPDF 2.5.1
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v8</title>
+<title>⚔ COMBAT FIT IL PRO v9</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -522,7 +522,7 @@ document.head.appendChild(_link);
 <div class="top">
   <div>
     <div class="logo-main" id="logo-main">⚔ COMBAT FIT</div>
-    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v8.0 PRO</div>
+    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v9.0 PRO</div>
   </div>
   <div class="top-right">
     <span class="coach-badge">🎖 COACH</span>
@@ -603,6 +603,19 @@ document.head.appendChild(_link);
     <div id="r-title-d" style="text-align:center;font-size:12px;color:var(--txt2);margin-bottom:8px">בצע מבחן לראות ציון</div>
     <div class="pw"><div class="pf" id="r-bar" style="width:0%"></div></div>
     <button class="btn bp" onclick="showPg('test')">▶ בצע מבחן עכשיו</button>
+  </div>
+
+  <!-- Draft Countdown -->
+  <div id="draft-countdown-card" style="display:none;background:linear-gradient(135deg,rgba(255,45,85,.08),rgba(124,58,237,.08));border:1px solid rgba(255,45,85,.25);border-radius:16px;padding:14px;margin-bottom:12px;text-align:center">
+    <div style="font-size:10px;color:var(--red);font-weight:900;letter-spacing:1px;margin-bottom:6px">⚔ עד לגיוס</div>
+    <div style="display:flex;justify-content:center;gap:12px">
+      <div><div id="cd-days" style="font-family:var(--fd);font-size:36px;color:var(--red);line-height:1">--</div><div style="font-size:9px;color:var(--txt3)">ימים</div></div>
+      <div style="font-family:var(--fd);font-size:36px;color:var(--txt3)">:</div>
+      <div><div id="cd-hours" style="font-family:var(--fd);font-size:36px;color:var(--orange);line-height:1">--</div><div style="font-size:9px;color:var(--txt3)">שעות</div></div>
+      <div style="font-family:var(--fd);font-size:36px;color:var(--txt3)">:</div>
+      <div><div id="cd-mins" style="font-family:var(--fd);font-size:36px;color:var(--yellow);line-height:1">--</div><div style="font-size:9px;color:var(--txt3)">דקות</div></div>
+    </div>
+    <div id="cd-unit" style="font-size:11px;color:var(--txt2);margin-top:6px"></div>
   </div>
 
   <div class="mc" id="daily-mc">
@@ -703,6 +716,7 @@ document.head.appendChild(_link);
       <div><label>ישיבות (2 דקות)</label><input id="bsi" type="number" placeholder="70" min="0"/></div>
       <button class="btn bp" onclick="calcBaror()">חשב ציון</button>
       <div id="br-res" style="margin-top:10px"></div>
+      <button class="btn bs" style="margin-top:8px;display:none" id="share-score-btn" onclick="shareScore()">📤 שתף ציון</button>
     </div>
     <div class="card">
       <div class="sh">🏆 יעדים לפי יחידה</div>
@@ -1427,6 +1441,8 @@ document.head.appendChild(_link);
     <button class="tab" onclick="trt('tr-rec',this)">🩹 שיקום</button>
     <button class="tab" onclick="trt('tr-body',this)">📏 מידות</button>
     <button class="tab" onclick="trt('tr-hr',this)">❤️ דופק</button>
+        <button class="tab" onclick="trt('tr-sleep',this)">😴 שינה</button>
+        <button class="tab" onclick="trt('tr-injury',this)">🩹 פציעות</button>
         <button class="tab" onclick="trt('tr-ruck',this)">🎒 Ruck</button>
         <button class="tab" onclick="trt('tr-period',this)">📅 מחזורי</button>
         <button class="tab" onclick="trt('tr-scale',this)">⚖️ Scalable</button>
@@ -1875,6 +1891,65 @@ document.head.appendChild(_link);
     </div>
   </div>
 
+  <!-- ════ SLEEP TRACKER — like Whoop ════ -->
+  <div id="tr-sleep" style="display:none">
+    <div class="card hot" style="border-color:rgba(124,58,237,.3);background:linear-gradient(180deg,rgba(124,58,237,.05),var(--card))">
+      <div class="sh p">😴 מעקב שינה — Whoop Protocol</div>
+      <div class="mini" style="margin-bottom:12px">שינה = 70% מהגיבוש. מינימום 8 שעות בשבוע לפני גיבוש</div>
+      <div class="r2">
+        <div><label>שעות שינה הלילה</label>
+          <input id="sl-hours" type="number" value="7" min="3" max="12" step="0.5" inputmode="decimal" oninput="calcSleep()"/>
+        </div>
+        <div><label>איכות (1-10)</label>
+          <input id="sl-qual" type="number" value="7" min="1" max="10" inputmode="numeric" oninput="calcSleep()"/>
+        </div>
+      </div>
+      <div class="r2">
+        <div><label>שעת שינה</label>
+          <input id="sl-bed" type="time" value="23:00" oninput="calcSleep()"/>
+        </div>
+        <div><label>שעת קימה</label>
+          <input id="sl-wake" type="time" value="06:00" oninput="calcSleep()"/>
+        </div>
+      </div>
+      <div id="sl-result" style="margin:10px 0"></div>
+      <button class="btn bp" onclick="saveSleep()">💾 שמור שינה היום</button>
+    </div>
+    <div class="card">
+      <div class="sh p">📊 היסטוריית שינה — 7 ימים</div>
+      <div id="sl-history" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <!-- ════ INJURY PREVENTION — like Tsevet Lohamim ════ -->
+  <div id="tr-injury" style="display:none">
+    <div class="card hot" style="border-color:rgba(255,45,85,.3)">
+      <div class="sh r">🩹 מניעת פציעות — IDF Protocol</div>
+      <div class="mini" style="margin-bottom:12px">הכי נפוצות: שין-ספלינט, כתף, ברך, גב תחתון. בחר אזור כאב</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <button class="btn" onclick="showInjury('shin')" style="background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.25);padding:12px;font-size:12px;font-weight:800">
+          🦵 שין-ספלינט<br/><span style="font-size:9px;color:var(--txt3)">כאב שוקיים</span>
+        </button>
+        <button class="btn" onclick="showInjury('shoulder')" style="background:rgba(255,136,0,.06);border:1px solid rgba(255,136,0,.25);padding:12px;font-size:12px;font-weight:800">
+          💪 כתף<br/><span style="font-size:9px;color:var(--txt3)">מנשאי כיס / מתח</span>
+        </button>
+        <button class="btn" onclick="showInjury('knee')" style="background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.25);padding:12px;font-size:12px;font-weight:800">
+          🦵 ברך<br/><span style="font-size:9px;color:var(--txt3)">ריצה / Ruck</span>
+        </button>
+        <button class="btn" onclick="showInjury('back')" style="background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.25);padding:12px;font-size:12px;font-weight:800">
+          🔙 גב תחתון<br/><span style="font-size:9px;color:var(--txt3)">כפיפות / Ruck</span>
+        </button>
+      </div>
+      <div id="injury-detail" style="display:none"></div>
+    </div>
+    <div class="card">
+      <div class="sh r">🩹 תרגילי מניעה יומיים</div>
+      <div class="mini" style="margin-bottom:8px">10 דקות ביום = חוסך שבועות של פציעה</div>
+      <div id="daily-prehab" style="margin-top:8px"></div>
+      <button class="btn bs" style="margin-top:8px" onclick="renderPrehab()">🔄 שגרה חדשה</button>
+    </div>
+  </div>
+
 </div><!-- /p-train body -->
 </div>
 
@@ -2084,7 +2159,7 @@ function initCM(){
   const b=document.getElementById('mode-btn');
   if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
   const lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v8.0':'IDF ELITE SYSTEM v8.0 PRO';
+  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v8.0':'IDF ELITE SYSTEM v9.0 PRO';
   // Show/hide coach panel
   const afc=document.getElementById('ann-feed-card');
   const lbo=document.getElementById('lb-out');
@@ -2253,7 +2328,7 @@ function tt(id,el){
   if(id==='tb-cm')initCombatMode();
 }
 function trt(id,el){
-  ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr','tr-ruck','tr-period','tr-scale'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
+  ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr','tr-ruck','tr-period','tr-scale','tr-sleep','tr-injury'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
   document.getElementById(id).style.display='block';
   el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
   if(id==='tr-route')initRoute();
@@ -2262,6 +2337,8 @@ function trt(id,el){
   if(id==='tr-rec'){initMuscleGrid();setTimeout(calcRecovery,50);}
   if(id==='tr-scale')renderScaleGrid('all');
   if(id==='tr-ruck')calcRuck();
+  if(id==='tr-sleep'){calcSleep();renderSleepHistory();}
+  if(id==='tr-injury'){renderPrehab();}
 }
 
 // ═══════════════════════════════════════════════════
@@ -2321,6 +2398,7 @@ var EMOJIS=['🦁','🐯','🦅','🔥','⚡','💀','🥷','🤺','💪','🗡'
 // DASHBOARD
 // ═══════════════════════════════════════════════════
 function refreshDash(){
+  initDraftCountdown();
   if(!MISSIONS||!TIPS||!CHALLENGES)return;
   const d=new Date();
   document.getElementById('mission-txt').textContent=MISSIONS[(d.getDate()+d.getDay())%MISSIONS.length];
@@ -2492,6 +2570,7 @@ function calcBaror(){
     🤸 ישיבות ${si} → ${S} נק׳ (15%)</div>
     ${imp?`<div class="mc"><div class="mt">🎯 נקודות לשיפור</div><div class="mx">${imp}</div></div>`:'<div class="mc"><div class="mt">🏆 ציון מצוין!</div><div class="mx">אתה עומד בסטנדרט קרבי. המשך כך!</div></div>'}`;
   notify(`ציון בר-אור: ${tot}`);
+  var shareBtn=document.getElementById('share-score-btn');if(shareBtn)shareBtn.style.display='block';
 }
 
 // ─── Live gibush input helpers ─────────────────
@@ -7356,7 +7435,7 @@ function initCM(){
   document.body.classList.toggle('cm',coachMode);
   var b=document.getElementById('mode-btn');if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
   var lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  var ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v8.0':'IDF ELITE SYSTEM v8.0 PRO';
+  var ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v8.0':'IDF ELITE SYSTEM v9.0 PRO';
   var navAth=document.getElementById('nav-athlete'),navCoach=document.getElementById('nav-coach');
   if(navAth)navAth.style.display=coachMode?'none':'grid';
   if(navCoach)navCoach.style.display=coachMode?'grid':'none';
@@ -7668,183 +7747,260 @@ function renderMsgAthletesList(){
 }
 // ═══════════════════════════════ END COACH ═══════════════════════════════════
 
-</script>
-
-<!-- Firebase SDK — Multi-group combat fitness -->
-<script type="module">
-import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,
-  onAuthStateChanged,signOut,updateProfile,GoogleAuthProvider,signInWithPopup}
-  from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import{getFirestore,doc,setDoc,getDoc,serverTimestamp,collection,getDocs,
-  query,where,orderBy,limit,onSnapshot,addDoc,updateDoc}
-  from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
-const FC={apiKey:"AIzaSyAWcDNu_VJojA-wS_f-BbFcSyW56KSE5Ng",authDomain:"app-for-army.firebaseapp.com",projectId:"app-for-army",storageBucket:"app-for-army.firebasestorage.app",messagingSenderId:"1023834576325",appId:"1:1023834576325:web:4cfa5653d257245ae267ac"};
-
-try{
-const app=initializeApp(FC);
-const auth=getAuth(app);
-const db=getFirestore(app);
-
-// ── Private athlete data keys ──
-const PRIV=['cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7lb','cf7ath','cf7rec','cf7_profile','cf7_workout_history','cf7_measurements'];
-
-// Sync DOWN: Firestore → localStorage
-async function syncDown(uid){
-  try{
-    const snap=await getDoc(doc(db,'users',uid));
-    if(snap.exists()){
-      const d=snap.data();
-      PRIV.forEach(k=>{if(d[k]!=null)localStorage.setItem(k,d[k]);});
-      window._fbRole=d.role||'athlete';
-      if(typeof refreshDash==='function')setTimeout(refreshDash,200);
-      if(typeof notify==='function')notify('☁️ נתונים סונכרנו!','p');
-      if(d.role==='coach')loadCoachGroups(uid);
-      else listenMessages(uid);
-    } else syncUp(uid);
-  }catch(e){console.warn('syncDown:',e);}
-}
-
-// Sync UP: localStorage → Firestore
-let _st=null;
-window._syncUp=()=>{clearTimeout(_st);_st=setTimeout(doSync,2500);};
-async function doSync(){
-  const uid=window._fbUID;if(!uid)return;
-  try{
-    const d={uid,ts:serverTimestamp(),displayName:window._fbUser?.displayName||'',email:window._fbUser?.email||'',role:window._fbRole||'athlete'};
-    PRIV.forEach(k=>{try{const v=localStorage.getItem(k);if(v!=null)d[k]=v;}catch{}});
-    const pg=JSON.parse(localStorage.getItem('cf7p')||'[]');
-    if(pg.length){d._latestScore=parseInt(pg[0].bar||0);d._unit=JSON.parse(localStorage.getItem('cf7pr')||'{}').unit||'gen';}
-    await setDoc(doc(db,'users',uid),d,{merge:true});
-    const dot=document.getElementById('sync-dot');
-    if(dot){dot.style.background='var(--pri)';setTimeout(()=>dot.style.background='rgba(0,255,136,.3)',3000);}
-  }catch(e){console.warn('syncUp:',e);}
-}
-
-// Patch localStorage to auto-sync
-const _orig=localStorage.setItem.bind(localStorage);
-localStorage.setItem=(k,v)=>{_orig(k,v);if(window._fbUID&&PRIV.includes(k))window._syncUp?.();};
-
-// ── COACH: Groups ──
-window._coachGroups=[];window._coachAthletes={};
-
-async function loadCoachGroups(coachUid){
-  try{
-    const q=query(collection(db,'groups'),where('coachId','==',coachUid));
-    const snap=await getDocs(q);
-    window._coachGroups=snap.docs.map(d=>({id:d.id,...d.data()}));
-    localStorage.setItem('cf7_coach_groups',JSON.stringify(window._coachGroups));
-    if(typeof renderCoachGroupsUI==='function')renderCoachGroupsUI();
-    for(const g of window._coachGroups)await loadGroupMembers(g.id);
-  }catch(e){console.warn('loadGroups:',e);}
-}
-
-async function loadGroupMembers(groupId){
-  try{
-    const q=query(collection(db,'group_members'),where('groupId','==',groupId));
-    const snap=await getDocs(q);
-    const athletes=[];
-    for(const m of snap.docs){
-      try{
-        const uid=m.data().athleteUid;
-        const uSnap=await getDoc(doc(db,'users',uid));
-        if(uSnap.exists()){
-          const ud=uSnap.data();
-          athletes.push({uid,nm:ud.displayName||ud.email?.split('@')[0]||'לוחם',email:ud.email||'',sc:ud._latestScore||0,unit:ud._unit||'gen'});
-        }
-      }catch(e){}
-    }
-    window._coachAthletes[groupId]=athletes;
-    localStorage.setItem('cf7_ath_'+groupId,JSON.stringify(athletes));
-    if(typeof renderCoachGroupsUI==='function')renderCoachGroupsUI();
-  }catch(e){console.warn('loadMembers:',e);}
-}
-
-window._createGroup=async function(name){
-  if(!window._fbUID)return null;
-  try{
-    const code='CF-'+Math.random().toString(36).slice(2,8).toUpperCase();
-    const ref=await addDoc(collection(db,'groups'),{name,coachId:window._fbUID,coachName:window._fbUser?.displayName||'מאמן',code,createdAt:serverTimestamp()});
-    await loadCoachGroups(window._fbUID);
-    return{id:ref.id,code,name};
-  }catch(e){console.warn('createGroup:',e);return null;}
-};
-
-window._joinGroup=async function(code){
-  if(!window._fbUID||!code)return{ok:false,msg:'שגיאה'};
-  try{
-    const q=query(collection(db,'groups'),where('code','==',code.toUpperCase().trim()));
-    const snap=await getDocs(q);
-    if(snap.empty)return{ok:false,msg:'קוד לא נמצא'};
-    const g=snap.docs[0];
-    await setDoc(doc(db,'group_members',g.id+'_'+window._fbUID),{groupId:g.id,athleteUid:window._fbUID,coachId:g.data().coachId,joinDate:serverTimestamp()});
-    await updateDoc(doc(db,'users',window._fbUID),{coachId:g.data().coachId,groupId:g.id,groupName:g.data().name});
-    return{ok:true,groupName:g.data().name,coachName:g.data().coachName};
-  }catch(e){return{ok:false,msg:e.message};}
-};
-
-// ── Messages ──
-window._sendMsg=async function(toUid,text,type,groupId){
-  if(!window._fbUID||!text)return false;
-  try{await addDoc(collection(db,'messages'),{to:toUid,from:window._fbUID,fromName:window._fbUser?.displayName||'מאמן',text,type:type||'message',groupId:groupId||'',read:false,ts:serverTimestamp()});return true;}catch(e){return false;}
-};
-
-window._sendGroupMsg=async function(groupId,text,type){
-  if(!window._fbUID||!groupId||!text)return;
-  const athletes=window._coachAthletes[groupId]||[];
-  await Promise.all(athletes.map(a=>addDoc(collection(db,'messages'),{to:a.uid,from:window._fbUID,fromName:window._fbUser?.displayName||'מאמן',text,type:type||'announcement',groupId,read:false,ts:serverTimestamp()})));
-};
-
-let _msgUnsub=null;
-function listenMessages(uid){
-  if(_msgUnsub)_msgUnsub();
-  try{
-    const q=query(collection(db,'messages'),where('to','==',uid),where('read','==',false));
-    _msgUnsub=onSnapshot(q,snap=>{
-      const n=snap.docs.length;
-      const b=document.getElementById('msg-badge');
-      if(b){b.textContent=n>0?n:'';b.style.display=n>0?'block':'none';}
-    });
-  }catch(e){}
-}
-
-window._getMyMessages=async function(){
-  try{const q=query(collection(db,'messages'),where('to','==',window._fbUID),orderBy('ts','desc'),limit(30));const snap=await getDocs(q);return snap.docs.map(d=>({id:d.id,...d.data()}));}catch{return[];}
-};
-
-// ── Leaderboard ──
-window._pushLBScore=async(name,score,unit)=>{if(!window._fbUID)return;try{await setDoc(doc(db,'leaderboard',window._fbUID),{name,score,unit,ts:serverTimestamp()},{merge:true});}catch{}};
-window._pullLBScores=async()=>{try{const q=query(collection(db,'leaderboard'),orderBy('score','desc'),limit(50));const snap=await getDocs(q);return snap.docs.map(d=>({...d.data(),uid:d.id}));}catch{return null;}};
-
-// ── Auth state ──
-onAuthStateChanged(auth,user=>{
-  window._fbUser=user||null;window._fbUID=user?.uid||null;
-  const badge=document.getElementById('fb-badge');
-  const abtn=document.getElementById('auth-top-btn');
-  const dot=document.getElementById('sync-dot');
-  if(user){
-    const name=user.displayName||user.email?.split('@')[0]||'לוחם';
-    if(badge){badge.textContent='👤 '+name;badge.style.display='flex';}
-    if(abtn)abtn.style.display='none';
-    if(dot){dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';}
-    syncDown(user.uid);
-  }else{
-    if(badge)badge.style.display='none';
-    if(abtn)abtn.style.display='block';
-    if(dot){dot.style.background='rgba(255,255,255,.1)';dot.title='לא מחובר';}
-    if(!localStorage.getItem('cf7_skip_auth')){
-      setTimeout(()=>{const m=document.getElementById('auth-modal');if(m)m.style.display='block';},800);
-    }
+// ══════════════════════════════════════════════════════
+// DRAFT COUNTDOWN — counts down to enlistment date
+// ══════════════════════════════════════════════════════
+function initDraftCountdown(){
+  var pr=ld(K.PR,{});
+  var draft=pr.draft;
+  var card=document.getElementById('draft-countdown-card');
+  if(!draft||!card)return;
+  // Parse date dd/mm/yyyy or yyyy-mm-dd
+  var parts,draftDate;
+  if(draft.includes('/')){
+    parts=draft.split('/');
+    draftDate=new Date(parts[2],parts[1]-1,parts[0]);
+  } else {
+    draftDate=new Date(draft);
   }
+  if(isNaN(draftDate.getTime()))return;
+  var now=new Date();
+  if(draftDate<=now){card.style.display='none';return;}
+  card.style.display='block';
+  var unitEl=document.getElementById('cd-unit');
+  if(unitEl)unitEl.textContent='יחידת יעד: '+(pr.unit||'לא הוגדר');
+  function tick(){
+    var diff=draftDate-new Date();
+    if(diff<=0){card.style.display='none';return;}
+    var days=Math.floor(diff/864e5);
+    var hours=Math.floor((diff%864e5)/36e5);
+    var mins=Math.floor((diff%36e5)/6e4);
+    var dd=document.getElementById('cd-days');
+    var dh=document.getElementById('cd-hours');
+    var dm=document.getElementById('cd-mins');
+    if(dd)dd.textContent=days;
+    if(dh)dh.textContent=String(hours).padStart(2,'0');
+    if(dm)dm.textContent=String(mins).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick,60000);
+}
+
+// ══════════════════════════════════════════════════════
+// SLEEP TRACKER — Whoop-inspired
+// ══════════════════════════════════════════════════════
+function calcSleep(){
+  var hours=parseFloat(document.getElementById('sl-hours')?.value||7);
+  var qual=parseInt(document.getElementById('sl-qual')?.value||7);
+  var res=document.getElementById('sl-result');
+  if(!res)return;
+  var score=Math.round((hours/9*60)+(qual/10*40));
+  score=Math.min(100,Math.max(0,score));
+  var color=score>=80?'var(--pri)':score>=60?'var(--yellow)':'var(--red)';
+  var label=score>=80?'מצוין — מוכן לאימון קשה':score>=60?'בסדר — אימון בינוני מומלץ':score<40?'גרוע — מנוחה פעילה בלבד':'נמוך — הפחת עצימות';
+  var tips=hours<6?'⚠️ פחות מ-6 שעות — הגוף לא התאושש. שקול לדחות אימון כוח.':
+           hours<7?'💡 נסה לישון 30 דקות יותר מחר.':
+           hours>=8?'✅ שינה מספקת! מקסם את האימון.':'💡 שינה טובה, המשך ככה.';
+  res.innerHTML=
+    '<div style="background:var(--card2);border-radius:10px;padding:12px;text-align:center">'+
+    '<div style="font-family:var(--fd);font-size:42px;color:'+color+';line-height:1">'+score+'</div>'+
+    '<div style="font-size:11px;color:var(--txt2);margin:4px 0">ציון שינה</div>'+
+    '<div style="font-weight:800;font-size:12px;color:'+color+'">'+label+'</div>'+
+    '<div style="font-size:11px;color:var(--txt2);margin-top:6px">'+tips+'</div>'+
+    '</div>';
+}
+
+function saveSleep(){
+  var hours=parseFloat(document.getElementById('sl-hours')?.value||7);
+  var qual=parseInt(document.getElementById('sl-qual')?.value||7);
+  var bed=document.getElementById('sl-bed')?.value||'23:00';
+  var wake=document.getElementById('sl-wake')?.value||'06:00';
+  var hist=ld('cf7_sleep',[]);
+  hist.unshift({date:new Date().toLocaleDateString('he-IL'),hours,qual,bed,wake,ts:Date.now()});
+  sv('cf7_sleep',hist.slice(0,30));
+  renderSleepHistory();
+  notify('😴 שינה נשמרה!','p');
+}
+
+function renderSleepHistory(){
+  var hist=ld('cf7_sleep',[]);
+  var el=document.getElementById('sl-history');
+  if(!el)return;
+  if(!hist.length){el.innerHTML='<div class="mini">אין היסטוריה עדיין</div>';return;}
+  var avg=hist.slice(0,7).reduce(function(s,h){return s+h.hours;},0)/Math.min(hist.length,7);
+  el.innerHTML=
+    '<div style="background:var(--card2);border-radius:9px;padding:8px;margin-bottom:8px;text-align:center">'+
+    '<div style="font-size:10px;color:var(--txt3)">ממוצע 7 ימים</div>'+
+    '<div style="font-family:var(--fd);font-size:28px;color:var(--purple)">'+avg.toFixed(1)+'<span style="font-size:12px"> שעות</span></div>'+
+    '</div>'+
+    hist.slice(0,7).map(function(h){
+      var c=h.hours>=8?'var(--pri)':h.hours>=7?'var(--yellow)':'var(--red)';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--b1)">'+
+        '<span style="font-size:11px;color:var(--txt2)">'+h.date+'</span>'+
+        '<div style="display:flex;gap:8px;align-items:center">'+
+          '<span style="font-family:var(--fd);font-size:16px;color:'+c+'">'+h.hours+'ש</span>'+
+          '<span style="font-size:10px;color:var(--txt3)">איכות: '+h.qual+'/10</span>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// INJURY PREVENTION DATABASE — IDF Protocol
+// ══════════════════════════════════════════════════════
+var INJURY_DB={
+  shin:{
+    name:'שין-ספלינט',icon:'🦵',
+    cause:'עומס יתר על עצם השוקה — ריצה קשה מדי מהר מדי',
+    red:['כאב חד בשוקיים בזמן ריצה','נפיחות לאחר פעילות','כאב במישוש'],
+    treat:['הפסק ריצה ל-3-5 ימים','קרח 15 דקות × 3/יום','תרגיל: Calf raises 3×20','תרגיל: Toe taps 3×30'],
+    prevent:['הגדל עצימות ב-10% לשבוע בלבד','נעלי ריצה מתאימות','מדרסים אם רגל שטוחה','חימום 10 דק לפני כל ריצה'],
+    return:'חזרה מדורגת: הליכה → ריצה קלה → ריצה מלאה'
+  },
+  shoulder:{
+    name:'כתף — Impingement',icon:'💪',
+    cause:'לחץ על גידים מתרגילי מתח + נשיאת כיס',
+    red:['כאב בהרמת יד מעל הראש','חולשה בשרוול מסובב','כאב בלילה'],
+    treat:['הפסק מתח ל-7 ימים','חזק: Band external rotation 3×15','תמוך: מתיחת חזה 3×30שנ'],
+    prevent:['Face pulls לחיזוק כתף אחורית','מתיחת פקטוראל יומית','אל תתלה מת על מוט'],
+    return:'חזרה עם טווח תנועה מלא ללא כאב'
+  },
+  knee:{
+    name:'ברך — Runners Knee',icon:'🦵',
+    cause:'חיכוך תחת הפיקה — ריצה וירידות',
+    red:['כאב מסביב לפיקה','כאב בירידה במדרגות','נוקשות בבוקר'],
+    treat:['הפחת ריצה ב-50%','תרגיל: VMO squats 3×15','קרח 15 דק לאחר ריצה','הרמת רגל ישרה 3×15'],
+    prevent:['חזק VMO: terminal knee extensions','נעליים עם בולם זעזועים','הימנע מריצה בירידות תלולות'],
+    return:'חזרה כשאין כאב בריצה קלה 10 דק'
+  },
+  back:{
+    name:'גב תחתון',icon:'🔙',
+    cause:'כפיפות שגויות + כיס כבד + ישיבה ממושכת',
+    red:['כאב חד בהרמה','הקרנה לרגל','נוקשות בוקר מעל 30 דק'],
+    treat:['McGill Big 3: Bird-dog, Modified curl-up, Side plank','מתיחת היפ-פלקסור 2×45שנ','הימנע מישיבה ממושכת'],
+    prevent:['Dead bug 3×8 יומי','Hip hinge נכון בהרמות','ליבה חזקה = גב מוגן'],
+    return:'חזרה עם טכניקה מושלמת בלבד'
+  }
+};
+
+function showInjury(type){
+  var inj=INJURY_DB[type];
+  if(!inj)return;
+  var el=document.getElementById('injury-detail');
+  if(!el)return;
+  el.style.display='block';
+  el.innerHTML=
+    '<div style="background:var(--card2);border-radius:12px;padding:12px;margin-top:8px">'+
+    '<div style="font-size:16px;font-weight:900;color:var(--red);margin-bottom:8px">'+inj.icon+' '+inj.name+'</div>'+
+    '<div style="font-size:11px;color:var(--txt2);margin-bottom:10px">'+inj.cause+'</div>'+
+    '<div style="font-size:10px;font-weight:800;color:var(--orange);margin-bottom:4px">🚨 סימני אזהרה:</div>'+
+    inj.red.map(function(r){return '<div style="font-size:11px;color:var(--txt);padding:2px 0">• '+r+'</div>';}).join('')+
+    '<div style="font-size:10px;font-weight:800;color:var(--yellow);margin:8px 0 4px">💊 טיפול מיידי:</div>'+
+    inj.treat.map(function(t){return '<div style="font-size:11px;color:var(--txt);padding:2px 0">• '+t+'</div>';}).join('')+
+    '<div style="font-size:10px;font-weight:800;color:var(--pri);margin:8px 0 4px">🛡 מניעה:</div>'+
+    inj.prevent.map(function(p){return '<div style="font-size:11px;color:var(--txt);padding:2px 0">• '+p+'</div>';}).join('')+
+    '<div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:8px;margin-top:8px;font-size:11px;color:var(--pri)">'+
+    '✅ חזרה לאימון: '+inj.return+'</div>'+
+    '</div>';
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+var PREHAB_ROUTINES=[
+  [{name:'Hip 90/90 stretch',d:'2 דקות כל צד'},
+   {name:'Thoracic rotation',d:'10 × כל צד'},
+   {name:'Calf raises slow',d:'3×15'},
+   {name:'Dead bug',d:'3×8 כל צד'}],
+  [{name:'Banded clamshells',d:'3×15 כל צד'},
+   {name:'World greatest stretch',d:'5 × כל צד'},
+   {name:'Single leg balance',d:'3×30שנ כל רגל'},
+   {name:'Face pulls',d:'3×15'}],
+  [{name:'Jefferson curl',d:'3×8 איטי'},
+   {name:'Prone Y-T-W',d:'2×10 כל צורה'},
+   {name:'Ankle circles',d:'20 × כל כיוון'},
+   {name:'McGill bird-dog',d:'3×10 כל צד'}]
+];
+
+function renderPrehab(){
+  var el=document.getElementById('daily-prehab');
+  if(!el)return;
+  var r=PREHAB_ROUTINES[Math.floor(Math.random()*PREHAB_ROUTINES.length)];
+  el.innerHTML=r.map(function(ex){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--b1)">'+
+      '<span style="font-size:12px;font-weight:700;color:var(--txt)">'+ex.name+'</span>'+
+      '<span style="font-size:11px;color:var(--pri);font-weight:800">'+ex.d+'</span>'+
+    '</div>';
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// SHARE SCORE — Strava-style score card
+// ══════════════════════════════════════════════════════
+function shareScore(){
+  var scores=ld(K.P,[]);
+  var pr=ld(K.PR,{});
+  var last=scores[0]||{};
+  if(!last.bar){notify('בצע מבחן קודם!','y');return;}
+  var text='⚔ Combat Fit IL\n'+
+    'ציון: '+last.bar+'/100\n'+
+    'יחידת יעד: '+(pr.unit||'לא הוגדר')+'\n'+
+    'תאריך: '+last.date+'\n'+
+    'app-for-running.vercel.app';
+  if(navigator.share){
+    navigator.share({title:'Combat Fit IL — הציון שלי',text:text,url:'https://app-for-running.vercel.app'})
+      .then(function(){notify('שותף! 📤','p');})
+      .catch(function(){copyToClipboard(text);});
+  } else {
+    copyToClipboard(text);
+    notify('הציון הועתק ללוח 📋','p');
+  }
+}
+
+function copyToClipboard(txt){
+  var ta=document.createElement('textarea');
+  ta.value=txt;document.body.appendChild(ta);ta.select();
+  document.execCommand('copy');document.body.removeChild(ta);
+}
+
+// ══════════════════════════════════════════════════════
+// PATCH trt to init sleep/injury/prehab
+// ══════════════════════════════════════════════════════
+window.addEventListener('beforeunload', function() {
+  // Save current profile inputs
+  try{
+    const nameEl=document.getElementById('pnm');
+    const ageEl=document.getElementById('pag');
+    const heightEl=document.getElementById('phg');
+    const weightEl=document.getElementById('pwg');
+    const unitEl=document.getElementById('pun');
+    const draftEl=document.getElementById('pdr');
+    if(nameEl&&nameEl.value){
+      var pr=ld(K.PR,{});
+      if(nameEl.value)pr.name=nameEl.value;
+      if(ageEl&&ageEl.value)pr.age=ageEl.value;
+      if(heightEl&&heightEl.value)pr.height=heightEl.value;
+      if(weightEl&&weightEl.value)pr.weight=weightEl.value;
+      if(unitEl&&unitEl.value)pr.unit=unitEl.value;
+      if(draftEl&&draftEl.value)pr.draft=draftEl.value;
+      sv(K.PR,pr);
+    }
+    // Save AI settings
+    const aiAge=document.getElementById('ai-age');
+    const aiWgt=document.getElementById('weight');
+    if(aiAge&&aiAge.value)localStorage.setItem('cf_age',aiAge.value);
+    if(aiWgt&&aiWgt.value)localStorage.setItem('cf_wgt',aiWgt.value);
+    // Save muscle state
+    if(Object.keys(muscleState).length)sv('cf7_muscles',muscleState);
+  }catch(e){}
 });
 
-window._FB={auth,db,doc,setDoc,getDoc,collection,getDocs,addDoc,updateDoc,query,where,orderBy,limit,serverTimestamp,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,updateProfile,GoogleAuthProvider,signInWithPopup};
-window._fbSignOut=()=>signOut(auth);
-}catch(e){console.warn('Firebase:',e);}
-
-
-// ══════════ AUTO-SAVE ON TAB CLOSE / RELOAD ══════════
+// ══════════ RESTORE MUSCLE STATE ON LOAD ══════════
+document.addEventListener('DOMContentLoaded',function(){
+  var savedMuscles=ld('cf7_muscles',null);
+  if(savedMuscles&&typeof savedMuscles==='object'){
+    muscleState=savedMuscles;
+  }
+});
+// ═══════════════════════════════════════════════════
 
 // ══════════════════════════════════════════════════════
 // RUCK TRAINING — Tsevet Lohamim / Goruck inspired
@@ -8126,44 +8282,183 @@ function genOperatorWorkout(type){
 var _origTrt=window.trt||function(){};
 // Patch trt to init new sections
 var _patchedTrt=false;
+</script>
 
-window.addEventListener('beforeunload', function() {
-  // Save current profile inputs
+<!-- Firebase SDK — Multi-group combat fitness -->
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,
+  onAuthStateChanged,signOut,updateProfile,GoogleAuthProvider,signInWithPopup}
+  from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import{getFirestore,doc,setDoc,getDoc,serverTimestamp,collection,getDocs,
+  query,where,orderBy,limit,onSnapshot,addDoc,updateDoc}
+  from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const FC={apiKey:"AIzaSyAWcDNu_VJojA-wS_f-BbFcSyW56KSE5Ng",authDomain:"app-for-army.firebaseapp.com",projectId:"app-for-army",storageBucket:"app-for-army.firebasestorage.app",messagingSenderId:"1023834576325",appId:"1:1023834576325:web:4cfa5653d257245ae267ac"};
+
+try{
+const app=initializeApp(FC);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+// ── Private athlete data keys ──
+const PRIV=['cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7lb','cf7ath','cf7rec','cf7_profile','cf7_workout_history','cf7_measurements'];
+
+// Sync DOWN: Firestore → localStorage
+async function syncDown(uid){
   try{
-    const nameEl=document.getElementById('pnm');
-    const ageEl=document.getElementById('pag');
-    const heightEl=document.getElementById('phg');
-    const weightEl=document.getElementById('pwg');
-    const unitEl=document.getElementById('pun');
-    const draftEl=document.getElementById('pdr');
-    if(nameEl&&nameEl.value){
-      var pr=ld(K.PR,{});
-      if(nameEl.value)pr.name=nameEl.value;
-      if(ageEl&&ageEl.value)pr.age=ageEl.value;
-      if(heightEl&&heightEl.value)pr.height=heightEl.value;
-      if(weightEl&&weightEl.value)pr.weight=weightEl.value;
-      if(unitEl&&unitEl.value)pr.unit=unitEl.value;
-      if(draftEl&&draftEl.value)pr.draft=draftEl.value;
-      sv(K.PR,pr);
-    }
-    // Save AI settings
-    const aiAge=document.getElementById('ai-age');
-    const aiWgt=document.getElementById('weight');
-    if(aiAge&&aiAge.value)localStorage.setItem('cf_age',aiAge.value);
-    if(aiWgt&&aiWgt.value)localStorage.setItem('cf_wgt',aiWgt.value);
-    // Save muscle state
-    if(Object.keys(muscleState).length)sv('cf7_muscles',muscleState);
-  }catch(e){}
-});
+    const snap=await getDoc(doc(db,'users',uid));
+    if(snap.exists()){
+      const d=snap.data();
+      PRIV.forEach(k=>{if(d[k]!=null)localStorage.setItem(k,d[k]);});
+      window._fbRole=d.role||'athlete';
+      if(typeof refreshDash==='function')setTimeout(refreshDash,200);
+      if(typeof notify==='function')notify('☁️ נתונים סונכרנו!','p');
+      if(d.role==='coach')loadCoachGroups(uid);
+      else listenMessages(uid);
+    } else syncUp(uid);
+  }catch(e){console.warn('syncDown:',e);}
+}
 
-// ══════════ RESTORE MUSCLE STATE ON LOAD ══════════
-document.addEventListener('DOMContentLoaded',function(){
-  var savedMuscles=ld('cf7_muscles',null);
-  if(savedMuscles&&typeof savedMuscles==='object'){
-    muscleState=savedMuscles;
+// Sync UP: localStorage → Firestore
+let _st=null;
+window._syncUp=()=>{clearTimeout(_st);_st=setTimeout(doSync,2500);};
+async function doSync(){
+  const uid=window._fbUID;if(!uid)return;
+  try{
+    const d={uid,ts:serverTimestamp(),displayName:window._fbUser?.displayName||'',email:window._fbUser?.email||'',role:window._fbRole||'athlete'};
+    PRIV.forEach(k=>{try{const v=localStorage.getItem(k);if(v!=null)d[k]=v;}catch{}});
+    const pg=JSON.parse(localStorage.getItem('cf7p')||'[]');
+    if(pg.length){d._latestScore=parseInt(pg[0].bar||0);d._unit=JSON.parse(localStorage.getItem('cf7pr')||'{}').unit||'gen';}
+    await setDoc(doc(db,'users',uid),d,{merge:true});
+    const dot=document.getElementById('sync-dot');
+    if(dot){dot.style.background='var(--pri)';setTimeout(()=>dot.style.background='rgba(0,255,136,.3)',3000);}
+  }catch(e){console.warn('syncUp:',e);}
+}
+
+// Patch localStorage to auto-sync
+const _orig=localStorage.setItem.bind(localStorage);
+localStorage.setItem=(k,v)=>{_orig(k,v);if(window._fbUID&&PRIV.includes(k))window._syncUp?.();};
+
+// ── COACH: Groups ──
+window._coachGroups=[];window._coachAthletes={};
+
+async function loadCoachGroups(coachUid){
+  try{
+    const q=query(collection(db,'groups'),where('coachId','==',coachUid));
+    const snap=await getDocs(q);
+    window._coachGroups=snap.docs.map(d=>({id:d.id,...d.data()}));
+    localStorage.setItem('cf7_coach_groups',JSON.stringify(window._coachGroups));
+    if(typeof renderCoachGroupsUI==='function')renderCoachGroupsUI();
+    for(const g of window._coachGroups)await loadGroupMembers(g.id);
+  }catch(e){console.warn('loadGroups:',e);}
+}
+
+async function loadGroupMembers(groupId){
+  try{
+    const q=query(collection(db,'group_members'),where('groupId','==',groupId));
+    const snap=await getDocs(q);
+    const athletes=[];
+    for(const m of snap.docs){
+      try{
+        const uid=m.data().athleteUid;
+        const uSnap=await getDoc(doc(db,'users',uid));
+        if(uSnap.exists()){
+          const ud=uSnap.data();
+          athletes.push({uid,nm:ud.displayName||ud.email?.split('@')[0]||'לוחם',email:ud.email||'',sc:ud._latestScore||0,unit:ud._unit||'gen'});
+        }
+      }catch(e){}
+    }
+    window._coachAthletes[groupId]=athletes;
+    localStorage.setItem('cf7_ath_'+groupId,JSON.stringify(athletes));
+    if(typeof renderCoachGroupsUI==='function')renderCoachGroupsUI();
+  }catch(e){console.warn('loadMembers:',e);}
+}
+
+window._createGroup=async function(name){
+  if(!window._fbUID)return null;
+  try{
+    const code='CF-'+Math.random().toString(36).slice(2,8).toUpperCase();
+    const ref=await addDoc(collection(db,'groups'),{name,coachId:window._fbUID,coachName:window._fbUser?.displayName||'מאמן',code,createdAt:serverTimestamp()});
+    await loadCoachGroups(window._fbUID);
+    return{id:ref.id,code,name};
+  }catch(e){console.warn('createGroup:',e);return null;}
+};
+
+window._joinGroup=async function(code){
+  if(!window._fbUID||!code)return{ok:false,msg:'שגיאה'};
+  try{
+    const q=query(collection(db,'groups'),where('code','==',code.toUpperCase().trim()));
+    const snap=await getDocs(q);
+    if(snap.empty)return{ok:false,msg:'קוד לא נמצא'};
+    const g=snap.docs[0];
+    await setDoc(doc(db,'group_members',g.id+'_'+window._fbUID),{groupId:g.id,athleteUid:window._fbUID,coachId:g.data().coachId,joinDate:serverTimestamp()});
+    await updateDoc(doc(db,'users',window._fbUID),{coachId:g.data().coachId,groupId:g.id,groupName:g.data().name});
+    return{ok:true,groupName:g.data().name,coachName:g.data().coachName};
+  }catch(e){return{ok:false,msg:e.message};}
+};
+
+// ── Messages ──
+window._sendMsg=async function(toUid,text,type,groupId){
+  if(!window._fbUID||!text)return false;
+  try{await addDoc(collection(db,'messages'),{to:toUid,from:window._fbUID,fromName:window._fbUser?.displayName||'מאמן',text,type:type||'message',groupId:groupId||'',read:false,ts:serverTimestamp()});return true;}catch(e){return false;}
+};
+
+window._sendGroupMsg=async function(groupId,text,type){
+  if(!window._fbUID||!groupId||!text)return;
+  const athletes=window._coachAthletes[groupId]||[];
+  await Promise.all(athletes.map(a=>addDoc(collection(db,'messages'),{to:a.uid,from:window._fbUID,fromName:window._fbUser?.displayName||'מאמן',text,type:type||'announcement',groupId,read:false,ts:serverTimestamp()})));
+};
+
+let _msgUnsub=null;
+function listenMessages(uid){
+  if(_msgUnsub)_msgUnsub();
+  try{
+    const q=query(collection(db,'messages'),where('to','==',uid),where('read','==',false));
+    _msgUnsub=onSnapshot(q,snap=>{
+      const n=snap.docs.length;
+      const b=document.getElementById('msg-badge');
+      if(b){b.textContent=n>0?n:'';b.style.display=n>0?'block':'none';}
+    });
+  }catch(e){}
+}
+
+window._getMyMessages=async function(){
+  try{const q=query(collection(db,'messages'),where('to','==',window._fbUID),orderBy('ts','desc'),limit(30));const snap=await getDocs(q);return snap.docs.map(d=>({id:d.id,...d.data()}));}catch{return[];}
+};
+
+// ── Leaderboard ──
+window._pushLBScore=async(name,score,unit)=>{if(!window._fbUID)return;try{await setDoc(doc(db,'leaderboard',window._fbUID),{name,score,unit,ts:serverTimestamp()},{merge:true});}catch{}};
+window._pullLBScores=async()=>{try{const q=query(collection(db,'leaderboard'),orderBy('score','desc'),limit(50));const snap=await getDocs(q);return snap.docs.map(d=>({...d.data(),uid:d.id}));}catch{return null;}};
+
+// ── Auth state ──
+onAuthStateChanged(auth,user=>{
+  window._fbUser=user||null;window._fbUID=user?.uid||null;
+  const badge=document.getElementById('fb-badge');
+  const abtn=document.getElementById('auth-top-btn');
+  const dot=document.getElementById('sync-dot');
+  if(user){
+    const name=user.displayName||user.email?.split('@')[0]||'לוחם';
+    if(badge){badge.textContent='👤 '+name;badge.style.display='flex';}
+    if(abtn)abtn.style.display='none';
+    if(dot){dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';}
+    syncDown(user.uid);
+  }else{
+    if(badge)badge.style.display='none';
+    if(abtn)abtn.style.display='block';
+    if(dot){dot.style.background='rgba(255,255,255,.1)';dot.title='לא מחובר';}
+    if(!localStorage.getItem('cf7_skip_auth')){
+      setTimeout(()=>{const m=document.getElementById('auth-modal');if(m)m.style.display='block';},800);
+    }
   }
 });
-// ═══════════════════════════════════════════════════
+
+window._FB={auth,db,doc,setDoc,getDoc,collection,getDocs,addDoc,updateDoc,query,where,orderBy,limit,serverTimestamp,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,updateProfile,GoogleAuthProvider,signInWithPopup};
+window._fbSignOut=()=>signOut(auth);
+}catch(e){console.warn('Firebase:',e);}
+
+
+// ══════════ AUTO-SAVE ON TAB CLOSE / RELOAD ══════════
 
 </script>
 
