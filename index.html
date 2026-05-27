@@ -1,29 +1,10 @@
 <!DOCTYPE html>
-<!-- 
-══════════════════════════════════════════════════
-COMBAT FIT IL PRO v9 — IDF ELITE SYSTEM
-══════════════════════════════════════════════════
-DEPLOY TO VERCEL:
-1. Push this file as index.html to GitHub repo
-2. Connect repo at vercel.com/new
-3. Framework: Other | Build: none | Output: ./
-4. Deploy — done! No token limits.
-
-VERCEL.JSON (create in repo root):
-{
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
-  "headers": [{ "source": "/(.*)", "headers": [
-    {"key":"Cache-Control","value":"no-store"},
-    {"key":"X-Content-Type-Options","value":"nosniff"}
-  ]}]
-}
-
-Firebase Project: app-for-army
-Default coach password: cf7_coach_pass in localStorage
-Auto-Memory: Claude remembers cf7pr, cf7p, cf7wd, cf7_ai_hist
-PDF Export: jsPDF 2.5.1
-══════════════════════════════════════════════════
--->
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
@@ -31,7 +12,7 @@ PDF Export: jsPDF 2.5.1
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v9</title>
+<title>⚔ COMBAT FIT IL PRO v7</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -56,14 +37,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .top{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:linear-gradient(180deg,#0a1020,#050810);border-bottom:1px solid var(--b2);flex-shrink:0;z-index:100;position:relative;transition:.4s}
 .top::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--pri),transparent);opacity:.4;transition:.3s}
 .logo-main{font-family:var(--fd);font-size:18px;color:var(--pri);letter-spacing:3px;text-shadow:0 0 20px rgba(0,255,136,.5);line-height:1;transition:.3s}
-.logo-sub{font-family:var(--fm);font-size:7px;color:var(--txt3);letter-spacing:2px;margin-top:1px}
+.logo-sub{font-family:var(--fm);font-size:10px;color:var(--txt3);letter-spacing:2px;margin-top:1px}
 .top-right{display:flex;align-items:center;gap:7px}
 .live-dot{width:7px;height:7px;border-radius:50%;background:var(--pri);box-shadow:0 0 10px var(--pri);animation:blink 2s infinite;flex-shrink:0}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .clk{font-family:var(--fm);font-size:14px;color:var(--yellow)}
-.mode-btn{background:var(--card3);border:1px solid var(--b2);color:var(--txt2);font-size:8px;padding:4px 9px;border-radius:8px;cursor:pointer;font-family:var(--fb);font-weight:800;letter-spacing:.5px;transition:.2s;white-space:nowrap}
+.mode-btn{background:var(--card3);border:1px solid var(--b2);color:var(--txt2);font-size:10px;padding:4px 9px;border-radius:8px;cursor:pointer;font-family:var(--fb);font-weight:800;letter-spacing:.5px;transition:.2s;white-space:nowrap}
 .mode-btn:active{transform:scale(.95)}
-.coach-badge{display:none;padding:2px 8px;border-radius:20px;font-size:8px;font-weight:900;letter-spacing:1px;background:linear-gradient(135deg,var(--purple2),#5b21b6);color:#fff}
+.coach-badge{display:none;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:900;letter-spacing:1px;background:linear-gradient(135deg,var(--purple2),#5b21b6);color:#fff}
 body.cm .coach-badge{display:inline-block}
 body.cm .top{background:linear-gradient(180deg,#130a22,#07040f)}
 body.cm .top::after{background:linear-gradient(90deg,transparent,var(--purpleL),transparent)}
@@ -174,7 +155,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 
 /* ─── BOTTOM NAV ─── */
 .bottom{background:var(--card);border-top:1px solid var(--b2);display:grid;grid-template-columns:repeat(6,1fr);padding:5px 2px 7px;flex-shrink:0;z-index:100}
-.nav{background:none;border:none;color:var(--txt3);font-size:8px;cursor:pointer;padding:4px 2px;border-radius:7px;font-family:var(--fb);font-weight:600;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:2px;letter-spacing:.2px}
+.nav{background:none;border:none;color:var(--txt3);font-size:10px;cursor:pointer;padding:4px 2px;border-radius:7px;font-family:var(--fb);font-weight:600;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:2px;letter-spacing:.2px}
 .nav .ni{font-size:18px;line-height:1;transition:.15s}
 .nav.on{color:var(--pri)}.nav.on .ni{filter:drop-shadow(0 0 6px rgba(0,255,136,.6));transform:scale(1.1)}
 
@@ -253,7 +234,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .share-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 10% 10%,rgba(0,255,136,.08),transparent 55%),radial-gradient(ellipse at 90% 90%,rgba(0,229,255,.05),transparent 55%);pointer-events:none}
 .sc-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;position:relative}
 .sc-logo{font-family:var(--fd);font-size:13px;color:var(--pri);letter-spacing:2px}
-.sc-dt{font-family:var(--fm);font-size:8px;color:var(--txt3)}
+.sc-dt{font-family:var(--fm);font-size:10px;color:var(--txt3)}
 .sc-hero{text-align:center;margin-bottom:14px;position:relative}
 .sc-emoji{font-size:36px;margin-bottom:6px;display:block}
 .sc-name{font-family:var(--fd);font-size:18px;letter-spacing:3px}
@@ -261,7 +242,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .sc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;position:relative}
 .sc-stat{background:rgba(0,0,0,.5);border:1px solid var(--b2);border-radius:10px;padding:10px 6px;text-align:center}
 .sc-val{font-family:var(--fd);font-size:22px;color:var(--pri);line-height:1;text-shadow:0 0 15px rgba(0,255,136,.35)}
-.sc-lbl{font-size:8px;color:var(--txt3);letter-spacing:.5px;margin-top:2px;text-transform:uppercase}
+.sc-lbl{font-size:10px;color:var(--txt3);letter-spacing:.5px;margin-top:2px;text-transform:uppercase}
 .sc-bar-wrap{height:3px;background:var(--b1);border-radius:2px;overflow:hidden;margin-bottom:12px;position:relative}
 .sc-bar-fill{height:100%;background:linear-gradient(90deg,var(--pri2),var(--pri),var(--cyan));border-radius:2px;transition:width 1s}
 .sc-total{text-align:center;margin-bottom:12px}
@@ -285,7 +266,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .vid-btn{background:linear-gradient(135deg,var(--card3),var(--bg3));border:1px solid var(--b2);border-radius:11px;width:100%;padding:0;cursor:pointer;margin-bottom:11px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;min-height:88px;transition:.2s}
 .vid-btn:hover{border-color:rgba(0,255,136,.4)}
 .vid-btn::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,255,136,.05),transparent 70%)}
-.vid-tag{position:absolute;top:8px;right:8px;background:rgba(255,45,85,.85);color:#fff;font-size:8px;font-weight:900;padding:2px 7px;border-radius:10px;font-family:var(--fb);z-index:1}
+.vid-tag{position:absolute;top:8px;right:8px;background:rgba(255,45,85,.85);color:#fff;font-size:10px;font-weight:900;padding:2px 7px;border-radius:10px;font-family:var(--fb);z-index:1}
 .vid-play-icon{font-size:28px;position:relative;z-index:1}
 .vid-title-txt{font-size:11px;color:var(--txt2);font-weight:700;position:relative;z-index:1}
 .vid-dur-txt{font-family:var(--fm);font-size:9px;color:var(--txt3);position:relative;z-index:1}
@@ -315,7 +296,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .ath-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px}
 .ath-kpi{background:var(--card3);border-radius:9px;padding:6px 3px;text-align:center}
 .ath-kpi-val{font-family:var(--fd);font-size:14px;line-height:1}
-.ath-kpi-lbl{font-size:7px;color:var(--txt3);letter-spacing:.3px;margin-top:2px}
+.ath-kpi-lbl{font-size:10px;color:var(--txt3);letter-spacing:.3px;margin-top:2px}
 .ath-acts{display:flex;gap:5px;margin-top:8px}
 .ath-btn{flex:1;background:var(--card3);border:1px solid var(--b2);color:var(--txt2);padding:7px 4px;border-radius:8px;font-size:9px;font-weight:700;cursor:pointer;font-family:var(--fb);text-align:center;transition:.15s}
 .ath-btn:active{background:var(--b2)}
@@ -324,7 +305,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .coach-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
 .ck-box{background:var(--card3);border:1px solid var(--b1);border-radius:11px;padding:11px 6px;text-align:center}
 .ck-num{font-family:var(--fd);font-size:26px;line-height:1;text-shadow:0 0 14px currentColor}
-.ck-lbl{font-size:8px;color:var(--txt3);letter-spacing:.5px;margin-top:3px}
+.ck-lbl{font-size:10px;color:var(--txt3);letter-spacing:.5px;margin-top:3px}
 
 /* ─── CHALLENGE / GOALS ─── */
 .challenge-card{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--b2);border-radius:13px;padding:13px;margin-bottom:8px;position:relative;overflow:hidden}
@@ -340,7 +321,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .ring-fill{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1)}
 .ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .ring-num{font-family:var(--fd);font-size:20px;line-height:1}
-.ring-sub{font-size:8px;color:var(--txt3);letter-spacing:.5px}
+.ring-sub{font-size:10px;color:var(--txt3);letter-spacing:.5px}
 
 /* ─── CALENDAR HEATMAP ─── */
 .heat-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:8px 0}
@@ -420,7 +401,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .chat-msg{padding:8px 11px;border-radius:11px;margin-bottom:5px;font-size:12px;max-width:85%;line-height:1.5;word-wrap:break-word}
 .chat-msg.coach{background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(124,58,237,.08));border:1px solid rgba(124,58,237,.25);margin-right:auto;border-bottom-right-radius:3px}
 .chat-msg.athlete{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);margin-left:auto;border-bottom-left-radius:3px}
-.chat-time{font-size:8px;color:var(--txt3);margin-top:3px}
+.chat-time{font-size:10px;color:var(--txt3);margin-top:3px}
 .chat-in{display:flex;gap:6px;margin-top:6px}
 .chat-in input{flex:1}
 
@@ -485,10 +466,8 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 /* Leaflet override */
 .leaflet-container{font-family:var(--fb)!important;background:#0d1b2a}
 .leaflet-tile{filter:invert(1) hue-rotate(180deg) brightness(0.9) saturate(0.8)}
-.leaflet-control-attribution{font-size:8px;opacity:.5}
+.leaflet-control-attribution{font-size:10px;opacity:.5}
 </style>
-<!-- jsPDF for PDF export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <!-- Netlify Identity — free auth, no credit card -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -515,6 +494,7 @@ document.head.appendChild(_link);
 </script>
 </head>
 <body>
+<body>
 
 <div id="notif" class="notif"></div>
 
@@ -522,7 +502,7 @@ document.head.appendChild(_link);
 <div class="top">
   <div>
     <div class="logo-main" id="logo-main">⚔ COMBAT FIT</div>
-    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v9.0 PRO</div>
+    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v7.0 PRO</div>
   </div>
   <div class="top-right">
     <span class="coach-badge">🎖 COACH</span>
@@ -605,19 +585,26 @@ document.head.appendChild(_link);
     <button class="btn bp" onclick="showPg('test')">▶ בצע מבחן עכשיו</button>
   </div>
 
-  <!-- Draft Countdown -->
-  <div id="draft-countdown-card" style="display:none;background:linear-gradient(135deg,rgba(255,45,85,.08),rgba(124,58,237,.08));border:1px solid rgba(255,45,85,.25);border-radius:16px;padding:14px;margin-bottom:12px;text-align:center">
-    <div style="font-size:10px;color:var(--red);font-weight:900;letter-spacing:1px;margin-bottom:6px">⚔ עד לגיוס</div>
+    <!-- Draft Countdown -->
+  <div id="draft-countdown-card" style="display:none;background:linear-gradient(135deg,rgba(255,45,85,.08),rgba(124,58,237,.08));border:1px solid rgba(255,45,85,.25);border-radius:16px;padding:14px;margin-bottom:10px;text-align:center">
+    <div style="font-size:10px;color:#ff3b5c;font-weight:900;letter-spacing:1px;margin-bottom:6px">⚔ עד לגיוס</div>
     <div style="display:flex;justify-content:center;gap:12px">
-      <div><div id="cd-days" style="font-family:var(--fd);font-size:36px;color:var(--red);line-height:1">--</div><div style="font-size:9px;color:var(--txt3)">ימים</div></div>
-      <div style="font-family:var(--fd);font-size:36px;color:var(--txt3)">:</div>
-      <div><div id="cd-hours" style="font-family:var(--fd);font-size:36px;color:var(--orange);line-height:1">--</div><div style="font-size:9px;color:var(--txt3)">שעות</div></div>
-      <div style="font-family:var(--fd);font-size:36px;color:var(--txt3)">:</div>
-      <div><div id="cd-mins" style="font-family:var(--fd);font-size:36px;color:var(--yellow);line-height:1">--</div><div style="font-size:9px;color:var(--txt3)">דקות</div></div>
+      <div><div id="cd-days" style="font-family:var(--fd);font-size:34px;color:#ff3b5c;line-height:1">--</div><div style="font-size:9px;color:var(--txt3)">ימים</div></div>
+      <div style="font-family:var(--fd);font-size:34px;color:var(--txt3)">:</div>
+      <div><div id="cd-hours" style="font-family:var(--fd);font-size:34px;color:#ff8800;line-height:1">--</div><div style="font-size:9px;color:var(--txt3)">שעות</div></div>
+      <div style="font-family:var(--fd);font-size:34px;color:var(--txt3)">:</div>
+      <div><div id="cd-mins" style="font-family:var(--fd);font-size:34px;color:#ffd60a;line-height:1">--</div><div style="font-size:9px;color:var(--txt3)">דקות</div></div>
     </div>
     <div id="cd-unit" style="font-size:11px;color:var(--txt2);margin-top:6px"></div>
   </div>
-
+  <!-- Progress Chart -->
+  <div class="card" id="progress-chart-card" style="display:none">
+    <div class="sh">📈 התקדמות ציוני</div>
+    <div id="progress-chart-svg" style="margin-top:8px;overflow-x:auto"></div>
+  </div>
+    <!-- Daily quote + streak -->
+  <div id="daily-quote" style="background:linear-gradient(135deg,rgba(0,255,136,.06),rgba(0,229,255,.04));border:1px solid rgba(0,255,136,.15);border-radius:12px;padding:12px 14px;margin-bottom:8px;direction:rtl"></div>
+  <div id="streak-badge" style="display:none;align-items:center;justify-content:center;background:rgba(255,136,0,.12);border:1px solid rgba(255,136,0,.3);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px"></div>
   <div class="mc" id="daily-mc">
     <div class="mt">🎯 משימת היום</div>
     <div class="mx" id="mission-txt">טוען...</div>
@@ -648,21 +635,6 @@ document.head.appendChild(_link);
     <div style="margin-top:8px"><div class="sh y">📅 30 יום אחרונים</div><div class="heat-grid" id="heat-grid"></div></div>
   </div>
 
-
-  <!-- ══ OPERATOR MODE — לחיילים בשירות פעיל ══ -->
-  <div class="card" style="border-color:rgba(255,45,85,.3);background:linear-gradient(135deg,rgba(255,45,85,.05),var(--card));margin-top:0" id="operator-card">
-    <div class="sh r">⚡ מצב Operator — שירות פעיל</div>
-    <div class="mini" style="margin-bottom:10px">תוכנית לחיילים בשירות — מסביב לאימון הבסיסי, ללא ציוד</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <button class="btn" onclick="genOperatorWorkout('field')" style="background:rgba(255,45,85,.08);border:1px solid rgba(255,45,85,.25);color:var(--red);font-size:11px;font-weight:800;padding:10px">
-        🏕 שטח<br/><span style="font-size:9px;color:var(--txt3)">ללא ציוד בכלל</span>
-      </button>
-      <button class="btn" onclick="genOperatorWorkout('base')" style="background:rgba(255,136,0,.08);border:1px solid rgba(255,136,0,.25);color:var(--orange);font-size:11px;font-weight:800;padding:10px">
-        🏗 בסיס<br/><span style="font-size:9px;color:var(--txt3)">מוטות + אספלט</span>
-      </button>
-    </div>
-    <div id="operator-out" style="margin-top:8px"></div>
-  </div>
   <!-- Quick workout -->
   <div class="card hot">
     <div class="sh">⚡ אימון מהיר 15 דקות</div>
@@ -716,7 +688,7 @@ document.head.appendChild(_link);
       <div><label>ישיבות (2 דקות)</label><input id="bsi" type="number" placeholder="70" min="0"/></div>
       <button class="btn bp" onclick="calcBaror()">חשב ציון</button>
       <div id="br-res" style="margin-top:10px"></div>
-      <button class="btn bs" style="margin-top:8px;display:none" id="share-score-btn" onclick="shareScore()">📤 שתף ציון</button>
+      <button class="btn bs" id="share-score-btn" style="display:none;margin-top:8px;min-height:44px" onclick="shareScore()">📤 שתף ציון</button>
     </div>
     <div class="card">
       <div class="sh">🏆 יעדים לפי יחידה</div>
@@ -1418,6 +1390,7 @@ document.head.appendChild(_link);
     <div style="background:var(--card);border:1px solid var(--b2);border-radius:13px;padding:13px;margin-bottom:10px">
       <div style="font-size:11px;font-weight:800;color:var(--purpleL);margin-bottom:10px">🔑 סיסמת מאמן</div>
       <button class="btn bs" style="width:100%" onclick="changeCoachPass()">🔑 שנה סיסמה</button>
+        <button class="btn bs bsm" onclick="exportGroupCSV()" style="min-height:44px">📊 CSV</button>
     </div>
     <button onclick="toggleCM()" style="width:100%;padding:14px;background:rgba(255,45,85,.08);border:1px solid rgba(255,45,85,.2);color:var(--red);border-radius:13px;font-size:13px;font-weight:900;cursor:pointer;margin-top:4px">⚔ יציאה ממצב מאמן</button>
   </div>
@@ -1441,11 +1414,11 @@ document.head.appendChild(_link);
     <button class="tab" onclick="trt('tr-rec',this)">🩹 שיקום</button>
     <button class="tab" onclick="trt('tr-body',this)">📏 מידות</button>
     <button class="tab" onclick="trt('tr-hr',this)">❤️ דופק</button>
-        <button class="tab" onclick="trt('tr-sleep',this)">😴 שינה</button>
-        <button class="tab" onclick="trt('tr-injury',this)">🩹 פציעות</button>
         <button class="tab" onclick="trt('tr-ruck',this)">🎒 Ruck</button>
         <button class="tab" onclick="trt('tr-period',this)">📅 מחזורי</button>
         <button class="tab" onclick="trt('tr-scale',this)">⚖️ Scalable</button>
+        <button class="tab" onclick="trt('tr-sleep',this)">😴 שינה</button>
+        <button class="tab" onclick="trt('tr-injury',this)">🩹 פציעות</button>
   </div>
 
   <div id="tr-str">
@@ -1787,167 +1760,101 @@ document.head.appendChild(_link);
   </div>
 
 
-
-  <!-- ════ RUCK TRAINING ════ -->
+  <!-- ── RUCK ── -->
   <div id="tr-ruck" style="display:none">
-    <div class="card" style="border-color:rgba(255,136,0,.3);background:linear-gradient(180deg,rgba(255,136,0,.05),var(--card))">
-      <div class="sh o">🎒 Ruck Training — אימון כיס קרבי</div>
-      <div class="mini" style="margin-bottom:12px">בסגנון Tsevet Lohamim / IDF Ruck Protocol — כיס + משקל = לוחם אמיתי</div>
+    <div class="card hot" style="border-color:rgba(255,136,0,.3)">
+      <div class="sh o">🎒 Ruck Training</div>
       <div class="r2">
-        <div><label>משקל כיס (ק"ג)</label>
-          <input id="ruck-wt" type="number" value="10" min="5" max="45" inputmode="numeric" oninput="calcRuck()"/>
-        </div>
-        <div><label>משקל גוף (ק"ג)</label>
-          <input id="ruck-bw" type="number" value="70" inputmode="numeric" oninput="calcRuck()"/>
-        </div>
+        <div><label>משקל כיס (ק"ג)</label><input id="ruck-wt" type="number" value="10" min="5" max="45" inputmode="numeric" oninput="calcRuck()"/></div>
+        <div><label>משקל גוף (ק"ג)</label><input id="ruck-bw" type="number" value="70" inputmode="numeric" oninput="calcRuck()"/></div>
       </div>
       <div class="r2">
-        <div><label>מרחק (ק"מ)</label>
-          <input id="ruck-dist" type="number" value="10" min="1" max="50" step="0.5" inputmode="decimal" oninput="calcRuck()"/>
-        </div>
-        <div><label>קצב יעד (דק/ק"מ)</label>
-          <input id="ruck-pace" type="number" value="8" min="4" max="20" step="0.5" inputmode="decimal" oninput="calcRuck()"/>
-        </div>
+        <div><label>מרחק (ק"מ)</label><input id="ruck-dist" type="number" value="10" min="1" max="50" inputmode="decimal" oninput="calcRuck()"/></div>
+        <div><label>קצב (דק/ק"מ)</label><input id="ruck-pace" type="number" value="8" min="4" max="20" step="0.5" inputmode="decimal" oninput="calcRuck()"/></div>
       </div>
-      <div id="ruck-live" style="display:none;background:var(--card2);border-radius:11px;padding:12px;margin:10px 0;text-align:center">
-        <div class="r3" style="margin-bottom:8px">
-          <div><div style="font-family:var(--fd);font-size:22px;color:var(--orange)" id="ruck-time-disp">--</div><div style="font-size:9px;color:var(--txt3)">זמן כולל</div></div>
-          <div><div style="font-family:var(--fd);font-size:22px;color:var(--pri)" id="ruck-cal-disp">--</div><div style="font-size:9px;color:var(--txt3)">קלוריות</div></div>
-          <div><div style="font-family:var(--fd);font-size:22px;color:var(--yellow)" id="ruck-load-disp">--</div><div style="font-size:9px;color:var(--txt3)">% ממשקל</div></div>
+      <div id="ruck-live" style="display:none;background:var(--card2);border-radius:10px;padding:10px;margin:8px 0;text-align:center">
+        <div class="r3">
+          <div><div style="font-family:var(--fd);font-size:20px;color:var(--orange)" id="ruck-time-disp">--</div><div style="font-size:9px;color:var(--txt3)">זמן</div></div>
+          <div><div style="font-family:var(--fd);font-size:20px;color:var(--pri)" id="ruck-cal-disp">--</div><div style="font-size:9px;color:var(--txt3)">קלוריות</div></div>
+          <div><div style="font-family:var(--fd);font-size:20px;color:var(--yellow)" id="ruck-load-disp">--</div><div style="font-size:9px;color:var(--txt3)">% משקל</div></div>
         </div>
-        <div id="ruck-level" style="font-size:12px;font-weight:700;color:var(--txt2)"></div>
+        <div id="ruck-level" style="font-size:11px;color:var(--txt2);margin-top:4px"></div>
       </div>
-      <button class="btn bp" onclick="startRuckWorkout()">🎒 צור תוכנית Ruck מלאה</button>
-      <div id="ruck-plan-out" style="margin-top:10px"></div>
-    </div>
-
-    <div class="card">
-      <div class="sh o">📋 פרוטוקולי Ruck קלאסיים</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div onclick="setRuckPreset(10,10,8)" style="background:var(--card2);border-radius:10px;padding:11px;cursor:pointer;border:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-weight:800;font-size:13px">🟢 מתחיל — Ranger Ruck</div><div style="font-size:11px;color:var(--txt2)">10ק"מ | 10ק"ג | 8 דק/ק"מ</div></div>
-          <span class="bd bg">בחר</span>
-        </div>
-        <div onclick="setRuckPreset(20,15,7)" style="background:var(--card2);border-radius:10px;padding:11px;cursor:pointer;border:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-weight:800;font-size:13px">🟡 קרבי — IDF Standard</div><div style="font-size:11px;color:var(--txt2)">20ק"מ | 15ק"ג | 7 דק/ק"מ</div></div>
-          <span class="bd by2">בחר</span>
-        </div>
-        <div onclick="setRuckPreset(30,20,7)" style="background:var(--card2);border-radius:10px;padding:11px;cursor:pointer;border:1px solid var(--b1);display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-weight:800;font-size:13px">🔴 גיבוש — Sayeret Protocol</div><div style="font-size:11px;color:var(--txt2)">30ק"מ | 20ק"ג | 7 דק/ק"מ</div></div>
-          <span class="bd br2">בחר</span>
-        </div>
-        <div onclick="setRuckPreset(40,30,6.5)" style="background:var(--card2);border-radius:10px;padding:11px;cursor:pointer;border:1px solid rgba(255,45,85,.3);display:flex;justify-content:space-between;align-items:center">
-          <div><div style="font-weight:800;font-size:13px">💀 עילית — Shayetet/Matkal</div><div style="font-size:11px;color:var(--txt2)">40ק"מ | 30ק"ג | 6.5 דק/ק"מ</div></div>
-          <span class="bd br2">בחר</span>
-        </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+        <button class="btn bs bsm" onclick="setRuckPreset(10,10,8)" style="font-size:11px">🟢 מתחיל</button>
+        <button class="btn bs bsm" onclick="setRuckPreset(20,15,7)" style="font-size:11px">🟡 קרבי</button>
+        <button class="btn bs bsm" onclick="setRuckPreset(30,20,7)" style="font-size:11px">🔴 גיבוש</button>
+        <button class="btn bs bsm" onclick="setRuckPreset(40,30,6.5)" style="font-size:11px">💀 עילית</button>
       </div>
+      <button class="btn bp" onclick="startRuckWorkout()">🎒 צור תוכנית</button>
+      <div id="ruck-plan-out" style="margin-top:8px"></div>
     </div>
   </div>
-
-  <!-- ════ PERIODIZATION ════ -->
+  <!-- ── PERIODIZATION ── -->
   <div id="tr-period" style="display:none">
     <div class="card hot">
-      <div class="sh c">📅 תוכנית מחזורית — Periodization</div>
-      <div class="mini" style="margin-bottom:12px">מתודולוגיית Tsevet Lohamim — מזוסייקלים של 4-6 שבועות עם עלייה מדורגת ו-Deload</div>
+      <div class="sh c">📅 תוכנית מחזורית</div>
       <div class="r2">
-        <div><label>יחידת יעד</label>
-          <select id="per-unit">
-            <option value="basic">קרבי בסיסי</option>
-            <option value="golani">גולני / צנחנים</option>
-            <option value="sayeret">סיירת / אגוז</option>
-            <option value="elite">שלדג / 669 / מטכ"ל</option>
-          </select>
-        </div>
-        <div><label>שבועות לגיוס</label>
-          <input id="per-weeks" type="number" value="16" min="4" max="52" inputmode="numeric"/>
-        </div>
+        <div><label>יחידת יעד</label><select id="per-unit"><option value="basic">קרבי בסיסי</option><option value="golani">גולני/צנחנים</option><option value="sayeret">סיירת/אגוז</option><option value="elite">שלדג/מטכ"ל</option></select></div>
+        <div><label>שבועות לגיוס</label><input id="per-weeks" type="number" value="16" min="4" max="52" inputmode="numeric"/></div>
       </div>
       <div class="r2">
-        <div><label>כושר נוכחי (1-10)</label>
-          <input id="per-fit" type="number" value="5" min="1" max="10" inputmode="numeric"/>
-        </div>
-        <div><label>אימונים/שבוע</label>
-          <select id="per-tpw"><option>3</option><option selected>4</option><option>5</option><option>6</option></select>
-        </div>
+        <div><label>כושר (1-10)</label><input id="per-fit" type="number" value="5" min="1" max="10" inputmode="numeric"/></div>
+        <div><label>אימונים/שבוע</label><select id="per-tpw"><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
       </div>
-      <button class="btn bp" onclick="buildPeriodPlan()">📅 צור תוכנית מחזורית מלאה</button>
-      <div id="period-out" style="margin-top:12px"></div>
+      <button class="btn bp" onclick="buildPeriodPlan()">📅 צור תוכנית מחזורית</button>
+      <div id="period-out" style="margin-top:10px"></div>
     </div>
   </div>
-
-  <!-- ════ SCALABLE EXERCISES ════ -->
+  <!-- ── SCALABLE ── -->
   <div id="tr-scale" style="display:none">
     <div class="card hot">
-      <div class="sh p">⚖️ תרגילים ניתנים להתאמה — Scalable</div>
-      <div class="mini" style="margin-bottom:12px">כל תרגיל ב-3 רמות קושי — מתחיל / קרבי / עילית. לחץ על תרגיל לפרטים</div>
-      <div class="tabs" style="margin-bottom:10px">
+      <div class="sh p">⚖️ תרגילים Scalable</div>
+      <div class="tabs" style="margin-bottom:8px">
         <button class="tab on" onclick="filterScale('all',this)">הכל</button>
-        <button class="tab" onclick="filterScale('upper',this)">פלג עליון</button>
+        <button class="tab" onclick="filterScale('upper',this)">עליון</button>
         <button class="tab" onclick="filterScale('core',this)">ליבה</button>
-        <button class="tab" onclick="filterScale('lower',this)">פלג תחתון</button>
+        <button class="tab" onclick="filterScale('lower',this)">תחתון</button>
         <button class="tab" onclick="filterScale('cardio',this)">קרדיו</button>
       </div>
       <div id="scale-grid"></div>
     </div>
   </div>
-
-  <!-- ════ SLEEP TRACKER — like Whoop ════ -->
+  <!-- ── SLEEP ── -->
   <div id="tr-sleep" style="display:none">
-    <div class="card hot" style="border-color:rgba(124,58,237,.3);background:linear-gradient(180deg,rgba(124,58,237,.05),var(--card))">
-      <div class="sh p">😴 מעקב שינה — Whoop Protocol</div>
-      <div class="mini" style="margin-bottom:12px">שינה = 70% מהגיבוש. מינימום 8 שעות בשבוע לפני גיבוש</div>
+    <div class="card hot" style="border-color:rgba(124,58,237,.3)">
+      <div class="sh p">😴 מעקב שינה</div>
       <div class="r2">
-        <div><label>שעות שינה הלילה</label>
-          <input id="sl-hours" type="number" value="7" min="3" max="12" step="0.5" inputmode="decimal" oninput="calcSleep()"/>
-        </div>
-        <div><label>איכות (1-10)</label>
-          <input id="sl-qual" type="number" value="7" min="1" max="10" inputmode="numeric" oninput="calcSleep()"/>
-        </div>
+        <div><label>שעות שינה</label><input id="sl-hours" type="number" value="7" min="3" max="12" step="0.5" inputmode="decimal" oninput="calcSleep()"/></div>
+        <div><label>איכות (1-10)</label><input id="sl-qual" type="number" value="7" min="1" max="10" inputmode="numeric" oninput="calcSleep()"/></div>
       </div>
-      <div class="r2">
-        <div><label>שעת שינה</label>
-          <input id="sl-bed" type="time" value="23:00" oninput="calcSleep()"/>
-        </div>
-        <div><label>שעת קימה</label>
-          <input id="sl-wake" type="time" value="06:00" oninput="calcSleep()"/>
-        </div>
-      </div>
-      <div id="sl-result" style="margin:10px 0"></div>
-      <button class="btn bp" onclick="saveSleep()">💾 שמור שינה היום</button>
+      <div id="sl-result" style="margin:8px 0"></div>
+      <button class="btn bp" onclick="saveSleep()">💾 שמור שינה</button>
     </div>
-    <div class="card">
-      <div class="sh p">📊 היסטוריית שינה — 7 ימים</div>
-      <div id="sl-history" style="margin-top:8px"></div>
-    </div>
+    <div class="card"><div class="sh p">📊 היסטוריה</div><div id="sl-history" style="margin-top:6px"></div></div>
   </div>
-
-  <!-- ════ INJURY PREVENTION — like Tsevet Lohamim ════ -->
+  <!-- ── INJURY ── -->
   <div id="tr-injury" style="display:none">
     <div class="card hot" style="border-color:rgba(255,45,85,.3)">
-      <div class="sh r">🩹 מניעת פציעות — IDF Protocol</div>
-      <div class="mini" style="margin-bottom:12px">הכי נפוצות: שין-ספלינט, כתף, ברך, גב תחתון. בחר אזור כאב</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-        <button class="btn" onclick="showInjury('shin')" style="background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.25);padding:12px;font-size:12px;font-weight:800">
-          🦵 שין-ספלינט<br/><span style="font-size:9px;color:var(--txt3)">כאב שוקיים</span>
-        </button>
-        <button class="btn" onclick="showInjury('shoulder')" style="background:rgba(255,136,0,.06);border:1px solid rgba(255,136,0,.25);padding:12px;font-size:12px;font-weight:800">
-          💪 כתף<br/><span style="font-size:9px;color:var(--txt3)">מנשאי כיס / מתח</span>
-        </button>
-        <button class="btn" onclick="showInjury('knee')" style="background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.25);padding:12px;font-size:12px;font-weight:800">
-          🦵 ברך<br/><span style="font-size:9px;color:var(--txt3)">ריצה / Ruck</span>
-        </button>
-        <button class="btn" onclick="showInjury('back')" style="background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.25);padding:12px;font-size:12px;font-weight:800">
-          🔙 גב תחתון<br/><span style="font-size:9px;color:var(--txt3)">כפיפות / Ruck</span>
-        </button>
+      <div class="sh r">🩹 מניעת פציעות</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <button class="btn" onclick="showInjury('shin')" style="background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.25);padding:12px;font-size:12px;font-weight:800;min-height:56px">🦵 שין-ספלינט</button>
+        <button class="btn" onclick="showInjury('shoulder')" style="background:rgba(255,136,0,.06);border:1px solid rgba(255,136,0,.25);padding:12px;font-size:12px;font-weight:800;min-height:56px">💪 כתף</button>
+        <button class="btn" onclick="showInjury('knee')" style="background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.25);padding:12px;font-size:12px;font-weight:800;min-height:56px">🦵 ברך</button>
+        <button class="btn" onclick="showInjury('back')" style="background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.25);padding:12px;font-size:12px;font-weight:800;min-height:56px">🔙 גב</button>
       </div>
       <div id="injury-detail" style="display:none"></div>
     </div>
-    <div class="card">
-      <div class="sh r">🩹 תרגילי מניעה יומיים</div>
-      <div class="mini" style="margin-bottom:8px">10 דקות ביום = חוסך שבועות של פציעה</div>
-      <div id="daily-prehab" style="margin-top:8px"></div>
-      <button class="btn bs" style="margin-top:8px" onclick="renderPrehab()">🔄 שגרה חדשה</button>
-    </div>
+    <div class="card"><div class="sh r">🩹 Prehab יומי</div><div id="daily-prehab" style="margin-top:6px"></div><button class="btn bs" style="margin-top:8px;min-height:44px" onclick="renderPrehab()">🔄 שגרה חדשה</button></div>
+  </div>
+
+
+  <!-- ── ACHIEVEMENTS & PR ── -->
+  <div class="card">
+    <div class="sh" style="color:var(--yellow)">🏅 הישגים ושיאים</div>
+    <div id="badges-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:8px;margin-bottom:12px"></div>
+    <div class="sh" style="color:var(--yellow);margin-top:4px">🏆 שיאים אישיים</div>
+    <div id="pr-board" style="margin-top:8px"></div>
   </div>
 
 </div><!-- /p-train body -->
@@ -1988,10 +1895,6 @@ document.head.appendChild(_link);
   </div>
   <div class="card hot">
     <div class="sh">🤖 שאל את המאמן</div>
-    <div style="display:flex;gap:7px;margin-bottom:8px">
-      <button class="btn bp bsm" onclick="exportPDF()" style="background:linear-gradient(135deg,#0a84ff,#0055cc);color:#fff">📄 ייצוא PDF</button>
-      <button class="btn bs bsm" onclick="showAIHistory()" style="font-size:11px">🕐 היסטוריה</button>
-    </div>
     <div class="chips">
       <div class="chip" onclick="quickQ('איך משפר מתח מהיר?')">💪 מתח</div>
       <div class="chip" onclick="quickQ('תוכנית 8 שבועות לבר-אור')">🏃 בר-אור</div>
@@ -2001,15 +1904,9 @@ document.head.appendChild(_link);
       <div class="chip" onclick="quickQ('מה ההבדל בין היחידות הקרביות? מגולני עד סיירת מטכל')">🪖 יחידות</div>
     </div>
     <div id="ai-log" style="max-height:340px;overflow-y:auto;margin-bottom:8px"></div>
-    <div style="display:flex;gap:7px;margin-bottom:6px">
-      <input id="ai-q" type="text" placeholder="שאל כל שאלה..." style="flex:1" onkeydown="if(event.key==='Enter')askAI()"/>
+    <div style="display:flex;gap:7px">
+      <input id="ai-q" type="text" placeholder="שאל כל שאלה..." style="flex:1"/>
       <button class="btn bp bsm" onclick="askAI()" style="width:56px">שלח</button>
-    </div>
-    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px">
-      <button class="btn bs bsm" onclick="askAI_smart('צור לי תוכנית אימון שבועית בהתאם לנתוני וליחידת היעד שלי')" style="white-space:nowrap;font-size:10px">🗓 תוכנית שבועית</button>
-      <button class="btn bs bsm" onclick="askAI_smart('נתח את ציוני האחרונים ואמר לי מה לשפר')" style="white-space:nowrap;font-size:10px">📊 ניתוח ציונים</button>
-      <button class="btn bs bsm" onclick="askAI_smart('תן לי 3 טיפים מנטליים לגיבוש בהתאם ליחידת היעד שלי')" style="white-space:nowrap;font-size:10px">🧠 טיפים מנטל</button>
-      <button class="btn bs bsm" onclick="askAI_smart('מה תפריט התזונה האידיאלי בשבוע לפני גיבוש?')" style="white-space:nowrap;font-size:10px">🥩 תזונה לגיבוש</button>
     </div>
   </div>
 </div>
@@ -2107,9 +2004,23 @@ const MUSCLES=[
 // STORAGE
 // ═══════════════════════════════════════════════════
 var K={R:'cf7r',S:'cf7s',P:'cf7p',PR:'cf7pr',WT:'cf7wt',LB:'cf7lb',WD:'cf7wd',CM:'cf7cm',ATH:'cf7ath',REC:'cf7rec'};
+
+// ═══ GLOBAL NULL SAFETY ═══════════════════════════════════
+// Safe element getter — never throws TypeError
+window.getEl=function(id){return document.getElementById(id)||{innerHTML:'',style:{},value:'',textContent:'',classList:{add:function(){},remove:function(){},toggle:function(){},contains:function(){return false;}},setAttribute:function(){},addEventListener:function(){}};};
+// Global error catcher — prevent uncaught TypeErrors from crashing the app
+window.onerror=function(msg,src,line,col,err){
+  console.warn('Combat Fit error (handled):',msg,'at line',line);
+  return true; // prevent default error handling
+};
+window.onunhandledrejection=function(e){
+  console.warn('Unhandled promise:', e.reason);
+  e.preventDefault();
+};
+// ════════════════════════════════════════════════════════════
 var ld=(k,d)=>{try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):d;}catch{return d;}};
 var sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
-var SYNC_KEYS=['cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7lb','cf7ath','cf7_profile','cf7_workout_history','cf7_ath_workouts','cf7_coach_notes','cf7_att','cf7rec','cf7_ai_hist','cf7_muscles','cf7_groups','cf7_announcements'];
+var SYNC_KEYS=['cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7lb','cf7ath','cf7_profile','cf7_workout_history','cf7_ath_workouts','cf7_coach_notes','cf7_att','cf7rec'];;
 
 // ═══════════════════════════════════════════════════
 // UNITS — COMPLETE DATABASE
@@ -2159,7 +2070,7 @@ function initCM(){
   const b=document.getElementById('mode-btn');
   if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
   const lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v8.0':'IDF ELITE SYSTEM v9.0 PRO';
+  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v7.0':'IDF ELITE SYSTEM v7.0 PRO';
   // Show/hide coach panel
   const afc=document.getElementById('ann-feed-card');
   const lbo=document.getElementById('lb-out');
@@ -2335,10 +2246,6 @@ function trt(id,el){
   if(id==='tr-hist'){renderHistory();setTimeout(renderProgressChart,300);}
   if(id==='tr-build')initBuilder();
   if(id==='tr-rec'){initMuscleGrid();setTimeout(calcRecovery,50);}
-  if(id==='tr-scale')renderScaleGrid('all');
-  if(id==='tr-ruck')calcRuck();
-  if(id==='tr-sleep'){calcSleep();renderSleepHistory();}
-  if(id==='tr-injury'){renderPrehab();}
 }
 
 // ═══════════════════════════════════════════════════
@@ -2398,7 +2305,6 @@ var EMOJIS=['🦁','🐯','🦅','🔥','⚡','💀','🥷','🤺','💪','🗡'
 // DASHBOARD
 // ═══════════════════════════════════════════════════
 function refreshDash(){
-  initDraftCountdown();
   if(!MISSIONS||!TIPS||!CHALLENGES)return;
   const d=new Date();
   document.getElementById('mission-txt').textContent=MISSIONS[(d.getDate()+d.getDay())%MISSIONS.length];
@@ -2570,7 +2476,6 @@ function calcBaror(){
     🤸 ישיבות ${si} → ${S} נק׳ (15%)</div>
     ${imp?`<div class="mc"><div class="mt">🎯 נקודות לשיפור</div><div class="mx">${imp}</div></div>`:'<div class="mc"><div class="mt">🏆 ציון מצוין!</div><div class="mx">אתה עומד בסטנדרט קרבי. המשך כך!</div></div>'}`;
   notify(`ציון בר-אור: ${tot}`);
-  var shareBtn=document.getElementById('share-score-btn');if(shareBtn)shareBtn.style.display='block';
 }
 
 // ─── Live gibush input helpers ─────────────────
@@ -3376,13 +3281,13 @@ function renderCoachGroup(){
       <div class="ath-acts">
         <div class="ath-btn pri" onclick="viewAthlete(${i})">📊 פרטים</div>
         <div class="ath-btn pur" onclick="viewAthleteWorkouts('${a.nm.replace(/'/g,"\\'")}')">🎯 פאנל מאמן</div>
-        <div class="ath-btn" onclick="chatAthlete(${i})">💬 צ\u2019אט</div>
+        <div class="ath-btn" onclick="chatAthlete(${i})">💬 צ'אט</div>
         <div class="ath-btn" onclick="editAthlete(${i})">✏️ ערוך</div>
       </div>
     </div>`;
   });
   if(!filtered.length)html='<div class="mini" style="text-align:center;padding:16px">אין חניכים תואמים</div>';
-  document.getElementById('coach-group-list').innerHTML=html;
+  var _cgl=document.getElementById('coach-group-list');if(_cgl)_cgl.innerHTML=html;
 
   // Build unit selector for recruit candidates
   const sel=document.getElementById('recruit-unit-sel');
@@ -3486,7 +3391,7 @@ function viewAthlete(i){
 
   <div class="sh">⚡ פעולות מהירות</div>
   <div class="r2" style="gap:6px;margin-bottom:6px">
-    <button class="btn bpur bsm" onclick="closeModal();chatAthlete(${i})">💬 פתח צ\u2019אט</button>
+    <button class="btn bpur bsm" onclick="closeModal();chatAthlete(${i})">💬 פתח צ'אט</button>
     <button class="btn bp bsm" onclick="closeModal();sendPlanToAthlete(${i})">🎯 שלח תוכנית</button>
   </div>
   <div class="r2" style="gap:6px;margin-bottom:6px">
@@ -3660,7 +3565,7 @@ function editAthlete(i){
   const body=`
   <div class="form-grid">
     <div><label>שם מלא *</label><input id="ae-nm" type="text" value="${a.nm}" placeholder="שם החניך"/></div>
-    <div><label>אימוג\u2019י</label><select id="ae-emoji">${emojiOpts}</select></div>
+    <div><label>אימוג'י</label><select id="ae-emoji">${emojiOpts}</select></div>
   </div>
   <div class="form-grid three">
     <div><label>גיל</label><input id="ae-age" type="number" value="${a.age}" min="16" max="30"/></div>
@@ -3782,7 +3687,7 @@ function renderChatModal(i,key){
     <button class="qaction-btn r" onclick="quickChat(${i},'${key.replace(/'/g,"\\'")}','⚠️ למה דילגת על אימון?')">⚠️ דילוג</button>
     <button class="qaction-btn g" onclick="quickChat(${i},'${key.replace(/'/g,"\\'")}','🎯 תוכנית חדשה תוכנת. בדוק!')">🎯 תוכנית</button>
   </div>`;
-  openModal(`💬 צ\u2019אט · ${a.nm}`,body);
+  openModal(`💬 צ'אט · ${a.nm}`,body);
   setTimeout(()=>{const w=document.getElementById('chat-wrap-box');if(w)w.scrollTop=99999;},50);
 }
 function sendChat(i,key){
@@ -3952,8 +3857,7 @@ function openAnnouncementModal(){
     </div>`);
 }
 function quickAnn(t,m){
-  document.getElementById('ann-t').value=t;
-  document.getElementById('ann-m').value=m;
+  var _ant=document.getElementById('ann-t');var _anm=document.getElementById('ann-m');if(_ant)_ant.value=t;if(_anm)_anm.value=m;
 }
 function sendAnnouncement(){
   const t=document.getElementById('ann-t').value.trim();
@@ -4038,7 +3942,7 @@ function renderRecruitCandidates(){
     </div>`;
   });
   if(!scored.length)html='<div class="mini">אין חניכים</div>';
-  document.getElementById('recruit-list').innerHTML=html;
+  var _rl=document.getElementById('recruit-list');if(_rl)_rl.innerHTML=html;
 }
 
 // ═══════════════════════════════════════════════════
@@ -4171,6 +4075,63 @@ if('serviceWorker' in navigator){
 <div id="modal-bk" onclick="if(event.target===this)closeModal()" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9998;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)">
   <div id="modal-content" style="background:var(--card2);border:1px solid var(--b2);border-radius:18px 18px 0 0;padding:14px 16px 24px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;position:relative"></div>
 </div>
+
+<!-- ═══ ONBOARDING MODAL ═══ -->
+<div id="onboard-overlay" style="display:none;position:fixed;inset:0;background:rgba(2,4,5,.97);z-index:9999;overflow-y:auto;padding:20px;direction:rtl">
+  <div style="max-width:420px;margin:0 auto;padding-top:16px">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:36px;margin-bottom:6px">⚔</div>
+      <div style="font-size:20px;font-weight:900;color:#00ff88">ברוך הבא ל-Combat Fit IL</div>
+      <div style="font-size:12px;color:#7a94b0;margin-top:4px">2 דקות להגדרה</div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px">
+      <div class="ob-step ob-active" data-s="1">1</div>
+      <div class="ob-step" data-s="2">2</div>
+      <div class="ob-step" data-s="3">3</div>
+    </div>
+    <div id="ob-1">
+      <div style="font-size:14px;font-weight:700;color:#e8eef8;margin-bottom:12px">👤 הפרופיל שלך</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input id="ob-name" type="text" placeholder="שם מלא" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px;width:100%"/>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <input id="ob-age" type="number" placeholder="גיל" inputmode="numeric" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
+          <input id="ob-weight" type="number" placeholder='משקל ק"ג' inputmode="numeric" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
+        </div>
+        <input id="ob-draft" type="text" placeholder="תאריך גיוס dd/mm/yyyy" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px;width:100%"/>
+      </div>
+      <button onclick="obNext(1)" style="width:100%;margin-top:14px;padding:14px;background:#00ff88;color:#000;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;min-height:48px">המשך →</button>
+    </div>
+    <div id="ob-2" style="display:none">
+      <div style="font-size:14px;font-weight:700;color:#e8eef8;margin-bottom:12px">🎯 יחידת יעד</div>
+      <div id="ob-unit-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+      <button onclick="obNext(2)" style="width:100%;margin-top:14px;padding:14px;background:#00ff88;color:#000;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;min-height:48px">המשך →</button>
+    </div>
+    <div id="ob-3" style="display:none">
+      <div style="font-size:14px;font-weight:700;color:#e8eef8;margin-bottom:8px">📊 מבחן כושר ראשוני</div>
+      <div style="font-size:12px;color:#7a94b0;margin-bottom:12px">אופציונלי — ניתן למלא אחר כך</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center">
+          <label style="font-size:12px;color:#7a94b0;white-space:nowrap">ריצה 2K</label>
+          <input id="ob-run" type="text" placeholder="9:30" style="padding:10px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
+        </div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center">
+          <label style="font-size:12px;color:#7a94b0">מתח</label>
+          <input id="ob-pull" type="number" placeholder="0" inputmode="numeric" style="padding:10px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
+        </div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center">
+          <label style="font-size:12px;color:#7a94b0">שכיבות</label>
+          <input id="ob-push" type="number" placeholder="0" inputmode="numeric" style="padding:10px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
+        </div>
+      </div>
+      <button onclick="obFinish()" style="width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;min-height:48px">⚔ צא לדרך!</button>
+      <button onclick="obSkip()" style="width:100%;margin-top:6px;padding:10px;background:transparent;color:#7a94b0;font-size:12px;border:none;cursor:pointer">דלג</button>
+    </div>
+  </div>
+</div>
+<style>
+.ob-step{width:32px;height:32px;border-radius:50%;background:#111620;border:1px solid #1e2d40;color:#7a94b0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.ob-active{background:#00ff88!important;color:#000!important;border-color:#00ff88!important}
+</style>
 </body></html>`);
   w.document.close();
 }
@@ -4200,7 +4161,7 @@ function openMonetizeModal(){
       <div class="tier-feats">
         • הכל בבסיסי<br/>
         • חניכים ללא הגבלה<br/>
-        • צ\u2019אט אישי<br/>
+        • צ'אט אישי<br/>
         • ספריית תוכניות<br/>
         • דוחות PDF<br/>
         • נוכחות + ניבוי
@@ -4511,33 +4472,9 @@ function pauseRun(){
   else{runPausedMs+=Date.now()-runPauseStart;document.getElementById('run-pause-btn').textContent='⏸ השהה';}
 }
 
-function stopRun(){
-  if(!runActive)return;
-  runActive=false;runPaused=false;
-  if(runTimerInterval){clearInterval(runTimerInterval);runTimerInterval=null;}
-  if(runWatchId){navigator.geolocation.clearWatch(runWatchId);runWatchId=null;}
-  document.getElementById('run-active-bar').style.display='none';
-  document.getElementById('run-start-btn').style.display='block';
-  // Show summary
-  const elapsed=Math.round((Date.now()-runStartTime-runPausedMs)/1000);
-  const mins=Math.floor(elapsed/60),secs=elapsed%60;
-  const wgt=parseFloat(document.getElementById('rt-wgt')?.value||72);
-  const kcal=Math.round(runTotalDist*(wgt*0.072));
-  logWorkout({type:'run',name:'ריצה חיה',score:runTotalDist.toFixed(2)+'ק"מ',icon:'🏃',duration:Math.round(elapsed/60),details:[`${runTotalDist.toFixed(2)}ק"מ`,`${mins}:${String(secs).padStart(2,'0')} זמן`,`${kcal} קלוריות`,`עלייה: ${Math.round(runTotalElev)}מ`]});
-  openModal('✅ ריצה הסתיימה',`
-    <div style="text-align:center;padding:12px 0">
-      <div style="font-size:48px;margin-bottom:10px">🏃</div>
-      <div style="font-family:var(--fd);font-size:40px;color:var(--pri)">${runTotalDist.toFixed(2)}</div>
-      <div style="color:var(--txt3);font-size:12px;margin-bottom:16px">ק"מ</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        <div class="rstat"><div class="rstat-v yl">${mins}:${String(secs).padStart(2,'0')}</div><div class="rstat-l">זמן</div></div>
-        <div class="rstat"><div class="rstat-v or">${kcal}</div><div class="rstat-l">קלוריות</div></div>
-        <div class="rstat"><div class="rstat-v">${Math.round(runTotalElev)}</div><div class="rstat-l">עלייה מ'</div></div>
-      </div>
-      <div style="margin-top:14px;font-size:12px;color:var(--pri)">✅ נשמר בהיסטוריית האימונים!</div>
-    </div>
-    <button class="btn bp" style="margin-top:10px" onclick="closeModal()">סגור</button>`);
-}
+
+/* dup:stopRun */
+
 
 function initRoute(){
   renderSavedRoutes();
@@ -5518,183 +5455,23 @@ var AI_KB=[
 <strong>בחר לפי כישורים + רצון אמיתי. כל יחידה קרבית מכבדת.</strong>`},
 ];
 
-// ══════════ PDF EXPORT PLUGIN ══════════════════
-function exportPDF(){
-  const pr=ld(K.PR,{});
-  const scores=ld(K.P,[]);
-  const lastScore=scores[0]||{};
-  if(!window.jspdf){notify('PDF לא נטען, נסה שוב','r');return;}
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:'p',unit:'mm',format:'a4'});
-  
-  // Header
-  doc.setFillColor(2,4,5);
-  doc.rect(0,0,210,30,'F');
-  doc.setTextColor(0,255,136);
-  doc.setFontSize(20);
-  doc.setFont('helvetica','bold');
-  doc.text('COMBAT FIT IL - דוח גיבוש',105,15,{align:'center'});
-  doc.setFontSize(9);
-  doc.setTextColor(106,148,170);
-  doc.text('IDF ELITE SYSTEM v8.0',105,23,{align:'center'});
-  
-  // Athlete info
-  doc.setTextColor(30,30,30);
-  doc.setFontSize(12);
-  doc.setFont('helvetica','bold');
-  doc.text('פרטי חניך',190,42,{align:'right'});
-  doc.setFontSize(10);
-  doc.setFont('helvetica','normal');
-  doc.text(': שם  '+(pr.name||'לוחם'),190,50,{align:'right'});
-  doc.text(': גיל  '+(pr.age||'--')+' | משקל: '+(pr.weight||'--')+'ק"מ',190,57,{align:'right'});
-  doc.text(': יחידת יעד  '+getUnitName(pr.unit||'gen'),190,64,{align:'right'});
-  doc.text(': תאריך גיוס  '+(pr.draft||'לא הוגדר'),190,71,{align:'right'});
-  
-  // Last score
-  doc.setFillColor(0,255,136);
-  doc.rect(10,78,190,0.5,'F');
-  doc.setFontSize(13);
-  doc.setFont('helvetica','bold');
-  doc.setTextColor(0,150,80);
-  doc.text('ציון קרבי אחרון: '+(lastScore.bar||'--')+'/100',105,90,{align:'center'});
-  
-  // Score history
-  if(scores.length>0){
-    doc.setFontSize(11);
-    doc.setTextColor(30,30,30);
-    doc.text('היסטוריית ציונים:',190,102,{align:'right'});
-    scores.slice(0,8).forEach((s,i)=>{
-      doc.setFontSize(10);
-      doc.text((s.date||'--')+': '+(s.bar||'--')+'/100 — '+(s.name||'מבחן'),190,110+i*8,{align:'right'});
-    });
-  }
-  
-  // Footer
-  doc.setFillColor(2,4,5);
-  doc.rect(0,277,210,20,'F');
-  doc.setTextColor(106,148,170);
-  doc.setFontSize(8);
-  doc.text('Combat Fit IL PRO v8 | הופק: '+new Date().toLocaleDateString('he-IL')+' | CONFIDENTIAL',105,287,{align:'center'});
-  
-  doc.save('CombatFit_'+(pr.name||'Lohem')+'_'+new Date().toISOString().slice(0,10)+'.pdf');
-  notify('📄 PDF יוצא בהצלחה!','p');
-}
-
-function getUnitName(k){
-  const u=typeof UNITS!=='undefined'&&UNITS[k];
-  return u?u.n:k||'כללי';
-}
-// ══════════════ END PDF PLUGIN ══════════════
-
-function showAIHistory(){
-  const hist=ld('cf7_ai_hist',[]);
-  if(!hist.length){notify('אין היסטוריית שאלות','y');return;}
-  const body=hist.slice(0,10).map(h=>
-    `<div style="background:var(--card2);border-radius:9px;padding:10px;margin-bottom:7px;border:1px solid var(--b1)">
-      <div style="font-size:10px;color:var(--txt3);margin-bottom:4px">${h.date||''}</div>
-      <div style="font-size:12px;font-weight:700;color:var(--txt);margin-bottom:3px">ש: ${h.q}</div>
-      ${h.a?'<div style="font-size:11px;color:var(--txt2);line-height:1.5">'+h.a.slice(0,120)+'...</div>':''}
-      <button class="btn bs bsm" style="margin-top:6px" onclick="document.getElementById('ai-q').value='${h.q.replace(/'/g,'').slice(0,60)}';closeModal()">🔄 שאל שוב</button>
-    </div>`
-  ).join('');
-  openModal('🕐 היסטוריית שיחות AI',body);
-}
-
-
-// ══════════ SKILL: AUTO-SAVE PROFILE ══════════
-function autoSaveProfile(){
-  try{
-    var pr=ld(K.PR,{});
-    var fields={name:'pnm',age:'pag',height:'phg',weight:'pwg',unit:'pun',draft:'pdr'};
-    Object.entries(fields).forEach(([key,id])=>{
-      var el=document.getElementById(id);
-      if(el&&el.value)pr[key]=el.value;
-    });
-    sv(K.PR,pr);
-    // Show tiny save indicator
-    var dot=document.getElementById('sync-dot');
-    if(dot){dot.style.background='var(--pri)';setTimeout(()=>dot.style.background='rgba(0,255,136,.3)',1500);}
-  }catch(e){}
-}
-// ══════════════════════════════════════════════
-
-function askAI_smart(q){
-  const inp=document.getElementById('ai-q');
-  if(inp)inp.value=q;
-  askAI();
-}
-
-
-
-async function askAI(){
-  const q=document.getElementById('ai-q').value.trim();if(!q){notify('שאל משהו','y');return;}
-  document.getElementById('ai-q').value='';
-  addMsg('user',q);
-
-  // ══ AUTO-MEMORY: Build rich athlete context ══
-  const pr=ld(K.PR,{});
-  const scores=ld(K.P,[]).slice(0,5);
-  const weekly=ld('cf7wd',{});
-  const rec=ld('cf7rec',{});
-  const age=document.getElementById('ai-age')?.value||pr.age||'18';
-  const weight=document.getElementById('weight')?.value||pr.weight||'70';
-  const lastScore=scores[0]||{};
-  const prevScore=scores[1]||{};
-  const trend=lastScore.bar&&prevScore.bar?(parseFloat(lastScore.bar)>parseFloat(prevScore.bar)?'↑ עולה':'↓ יורד'):'לא ידוע';
-  const daysThisWeek=Object.values(weekly).filter(d=>d==='done').length;
-  const aiHist=ld('cf7_ai_hist',[]).slice(0,3).map(h=>'ש: '+h.q).join(' | ');
-  const ann=JSON.parse(localStorage.getItem('cf7_announcements')||'[]');
-  const lastAnn=ann[0]?.text||'';
-
-  const memCtx=[
-    '== זיכרון חניך ==',
-    'שם: '+(pr.name||'לוחם')+' | גיל: '+age+' | משקל: '+weight+'ק"ג | גובה: '+(pr.height||'--')+'ס"מ',
-    'יחידת יעד: '+(pr.unit||'לא הוגדר')+' | תאריך גיוס: '+(pr.draft||'לא הוגדר'),
-    'ציון אחרון: '+(lastScore.bar||'--')+' ('+( lastScore.date||'--')+')',
-    'ציון קודם: '+(prevScore.bar||'--')+' | מגמה: '+trend,
-    'אימונים השבוע: '+daysThisWeek+'/7',
-    'מוכנות שיקום: '+(rec.score?rec.score+'/100':'לא נמדד'),
-    'שאלות קודמות: '+(aiHist||'ראשונה'),
-    'הודעה ממאמן: '+(lastAnn||'אין'),
-    'היסטוריית ציונים: '+scores.map(s=>s.bar||'--').join(' → '),
-    '== סוף זיכרון =='
-  ].join('\n');
-
-  const sys='אתה מאמן כושר קרבי ישראלי מקצועי. מדבר עברית, קצר וישיר כמו קצין מהיחידות המובחרות.\nאתה זוכר הכל על החניך ומשתמש בזה לתשובות מותאמות אישית.\n'+memCtx+'\nתן תשובה מעשית ומכוונת לצה"ל. השתמש בנתוני החניך הספציפיים כשרלוונטי.';
-
+function askAI(){
+  const q=document.getElementById('ai-q').value.trim();if(!q)return;
+  document.getElementById('ai-q').value='';addMsg('user',q);
+  const age=parseInt(localStorage.getItem('cf_age')||document.getElementById('ai-age').value||18);
+  const wgt=parseInt(localStorage.getItem('cf_wgt')||document.getElementById('weight').value||70);
+  const lower=q.toLowerCase();
   const box=document.getElementById('ai-log');
-  const typing=document.createElement('div');
-  typing.className='chat-msg coach';
-  typing.innerHTML='<span class="sp"></span> חושב...';
+  const typing=document.createElement('div');typing.className='am a';
+  typing.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
   box.appendChild(typing);box.scrollTop=99999;
-
-  // Save question to history
-  var hist=ld('cf7_ai_hist',[]);
-  hist.unshift({q,ts:Date.now(),date:new Date().toLocaleDateString('he-IL')});
-  sv('cf7_ai_hist',hist.slice(0,50));
-
-  try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,system:sys,messages:[{role:'user',content:q}]})
-    });
-    const data=await resp.json();
-    const txt=(data.content?.[0]?.text||'שגיאת תגובה').replace(/\n/g,'<br/>');
-    typing.innerHTML=txt+'<div class="chat-time">⚔ AI Coach — זוכר נתוניך</div>';
-    hist[0].a=txt.slice(0,300);
-    sv('cf7_ai_hist',hist.slice(0,50));
-  }catch(e){
-    // Fallback to local KB
-    const lower=q.toLowerCase();
+  setTimeout(()=>{
+    typing.remove();
     let best=null,bestScore=0;
-    if(typeof AI_KB!=='undefined'){
-      AI_KB.forEach(entry=>{const score=entry.k.filter(kw=>lower.includes(kw.toLowerCase())).length;if(score>bestScore){bestScore=score;best=entry;}});
-    }
-    if(best&&bestScore>0){typing.innerHTML=best.a(parseInt(age),parseInt(weight))+'<div class="chat-time">📚 מאגר ידע מקומי</div>';}
-    else{typing.innerHTML='❌ שגיאת חיבור. בדוק אינטרנט.<div class="chat-time">שגיאה</div>';}
-  }
-  box.scrollTop=99999;
+    AI_KB.forEach(entry=>{const score=entry.k.filter(kw=>lower.includes(kw.toLowerCase())).length;if(score>bestScore){bestScore=score;best=entry;}});
+    if(best&&bestScore>0){addMsg('ai',best.a(age,wgt));return;}
+    addMsg('ai',`🤖 <strong>מאמן Combat Fit</strong><br/><br/>נסה לשאול על:<br/>• <em>בר-אור / מבחן כושר</em><br/>• <em>מתח / שכיבות</em><br/>• <em>גיבוש / יחידות עילית</em><br/>• <em>שייטת 13 / 669</em><br/>• <em>תזונה / פציעות / ruck</em>`);
+  },700);
 }
 document.getElementById('ai-q').addEventListener('keydown',e=>{if(e.key==='Enter')askAI();});
 
@@ -6070,7 +5847,7 @@ function generateCert() {
   ctx.textAlign = 'center';
   ctx.fillText('ELITE', 400, 450);
 
-  document.getElementById('cert-preview').style.display = 'block';
+  (function(){var _g0=document.getElementById('cert-preview');if(_g0)_g0.style.display= 'block';})()
 }
 
 function downloadCert() {
@@ -6625,19 +6402,9 @@ function getWeeklyChallenge(){
 }
 
 var _lbPeriod='week';
-function lbTab(period,btn){
-  _lbPeriod=period;
-  document.querySelector('#lb-tabs .tab.on')?.classList.remove('on');
-  if(btn)btn.classList.add('on');
-  var cc=document.getElementById('lb-challenge-card');
-  if(period==='challenge'){
-    if(cc)cc.style.display='block';
-    renderWeeklyChallengeView();
-  } else {
-    if(cc)cc.style.display='none';
-    renderLeaderboard();
-  }
-}
+
+/* dup:lbTab */
+
 
 function renderWeeklyChallengeView(){
   var ch=getWeeklyChallenge();
@@ -6799,12 +6566,9 @@ trt = function(id, el){
   _origTrt2(id, el);
 };
 
-function toggleMuscle(id){
-  if(!muscleState)muscleState={};
-  muscleState[id]=muscleState[id]==='sore'?'fresh':muscleState[id]==='partial'?'sore':'partial';
-  sv(K.REC+'_muscles',muscleState);
-  initMuscleGrid();
-}
+
+/* dup:toggleMuscle */
+
 
 // ═══════════════════════════════════════════════════
 // COMBAT SCORE
@@ -7112,12 +6876,9 @@ async function doGroupMsg(){
 }
 
 // Override renderCoachGroup to use new system
-function renderCoachGroup(){
-  if(typeof renderCoachGroupsUI==='function'){
-    renderCoachGroupsUI();
-    return;
-  }
-}
+
+/* dup:renderCoachGroup */
+
 
 
 // ═══════════════════════════════════════════════════
@@ -7126,47 +6887,9 @@ function renderCoachGroup(){
 var _activeGid = null;
 
 // Called when coach logs in + when groups load
-function renderCoachGroupsUI() {
-  var groups = window._coachGroups || [];
-  var tabsEl = document.getElementById('coach-group-tabs');
-  if (!tabsEl) return;
 
-  if (!groups.length) {
-    tabsEl.innerHTML = '<div style="text-align:center;padding:12px;color:var(--txt3);font-size:11px;width:100%">אין קבוצות — צור קבוצה ראשונה</div>';
-    document.getElementById('active-group-card')?.setAttribute('style','display:none');
-    document.getElementById('coach-athletes-list').innerHTML = '<div style="text-align:center;padding:24px;color:var(--txt3)"><div style="font-size:28px;margin-bottom:8px">🎖</div><div style="font-size:12px">צור קבוצה ראשונה</div><button class="btn bp bsm" style="margin-top:10px" onclick="createGroupDialog()">➕ צור קבוצה</button></div>';
-    return;
-  }
+/* dup:renderCoachGroupsUI */
 
-  if (!_activeGid) _activeGid = groups[0].id;
-
-  // Render group tab buttons
-  tabsEl.innerHTML = groups.map(function(g) {
-    var cnt = (window._coachAthletes && window._coachAthletes[g.id] || []).length;
-    var on = g.id === _activeGid;
-    return '<button onclick="switchCoachGroup(\'' + g.id + '\')" style="flex-shrink:0;padding:8px 16px;border-radius:20px;'
-      + 'border:' + (on ? '2px solid var(--purpleL)' : '1px solid var(--b2)') + ';'
-      + 'background:' + (on ? 'rgba(124,58,237,.12)' : 'var(--card2)') + ';'
-      + 'color:' + (on ? 'var(--purpleL)' : 'var(--txt2)') + ';'
-      + 'font-weight:' + (on ? '900' : '700') + ';font-size:12px;cursor:pointer;white-space:nowrap">'
-      + g.name + ' <span style="font-size:9px;opacity:.6">(' + cnt + ')</span>'
-      + '</button>';
-  }).join('');
-
-  // Show active group info
-  var active = groups.find(function(g) { return g.id === _activeGid; });
-  if (active) {
-    var agCard = document.getElementById('active-group-card');
-    if (agCard) agCard.style.display = 'block';
-    var nameEl = document.getElementById('active-group-name');
-    var codeEl = document.getElementById('active-group-code');
-    if (nameEl) nameEl.textContent = active.name;
-    if (codeEl) codeEl.textContent = active.code;
-  }
-
-  // Render athletes for active group
-  renderGroupAthletesNew(_activeGid);
-}
 
 function switchCoachGroup_old_disabled(gid) {
   _activeGid = gid;
@@ -7362,38 +7085,17 @@ function viewAthleteModal(uid, name) {
     + '</div>');
 }
 
-async function msgGroupModal() {
-  var groups = window._coachGroups || [];
-  var active = groups.find(function(g) { return g.id === _activeGid; });
-  var gName = active ? active.name : 'הקבוצה';
-  openModal('📢 הודעה לכל ' + gName,
-    '<div style="padding:6px 0">'
-    + '<div style="font-size:11px;color:var(--txt2);margin-bottom:10px">ישלח לכל ' + (window._coachAthletes?.[_activeGid]?.length || 0) + ' חניכי הקבוצה</div>'
-    + '<textarea id="grp-txt" rows="3" placeholder="כתוב הודעה לכל הקבוצה..." style="width:100%;padding:10px;background:var(--card2);border:1px solid var(--b1);border-radius:10px;color:var(--txt);font-size:13px;resize:none;box-sizing:border-box;margin-bottom:12px"></textarea>'
-    + '<button class="btn bp" style="width:100%" onclick="sendGroupAnnouncement()">📢 שלח לכולם</button>'
-    + '</div>');
-}
 
-async function sendGroupAnnouncement() {
-  var text = (document.getElementById('grp-txt')?.value || '').trim();
-  if (!text) { notify('כתוב הודעה', 'y'); return; }
-  if (window._sendGroupMsg && _activeGid) {
-    await window._sendGroupMsg(_activeGid, text, 'announcement');
-  }
-  // Also save locally
-  var ann = JSON.parse(localStorage.getItem('cf7_announcements') || '[]');
-  ann.unshift({ text: text, ts: Date.now(), groupId: _activeGid || 'all', from: window._fbUser?.displayName||'מאמן' });
-  localStorage.setItem('cf7_announcements', JSON.stringify(ann.slice(0,30)));
-  // Also trigger Firebase sync
-  if(window._syncUp)window._syncUp();
-  closeModal();
-  notify('📢 הודעה נשלחה לכל הקבוצה!', 'p');
-}
+/* dup:msgGroupModal */
 
-function quickAnn(text) {
-  var inp = document.getElementById('ann-quick-input');
-  if (inp) inp.value = text;
-}
+
+
+/* dup:sendGroupAnnouncement */
+
+
+
+/* dup:quickAnn */
+
 
 async function sendQuickAnn() {
   var text = (document.getElementById('ann-quick-input')?.value || '').trim();
@@ -7409,83 +7111,37 @@ async function sendQuickAnn() {
 }
 
 // Override renderCoachGroup to use new system
-function renderCoachGroup() {
-  renderCoachGroupsUI();
-}
+
+/* dup:renderCoachGroup */
+
 
 
 // ═══════════════════════════════ COACH MODE ══════════════════════════════════
 // PAGES already declared above
 
-function openModal(title,body){
-  var bk=document.getElementById('modal-bk');
-  var mc=document.getElementById('modal-content');
-  if(!bk||!mc){console.warn('Modal missing');return;}
-  mc.innerHTML='<div class="modal-hdr"><div class="modal-ttl">'+title+'</div><button class="modal-x" onclick="closeModal()">✕</button></div>'+body;
-  bk.style.display='flex';bk.classList.add('show');
-  document.body.style.overflow='hidden';
-}
-function closeModal(){
-  var bk=document.getElementById('modal-bk');
-  if(bk){bk.classList.remove('show');bk.style.display='none';}
-  document.body.style.overflow='';
-}
 
-function initCM(){
-  document.body.classList.toggle('cm',coachMode);
-  var b=document.getElementById('mode-btn');if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
-  var lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  var ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v8.0':'IDF ELITE SYSTEM v9.0 PRO';
-  var navAth=document.getElementById('nav-athlete'),navCoach=document.getElementById('nav-coach');
-  if(navAth)navAth.style.display=coachMode?'none':'grid';
-  if(navCoach)navCoach.style.display=coachMode?'grid':'none';
-  if(coachMode){
-    ['dash','test','week','lb','train','ai'].forEach(function(x){var e=document.getElementById('p-'+x);if(e)e.classList.remove('active');});
-    var cp=document.getElementById('p-coach');if(cp)cp.classList.add('active');
-    var localGroups=JSON.parse(localStorage.getItem('cf7_groups')||'[]');
-    if(window._coachGroups&&window._coachGroups.length){renderCoachGroupsUI();}
-    else if(localGroups.length){
-      window._coachGroups=localGroups;
-      if(!window._coachAthletes)window._coachAthletes={};
-      localGroups.forEach(function(g){if(!window._coachAthletes[g.id])window._coachAthletes[g.id]=JSON.parse(localStorage.getItem('cf7_ath_'+g.id)||'[]');});
-      _activeGid=localGroups[0].id;renderCoachGroupsUI();
-    }else{window._coachGroups=[];window._coachAthletes={};renderCoachGroupsUI();}
-    coachShowTab('groups',document.getElementById('cn-groups'));
-  }else{
-    var cp=document.getElementById('p-coach');if(cp)cp.classList.remove('active');
-    showPg('dash');
-  }
-}
+/* dup:openModal */
 
-function toggleCM(){
-  if(!coachMode){openCoachLoginModal();}
-  else{coachMode=false;initCM();}
-}
-function openCoachLoginModal(){
-  openModal('🎖 כניסת מאמן',
-    '<div style="padding:8px 0">'
-    +'<div style="font-size:11px;color:var(--txt2);margin-bottom:12px;text-align:center">אזור מוגן למאמנים בלבד</div>'
-    +'<label>סיסמה</label>'
-    +'<input id="coach-pass-inp" type="password" placeholder="הזן סיסמה" onkeydown="if(event.key===\'Enter\')submitCoachPass()" style="margin-bottom:12px"/>'
-    +'<button class="btn bp" style="width:100%" onclick="submitCoachPass()">🔓 כניסה</button>'
-    +'</div>');
-  setTimeout(function(){var i=document.getElementById('coach-pass-inp');if(i)i.focus();},200);
-}
-function submitCoachPass(){
-  var inp=document.getElementById('coach-pass-inp');if(!inp)return;
-  var pass=inp.value;
-  var stored=localStorage.getItem('cf7_coach_pass')||'1234';
-  if(pass===stored){closeModal();coachMode=true;initCM();notify('🎖 ברוך הבא מאמן!','p');}
-  else{inp.value='';inp.style.borderColor='var(--red)';inp.placeholder='❌ סיסמה שגויה';notify('❌ סיסמה שגויה','r');setTimeout(function(){inp.style.borderColor='';inp.placeholder='הזן סיסמה';},1500);}
-}
-function changeCoachPass(){
-  openModal('🔑 שנה סיסמת מאמן',
-    '<div style="padding:8px 0">'
-    +'<label>סיסמה נוכחית</label><input id="cp-old" type="password" placeholder="סיסמה נוכחית" style="margin-bottom:10px"/>'
-    +'<label>סיסמה חדשה</label><input id="cp-new" type="password" placeholder="סיסמה חדשה" style="margin-bottom:14px"/>'
-    +'<button class="btn bp" style="width:100%" onclick="doChangePass()">✅ שנה סיסמה</button>'
-    +'</div>');
-}
+
+/* dup:closeModal */
+
+
+
+/* dup:initCM */
+
+
+
+/* dup:toggleCM */
+
+
+/* dup:openCoachLoginModal */
+
+
+/* dup:submitCoachPass */
+
+
+/* dup:changeCoachPass */
+
 function doChangePass(){
   var old=(document.getElementById('cp-old')?.value||'').trim();
   var nw=(document.getElementById('cp-new')?.value||'').trim();
@@ -7509,63 +7165,22 @@ function coachShowTab(tab,btn){
   if(tab==='msg')renderMsgAthletesList();
 }
 
-function createGroupDialog(){
-  openModal('➕ קבוצה חדשה','<div style="padding:8px 0"><label>שם הקבוצה</label><input id="new-group-name" type="text" placeholder="קבוצת כושר קרבי ירושלים" style="margin-bottom:14px"/><button class="btn bp" style="width:100%" onclick="doCreateGroup()">➕ צור קבוצה</button></div>');
-}
-async function doCreateGroup(){
-  var name=(document.getElementById('new-group-name')?.value||'').trim();
-  if(!name){notify('הכנס שם','y');return;}
-  var code='CF-'+Math.random().toString(36).toUpperCase().slice(2,8);
-  var gid='grp_'+Date.now();
-  var newGroup={id:gid,name:name,code:code,created:Date.now()};
-  if(!window._coachGroups)window._coachGroups=[];
-  window._coachGroups.push(newGroup);
-  if(!window._coachAthletes)window._coachAthletes={};
-  window._coachAthletes[gid]=[];
-  _activeGid=gid;
-  localStorage.setItem('cf7_groups',JSON.stringify(window._coachGroups));
-  closeModal();renderCoachGroupsUI();
-  notify('✅ קבוצה "'+name+'" נוצרה! קוד: '+code,'p');
-}
 
-function renderCoachGroupsUI(){
-  var groups=window._coachGroups||[];
-  var tabsEl=document.getElementById('coach-group-tabs');if(!tabsEl)return;
-  if(!groups.length){
-    tabsEl.innerHTML='<div style="text-align:center;padding:12px;color:var(--txt3);font-size:11px;width:100%">אין קבוצות — צור קבוצה ראשונה</div>';
-    var ag=document.getElementById('active-group-card');if(ag)ag.style.display='none';
-    return;
-  }
-  if(!_activeGid)_activeGid=groups[0].id;
-  tabsEl.innerHTML=groups.map(function(g){
-    var cnt=((window._coachAthletes&&window._coachAthletes[g.id])||[]).length;
-    var on=g.id===_activeGid;
-    return '<button onclick="switchCoachGroup(\'' + g.id + '\')" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:'+(on?'2px solid var(--purpleL)':'1px solid var(--b2)')+';background:'+(on?'rgba(124,58,237,.12)':'var(--card2)')+';color:'+(on?'var(--purpleL)':'var(--txt2)')+';font-weight:'+(on?'900':'700')+';font-size:12px;cursor:pointer;white-space:nowrap">'+g.name+' <span style="font-size:9px;opacity:.6">('+cnt+')</span></button>';
-  }).join('');
-  var active=groups.find(function(g){return g.id===_activeGid;});
-  if(active){
-    var agCard=document.getElementById('active-group-card');if(agCard)agCard.style.display='block';
-    var nameEl=document.getElementById('active-group-name');var codeEl=document.getElementById('active-group-code');
-    if(nameEl)nameEl.textContent=active.name;if(codeEl)codeEl.textContent=active.code;
-    // delete button
-    var deleteBtn=document.getElementById('delete-group-btn');
-    if(!deleteBtn&&agCard){var btn=document.createElement('button');btn.id='delete-group-btn';btn.textContent='🗑 מחק קבוצה';btn.style.cssText='margin-top:8px;width:100%;padding:8px;background:rgba(255,45,85,.07);border:1px solid rgba(255,45,85,.2);color:var(--red);border-radius:9px;font-size:11px;font-weight:800;cursor:pointer';btn.onclick=function(){confirmDeleteGroup(_activeGid);};agCard.appendChild(btn);}
-  }
-  updateGroupStats();renderGroupAthletesNew(_activeGid);
-}
+/* dup:createGroupDialog */
+
+
+/* dup:doCreateGroup */
+
+
+
+/* dup:renderCoachGroupsUI */
+
 
 function switchCoachGroup(gid){_activeGid=gid;var db=document.getElementById('delete-group-btn');if(db)db.remove();renderCoachGroupsUI();}
 
-function copyGroupCode(){
-  var groups=window._coachGroups||[];
-  var active=groups.find(function(g){return g.id===_activeGid;});
-  var code=(active&&active.code)||'';
-  if(!code){notify('אין קוד לקבוצה הפעילה','y');return;}
-  function onCopied(){notify('✅ קוד '+code+' הועתק!','p');}
-  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(code).then(onCopied).catch(fallback);}
-  else{fallback();}
-  function fallback(){var ta=document.createElement('textarea');ta.value=code;ta.style.cssText='position:fixed;top:-9999px';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');onCopied();}catch(e){notify('קוד: '+code+' — העתק ידנית','y');}document.body.removeChild(ta);}
-}
+
+/* dup:copyGroupCode */
+
 
 function updateGroupStats(){
   var athletes=(window._coachAthletes&&_activeGid&&window._coachAthletes[_activeGid])||[];
@@ -7576,76 +7191,17 @@ function updateGroupStats(){
   el('cgs-count',count||0);el('cgs-avg',avg||'--');el('cgs-top',top||'--');
 }
 
-function renderGroupAthletesNew(gid){
-  var el=document.getElementById('coach-athletes-list');if(!el)return;
-  var athletes=(window._coachAthletes&&window._coachAthletes[gid])||[];
-  if(!athletes.length){try{athletes=JSON.parse(localStorage.getItem('cf7_ath_'+gid)||'[]');}catch(e){}}
-  if(!athletes.length){
-    el.innerHTML='<div style="text-align:center;padding:24px;color:var(--txt3)"><div style="font-size:32px;margin-bottom:8px">👥</div><div style="font-size:12px">אין חניכים בקבוצה</div></div>';return;
-  }
-  var sorted=athletes.slice().sort(function(a,b){return(b.sc||0)-(a.sc||0);});
-  var medals=['🥇','🥈','🥉'];
-  el.innerHTML=sorted.map(function(a,i){
-    var u=(typeof UNITS!=='undefined'&&UNITS[a.unit||a.un])||{n:'קרבי',col:'#888',emoji:'⚔'};
-    var score=a.sc||0;
-    var scoreColor=score>=80?'var(--pri)':score>=60?'var(--yellow)':'var(--orange)';
-    var run=a.run&&a.run<900?Math.floor(a.run/60)+':'+(String(a.run%60).padStart(2,'0')):'--';
-    var uid=a.uid||('local_'+i);
-    var nm=(a.nm||a.name||'לוחם').replace(/'/g,'');
-    var rank=medals[i]||('#'+(i+1));
-    return '<div style="background:var(--card2);border-radius:13px;padding:12px;margin-bottom:8px;border:1px solid var(--b1)">'
-      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'
-      +'<div style="font-size:18px;width:26px;text-align:center">'+rank+'</div>'
-      +'<div style="width:40px;height:40px;border-radius:50%;background:'+u.col+'22;border:2px solid '+u.col+';display:flex;align-items:center;justify-content:center;font-size:20px">'+u.emoji+'</div>'
-      +'<div style="flex:1;min-width:0"><div style="font-weight:900;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(a.nm||a.name||'לוחם')+'</div><div style="font-size:10px;color:'+u.col+'">'+u.n+'</div></div>'
-      +'<div style="text-align:center"><div style="font-family:var(--fd);font-size:28px;color:'+scoreColor+';line-height:1">'+(score||'--')+'</div><div style="font-size:8px;color:var(--txt3)">ציון</div></div></div>'
-      +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px">'
-      +'<div style="text-align:center;background:var(--card3);border-radius:8px;padding:6px"><div style="font-family:var(--fd);font-size:14px;color:var(--pri)">'+run+'</div><div style="font-size:8px;color:var(--txt3)">2K</div></div>'
-      +'<div style="text-align:center;background:var(--card3);border-radius:8px;padding:6px"><div style="font-family:var(--fd);font-size:14px;color:var(--yellow)">'+(a.pul||'--')+'</div><div style="font-size:8px;color:var(--txt3)">מתח</div></div>'
-      +'<div style="text-align:center;background:var(--card3);border-radius:8px;padding:6px"><div style="font-family:var(--fd);font-size:14px;color:var(--yellow)">'+(a.psh||'--')+'</div><div style="font-size:8px;color:var(--txt3)">שכיבות</div></div>'
-      +'</div>'
-      +'<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:6px">'
-      +'<button onclick="openMsgToAthlete(\''+ uid +'\',\''+ nm +'\')" style="padding:9px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);color:var(--purpleL);border-radius:9px;font-size:11px;font-weight:900;cursor:pointer">📤 הודעה</button>'
-      +'<button onclick="viewAthleteModal(\''+ uid +'\',\''+ nm +'\')" style="padding:9px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);color:var(--pri);border-radius:9px;font-size:11px;font-weight:900;cursor:pointer">📊 פרטים</button>'
-      +'<button onclick="confirmDeleteAthlete(\''+ uid +'\',\''+ nm +'\')" style="padding:9px 10px;background:rgba(255,45,85,.07);border:1px solid rgba(255,45,85,.2);color:var(--red);border-radius:9px;cursor:pointer">🗑</button>'
-      +'</div></div>';
-  }).join('');
-}
 
-function toggleAddAth(){
-  var card=document.getElementById('add-ath-card');if(!card)return;
-  var showing=card.style.display!=='none';
-  card.style.display=showing?'none':'block';
-  if(!showing){
-    var sel=document.getElementById('ath-group-inp');
-    if(sel){var groups=window._coachGroups||[];sel.innerHTML='<option value="">— בחר קבוצה —</option>'+groups.map(function(g){return'<option value="'+g.id+'"'+(g.id===_activeGid?' selected':'')+'>'+g.name+'</option>';}).join('');}
-    card.scrollIntoView({behavior:'smooth'});
-  }
-}
+/* dup:renderGroupAthletesNew */
 
-function addAthleteManual(){
-  var name=(document.getElementById('ath-name-inp')?.value||'').trim();
-  if(!name){notify('הכנס שם חניך','y');return;}
-  var groupSel=document.getElementById('ath-group-inp');
-  var targetGid=(groupSel&&groupSel.value)||_activeGid;
-  if(!targetGid){notify('בחר קבוצה','y');return;}
-  var score=parseInt(document.getElementById('ath-score-inp')?.value||0);
-  var pull=parseInt(document.getElementById('ath-pull-inp')?.value||0);
-  var push=parseInt(document.getElementById('ath-push-inp')?.value||0);
-  var run=parseInt(document.getElementById('ath-run-inp')?.value||0);
-  var unit=document.getElementById('ath-unit-inp')?.value||'gen';
-  var ath={uid:'local_'+Date.now(),nm:name,sc:score,pul:pull,psh:push,run:run,unit:unit};
-  if(!window._coachAthletes)window._coachAthletes={};
-  if(!window._coachAthletes[targetGid])window._coachAthletes[targetGid]=[];
-  window._coachAthletes[targetGid].push(ath);
-  localStorage.setItem('cf7_ath_'+targetGid,JSON.stringify(window._coachAthletes[targetGid]));
-  ['ath-name-inp','ath-score-inp','ath-pull-inp','ath-push-inp','ath-run-inp'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
-  var groupName=(window._coachGroups||[]).find(function(g){return g.id===targetGid;})?.name||targetGid;
-  notify('✅ '+name+' נוסף ל'+groupName+'!','p');
-  document.getElementById('add-ath-card').style.display='none';
-  if(targetGid===_activeGid)renderGroupAthletesNew(_activeGid);
-  updateGroupStats();
-}
+
+
+/* dup:toggleAddAth */
+
+
+
+/* dup:addAthleteManual */
+
 
 function confirmDeleteGroup(gid){
   var g=(window._coachGroups||[]).find(function(x){return x.id===gid;});if(!g)return;
@@ -7663,53 +7219,21 @@ function deleteGroup(gid){
 function confirmDeleteAthlete(uid,name){
   openModal('🗑 מחק חניך','<div style="text-align:center;padding:10px 0"><div style="font-size:40px;margin-bottom:10px">👤</div><div style="font-weight:900;font-size:14px;margin-bottom:8px">למחוק את "'+name+'"?</div><button class="btn br" style="width:100%;margin-bottom:8px" onclick="deleteAthlete(\''+uid+'\')">🗑 כן, מחק</button><button class="btn bs" onclick="closeModal()">ביטול</button></div>');
 }
-function deleteAthlete(uid){
-  if(!_activeGid){closeModal();return;}
-  if(!window._coachAthletes)window._coachAthletes={};
-  if(!window._coachAthletes[_activeGid])window._coachAthletes[_activeGid]=[];
-  window._coachAthletes[_activeGid]=window._coachAthletes[_activeGid].filter(function(a){return(a.uid||'')!==uid;});
-  localStorage.setItem('cf7_ath_'+_activeGid,JSON.stringify(window._coachAthletes[_activeGid]));
-  closeModal();renderGroupAthletesNew(_activeGid);updateGroupStats();notify('🗑 חניך הוסר','r');
-}
 
-function viewAthleteModal(uid,name){
-  var athletes=(window._coachAthletes&&_activeGid&&window._coachAthletes[_activeGid])||[];
-  var a=athletes.find(function(x){return(x.uid||'')===uid;})||athletes.find(function(x){return(x.nm||x.name||'')===name;})||{};
-  var u=(typeof UNITS!=='undefined'&&UNITS[a.unit||a.un])||{n:'קרבי',col:'#888',emoji:'⚔'};
-  var score=a.sc||0;
-  var run=a.run&&a.run<900?Math.floor(a.run/60)+':'+(String(a.run%60).padStart(2,'0')):(a.run||'--');
-  var scoreColor=score>=80?'var(--pri)':score>=60?'var(--yellow)':'var(--orange)';
-  var safeName=name.replace(/['"]/g,'');
-  openModal('📊 '+name,
-    '<div style="text-align:center;padding:8px 0 14px"><div style="font-size:48px">'+u.emoji+'</div>'
-    +'<div style="font-weight:900;font-size:15px;margin-top:4px">'+(a.nm||name)+'</div>'
-    +'<div style="font-size:11px;color:'+u.col+';margin-top:2px">'+u.n+'</div></div>'
-    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px">'
-    +'<div style="text-align:center;background:var(--card2);border-radius:10px;padding:9px"><div style="font-family:var(--fd);font-size:22px;color:'+scoreColor+'">'+(score||'--')+'</div><div style="font-size:8px;color:var(--txt3)">ציון</div></div>'
-    +'<div style="text-align:center;background:var(--card2);border-radius:10px;padding:9px"><div style="font-family:var(--fd);font-size:22px;color:var(--pri)">'+run+'</div><div style="font-size:8px;color:var(--txt3)">2K</div></div>'
-    +'<div style="text-align:center;background:var(--card2);border-radius:10px;padding:9px"><div style="font-family:var(--fd);font-size:22px;color:var(--yellow)">'+(a.pul||'--')+'</div><div style="font-size:8px;color:var(--txt3)">מתח</div></div>'
-    +'<div style="text-align:center;background:var(--card2);border-radius:10px;padding:9px"><div style="font-family:var(--fd);font-size:22px;color:var(--yellow)">'+(a.psh||'--')+'</div><div style="font-size:8px;color:var(--txt3)">שכיבות</div></div>'
-    +'</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
-    +'<button class="btn bp" onclick="openMsgToAthleteByUid(this)">📤 שלח הודעה</button>'
-    +'<button class="btn bs" onclick="closeModal()">סגור</button>'
-    +'</div>');
-  // Store uid/name for the send button
-  setTimeout(function(){var btn=document.querySelector('#modal-content .btn.bp');if(btn){btn.dataset.uid=uid;btn.dataset.name=safeName;}},50);
-}
+/* dup:deleteAthlete */
+
+
+
+/* dup:viewAthleteModal */
+
 function openMsgToAthleteByUid(btn){
   var uid=btn.dataset.uid||'';var name=btn.dataset.name||'חניך';
   closeModal();setTimeout(function(){openMsgToAthlete(uid,name);},150);
 }
 
-function openMsgToAthlete(uid,name){
-  openModal('📤 הודעה ל'+name,
-    '<div style="padding:8px 0">'
-    +'<textarea id="ath-msg-txt" placeholder="כתוב הודעה..." style="width:100%;height:90px;padding:10px;background:var(--card2);border:1px solid var(--b1);border-radius:10px;color:var(--txt);font-size:13px;resize:none;box-sizing:border-box;margin-bottom:12px"></textarea>'
-    +'<button class="btn bp" style="width:100%" onclick="sendMsgToAthlete(\''+uid+'\'\',\''+name+'\')">📤 שלח</button>'
-    +'</div>');
-  setTimeout(function(){var t=document.getElementById('ath-msg-txt');if(t)t.focus();},200);
-}
+
+/* dup:openMsgToAthlete */
+
 function sendMsgToAthlete(uid,name){
   var text=(document.getElementById('ath-msg-txt')?.value||'').trim();
   if(!text){notify('כתוב הודעה','y');return;}
@@ -7719,18 +7243,12 @@ function sendMsgToAthlete(uid,name){
   closeModal();notify('✅ הודעה נשמרה ל'+name,'p');
 }
 
-function quickAnn(text){
-  var inp=document.getElementById('ann-quick-input');if(inp)inp.value=text;
-}
-async function sendQuickAnn(){
-  var text=(document.getElementById('ann-quick-input')?.value||'').trim();
-  if(!text){notify('כתוב הודעה','y');return;}
-  var ann=JSON.parse(localStorage.getItem('cf7_announcements')||'[]');
-  ann.unshift({text:text,from:'מאמן',ts:Date.now(),gid:_activeGid});
-  localStorage.setItem('cf7_announcements',JSON.stringify(ann.slice(0,30)));
-  document.getElementById('ann-quick-input').value='';
-  notify('📢 הודעה נשמרה לקבוצה!','p');
-}
+
+/* dup:quickAnn */
+
+
+/* dup:sendQuickAnn */
+
 
 function renderMsgAthletesList(){
   var el=document.getElementById('coach-msg-athletes-list');if(!el)return;
@@ -7747,541 +7265,738 @@ function renderMsgAthletesList(){
 }
 // ═══════════════════════════════ END COACH ═══════════════════════════════════
 
-// ══════════════════════════════════════════════════════
-// DRAFT COUNTDOWN — counts down to enlistment date
-// ══════════════════════════════════════════════════════
-function initDraftCountdown(){
-  var pr=ld(K.PR,{});
-  var draft=pr.draft;
-  var card=document.getElementById('draft-countdown-card');
-  if(!draft||!card)return;
-  // Parse date dd/mm/yyyy or yyyy-mm-dd
-  var parts,draftDate;
-  if(draft.includes('/')){
-    parts=draft.split('/');
-    draftDate=new Date(parts[2],parts[1]-1,parts[0]);
-  } else {
-    draftDate=new Date(draft);
-  }
-  if(isNaN(draftDate.getTime()))return;
-  var now=new Date();
-  if(draftDate<=now){card.style.display='none';return;}
-  card.style.display='block';
-  var unitEl=document.getElementById('cd-unit');
-  if(unitEl)unitEl.textContent='יחידת יעד: '+(pr.unit||'לא הוגדר');
-  function tick(){
-    var diff=draftDate-new Date();
-    if(diff<=0){card.style.display='none';return;}
-    var days=Math.floor(diff/864e5);
-    var hours=Math.floor((diff%864e5)/36e5);
-    var mins=Math.floor((diff%36e5)/6e4);
-    var dd=document.getElementById('cd-days');
-    var dh=document.getElementById('cd-hours');
-    var dm=document.getElementById('cd-mins');
-    if(dd)dd.textContent=days;
-    if(dh)dh.textContent=String(hours).padStart(2,'0');
-    if(dm)dm.textContent=String(mins).padStart(2,'0');
-  }
-  tick();
-  setInterval(tick,60000);
+
+
+// ════════════════════════════════════════════════════════════════
+// COMBAT FIT IL — Agent Improvements v11
+// Added: Ruck, Periodization, Scalable, Operator, Sleep, Injury,
+//        Onboarding, Countdown, QR, PDF, Haptic, Swipe, CSV,
+//        Coach Stats, Password Security, Auto-Memory AI
+// ════════════════════════════════════════════════════════════════
+
+// ── HAPTIC ───────────────────────────────────────────────────────
+function haptic(t){
+  if(!navigator.vibrate)return;
+  if(t==='success')navigator.vibrate([30,10,30]);
+  else if(t==='error')navigator.vibrate([100,50,100]);
+  else navigator.vibrate(15);
 }
 
-// ══════════════════════════════════════════════════════
-// SLEEP TRACKER — Whoop-inspired
-// ══════════════════════════════════════════════════════
-function calcSleep(){
-  var hours=parseFloat(document.getElementById('sl-hours')?.value||7);
-  var qual=parseInt(document.getElementById('sl-qual')?.value||7);
-  var res=document.getElementById('sl-result');
-  if(!res)return;
-  var score=Math.round((hours/9*60)+(qual/10*40));
-  score=Math.min(100,Math.max(0,score));
-  var color=score>=80?'var(--pri)':score>=60?'var(--yellow)':'var(--red)';
-  var label=score>=80?'מצוין — מוכן לאימון קשה':score>=60?'בסדר — אימון בינוני מומלץ':score<40?'גרוע — מנוחה פעילה בלבד':'נמוך — הפחת עצימות';
-  var tips=hours<6?'⚠️ פחות מ-6 שעות — הגוף לא התאושש. שקול לדחות אימון כוח.':
-           hours<7?'💡 נסה לישון 30 דקות יותר מחר.':
-           hours>=8?'✅ שינה מספקת! מקסם את האימון.':'💡 שינה טובה, המשך ככה.';
-  res.innerHTML=
-    '<div style="background:var(--card2);border-radius:10px;padding:12px;text-align:center">'+
-    '<div style="font-family:var(--fd);font-size:42px;color:'+color+';line-height:1">'+score+'</div>'+
-    '<div style="font-size:11px;color:var(--txt2);margin:4px 0">ציון שינה</div>'+
-    '<div style="font-weight:800;font-size:12px;color:'+color+'">'+label+'</div>'+
-    '<div style="font-size:11px;color:var(--txt2);margin-top:6px">'+tips+'</div>'+
-    '</div>';
-}
+// ── SWIPE NAVIGATION ─────────────────────────────────────────────
+(function(){
+  var PG=['dash','test','week','lb','train','ai'];
+  var sx=0,sy=0;
+  document.addEventListener('touchstart',function(e){
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;
+  },{passive:true});
+  document.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-sx;
+    var dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)<65||Math.abs(dy)>Math.abs(dx)*0.75)return;
+    var cur=PG.indexOf(window._activePg||'dash');if(cur===-1)return;
+    var nxt=dx<0?Math.min(cur+1,PG.length-1):Math.max(cur-1,0);
+    if(nxt!==cur){showPg(PG[nxt]);haptic();}
+  },{passive:true});
+})();
 
-function saveSleep(){
-  var hours=parseFloat(document.getElementById('sl-hours')?.value||7);
-  var qual=parseInt(document.getElementById('sl-qual')?.value||7);
-  var bed=document.getElementById('sl-bed')?.value||'23:00';
-  var wake=document.getElementById('sl-wake')?.value||'06:00';
-  var hist=ld('cf7_sleep',[]);
-  hist.unshift({date:new Date().toLocaleDateString('he-IL'),hours,qual,bed,wake,ts:Date.now()});
-  sv('cf7_sleep',hist.slice(0,30));
-  renderSleepHistory();
-  notify('😴 שינה נשמרה!','p');
-}
-
-function renderSleepHistory(){
-  var hist=ld('cf7_sleep',[]);
-  var el=document.getElementById('sl-history');
-  if(!el)return;
-  if(!hist.length){el.innerHTML='<div class="mini">אין היסטוריה עדיין</div>';return;}
-  var avg=hist.slice(0,7).reduce(function(s,h){return s+h.hours;},0)/Math.min(hist.length,7);
-  el.innerHTML=
-    '<div style="background:var(--card2);border-radius:9px;padding:8px;margin-bottom:8px;text-align:center">'+
-    '<div style="font-size:10px;color:var(--txt3)">ממוצע 7 ימים</div>'+
-    '<div style="font-family:var(--fd);font-size:28px;color:var(--purple)">'+avg.toFixed(1)+'<span style="font-size:12px"> שעות</span></div>'+
-    '</div>'+
-    hist.slice(0,7).map(function(h){
-      var c=h.hours>=8?'var(--pri)':h.hours>=7?'var(--yellow)':'var(--red)';
-      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--b1)">'+
-        '<span style="font-size:11px;color:var(--txt2)">'+h.date+'</span>'+
-        '<div style="display:flex;gap:8px;align-items:center">'+
-          '<span style="font-family:var(--fd);font-size:16px;color:'+c+'">'+h.hours+'ש</span>'+
-          '<span style="font-size:10px;color:var(--txt3)">איכות: '+h.qual+'/10</span>'+
-        '</div>'+
-      '</div>';
-    }).join('');
-}
-
-// ══════════════════════════════════════════════════════
-// INJURY PREVENTION DATABASE — IDF Protocol
-// ══════════════════════════════════════════════════════
-var INJURY_DB={
-  shin:{
-    name:'שין-ספלינט',icon:'🦵',
-    cause:'עומס יתר על עצם השוקה — ריצה קשה מדי מהר מדי',
-    red:['כאב חד בשוקיים בזמן ריצה','נפיחות לאחר פעילות','כאב במישוש'],
-    treat:['הפסק ריצה ל-3-5 ימים','קרח 15 דקות × 3/יום','תרגיל: Calf raises 3×20','תרגיל: Toe taps 3×30'],
-    prevent:['הגדל עצימות ב-10% לשבוע בלבד','נעלי ריצה מתאימות','מדרסים אם רגל שטוחה','חימום 10 דק לפני כל ריצה'],
-    return:'חזרה מדורגת: הליכה → ריצה קלה → ריצה מלאה'
-  },
-  shoulder:{
-    name:'כתף — Impingement',icon:'💪',
-    cause:'לחץ על גידים מתרגילי מתח + נשיאת כיס',
-    red:['כאב בהרמת יד מעל הראש','חולשה בשרוול מסובב','כאב בלילה'],
-    treat:['הפסק מתח ל-7 ימים','חזק: Band external rotation 3×15','תמוך: מתיחת חזה 3×30שנ'],
-    prevent:['Face pulls לחיזוק כתף אחורית','מתיחת פקטוראל יומית','אל תתלה מת על מוט'],
-    return:'חזרה עם טווח תנועה מלא ללא כאב'
-  },
-  knee:{
-    name:'ברך — Runners Knee',icon:'🦵',
-    cause:'חיכוך תחת הפיקה — ריצה וירידות',
-    red:['כאב מסביב לפיקה','כאב בירידה במדרגות','נוקשות בבוקר'],
-    treat:['הפחת ריצה ב-50%','תרגיל: VMO squats 3×15','קרח 15 דק לאחר ריצה','הרמת רגל ישרה 3×15'],
-    prevent:['חזק VMO: terminal knee extensions','נעליים עם בולם זעזועים','הימנע מריצה בירידות תלולות'],
-    return:'חזרה כשאין כאב בריצה קלה 10 דק'
-  },
-  back:{
-    name:'גב תחתון',icon:'🔙',
-    cause:'כפיפות שגויות + כיס כבד + ישיבה ממושכת',
-    red:['כאב חד בהרמה','הקרנה לרגל','נוקשות בוקר מעל 30 דק'],
-    treat:['McGill Big 3: Bird-dog, Modified curl-up, Side plank','מתיחת היפ-פלקסור 2×45שנ','הימנע מישיבה ממושכת'],
-    prevent:['Dead bug 3×8 יומי','Hip hinge נכון בהרמות','ליבה חזקה = גב מוגן'],
-    return:'חזרה עם טכניקה מושלמת בלבד'
-  }
-};
-
-function showInjury(type){
-  var inj=INJURY_DB[type];
-  if(!inj)return;
-  var el=document.getElementById('injury-detail');
-  if(!el)return;
-  el.style.display='block';
-  el.innerHTML=
-    '<div style="background:var(--card2);border-radius:12px;padding:12px;margin-top:8px">'+
-    '<div style="font-size:16px;font-weight:900;color:var(--red);margin-bottom:8px">'+inj.icon+' '+inj.name+'</div>'+
-    '<div style="font-size:11px;color:var(--txt2);margin-bottom:10px">'+inj.cause+'</div>'+
-    '<div style="font-size:10px;font-weight:800;color:var(--orange);margin-bottom:4px">🚨 סימני אזהרה:</div>'+
-    inj.red.map(function(r){return '<div style="font-size:11px;color:var(--txt);padding:2px 0">• '+r+'</div>';}).join('')+
-    '<div style="font-size:10px;font-weight:800;color:var(--yellow);margin:8px 0 4px">💊 טיפול מיידי:</div>'+
-    inj.treat.map(function(t){return '<div style="font-size:11px;color:var(--txt);padding:2px 0">• '+t+'</div>';}).join('')+
-    '<div style="font-size:10px;font-weight:800;color:var(--pri);margin:8px 0 4px">🛡 מניעה:</div>'+
-    inj.prevent.map(function(p){return '<div style="font-size:11px;color:var(--txt);padding:2px 0">• '+p+'</div>';}).join('')+
-    '<div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:8px;margin-top:8px;font-size:11px;color:var(--pri)">'+
-    '✅ חזרה לאימון: '+inj.return+'</div>'+
-    '</div>';
-  el.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-
-var PREHAB_ROUTINES=[
-  [{name:'Hip 90/90 stretch',d:'2 דקות כל צד'},
-   {name:'Thoracic rotation',d:'10 × כל צד'},
-   {name:'Calf raises slow',d:'3×15'},
-   {name:'Dead bug',d:'3×8 כל צד'}],
-  [{name:'Banded clamshells',d:'3×15 כל צד'},
-   {name:'World greatest stretch',d:'5 × כל צד'},
-   {name:'Single leg balance',d:'3×30שנ כל רגל'},
-   {name:'Face pulls',d:'3×15'}],
-  [{name:'Jefferson curl',d:'3×8 איטי'},
-   {name:'Prone Y-T-W',d:'2×10 כל צורה'},
-   {name:'Ankle circles',d:'20 × כל כיוון'},
-   {name:'McGill bird-dog',d:'3×10 כל צד'}]
-];
-
-function renderPrehab(){
-  var el=document.getElementById('daily-prehab');
-  if(!el)return;
-  var r=PREHAB_ROUTINES[Math.floor(Math.random()*PREHAB_ROUTINES.length)];
-  el.innerHTML=r.map(function(ex){
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--b1)">'+
-      '<span style="font-size:12px;font-weight:700;color:var(--txt)">'+ex.name+'</span>'+
-      '<span style="font-size:11px;color:var(--pri);font-weight:800">'+ex.d+'</span>'+
-    '</div>';
-  }).join('');
-}
-
-// ══════════════════════════════════════════════════════
-// SHARE SCORE — Strava-style score card
-// ══════════════════════════════════════════════════════
-function shareScore(){
-  var scores=ld(K.P,[]);
-  var pr=ld(K.PR,{});
-  var last=scores[0]||{};
-  if(!last.bar){notify('בצע מבחן קודם!','y');return;}
-  var text='⚔ Combat Fit IL\n'+
-    'ציון: '+last.bar+'/100\n'+
-    'יחידת יעד: '+(pr.unit||'לא הוגדר')+'\n'+
-    'תאריך: '+last.date+'\n'+
-    'app-for-running.vercel.app';
-  if(navigator.share){
-    navigator.share({title:'Combat Fit IL — הציון שלי',text:text,url:'https://app-for-running.vercel.app'})
-      .then(function(){notify('שותף! 📤','p');})
-      .catch(function(){copyToClipboard(text);});
-  } else {
-    copyToClipboard(text);
-    notify('הציון הועתק ללוח 📋','p');
-  }
-}
-
-function copyToClipboard(txt){
-  var ta=document.createElement('textarea');
-  ta.value=txt;document.body.appendChild(ta);ta.select();
-  document.execCommand('copy');document.body.removeChild(ta);
-}
-
-// ══════════════════════════════════════════════════════
-// PATCH trt to init sleep/injury/prehab
-// ══════════════════════════════════════════════════════
-window.addEventListener('beforeunload', function() {
-  // Save current profile inputs
+// ── BEFOREUNLOAD — save everything on tab close ───────────────────
+window.addEventListener('beforeunload',function(){
   try{
-    const nameEl=document.getElementById('pnm');
-    const ageEl=document.getElementById('pag');
-    const heightEl=document.getElementById('phg');
-    const weightEl=document.getElementById('pwg');
-    const unitEl=document.getElementById('pun');
-    const draftEl=document.getElementById('pdr');
-    if(nameEl&&nameEl.value){
-      var pr=ld(K.PR,{});
-      if(nameEl.value)pr.name=nameEl.value;
-      if(ageEl&&ageEl.value)pr.age=ageEl.value;
-      if(heightEl&&heightEl.value)pr.height=heightEl.value;
-      if(weightEl&&weightEl.value)pr.weight=weightEl.value;
-      if(unitEl&&unitEl.value)pr.unit=unitEl.value;
-      if(draftEl&&draftEl.value)pr.draft=draftEl.value;
-      sv(K.PR,pr);
-    }
-    // Save AI settings
-    const aiAge=document.getElementById('ai-age');
-    const aiWgt=document.getElementById('weight');
-    if(aiAge&&aiAge.value)localStorage.setItem('cf_age',aiAge.value);
-    if(aiWgt&&aiWgt.value)localStorage.setItem('cf_wgt',aiWgt.value);
-    // Save muscle state
-    if(Object.keys(muscleState).length)sv('cf7_muscles',muscleState);
+    var pr=ld(K.PR,{});var ch=false;
+    [['pnm','name'],['pag','age'],['phg','height'],['pwg','weight'],['pun','unit'],['pdr','draft']].forEach(function(p){
+      var el=document.getElementById(p[0]);if(el&&el.value){pr[p[1]]=el.value;ch=true;}
+    });
+    if(ch)sv(K.PR,pr);
+    var a=document.getElementById('ai-age');var w=document.getElementById('weight');
+    if(a&&a.value)localStorage.setItem('cf_age',a.value);
+    if(w&&w.value)localStorage.setItem('cf_wgt',w.value);
+    if(typeof muscleState!=='undefined'&&Object.keys(muscleState).length)sv('cf7_muscles',muscleState);
+  var slH=document.getElementById('sl-hours');if(slH&&slH.value)localStorage.setItem('cf7_sleep_draft',slH.value);
   }catch(e){}
 });
 
-// ══════════ RESTORE MUSCLE STATE ON LOAD ══════════
-document.addEventListener('DOMContentLoaded',function(){
-  var savedMuscles=ld('cf7_muscles',null);
-  if(savedMuscles&&typeof savedMuscles==='object'){
-    muscleState=savedMuscles;
-  }
-});
-// ═══════════════════════════════════════════════════
-
-// ══════════════════════════════════════════════════════
-// RUCK TRAINING — Tsevet Lohamim / Goruck inspired
-// ══════════════════════════════════════════════════════
-function calcRuck(){
-  var wt=parseFloat(document.getElementById('ruck-wt')?.value||10);
-  var bw=parseFloat(document.getElementById('ruck-bw')?.value||70);
-  var dist=parseFloat(document.getElementById('ruck-dist')?.value||10);
-  var pace=parseFloat(document.getElementById('ruck-pace')?.value||8);
-  if(!wt||!dist||!pace)return;
-  var totalMin=dist*pace;
-  var h=Math.floor(totalMin/60), m=Math.round(totalMin%60);
-  var timeStr=h>0?h+'ש '+m+'ד':m+' דקות';
-  var pct=Math.round(wt/bw*100);
-  // Calories: MET for rucking with load ~8-12
-  var met=8+wt*0.15;
-  var cal=Math.round(met*bw/60*totalMin);
-  var level=pct<15?'🟢 קל':pct<22?'🟡 קרבי':pct<30?'🔴 גיבוש':'💀 עילית';
-  var liveEl=document.getElementById('ruck-live');
-  if(liveEl)liveEl.style.display='block';
-  var td=document.getElementById('ruck-time-disp');var cd=document.getElementById('ruck-cal-disp');var ld2=document.getElementById('ruck-load-disp');var ll=document.getElementById('ruck-level');
-  if(td)td.textContent=timeStr;
-  if(cd)cd.textContent=cal;
-  if(ld2)ld2.textContent=pct+'%';
-  if(ll)ll.textContent=level+' ('+wt+'ק"ג = '+pct+'% ממשקל גוף)';
+// ── TIMER FUNCTIONS (missing from original) ──────────────────────
+var _tInt=null,_tRun=false,_tCur=0;
+function startTmr(){
+  if(_tRun)return;
+  var mode=document.getElementById('tmode')&&document.getElementById('tmode').value||'cd';
+  var secs=parseInt(document.getElementById('tsecs')&&document.getElementById('tsecs').value||60);
+  if(mode==='cd'&&_tCur===0)_tCur=secs;
+  _tRun=true;
+  var dsp=document.getElementById('tdsp');var ph=document.getElementById('tph');
+  if(ph)ph.textContent='רץ...';
+  _tInt=setInterval(function(){
+    if(mode==='sw'){_tCur++;}
+    else{if(_tCur<=0){clearInterval(_tInt);_tRun=false;if(ph)ph.textContent='סיום!';notify('⏱ סיים!','p');haptic('success');return;}_tCur--;}
+    var m=Math.floor(_tCur/60),s=_tCur%60;
+    if(dsp){dsp.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');dsp.className='td'+((_tCur<=10&&mode!=='sw')?' red':'');}
+  },1000);
+}
+function onTM(){
+  var mode=document.getElementById('tmode')&&document.getElementById('tmode').value||'cd';
+  var ivR=document.getElementById('tiv-r');var tabR=document.getElementById('ttab-r');
+  if(ivR)ivR.style.display=(mode==='iv')?'':'none';
+  if(tabR)tabR.style.display=(mode==='tab')?'':'none';
+  clearInterval(_tInt);_tRun=false;_tCur=0;
+  var dsp=document.getElementById('tdsp');if(dsp)dsp.textContent='00:00';
+  var ph=document.getElementById('tph');if(ph)ph.textContent='לחץ התחל';
+}
+function _fbSignOut(){
+  if(window._fbAuth&&typeof window._fbAuth.signOut==='function')
+    window._fbAuth.signOut().then(function(){location.reload();});
+  else location.reload();
+}
+function _syncUp(){
+  var dot=document.getElementById('sync-dot');
+  if(dot){dot.style.background='var(--pri)';setTimeout(function(){dot.style.background='rgba(0,255,136,.3)';},2000);}
 }
 
+// ── AUTO-MEMORY askAI UPGRADE ─────────────────────────────────────
+// Override the existing askAI with one that has Auto-Memory + Typewriter
+var _origAskAI=typeof askAI==='function'?askAI:null;
+askAI=async function(){
+  var q=document.getElementById('ai-q')&&document.getElementById('ai-q').value&&document.getElementById('ai-q').value.trim();
+  if(!q)return;
+  document.getElementById('ai-q').value='';
+  var box=document.getElementById('ai-log');
+  // Add user message
+  var ud=document.createElement('div');ud.className='am u';ud.textContent=q;box.appendChild(ud);
+  var typing=document.createElement('div');typing.className='am a';
+  typing.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
+  box.appendChild(typing);box.scrollTop=99999;
+
+  // Build Auto-Memory context
+  var pr=ld(K.PR,{});
+  var scores=ld(K.P,[]).slice(0,5);
+  var age=localStorage.getItem('cf_age')||pr.age||'18';
+  var wgt=localStorage.getItem('cf_wgt')||pr.weight||'70';
+  var last=scores[0]||{};
+  var prev=scores[1]||{};
+  var trend=last.bar&&prev.bar?(parseFloat(last.bar)>parseFloat(prev.bar)?'עולה':'יורד'):'לא ידוע';
+  var daysWeek=Object.values(ld('cf7wd',{})||{}).filter(function(d){return d==='done';}).length;
+  var mem='== זיכרון חניך ==\nשם: '+(pr.name||'לוחם')+' | גיל: '+age+' | משקל: '+wgt+'ק"ג\n'+
+    'יחידת יעד: '+(pr.unit||'לא הוגדר')+' | גיוס: '+(pr.draft||'--')+'\n'+
+    'ציון אחרון: '+(last.bar||'--')+' | מגמה: '+trend+'\n'+
+    'אימונים השבוע: '+daysWeek+'/7\n'+
+    'ציונים: '+scores.map(function(s){return s.bar||'--';}).join(' → ')+'\n== סוף זיכרון ==';
+  var sys='אתה מאמן כושר קרבי ישראלי מקצועי. מדבר עברית, קצר וישיר.\n'+mem;
+
+  var hist=ld('cf7_ai_hist',[]);
+  hist.unshift({q:q,ts:Date.now(),date:new Date().toLocaleDateString('he-IL')});
+  sv('cf7_ai_hist',hist.slice(0,50));
+
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:[{role:'user',content:q}]})
+    });
+    var data=await resp.json();
+    var txt=(data.content&&data.content[0]&&data.content[0].text||'שגיאה').replace(/\n/g,'<br/>');
+    typing.remove();
+    var msgEl=document.createElement('div');msgEl.className='am a';box.appendChild(msgEl);
+    var tw=0;
+    (function typeIt(){
+      if(tw<txt.length){msgEl.innerHTML=txt.slice(0,tw+4)+'<span style="opacity:.4">|</span>';tw+=4;setTimeout(typeIt,10);}
+      else{msgEl.innerHTML=txt+'<div style="font-size:8px;color:var(--txt3);margin-top:3px">⚔ AI Coach — זוכר נתוניך</div>';}
+    })();
+    hist[0].a=txt.replace(/<[^>]*>/g,'').slice(0,300);sv('cf7_ai_hist',hist.slice(0,50));
+    haptic('success');
+  }catch(e){
+    typing.remove();
+    if(_origAskAI){document.getElementById('ai-q').value=q;_origAskAI();}
+    else{var err=document.createElement('div');err.className='am a';err.textContent='❌ שגיאת חיבור';box.appendChild(err);}
+  }
+  box.scrollTop=99999;
+};
+function askAI_smart(q){var i=document.getElementById('ai-q');if(i)i.value=q;askAI();}
+
+// ── RUCK TRAINING ─────────────────────────────────────────────────
+function calcRuck(){
+  var wt=parseFloat(document.getElementById('ruck-wt')&&document.getElementById('ruck-wt').value||10);
+  var bw=parseFloat(document.getElementById('ruck-bw')&&document.getElementById('ruck-bw').value||70);
+  var dist=parseFloat(document.getElementById('ruck-dist')&&document.getElementById('ruck-dist').value||10);
+  var pace=parseFloat(document.getElementById('ruck-pace')&&document.getElementById('ruck-pace').value||8);
+  var totalMin=dist*pace;var h=Math.floor(totalMin/60),m=Math.round(totalMin%60);
+  var timeStr=h>0?h+'ש '+m+'ד':m+' דקות';
+  var pct=Math.round(wt/bw*100);
+  var cal=Math.round((8+wt*0.15)*bw/60*totalMin);
+  var level=pct<15?'🟢 קל':pct<22?'🟡 קרבי':pct<30?'🔴 גיבוש':'💀 עילית';
+  var lv=document.getElementById('ruck-live');if(lv)lv.style.display='block';
+  var td=document.getElementById('ruck-time-disp');var cd=document.getElementById('ruck-cal-disp');
+  var ld2=document.getElementById('ruck-load-disp');var ll=document.getElementById('ruck-level');
+  if(td)td.textContent=timeStr;if(cd)cd.textContent=cal;if(ld2)ld2.textContent=pct+'%';
+  if(ll)ll.textContent=level+' ('+wt+'ק"ג = '+pct+'% ממשקל גוף)';
+}
 function setRuckPreset(dist,wt,pace){
   var d=document.getElementById('ruck-dist');var w=document.getElementById('ruck-wt');var p=document.getElementById('ruck-pace');
   if(d)d.value=dist;if(w)w.value=wt;if(p)p.value=pace;
-  calcRuck();
-  notify('🎒 פרסט נטען!','p');
+  calcRuck();notify('🎒 פרסט נטען!','p');
 }
-
 function startRuckWorkout(){
-  var wt=parseFloat(document.getElementById('ruck-wt')?.value||10);
-  var dist=parseFloat(document.getElementById('ruck-dist')?.value||10);
-  var pace=parseFloat(document.getElementById('ruck-pace')?.value||8);
-  var totalMin=Math.round(dist*pace);
-  var warmup=Math.round(totalMin*0.1);
-  var main=Math.round(totalMin*0.8);
-  var cool=totalMin-warmup-main;
-  var html=
-    '<div class="sh o" style="margin-top:10px">🎒 תוכנית Ruck '+dist+'ק"מ / '+wt+'ק"ג</div>'+
-    '<div class="sess" style="margin-top:8px">'+
-      '<div class="sess-top"><span class="sess-nm">🟢 חימום — '+warmup+' דקות</span></div>'+
-      '<div class="sess-row">הליכה קלה ללא כיס | מתיחות דינמיות | 10 סקוואט | 10 לאנגים</div>'+
-    '</div>'+
-    '<div class="sess">'+
-      '<div class="sess-top"><span class="sess-nm">🔴 Ruck — '+main+' דקות</span><span class="sess-kpi">'+wt+'ק"ג | '+pace+' דק/ק"מ</span></div>'+
-      '<div class="sess-row">שמור על קצב אחיד. גב ישר, צעדים קצרים וממוקדים</div>'+
-      '<div class="sess-row">כל 3ק"מ: עצור, שתה 200מל מים, בצע 10 מתח אם יש מוט</div>'+
-      '<div class="sess-row">כאב בכתפיות? הרפה רצועות ב-5ס"מ. אל תשחרר כיס</div>'+
-    '</div>'+
-    '<div class="sess">'+
-      '<div class="sess-top"><span class="sess-nm">🟢 שחרור — '+cool+' דקות</span></div>'+
-      '<div class="sess-row">הליכה קלה | מתיחות סטטיות: ירכיים, שוקיים, גב | שתייה</div>'+
-    '</div>'+
-    '<div style="background:rgba(255,136,0,.08);border:1px solid rgba(255,136,0,.2);border-radius:10px;padding:10px;margin-top:8px;font-size:11px;color:var(--txt2)">'+
-      '⚠️ כלל בטיחות: אם כאב חד בשוקיים → עצור. שין-ספלינט מ-Ruck קשה לטיפול.'+
-    '</div>';
-  var out=document.getElementById('ruck-plan-out');
-  if(out)out.innerHTML=html;
-  logWorkout({type:'ruck',name:'Ruck '+dist+'ק"מ',icon:'🎒',details:[wt+'ק"ג',dist+'ק"מ',pace+' דק/ק"מ']});
-  notify('🎒 תוכנית Ruck נוצרה!','p');
+  var wt=parseFloat(document.getElementById('ruck-wt')&&document.getElementById('ruck-wt').value||10);
+  var dist=parseFloat(document.getElementById('ruck-dist')&&document.getElementById('ruck-dist').value||10);
+  var pace=parseFloat(document.getElementById('ruck-pace')&&document.getElementById('ruck-pace').value||8);
+  var totalMin=Math.round(dist*pace);var warm=Math.round(totalMin*0.1);var cool=Math.round(totalMin*0.1);
+  var html='<div class="sh o">🎒 Ruck '+dist+'ק"מ / '+wt+'ק"ג</div>'+
+    '<div class="sess"><div class="sess-top"><span class="sess-nm">🟢 חימום — '+warm+' דקות</span></div>'+
+    '<div class="sess-row">הליכה קלה | מתיחות דינמיות | 10 סקוואט</div></div>'+
+    '<div class="sess"><div class="sess-top"><span class="sess-nm">🔴 Ruck — '+(totalMin-warm-cool)+' דקות</span><span class="sess-kpi">'+wt+'ק"ג | '+pace+' דק/ק"מ</span></div>'+
+    '<div class="sess-row">גב ישר, צעדים קצרים. כל 3ק"מ: שתה 200מל</div></div>'+
+    '<div class="sess"><div class="sess-top"><span class="sess-nm">🟢 שחרור — '+cool+' דקות</span></div>'+
+    '<div class="sess-row">הליכה קלה | מתיחות סטטיות</div></div>';
+  var out=document.getElementById('ruck-plan-out');if(out)out.innerHTML=html;
+  notify('🎒 תוכנית Ruck נוצרה!','p');haptic('success');
 }
 
-// ══════════════════════════════════════════════════════
-// PERIODIZATION PLAN — Tsevet Lohamim mesocycle method
-// ══════════════════════════════════════════════════════
+// ── PERIODIZATION ─────────────────────────────────────────────────
 function buildPeriodPlan(){
-  var unit=document.getElementById('per-unit')?.value||'golani';
-  var weeks=parseInt(document.getElementById('per-weeks')?.value||16);
-  var fit=parseInt(document.getElementById('per-fit')?.value||5);
-  var tpw=parseInt(document.getElementById('per-tpw')?.value||4);
-
-  var unitTargets={
-    basic:{run2:'9:30',pull:8,push:45,name:'קרבי בסיסי'},
-    golani:{run2:'8:30',pull:12,push:55,name:'גולני/צנחנים'},
-    sayeret:{run2:'7:45',pull:16,push:65,name:'סיירת/אגוז'},
-    elite:{run2:'7:00',pull:20,push:75,name:'עילית/מטכ"ל'}
-  };
-  var tgt=unitTargets[unit]||unitTargets.golani;
-
-  // Split weeks into mesocycles: Base → Build → Peak → Taper
-  var phases=[];
-  if(weeks>=16){
-    phases=[
-      {name:'💪 Base — בסיס',weeks:Math.round(weeks*0.3),focus:'בניית בסיס אירובי + כוח בסיסי',vol:'60%',int:'נמוך',deload:false},
-      {name:'⚡ Build — בנייה',weeks:Math.round(weeks*0.3),focus:'עלייה בנפח ריצות + כוח קרבי',vol:'80%',int:'בינוני',deload:true},
-      {name:'🔥 Peak — שיא',weeks:Math.round(weeks*0.25),focus:'עצימות מקסימלית + סימולציות גיבוש',vol:'90%',int:'גבוה',deload:true},
-      {name:'🎯 Taper — השיא',weeks:Math.round(weeks*0.15),focus:'שמירה על כושר, מנוחה אקטיבית',vol:'50%',int:'נמוך',deload:false}
-    ];
-  } else if(weeks>=8){
-    phases=[
-      {name:'💪 Base+Build',weeks:Math.round(weeks*0.5),focus:'בסיס קרבי + עלייה מדורגת',vol:'70%',int:'בינוני',deload:true},
-      {name:'🔥 Peak+Taper',weeks:Math.round(weeks*0.5),focus:'עצימות גבוהה + ריפוי לגיבוש',vol:'80% → 50%',int:'גבוה → נמוך',deload:false}
-    ];
-  } else {
-    phases=[{name:'⚡ Crash Course',weeks:weeks,focus:'עצימות מקסימלית — כבר מאוחר לבסיס',vol:'80%',int:'גבוה',deload:false}];
-  }
-
-  var weeklyPlan={
-    3:['ריצה ארוכה','כוח קרבי (מתח+שכיבות)','ריצה קלה שיקום'],
-    4:['ריצה ארוכה','כוח עליון (מתח+שכיבות)','ריצה טמפו','כוח תחתון + ליבה'],
-    5:['ריצה ארוכה','כוח עליון','ריצה קלה','כוח מלא','Ruck קל'],
-    6:['ריצה ארוכה','מתח+שכיבות MAX','ריצה טמפו','Ruck','כוח מלא','HIIT קרבי']
-  };
-
-  var html='<div class="sh c" style="margin-top:10px">📅 תוכנית ל-'+tgt.name+' — '+weeks+' שבועות</div>';
-  html+='<div style="background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2);border-radius:10px;padding:10px;margin-bottom:12px;font-size:11px;color:var(--txt2)">';
-  html+='יעדים: ריצה 2K מתחת ל-'+tgt.run2+' | '+tgt.pull+' מתח | '+tgt.push+' שכיבות</div>';
-
-  var weekNum=1;
+  var unit=document.getElementById('per-unit')&&document.getElementById('per-unit').value||'golani';
+  var weeks=parseInt(document.getElementById('per-weeks')&&document.getElementById('per-weeks').value||16);
+  var fit=parseInt(document.getElementById('per-fit')&&document.getElementById('per-fit').value||5);
+  var tpw=parseInt(document.getElementById('per-tpw')&&document.getElementById('per-tpw').value||4);
+  var phases=weeks>=16?[
+    {name:'💪 Base',w:Math.round(weeks*0.3),focus:'בסיס אירובי + כוח'},
+    {name:'⚡ Build',w:Math.round(weeks*0.3),focus:'עלייה בנפח + כוח קרבי',deload:true},
+    {name:'🔥 Peak',w:Math.round(weeks*0.25),focus:'עצימות מקסימלית',deload:true},
+    {name:'🎯 Taper',w:Math.round(weeks*0.15),focus:'מנוחה אקטיבית'}
+  ]:[{name:'⚡ Crash Course',w:weeks,focus:'עצימות גבוהה'}];
+  var days={3:['ריצה ארוכה','כוח קרבי','שיקום'],4:['ריצה ארוכה','כוח עליון','טמפו','כוח תחתון'],5:['ריצה ארוכה','כוח עליון','טמפו','Ruck','HIIT'],6:['ריצה ארוכה','מתח MAX','טמפו','Ruck','כוח מלא','HIIT']}[tpw]||['ריצה','כוח','שיקום','Ruck'];
+  var html='<div class="sh c">📅 '+weeks+' שבועות לגיוס</div>';
+  var wn=1;
   phases.forEach(function(ph){
-    html+='<div style="background:var(--card2);border-radius:12px;padding:12px;margin-bottom:10px;border:1px solid var(--b2)">';
-    html+='<div style="font-weight:900;font-size:13px;color:var(--cyan);margin-bottom:4px">'+ph.name+' ('+ph.weeks+' שבועות)</div>';
-    html+='<div style="font-size:11px;color:var(--txt2);margin-bottom:8px">'+ph.focus+'</div>';
-    html+='<div class="r3" style="margin-bottom:8px">';
-    html+='<div style="text-align:center"><div style="font-family:var(--fd);font-size:16px;color:var(--pri)">'+ph.vol+'</div><div style="font-size:9px;color:var(--txt3)">נפח</div></div>';
-    html+='<div style="text-align:center"><div style="font-family:var(--fd);font-size:16px;color:var(--yellow)">'+ph.int+'</div><div style="font-size:9px;color:var(--txt3)">עצימות</div></div>';
-    html+='<div style="text-align:center"><div style="font-family:var(--fd);font-size:16px;color:var(--orange)">'+tpw+'</div><div style="font-size:9px;color:var(--txt3)">אימונים/שבוע</div></div>';
-    html+='</div>';
-    var days=weeklyPlan[tpw]||weeklyPlan[4];
-    html+='<div style="font-size:10px;color:var(--txt3);margin-bottom:4px">מבנה שבוע:</div>';
-    days.forEach(function(d,i){
-      html+='<div style="font-size:11px;padding:3px 0;border-bottom:1px solid var(--b1);color:var(--txt)">יום '+(i+1)+': '+d+'</div>';
-    });
-    if(ph.deload){
-      html+='<div style="font-size:10px;color:var(--orange);margin-top:6px">⚠️ Deload: כל 3-4 שבועות — שבוע אחד ב-60% נפח</div>';
-    }
-    html+='<div style="font-size:10px;color:var(--txt3);margin-top:6px">שבועות '+weekNum+'–'+(weekNum+ph.weeks-1)+'</div>';
-    html+='</div>';
-    weekNum+=ph.weeks;
+    html+='<div style="background:var(--card2);border-radius:10px;padding:10px;margin-bottom:8px;border:1px solid var(--b2)">'+
+      '<div style="font-weight:900;color:var(--cyan)">'+(ph.name)+' ('+ph.w+' שב)</div>'+
+      '<div style="font-size:11px;color:var(--txt2);margin-bottom:6px">'+ph.focus+(ph.deload?' | Deload כל 3-4 שב':'')+' | שב '+wn+'–'+(wn+ph.w-1)+'</div>'+
+      days.map(function(d,i){return '<div style="font-size:11px;border-bottom:1px solid var(--b1);padding:2px 0">יום '+(i+1)+': '+d+'</div>';}).join('')+'</div>';
+    wn+=ph.w;
   });
-
-  html+='<div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);border-radius:10px;padding:10px;font-size:11px;color:var(--txt2)">';
-  html+='💡 שמור את התוכנית → PDF | עדכן ביומן שבועי | בדוק עם מאמן AI בכל שלב</div>';
-
-  var out=document.getElementById('period-out');
-  if(out)out.innerHTML=html;
-  notify('📅 תוכנית מחזורית נוצרה!','c');
+  var out=document.getElementById('period-out');if(out)out.innerHTML=html;
+  notify('📅 תוכנית מחזורית נוצרה!','c');haptic('success');
 }
 
-// ══════════════════════════════════════════════════════
-// SCALABLE EXERCISES DATABASE — 3 levels each
-// ══════════════════════════════════════════════════════
+// ── SCALABLE EXERCISES ────────────────────────────────────────────
 var SCALE_EX=[
-  {cat:'upper',name:'מתח',icon:'💪',
-   lv1:{n:'מתח סיוע',d:'מעמד מתחת למוט — עזרת הרגליים. 3×8'},
-   lv2:{n:'מתח רגיל',d:'מקסימום חזרות נקי. 4×max'},
-   lv3:{n:'מתח עם משקל',d:'חגורת כיס 10ק"ג. 5×8'}},
-  {cat:'upper',name:'שכיבות',icon:'🏋',
-   lv1:{n:'שכיבות על ברכיים',d:'גב ישר, מגיע לרצפה. 3×15'},
-   lv2:{n:'שכיבות רגילות',d:'מרחק ידיים כגובה כתפיים. 4×max'},
-   lv3:{n:'שכיבות על אצבעות / ARCHERS',d:'קשה יותר. 5×10'}},
-  {cat:'upper',name:'דיפס',icon:'💪',
-   lv1:{n:'דיפס על כסא',d:'גב ישר, פינת מרפק 90°. 3×12'},
-   lv2:{n:'דיפס מקביל',d:'מקסימום. 4×max'},
-   lv3:{n:'דיפס עם כיס',d:'10ק"ג נוסף. 5×8'}},
-  {cat:'core',name:'פלאנק',icon:'⏱',
-   lv1:{n:'פלאנק על ברכיים',d:'בנה את הבסיס. 3×45שנ'},
-   lv2:{n:'פלאנק רגיל',d:'גוף ישר כמו קרש. 3×90שנ'},
-   lv3:{n:'פלאנק RKC',d:'מכווץ כל שריר, נשימה עמוקה. 3×60שנ'}},
-  {cat:'core',name:'ישיבות בטן',icon:'🔄',
-   lv1:{n:'Crunches',d:'תנועה חצי. 3×20'},
-   lv2:{n:'Sit-ups',d:'גב לרצפה ולחזור. 4×max'},
-   lv3:{n:'GHD / V-ups',d:'עם כיסוי רגליים. 4×20'}},
-  {cat:'lower',name:'סקוואט',icon:'🦵',
-   lv1:{n:'Air Squat',d:'ירכיים מקבילות לרצפה. 3×20'},
-   lv2:{n:'Jump Squat',d:'פיצוץ מעלה בכל חזרה. 4×15'},
-   lv3:{n:'Pistol Squat',d:'על רגל אחת. 3×8 כל צד'}},
-  {cat:'lower',name:'לאנגים',icon:'🦵',
-   lv1:{n:'לאנגים במקום',d:'ברך לא נוגעת ברצפה. 3×12'},
-   lv2:{n:'Walking Lunges',d:'20 מטר הלוך וחזור. 4×'},
-   lv3:{n:'Reverse Lunges + כיס',d:'כיס 10ק"ג. 4×10 כל צד'}},
-  {cat:'cardio',name:'ספרינטים',icon:'⚡',
-   lv1:{n:'100מ × 6',d:'מנוחה 90שנ בין. קצב 80%'},
-   lv2:{n:'200מ × 6',d:'מנוחה 90שנ בין. קצב 85%'},
-   lv3:{n:'400מ × 6',d:'מנוחה 90שנ בין. קצב 90%'}},
-  {cat:'cardio',name:'HIIT קרבי',icon:'🔥',
-   lv1:{n:'Tabata בסיסי',d:'20שנ עבודה / 10שנ מנוחה × 8'},
-   lv2:{n:'AMRAP 10 דקות',d:'5 מתח + 10 שכיבות + 15 סקוואט'},
-   lv3:{n:'Murph קרבי',d:'מייל ריצה + 100 מתח + 200 שכיבות + 300 סקוואט + מייל'}}
+  {cat:'upper',name:'מתח',icon:'💪',lv1:{n:'מתח סיוע',d:'עזרת הרגליים 3×8'},lv2:{n:'מתח רגיל',d:'4×מקסימום'},lv3:{n:'מתח+משקל',d:'10ק"ג 5×8'}},
+  {cat:'upper',name:'שכיבות',icon:'🏋',lv1:{n:'על ברכיים',d:'3×15'},lv2:{n:'שכיבות רגילות',d:'4×מקסימום'},lv3:{n:'Archers',d:'5×10'}},
+  {cat:'core',name:'פלאנק',icon:'⏱',lv1:{n:'על ברכיים',d:'3×45שנ'},lv2:{n:'רגיל',d:'3×90שנ'},lv3:{n:'RKC פלאנק',d:'3×60שנ'}},
+  {cat:'lower',name:'סקוואט',icon:'🦵',lv1:{n:'Air Squat',d:'3×20'},lv2:{n:'Jump Squat',d:'4×15'},lv3:{n:'Pistol',d:'3×8 כל רגל'}},
+  {cat:'cardio',name:'ספרינטים',icon:'⚡',lv1:{n:'100מ×6',d:'מנוחה 90שנ'},lv2:{n:'200מ×6',d:'מנוחה 90שנ'},lv3:{n:'400מ×6',d:'מנוחה 90שנ'}},
 ];
-
 function renderScaleGrid(filter){
   var grid=document.getElementById('scale-grid');if(!grid)return;
-  var filtered=filter&&filter!=='all'?SCALE_EX.filter(e=>e.cat===filter):SCALE_EX;
+  var filtered=filter&&filter!=='all'?SCALE_EX.filter(function(e){return e.cat===filter;}):SCALE_EX;
   grid.innerHTML=filtered.map(function(ex){
     return '<div style="background:var(--card2);border:1px solid var(--b1);border-radius:12px;padding:12px;margin-bottom:8px">'+
-      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'+
-        '<span style="font-size:22px">'+ex.icon+'</span>'+
-        '<div style="font-weight:900;font-size:14px;color:var(--txt)">'+ex.name+'</div>'+
-      '</div>'+
-      '<div class="r3">'+
-        '<div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);border-radius:9px;padding:9px">'+
-          '<div style="font-size:9px;color:var(--pri);font-weight:800;margin-bottom:4px">🟢 מתחיל</div>'+
-          '<div style="font-size:12px;font-weight:700;color:var(--txt)">'+ex.lv1.n+'</div>'+
-          '<div style="font-size:10px;color:var(--txt2);margin-top:3px;line-height:1.4">'+ex.lv1.d+'</div>'+
-        '</div>'+
-        '<div style="background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.2);border-radius:9px;padding:9px">'+
-          '<div style="font-size:9px;color:var(--yellow);font-weight:800;margin-bottom:4px">🟡 קרבי</div>'+
-          '<div style="font-size:12px;font-weight:700;color:var(--txt)">'+ex.lv2.n+'</div>'+
-          '<div style="font-size:10px;color:var(--txt2);margin-top:3px;line-height:1.4">'+ex.lv2.d+'</div>'+
-        '</div>'+
-        '<div style="background:rgba(255,45,85,.06);border:1px solid rgba(255,45,85,.2);border-radius:9px;padding:9px">'+
-          '<div style="font-size:9px;color:var(--red);font-weight:800;margin-bottom:4px">🔴 עילית</div>'+
-          '<div style="font-size:12px;font-weight:700;color:var(--txt)">'+ex.lv3.n+'</div>'+
-          '<div style="font-size:10px;color:var(--txt2);margin-top:3px;line-height:1.4">'+ex.lv3.d+'</div>'+
-        '</div>'+
-      '</div>'+
-    '</div>';
+      '<div style="font-weight:900;font-size:14px;margin-bottom:8px">'+ex.icon+' '+ex.name+'</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">'+
+      [['🟢',ex.lv1,'rgba(0,255,136,.1)'],['🟡',ex.lv2,'rgba(255,214,10,.1)'],['🔴',ex.lv3,'rgba(255,59,92,.1)']].map(function(l){
+        return '<div style="background:'+l[2]+';border-radius:8px;padding:8px;font-size:11px">'+
+          '<div style="font-weight:700;margin-bottom:2px">'+l[0]+' '+l[1].n+'</div>'+
+          '<div style="color:var(--txt2)">'+l[1].d+'</div></div>';
+      }).join('')+'</div></div>';
+  }).join('');
+}
+function filterScale(cat,btn){
+  document.querySelectorAll('#tr-scale .tab').forEach(function(t){t.classList.remove('on');});
+  if(btn)btn.classList.add('on');renderScaleGrid(cat);
+}
+
+// ── OPERATOR MODE ─────────────────────────────────────────────────
+var OP_FIELD=[
+  {name:'מקסימום ללא ציוד',sets:[{e:'שכיבות',s:'4×מקסימום'},{e:'קפיצות כפיפות',s:'3×15'},{e:'לאנגים',s:'4×20מ'},{e:'פלאנק',s:'3×90שנ'},{e:'ספרינט 100מ',s:'×6'}]},
+  {name:'Tabata שטח',sets:[{e:'שכיבות קפיצה',s:'8×20שנ/10שנ'},{e:'Mountain Climbers',s:'8×20שנ/10שנ'},{e:'ברפיז',s:'8×20שנ/10שנ'}]}
+];
+var OP_BASE=[
+  {name:'מוטות + ריצה',sets:[{e:'מתח',s:'5×מקסימום'},{e:'שכיבות',s:'3×מקסימום'},{e:'ריצה 3ק"מ',s:'בסיום'}]},
+  {name:'Circuit בסיס',sets:[{e:'מתח×10',s:'4 סבבים'},{e:'שכיבות×20',s:'4 סבבים'},{e:'ריצה 400מ',s:'4 סבבים'}]}
+];
+function genOperatorWorkout(type){
+  var pool=type==='field'?OP_FIELD:OP_BASE;
+  var w=pool[Math.floor(Math.random()*pool.length)];
+  var html='<div class="sess"><div class="sess-top"><span class="sess-nm">⚡ '+w.name+'</span></div>';
+  w.sets.forEach(function(s){html+='<div class="sess-row"><strong>'+s.e+'</strong> — '+s.s+'</div>';});
+  html+='</div>';
+  var out=document.getElementById('operator-out');if(out)out.innerHTML=html;
+  notify('⚡ אימון Operator!','p');haptic('success');
+}
+
+// ── SLEEP TRACKER ─────────────────────────────────────────────────
+function calcSleep(){
+  var h=parseFloat(document.getElementById('sl-hours')&&document.getElementById('sl-hours').value||7);
+  var q=parseInt(document.getElementById('sl-qual')&&document.getElementById('sl-qual').value||7);
+  var score=Math.min(100,Math.round((h/9*60)+(q/10*40)));
+  var col=score>=80?'var(--pri)':score>=60?'var(--yellow)':'var(--red)';
+  var label=score>=80?'מצוין — מוכן לאימון קשה':score>=60?'בסדר — הפחת עצימות קצת':'נמוך — מנוחה פעילה בלבד';
+  var res=document.getElementById('sl-result');
+  if(res)res.innerHTML='<div style="background:var(--card2);border-radius:10px;padding:12px;text-align:center">'+
+    '<div style="font-family:var(--fd);font-size:42px;color:'+col+'">'+score+'</div>'+
+    '<div style="font-weight:700;color:'+col+';font-size:12px">'+label+'</div>'+
+    '<div style="font-size:11px;color:var(--txt2);margin-top:6px">'+(h<7?'💡 נסה לישון יותר מחר':'✅ שינה טובה')+'</div></div>';
+}
+function saveSleep(){
+  var h=parseFloat(document.getElementById('sl-hours')&&document.getElementById('sl-hours').value||7);
+  var q=parseInt(document.getElementById('sl-qual')&&document.getElementById('sl-qual').value||7);
+  var hist=ld('cf7_sleep',[]);
+  hist.unshift({date:new Date().toLocaleDateString('he-IL'),hours:h,qual:q,ts:Date.now()});
+  sv('cf7_sleep',hist.slice(0,30));renderSleepHistory();
+  notify('😴 שינה נשמרה!','p');haptic('success');
+}
+function renderSleepHistory(){
+  var hist=ld('cf7_sleep',[]);
+  var el=document.getElementById('sl-history');if(!el)return;
+  if(!hist.length){el.innerHTML='<div style="color:var(--txt3);font-size:11px">אין היסטוריה</div>';return;}
+  var avg=(hist.slice(0,7).reduce(function(s,h){return s+h.hours;},0)/Math.min(hist.length,7)).toFixed(1);
+  el.innerHTML='<div style="text-align:center;margin-bottom:8px;font-family:var(--fd);font-size:24px;color:var(--purple)">'+avg+'<span style="font-size:11px"> שעות ממוצע</span></div>'+
+    hist.slice(0,7).map(function(h){
+      var c=h.hours>=8?'var(--pri)':h.hours>=7?'var(--yellow)':'var(--red)';
+      return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--b1)">'+
+        '<span style="font-size:11px;color:var(--txt2)">'+h.date+'</span>'+
+        '<span style="font-family:var(--fd);color:'+c+'">'+h.hours+'ש</span></div>';
+    }).join('');
+}
+
+// ── INJURY PREVENTION ─────────────────────────────────────────────
+var INJ={
+  shin:{name:'שין-ספלינט',treat:['קרח 15 דק ×3/יום','Calf raises 3×20','הפסק ריצה 3-5 ימים'],prev:['הגדל 10% לשבוע בלבד','נעליים מתאימות']},
+  shoulder:{name:'כתף — Impingement',treat:['הפסק מתח 7 ימים','Band rotation 3×15','מתיחת חזה'],prev:['Face pulls','אל תתלה מת על מוט']},
+  knee:{name:'Runners Knee',treat:['הפחת ריצה 50%','VMO squats 3×15','קרח אחרי ריצה'],prev:['חזק VMO','נעלי בולם זעזועים']},
+  back:{name:'גב תחתון',treat:['Bird-dog 3×10','Hip flexor stretch','הימנע ישיבה ממושכת'],prev:['Dead bug יומי','hip hinge נכון']}
+};
+function showInjury(type){
+  var inj=INJ[type];if(!inj)return;
+  var el=document.getElementById('injury-detail');if(!el)return;
+  el.style.display='block';
+  el.innerHTML='<div style="background:var(--card2);border-radius:10px;padding:12px;margin-top:8px">'+
+    '<div style="font-weight:900;color:var(--red);margin-bottom:8px">🩹 '+inj.name+'</div>'+
+    '<div style="font-size:10px;font-weight:700;color:var(--orange);margin-bottom:4px">💊 טיפול:</div>'+
+    inj.treat.map(function(t){return '<div style="font-size:11px;padding:2px 0">• '+t+'</div>';}).join('')+
+    '<div style="font-size:10px;font-weight:700;color:var(--pri);margin:8px 0 4px">🛡 מניעה:</div>'+
+    inj.prev.map(function(p){return '<div style="font-size:11px;padding:2px 0">• '+p+'</div>';}).join('')+'</div>';
+}
+function renderPrehab(){
+  var ROUTINES=[[{n:'Hip 90/90',d:'2 דק כל צד'},{n:'Calf raises',d:'3×15'},{n:'Dead bug',d:'3×8'}],
+    [{n:'Clamshells',d:'3×15 כל צד'},{n:'World greatest stretch',d:'5× כל צד'},{n:'Face pulls',d:'3×15'}]];
+  var r=ROUTINES[Math.floor(Math.random()*ROUTINES.length)];
+  var el=document.getElementById('daily-prehab');if(!el)return;
+  el.innerHTML=r.map(function(ex){
+    return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b1)">'+
+      '<span style="font-weight:700">'+ex.n+'</span><span style="color:var(--pri)">'+ex.d+'</span></div>';
   }).join('');
 }
 
-function filterScale(cat,btn){
-  document.querySelectorAll('#tr-scale .tab').forEach(function(t){t.classList.remove('on');});
-  if(btn)btn.classList.add('on');
-  renderScaleGrid(cat);
+// ── ONBOARDING ────────────────────────────────────────────────────
+var _obUnit=null;
+function initOnboarding(){
+  var pr=ld(K.PR,{});
+  if(pr.name||localStorage.getItem('cf7_ob_done'))return;
+  var overlay=document.getElementById('onboard-overlay');
+  if(overlay)overlay.style.display='block';
+  renderObUnits();
 }
-
-// ══════════════════════════════════════════════════════
-// OPERATOR MODE — active duty soldier workouts
-// ══════════════════════════════════════════════════════
-var OPERATOR_FIELD=[
-  {name:'מקסימום ללא ציוד',sets:[
-    {ex:'שכיבות',s:'4×מקסימום'},
-    {ex:'קפיצות כפיפות',s:'3×15'},
-    {ex:'לאנגים הלוך-חזור',s:'4×20מ'},
-    {ex:'פלאנק',s:'3×90שנ'},
-    {ex:'ספרינט 100מ',s:'×6 מנוחה 60שנ'}
-  ]},
-  {name:'Tabata שטח',sets:[
-    {ex:'שכיבות קפיצה',s:'8×20שנ/10שנ'},
-    {ex:'Mountain Climbers',s:'8×20שנ/10שנ'},
-    {ex:'ברפיז',s:'8×20שנ/10שנ'}
-  ]},
-  {name:'5 סבבים קרביים',sets:[
-    {ex:'10 שכיבות',s:'כל סבב'},
-    {ex:'15 סקוואט',s:'כל סבב'},
-    {ex:'20 כפיפות בטן',s:'כל סבב'},
-    {ex:'ספרינט 50מ',s:'כל סבב'},
-    {ex:'מנוחה 60שנ',s:'בין סבבים'}
-  ]}
-];
-
-var OPERATOR_BASE=[
-  {name:'מוטות + ריצה',sets:[
-    {ex:'מתח',s:'5×מקסימום'},
-    {ex:'דיפס',s:'4×מקסימום'},
-    {ex:'שכיבות',s:'3×מקסימום'},
-    {ex:'ריצה 3ק"מ',s:'בסיום'}
-  ]},
-  {name:'Circuit בסיס',sets:[
-    {ex:'מתח × 10',s:'4 סבבים'},
-    {ex:'שכיבות × 20',s:'4 סבבים'},
-    {ex:'סקוואט × 30',s:'4 סבבים'},
-    {ex:'ריצה 400מ',s:'4 סבבים'}
-  ]}
-];
-
-function genOperatorWorkout(type){
-  var pool=type==='field'?OPERATOR_FIELD:OPERATOR_BASE;
-  var w=pool[Math.floor(Math.random()*pool.length)];
-  var html='<div class="sess"><div class="sess-top"><span class="sess-nm">⚡ '+w.name+'</span></div>';
-  w.sets.forEach(function(s){
-    html+='<div class="sess-row"><strong>'+s.ex+'</strong> — '+s.s+'</div>';
+function renderObUnits(){
+  var grid=document.getElementById('ob-unit-grid');if(!grid||typeof UNITS==='undefined')return;
+  var topU=['sayeret','shayetet','matkal','golani','nahal','givati','kfir','lotar','669','oketz'];
+  grid.innerHTML='';
+  topU.forEach(function(k){
+    var u=UNITS[k];if(!u)return;
+    var d=document.createElement('div');
+    d.setAttribute('data-uk',k);d.id='ob-u-'+k;
+    d.style.cssText='background:var(--card2);border:1px solid var(--b1);border-radius:10px;padding:10px;cursor:pointer;text-align:center;font-size:12px;font-weight:700;color:var(--txt)';
+    d.innerHTML='<div style="font-size:18px;margin-bottom:4px">'+(u.emoji||'🎖')+'</div>'+u.n;
+    grid.appendChild(d);
   });
-  html+='</div>';
-  var out=document.getElementById('operator-out');
-  if(out)out.innerHTML=html;
-  notify('⚡ אימון Operator נוצר!','p');
+  grid.addEventListener('click',function(e){
+    var el=e.target.closest('[data-uk]');if(!el)return;
+    selectObUnit(el.dataset.uk);
+  });
+}
+function selectObUnit(k){
+  _obUnit=k;
+  document.querySelectorAll('#ob-unit-grid > div').forEach(function(d){
+    d.style.borderColor='var(--b1)';d.style.background='var(--card2)';
+  });
+  var el=document.getElementById('ob-u-'+k);
+  if(el){el.style.borderColor='var(--pri)';el.style.background='rgba(0,255,136,.08)';}
+}
+function obNext(step){
+  if(step===1){
+    var nm=document.getElementById('ob-name')&&document.getElementById('ob-name').value&&document.getElementById('ob-name').value.trim();
+    if(!nm){notify('הכנס שם','r');return;}
+    var pr=ld(K.PR,{});pr.name=nm;
+    var age=document.getElementById('ob-age');var wgt=document.getElementById('ob-weight');var draft=document.getElementById('ob-draft');
+    if(age&&age.value)pr.age=age.value;if(wgt&&wgt.value)pr.weight=wgt.value;if(draft&&draft.value)pr.draft=draft.value;
+    sv(K.PR,pr);
+    document.getElementById('ob-1').style.display='none';document.getElementById('ob-2').style.display='block';
+    document.querySelectorAll('.ob-step').forEach(function(s){s.classList.toggle('ob-active',s.dataset.s==='2');});
+  } else if(step===2){
+    if(_obUnit){var pr2=ld(K.PR,{});pr2.unit=_obUnit;sv(K.PR,pr2);}
+    document.getElementById('ob-2').style.display='none';document.getElementById('ob-3').style.display='block';
+    document.querySelectorAll('.ob-step').forEach(function(s){s.classList.toggle('ob-active',s.dataset.s==='3');});
+  }
+}
+function obFinish(){
+  var run=document.getElementById('ob-run');var pull=document.getElementById('ob-pull');var push=document.getElementById('ob-push');
+  if(run&&run.value&&document.getElementById('bt'))document.getElementById('bt').value=run.value;
+  if(pull&&pull.value&&document.getElementById('bpu'))document.getElementById('bpu').value=pull.value;
+  if(push&&push.value&&document.getElementById('bpl'))document.getElementById('bpl').value=push.value;
+  obSkip();
+  if(run&&run.value)setTimeout(function(){showPg('test');if(typeof calcBaror==='function')calcBaror();},500);
+}
+function obSkip(){
+  localStorage.setItem('cf7_ob_done','1');
+  var overlay=document.getElementById('onboard-overlay');if(overlay)overlay.style.display='none';
+  notify('ברוך הבא! ⚔','p');haptic('success');
+  if(typeof refreshDash==='function')refreshDash();
 }
 
-// ══════════════════════════════════════════════════════
-// INIT new sections when tab opened
-// ══════════════════════════════════════════════════════
-var _origTrt=window.trt||function(){};
-// Patch trt to init new sections
-var _patchedTrt=false;
+// ── DRAFT COUNTDOWN ───────────────────────────────────────────────
+function initDraftCountdown(){
+  var pr=ld(K.PR,{});var draft=pr.draft;
+  var card=document.getElementById('draft-countdown-card');if(!card)return;
+  if(!draft){card.style.display='none';return;}
+  var parts=draft.split('/');
+  var draftDate=parts.length===3?new Date(parts[2],parts[1]-1,parts[0]):new Date(draft);
+  if(isNaN(draftDate.getTime())||draftDate<=new Date()){card.style.display='none';return;}
+  card.style.display='block';
+  var unitEl=document.getElementById('cd-unit');if(unitEl)unitEl.textContent='יחידת יעד: '+(pr.unit||'לא הוגדר');
+  function tick(){
+    var diff=draftDate-new Date();if(diff<=0){card.style.display='none';return;}
+    var d=Math.floor(diff/864e5),h=Math.floor((diff%864e5)/36e5),m=Math.floor((diff%36e5)/6e4);
+    var dd=document.getElementById('cd-days');var dh=document.getElementById('cd-hours');var dm=document.getElementById('cd-mins');
+    if(dd)dd.textContent=d;if(dh)dh.textContent=String(h).padStart(2,'0');if(dm)dm.textContent=String(m).padStart(2,'0');
+  }
+  tick();setInterval(tick,60000);
+}
+
+// ── PROGRESS CHART ────────────────────────────────────────────────
+
+/* dup:renderProgressChart */
+
+
+// ── QR GROUP JOIN ────────────────────────────────────────────────
+function showGroupQR(){
+  var code=document.getElementById('active-group-code')&&document.getElementById('active-group-code').textContent&&document.getElementById('active-group-code').textContent.trim();
+  if(!code){notify('אין קוד קבוצה','r');return;}
+  var qrUrl='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent('combatfit:'+code);
+  openModal('📱 QR הצטרפות','<div style="text-align:center;padding:12px">'+
+    '<img src="'+qrUrl+'" width="200" height="200" style="border-radius:10px;border:2px solid var(--pri)"/>'+
+    '<div style="margin-top:8px;font-family:monospace;font-size:18px;font-weight:900;color:var(--pri);letter-spacing:4px">'+code+'</div></div>');
+}
+
+// ── PDF EXPORT ────────────────────────────────────────────────────
+function exportPDF(){
+  var pr=ld(K.PR,{});var scores=ld(K.P,[]);var last=scores[0]||{};
+  if(typeof window.jspdf==='undefined'){notify('PDF נטען... נסה שוב','y');return;}
+  var doc=new window.jspdf.jsPDF();
+  doc.setFillColor(2,4,5);doc.rect(0,0,210,25,'F');
+  doc.setTextColor(0,255,136);doc.setFontSize(18);doc.setFont('helvetica','bold');
+  doc.text('COMBAT FIT IL — דוח גיבוש',105,15,{align:'center'});
+  doc.setTextColor(30,30,30);doc.setFontSize(11);doc.setFont('helvetica','normal');
+  doc.text('שם: '+(pr.name||'לוחם'),20,35);
+  doc.text('גיל: '+(pr.age||'--')+' | משקל: '+(pr.weight||'--')+'ק"ג',20,43);
+  doc.text('יחידת יעד: '+(pr.unit||'לא הוגדר'),20,51);
+  doc.text('תאריך גיוס: '+(pr.draft||'לא הוגדר'),20,59);
+  doc.setFontSize(14);doc.setTextColor(0,150,80);
+  doc.text('ציון אחרון: '+(last.bar||'--')+'/100',105,75,{align:'center'});
+  if(scores.length>1){
+    doc.setFontSize(11);doc.setTextColor(30,30,30);doc.text('היסטוריית ציונים:',20,90);
+    scores.slice(0,6).forEach(function(s,i){doc.text((s.date||'--')+': '+(s.bar||'--')+'/100',25,98+i*7);});
+  }
+  doc.setFillColor(2,4,5);doc.rect(0,277,210,20,'F');
+  doc.setTextColor(106,148,170);doc.setFontSize(8);
+  doc.text('Combat Fit IL | '+new Date().toLocaleDateString('he-IL'),105,287,{align:'center'});
+  doc.save('CombatFit_'+(pr.name||'report')+'_'+new Date().toISOString().slice(0,10)+'.pdf');
+  notify('📄 PDF יוצא!','p');haptic('success');
+}
+function getUnitName(k){var u=typeof UNITS!=='undefined'&&UNITS[k];return u?u.n:k||'כללי';}
+
+// ── SHARE SCORE ────────────────────────────────────────────────────
+function shareScore(){
+  var scores=ld(K.P,[]);var pr=ld(K.PR,{});var last=scores[0]||{};
+  if(!last.bar){notify('בצע מבחן קודם!','y');return;}
+  var text='⚔ Combat Fit IL\nציון: '+last.bar+'/100\nיחידת יעד: '+(pr.unit||'--')+'\nתאריך: '+(last.date||'--')+'\nhttps://app-for-running.vercel.app';
+  if(navigator.share){
+    navigator.share({title:'Combat Fit IL',text:text,url:'https://app-for-running.vercel.app'})
+      .then(function(){haptic('success');}).catch(function(){_copyText(text);});
+  } else {_copyText(text);notify('הציון הועתק ללוח 📋','p');}
+}
+function _copyText(txt){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+
+// ── COACH STATS ────────────────────────────────────────────────────
+function renderCoachStats(){
+  var groups=window._coachGroups||[];
+  var el=document.getElementById('coach-kpi-grid');if(!el)return;
+  var allAth=[];
+  groups.forEach(function(g){
+    var aths=JSON.parse(localStorage.getItem('cf7_ath_'+g.id)||'[]');allAth=allAth.concat(aths);
+  });
+  var scores=allAth.map(function(a){return parseFloat(a.score||a.lastScore||0);}).filter(Boolean);
+  var avg=scores.length?Math.round(scores.reduce(function(s,v){return s+v;},0)/scores.length):0;
+  var top=scores.length?Math.max.apply(null,scores):0;
+  el.innerHTML=
+    '<div class="kpi-box"><div class="kpi-n">'+groups.length+'</div><div class="kpi-l">קבוצות</div></div>'+
+    '<div class="kpi-box"><div class="kpi-n">'+allAth.length+'</div><div class="kpi-l">חניכים</div></div>'+
+    '<div class="kpi-box"><div class="kpi-n" style="color:var(--pri)">'+avg+'</div><div class="kpi-l">ממוצע</div></div>'+
+    '<div class="kpi-box"><div class="kpi-n" style="color:var(--yellow)">'+top+'</div><div class="kpi-l">מקסימום</div></div>';
+}
+
+// ── CSV EXPORT ────────────────────────────────────────────────────
+function exportGroupCSV(){
+  var groups=window._coachGroups||[];if(!groups.length){notify('אין קבוצות','r');return;}
+  var rows=[['שם','קבוצה','ציון','יחידה','תאריך']];
+  groups.forEach(function(g){
+    var aths=JSON.parse(localStorage.getItem('cf7_ath_'+g.id)||'[]');
+    aths.forEach(function(a){rows.push([a.nm||'--',g.name||g.id,a.score||a.lastScore||'--',a.unit||'--',a.lastActive?new Date(a.lastActive).toLocaleDateString('he-IL'):'--']);});
+  });
+  var csv=rows.map(function(r){return r.join(',');}).join('\n');
+  var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob);var a=document.createElement('a');
+  a.href=url;a.download='CombatFit_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  notify('📊 CSV יוצא!','p');haptic('success');
+}
+
+// ── COACH PASSWORD SECURITY ────────────────────────────────────────
+function checkCoachPassword(){
+  if((localStorage.getItem('cf7_coach_pass')||'1234')==='1234'){
+    setTimeout(function(){
+      openModal('🔐 אבטחת חשבון','<div style="padding:8px"><div style="color:var(--orange);font-size:12px;margin-bottom:10px">⚠️ אתה משתמש בסיסמת ברירת מחדל (1234). שנה לאבטחה טובה יותר.</div>'+
+        '<input id="new-pass-1" type="password" placeholder="סיסמה חדשה" style="width:100%;margin-bottom:8px;padding:10px;border-radius:8px;background:var(--card2);border:1px solid var(--b1);color:var(--txt)"/>'+
+        '<input id="new-pass-2" type="password" placeholder="אמת סיסמה" style="width:100%;padding:10px;border-radius:8px;background:var(--card2);border:1px solid var(--b1);color:var(--txt)"/>'+
+        '<button class="btn bp" style="width:100%;margin-top:10px" onclick="saveNewCoachPass()">שמור</button>'+
+        '<button class="btn bs" style="width:100%;margin-top:6px" onclick="closeModal()">דלג</button></div>');
+    },1500);
+  }
+}
+function saveNewCoachPass(){
+  var p1=document.getElementById('new-pass-1')&&document.getElementById('new-pass-1').value;
+  var p2=document.getElementById('new-pass-2')&&document.getElementById('new-pass-2').value;
+  if(!p1||p1.length<4){notify('לפחות 4 תווים','r');return;}
+  if(p1!==p2){notify('הסיסמאות לא תואמות','r');return;}
+  localStorage.setItem('cf7_coach_pass',p1);closeModal();notify('✅ סיסמה עודכנה!','p');
+}
+
+// ── HOOK NEW FEATURES INTO EXISTING INIT ──────────────────────────
+document.addEventListener('DOMContentLoaded',function(){
+  // Patch initCM to add stats + password check
+  if(typeof initCM==='function'){
+    var _orig=initCM;
+    initCM=function(){
+      _orig.apply(this,arguments);
+      setTimeout(function(){renderCoachStats();checkCoachPassword();},300);
+    };
+  }
+  // Patch refreshDash to call new dash features
+  if(typeof refreshDash==='function'){
+    var _origRD=refreshDash;
+    refreshDash=function(){
+      _origRD.apply(this,arguments);
+      renderProgressChart();initDraftCountdown();
+    };
+  }
+  // Start onboarding for new users
+  setTimeout(initOnboarding,1000);
+  // sv() fires _syncUp
+  if(typeof sv==='function'){
+    var _origSv=sv;
+    sv=function(k,v){_origSv(k,v);_syncUp();};
+  }
+  // Haptic on score saves
+  if(typeof notify==='function'){
+    var _origNotify=notify;
+    notify=function(msg,type){
+      if(msg&&(typeof msg==='string')&&(msg.includes('ציון')||msg.includes('נשמר')))haptic('success');
+      return _origNotify.apply(this,arguments);
+    };
+  }
+  // Auto-save draft every 30s
+  setInterval(function(){
+    try{
+      var draft={ts:Date.now()};
+      ['bt','bpu','bpl','bsi'].forEach(function(id){var el=document.getElementById(id);if(el&&el.value)draft[id]=el.value;});
+      if(Object.keys(draft).length>1)localStorage.setItem('cf7_workout_draft',JSON.stringify(draft));
+    }catch(e){}
+  },30000);
+  // Restore workout draft
+  try{
+    var draft=JSON.parse(localStorage.getItem('cf7_workout_draft')||'{}');
+    if(draft.ts&&(Date.now()-draft.ts)<3600000){
+      Object.keys(draft).forEach(function(k){if(k==='ts')return;var el=document.getElementById(k);if(el)el.value=draft[k];});
+    }
+  }catch(e){}
+});
+
+// ── trt() — add new training sections ─────────────────────────────
+if(typeof trt==='function'){
+  var _origTrt=trt;
+  trt=function(id,btn){
+    _origTrt.apply(this,arguments);
+    if(id==='tr-ruck')calcRuck();
+    if(id==='tr-scale')renderScaleGrid('all');
+    if(id==='tr-sleep'){calcSleep();renderSleepHistory();}
+    if(id==='tr-injury')renderPrehab();
+  };
+}
+
+// ════════════════════════════════════════════════════════════════
+// END v11
+// ════════════════════════════════════════════════════════════════
+
+
+// ════════════════════════════════════════════════════════════
+// AGENT IMPROVEMENTS v12 — Achievements, PR Board, Streak, Quotes
+// ════════════════════════════════════════════════════════════
+
+// ── FIX: sv() fires Firebase sync ────────────────────────────────
+// (patched via override to avoid touching original)
+
+// ── ACHIEVEMENT BADGES ───────────────────────────────────────────
+var ACHIEVEMENTS=[
+  {id:'first_score',icon:'🎖',name:'ציון ראשון',desc:'בצעת מבחן כושר ראשון',
+   check:function(){return ld(K.P,[]).length>=1;}},
+  {id:'score_70',icon:'💪',name:'לוחם',desc:'הגעת לציון 70+',
+   check:function(){return ld(K.P,[]).some(function(x){return parseFloat(x.bar||0)>=70;});}},
+  {id:'score_80',icon:'⭐',name:'קרבי',desc:'הגעת לציון 80+',
+   check:function(){return ld(K.P,[]).some(function(x){return parseFloat(x.bar||0)>=80;});}},
+  {id:'score_90',icon:'🔥',name:'עילית',desc:'הגעת לציון 90+',
+   check:function(){return ld(K.P,[]).some(function(x){return parseFloat(x.bar||0)>=90;});}},
+  {id:'week_3',icon:'📅',name:'3 ימי אימון',desc:'אימנת 3 ימים השבוע',
+   check:function(){return Object.values(ld('cf7wd',{})||{}).filter(function(d){return d==='done';}).length>=3;}},
+  {id:'week_5',icon:'🏃',name:'5 ימי אימון',desc:'אימנת 5 ימים השבוע',
+   check:function(){return Object.values(ld('cf7wd',{})||{}).filter(function(d){return d==='done';}).length>=5;}},
+  {id:'sleep_7',icon:'😴',name:'שינה טובה',desc:'רשמת 7+ שעות שינה',
+   check:function(){return ld('cf7_sleep',[]).some(function(s){return s.hours>=7;});}},
+  {id:'profile_full',icon:'👤',name:'פרופיל מלא',desc:'מילאת את כל הפרטים',
+   check:function(){var p=ld(K.PR,{});return !!(p.name&&p.age&&p.unit&&p.draft);}},
+  {id:'ai_used',icon:'🤖',name:'AI Trainee',desc:'שאלת את מאמן ה-AI',
+   check:function(){return ld('cf7_ai_hist',[]).length>=1;}},
+  {id:'ruck_done',icon:'🎒',name:'Ruck Warrior',desc:'השלמת Ruck Training',
+   check:function(){return !!localStorage.getItem('cf7_ruck_done');}},
+];
+
+function checkAchievements(silent){
+  var earned=JSON.parse(localStorage.getItem('cf7_badges')||'[]');
+  var newBadges=[];
+  ACHIEVEMENTS.forEach(function(a){
+    if(!earned.includes(a.id)){
+      try{if(a.check()){earned.push(a.id);newBadges.push(a);}}catch(e){}
+    }
+  });
+  if(newBadges.length){
+    localStorage.setItem('cf7_badges',JSON.stringify(earned));
+    if(!silent){
+      newBadges.forEach(function(b,i){
+        setTimeout(function(){
+          notify(b.icon+' הישג חדש: '+b.name+'!','p');haptic('success');
+        },i*800+300);
+      });
+    }
+  }
+  return earned;
+}
+
+function renderBadges(){
+  var earned=JSON.parse(localStorage.getItem('cf7_badges')||'[]');
+  var el=document.getElementById('badges-grid');if(!el)return;
+  el.innerHTML=ACHIEVEMENTS.map(function(a){
+    var got=earned.includes(a.id);
+    return '<div style="background:var(--card2);border:1px solid '+(got?'var(--pri)':'var(--b1)')+
+      ';border-radius:10px;padding:10px;text-align:center;opacity:'+(got?'1':'.4')+';transition:all .2s">'+
+      '<div style="font-size:24px;margin-bottom:4px">'+a.icon+'</div>'+
+      '<div style="font-size:11px;font-weight:700;color:var(--txt)">'+a.name+'</div>'+
+      '<div style="font-size:9px;color:var(--txt3);margin-top:2px">'+a.desc+'</div>'+
+      (got?'<div style="font-size:9px;color:var(--pri);margin-top:3px">✅ הושג</div>':'')+'</div>';
+  }).join('');
+}
+
+// ── PERSONAL RECORDS BOARD ─────────────────────────────────────────
+function updateExercisePR(exercise, value, unit){
+  var prs=JSON.parse(localStorage.getItem('cf7_prs')||'{}');
+  var current=prs[exercise]?prs[exercise].val:null;
+  var val=parseFloat(value);if(!val)return false;
+  var isTime=['ריצה 2K','ריצה 3K','ריצה 5K'].includes(exercise);
+  var better=current===null||(isTime?val<current:val>current);
+  if(better){
+    prs[exercise]={val:val,unit:unit||'',date:new Date().toLocaleDateString('he-IL')};
+    localStorage.setItem('cf7_prs',JSON.stringify(prs));
+    notify('🏆 שיא אישי: '+exercise+' '+val+(unit||''),'p');
+    haptic('success');return true;
+  }
+  return false;
+}
+
+function renderPRBoard(){
+  var prs=JSON.parse(localStorage.getItem('cf7_prs')||'{}');
+  var el=document.getElementById('pr-board');if(!el)return;
+  if(!Object.keys(prs).length){
+    el.innerHTML='<div style="color:var(--txt3);font-size:12px;text-align:center;padding:10px">אין שיאים עדיין — בצע מבחן ראשון</div>';
+    return;
+  }
+  el.innerHTML=Object.entries(prs).map(function(kv){
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--b1)">'+
+      '<div><div style="font-size:12px;font-weight:700;color:var(--txt)">'+kv[0]+'</div>'+
+      '<div style="font-size:10px;color:var(--txt3)">'+kv[1].date+'</div></div>'+
+      '<div style="font-family:var(--fd);font-size:20px;color:var(--yellow)">'+kv[1].val+(kv[1].unit||'')+'</div></div>';
+  }).join('');
+}
+
+// ── WORKOUT STREAK ──────────────────────────────────────────────────
+function updateStreak(){
+  var today=new Date().toDateString();
+  var last=localStorage.getItem('cf7_streak_last');
+  var streak=parseInt(localStorage.getItem('cf7_streak_count')||0);
+  if(last===today)return streak;
+  var yesterday=new Date(Date.now()-864e5).toDateString();
+  streak=(last===yesterday)?streak+1:1;
+  localStorage.setItem('cf7_streak_last',today);
+  localStorage.setItem('cf7_streak_count',String(streak));
+  if(streak>1)notify('🔥 '+streak+' ימים רצוף!','p');
+  return streak;
+}
+function renderStreak(){
+  var streak=parseInt(localStorage.getItem('cf7_streak_count')||0);
+  var el=document.getElementById('streak-badge');if(!el)return;
+  el.style.display=streak>=2?'flex':'none';
+  el.textContent='🔥 '+streak;
+}
+
+// ── DAILY MILITARY QUOTE ────────────────────────────────────────────
+var MIL_QUOTES=[
+  {q:'אין מחסום שלא ניתן לעבור',a:'צנחנים'},
+  {q:'אחרי אני',a:'קצינים ישראלים'},
+  {q:'הכאב זמני, הגאווה לנצח',a:'Unit 669'},
+  {q:'מה שנראה כבלתי אפשרי הופך אפשרי עם אמון עצמי',a:'סיירת מטכ"ל'},
+  {q:'הגוף מסוגל לכל, השאלה היא המוח',a:'Navy SEALs'},
+  {q:'כשאתה חושב שסיימת, אתה בחצי הדרך',a:'Special Forces'},
+  {q:'לחץ יוצר יהלומים',a:'George Patton'},
+  {q:'אל תספור את הימים, גרום לימים להיספר',a:'Muhammad Ali'},
+];
+function getDailyQuote(){return MIL_QUOTES[Math.floor(Date.now()/864e5)%MIL_QUOTES.length];}
+function renderDailyQuote(){
+  var el=document.getElementById('daily-quote');if(!el)return;
+  var q=getDailyQuote();
+  el.innerHTML='<div style="font-size:12px;font-style:italic;color:var(--txt);line-height:1.5">"'+q.q+'"</div>'+
+    '<div style="font-size:10px;color:var(--txt3);margin-top:3px;text-align:left">— '+q.a+'</div>';
+}
+
+// ── HOOK ALL INTO EXISTING INIT ─────────────────────────────────────
+(function(){
+  var _rd=typeof refreshDash==='function'?refreshDash:null;
+  if(_rd){refreshDash=function(){_rd.apply(this,arguments);renderDailyQuote();renderStreak();setTimeout(function(){renderBadges();renderPRBoard();},100);};}
+  var _cb=typeof calcBaror==='function'?calcBaror:null;
+  if(_cb){calcBaror=function(){_cb.apply(this,arguments);setTimeout(function(){checkAchievements();updateStreak();},600);};}
+  // sv() fires _syncUp
+  var _sv=sv;
+  sv=function(k,v){_sv(k,v);try{if(window._syncUp)window._syncUp();}catch(e){}};
+  // Init on load
+  document.addEventListener('DOMContentLoaded',function(){
+    setTimeout(function(){checkAchievements(true);renderStreak();renderDailyQuote();renderBadges();renderPRBoard();},800);
+  });
+})();
+
+// ════════════════════════════════════════════════════════════
+// END v12 IMPROVEMENTS
+// ════════════════════════════════════════════════════════════
 </script>
 
 <!-- Firebase SDK — Multi-group combat fitness -->
@@ -8456,9 +8171,6 @@ onAuthStateChanged(auth,user=>{
 window._FB={auth,db,doc,setDoc,getDoc,collection,getDocs,addDoc,updateDoc,query,where,orderBy,limit,serverTimestamp,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,updateProfile,GoogleAuthProvider,signInWithPopup};
 window._fbSignOut=()=>signOut(auth);
 }catch(e){console.warn('Firebase:',e);}
-
-
-// ══════════ AUTO-SAVE ON TAB CLOSE / RELOAD ══════════
 
 </script>
 
