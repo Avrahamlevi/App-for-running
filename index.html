@@ -143,7 +143,7 @@ select option{background:var(--bg3)}
 .bc2{background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.25)}
 
 /* ─── TABS ─── */
-.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .tab{border:1px solid var(--b2);background:var(--card2);color:var(--txt2);padding:6px 10px;border-radius:8px;font-size:10px;cursor:pointer;font-family:var(--fb);font-weight:700;transition:.15s;white-space:nowrap}
 .tab.on{background:var(--pri);color:#010e05;border-color:var(--pri);font-weight:900}
 body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)}
@@ -610,6 +610,8 @@ document.head.appendChild(_link);
     <button onclick="showOnboardingOverlay()" style="background:var(--pri);color:#000;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;min-height:36px">התחל</button>
     <button onclick="localStorage.setItem('cf7_ob_done','1');this.parentElement.style.display='none'" style="background:transparent;border:none;color:var(--txt3);font-size:16px;cursor:pointer;padding:4px">✕</button>
   </div>
+  <!-- WHOOP-style Daily Recovery -->
+  <div id="daily-recovery-card" style="display:none;background:var(--card);border:1px solid var(--b2);border-radius:14px;padding:12px;margin-bottom:10px"></div>
   <div id="daily-quote" style="background:linear-gradient(135deg,rgba(0,255,136,.06),rgba(0,229,255,.04));border:1px solid rgba(0,255,136,.15);border-radius:12px;padding:12px 14px;margin-bottom:8px;direction:rtl"></div>
   <div id="streak-badge" style="display:none;align-items:center;justify-content:center;background:rgba(255,136,0,.12);border:1px solid rgba(255,136,0,.3);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px"></div>
   <div class="mc" id="daily-mc">
@@ -1411,7 +1413,7 @@ document.head.appendChild(_link);
 
 <div class="pg" id="p-train">
   <div class="pgh"><span>💪</span> אימון</div>
-  <div class="tabs" style="overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap;-webkit-overflow-scrolling:touch">
+  <div class="tabs" style="overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px">
     <button class="tab on" onclick="trt('tr-str',this)">כוח</button>
     <button class="tab" onclick="trt('tr-run',this)">ריצה</button>
     <button class="tab" onclick="trt('tr-route',this)">🗺 מסלול</button>
@@ -1421,6 +1423,7 @@ document.head.appendChild(_link);
     <button class="tab" onclick="trt('tr-rec',this)">🩹 שיקום</button>
     <button class="tab" onclick="trt('tr-body',this)">📏 מידות</button>
     <button class="tab" onclick="trt('tr-hr',this)">❤️ דופק</button>
+        <button class="tab" onclick="trt('tr-gibush',this)">⚔ גיבוש</button>
         <button class="tab" onclick="trt('tr-ruck',this)">🎒 Ruck</button>
         <button class="tab" onclick="trt('tr-period',this)">📅 מחזורי</button>
         <button class="tab" onclick="trt('tr-scale',this)">⚖️ Scalable</button>
@@ -1459,7 +1462,11 @@ document.head.appendChild(_link);
         <div><label>ריצות/שבוע</label><select id="rtpw"><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
         <div><label>שבועות</label><select id="rwks"><option>6</option><option>8</option><option selected>10</option><option>12</option></select></div>
       </div>
-      <button class="btn bp" onclick="buildRun()">צור תוכנית ריצה</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <button class="btn bs bsm" onclick="showPreRunBriefing()" style="min-height:44px;font-size:12px">⚡ BRIEFING לפני ריצה</button>
+          <button class="btn bs bsm" onclick="startVoiceCoach()" style="min-height:44px;font-size:12px">🎙️ מאמן קולי</button>
+        </div>
+        <button class="btn bp" onclick="buildRun()">צור תוכנית ריצה</button>
     </div>
     <div id="rp-out"></div>
   </div>
@@ -1562,6 +1569,8 @@ document.head.appendChild(_link);
           <button onclick="stopRun()" style="margin-top:10px;width:100%;padding:10px;background:rgba(255,45,85,.1);border:1px solid var(--red);color:var(--red);border-radius:10px;font-size:13px;font-weight:900;cursor:pointer">⏹ עצור ושמור</button>
         </div>
       </div>
+    </div>
+  </div>
 
   <!-- ════ WORKOUT BUILDER ════ -->
   <div id="tr-build" style="display:none">
@@ -1679,7 +1688,6 @@ document.head.appendChild(_link);
       <button class="btn bcy" onclick="saveRecovery()">💾 שמור וחשב</button>
     </div>
   </div>
-</div>
 
   <!-- ════ BODY MEASUREMENTS ════ -->
   <div id="tr-body" style="display:none">
@@ -1862,6 +1870,39 @@ document.head.appendChild(_link);
     <div id="badges-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:8px;margin-bottom:12px"></div>
     <div class="sh" style="color:var(--yellow);margin-top:4px">🏆 שיאים אישיים</div>
     <div id="pr-board" style="margin-top:8px"></div>
+  </div>
+
+
+  <!-- ── GIBUSH WEEK SIMULATOR ── -->
+  <div id="tr-gibush" style="display:none">
+    <div class="card hot" style="border-color:rgba(255,45,85,.4);background:linear-gradient(180deg,rgba(255,45,85,.06),var(--card))">
+      <div class="sh r">⚔ גיבוש וירטואלי — 5 ימים</div>
+      <div class="mini" style="margin-bottom:10px">סימולציה של שבוע גיבוש אמיתי — 5 ימים של אימונים כמו בגיבוש</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:10px">
+        <div style="background:rgba(255,45,85,.1);border:1px solid rgba(255,45,85,.3);border-radius:8px;padding:6px;text-align:center;font-size:10px;color:var(--red)">יום א<br/>קבלה</div>
+        <div style="background:var(--card2);border:1px solid var(--b1);border-radius:8px;padding:6px;text-align:center;font-size:10px;color:var(--txt3)">יום ב<br/>ניווט</div>
+        <div style="background:var(--card2);border:1px solid var(--b1);border-radius:8px;padding:6px;text-align:center;font-size:10px;color:var(--txt3)">יום ג<br/>כוח</div>
+        <div style="background:var(--card2);border:1px solid var(--b1);border-radius:8px;padding:6px;text-align:center;font-size:10px;color:var(--txt3)">יום ד<br/>לחץ</div>
+        <div style="background:var(--card2);border:1px solid var(--b1);border-radius:8px;padding:6px;text-align:center;font-size:10px;color:var(--txt3)">יום ה<br/>סיום</div>
+      </div>
+      <button class="btn bp" onclick="startGibushSim()" style="background:linear-gradient(135deg,#ff2d55,#aa0024);min-height:48px">⚔ התחל גיבוש וירטואלי</button>
+      <div id="gibush-sim-content" style="margin-top:10px"></div>
+    </div>
+    <div class="card">
+      <div class="sh r">📊 היסטוריית גיבושים</div>
+      <div id="gibush-hist" style="font-size:12px;color:var(--txt2);margin-top:6px">לא השלמת גיבוש וירטואלי עדיין</div>
+    </div>
+  
+
+  <!-- HRV Card -->
+  <div class="card" style="margin-top:8px">
+    <div class="sh c">💓 HRV — Heart Rate Variability</div>
+    <div class="mini" style="margin-bottom:10px">מדד שיקום מתקדם (Whoop-style) — הכנס דופק מנוחה ומקסימום</div>
+    <div class="r2">
+      <div><label>דופק מנוחה (BPM)</label><input id="hrv-rest" type="number" value="60" inputmode="numeric" oninput="calcHRV()"/></div>
+      <div><label>דופק מקסימום (BPM)</label><input id="hrv-max" type="number" value="190" inputmode="numeric" oninput="calcHRV()"/></div>
+    </div>
+    <div id="hrv-result" style="margin-top:8px"></div>
   </div>
 
 </div><!-- /p-train body -->
@@ -2252,14 +2293,39 @@ function tt(id,el){
   el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
   if(id==='tb-cm')initCombatMode();
 }
-function trt(id,el){
-  ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr','tr-ruck','tr-period','tr-scale','tr-sleep','tr-injury'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
-  document.getElementById(id).style.display='block';
-  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
-  if(id==='tr-route')initRoute();
-  if(id==='tr-hist'){renderHistory();setTimeout(renderProgressChart,300);}
-  if(id==='tr-build')initBuilder();
-  if(id==='tr-rec'){initMuscleGrid();setTimeout(calcRecovery,50);}
+function trt(id,btn){
+  // Hide all training sections safely
+  ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr',
+   'tr-rec','tr-body','tr-hr','tr-ruck','tr-period','tr-scale',
+   'tr-sleep','tr-injury','tr-gibush'].forEach(function(x){
+    var e=document.getElementById(x);if(e){e.style.display='none';}
+  });
+  // Show target
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.style.display='block';
+  // Update tab buttons
+  try{
+    var tabsContainer=btn&&btn.closest?btn.closest('.tabs'):null;
+    if(tabsContainer){
+      tabsContainer.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+    }
+    if(btn)btn.classList.add('on');
+  }catch(e){}
+  // Init section content
+  try{
+    if(id==='tr-route'&&typeof initRoute==='function')initRoute();
+    if(id==='tr-hist'){if(typeof renderHistory==='function')renderHistory();setTimeout(function(){try{renderProgressChart&&renderProgressChart();}catch(e){}},300);}
+    if(id==='tr-build'&&typeof initBuilder==='function')initBuilder();
+    if(id==='tr-rec'&&typeof initMuscleGrid==='function'){initMuscleGrid();setTimeout(function(){try{calcRecovery&&calcRecovery();}catch(e){}},50);}
+    if(id==='tr-tmr'&&typeof onTM==='function')onTM();
+    if(id==='tr-body'&&typeof initMuscleGrid==='function')initMuscleGrid();
+    if(id==='tr-ruck'&&typeof calcRuck==='function')calcRuck();
+    if(id==='tr-scale'&&typeof renderScaleGrid==='function')renderScaleGrid('all');
+    if(id==='tr-sleep'){if(typeof calcSleep==='function')calcSleep();if(typeof renderSleepHistory==='function')renderSleepHistory();}
+    if(id==='tr-injury'&&typeof renderPrehab==='function')renderPrehab();
+    if(id==='tr-gibush'&&typeof renderGibushDay==='function')renderGibushDay();
+  }catch(e){console.warn('trt init:',id,e);}
 }
 
 // ═══════════════════════════════════════════════════
@@ -8046,6 +8112,312 @@ function renderDailyQuote(){
 // ════════════════════════════════════════════════════════════
 // END v12 IMPROVEMENTS
 // ════════════════════════════════════════════════════════════
+
+
+// ════════════════════════════════════════════════════════════════
+// COMPETITIVE UPGRADE v13 — Based on Agent Competitive Scan
+// Sources: Strava 2025, Whoop 2025, Nike Run Club, Tsevet Lohamim
+// ════════════════════════════════════════════════════════════════
+
+// ── 1. WHOOP-STYLE DAILY RECOVERY SCORE ─────────────────────────
+// Better than competitors: combines sleep + muscle + training load
+function calcDailyRecovery(){
+  try{
+    var sleep=ld('cf7_sleep',[])[0]||{hours:7,qual:7};
+    var muscles=ld('cf7_muscles',{});
+    var scores=ld(K.P,[]);
+    var weekly=Object.values(ld('cf7wd',{})||{}).filter(function(d){return d==='done';}).length;
+    
+    // Sleep score (0-40)
+    var sleepScore=Math.min(40,Math.round((sleep.hours/8)*28+(sleep.qual/10)*12));
+    // Muscle freshness (0-30) — fewer sore muscles = better recovery
+    var soreMuscles=Object.values(muscles).filter(function(v){return v==='sore'||v==='partial';}).length;
+    var muscleScore=Math.max(0,30-soreMuscles*5);
+    // Training load balance (0-30)
+    var loadScore=weekly<=4?30:weekly<=5?20:weekly<=6?10:5;
+    
+    var total=sleepScore+muscleScore+loadScore;
+    var grade=total>=80?{label:'🟢 מוכן לאימון קשה',col:'#00ff88',advice:'הגוף שלך מוכן — תן הכל היום'}:
+              total>=60?{label:'🟡 מוכן לאימון בינוני',col:'#ffd60a',advice:'אימון טוב אבל אל תגזים'}:
+              total>=40?{label:'🟠 מנוחה אקטיבית',col:'#ff8800',advice:'ריצה קלה בלבד — הגוף צריך שיקום'}:
+                        {label:'🔴 מנוחה מלאה',col:'#ff3b5c',advice:'הגוף במצב שיקום — מנוחה מלאה'};
+    
+    localStorage.setItem('cf7_recovery_cache',JSON.stringify({score:total,grade:grade,date:new Date().toDateString()}));
+    renderDailyRecovery(total,grade);
+    return total;
+  }catch(e){}
+}
+
+function renderDailyRecovery(score,grade){
+  try{
+    var el=document.getElementById('daily-recovery-card');if(!el)return;
+    el.innerHTML=
+      '<div style="display:flex;align-items:center;gap:12px">'+
+      '<div style="text-align:center;flex-shrink:0">'+
+        '<svg width="60" height="60" viewBox="0 0 60 60">'+
+          '<circle cx="30" cy="30" r="25" fill="none" stroke="var(--card3)" stroke-width="5"/>'+
+          '<circle cx="30" cy="30" r="25" fill="none" stroke="'+grade.col+'" stroke-width="5"'+
+            ' stroke-dasharray="'+(2*Math.PI*25)+'" stroke-dashoffset="'+(2*Math.PI*25*(1-score/100))+'"'+
+            ' stroke-linecap="round" transform="rotate(-90 30 30)"/>'+
+          '<text x="30" y="35" text-anchor="middle" font-size="16" font-weight="700" fill="'+grade.col+'">'+score+'</text>'+
+        '</svg>'+
+        '<div style="font-size:9px;color:var(--txt3);margin-top:-2px">שיקום</div>'+
+      '</div>'+
+      '<div style="flex:1">'+
+        '<div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:3px">'+grade.label+'</div>'+
+        '<div style="font-size:11px;color:var(--txt2);line-height:1.4">'+grade.advice+'</div>'+
+        '<button onclick="calcDailyRecovery()" style="margin-top:6px;background:var(--card3);border:1px solid var(--b1);border-radius:6px;color:var(--txt2);font-size:10px;padding:3px 8px;cursor:pointer">🔄 עדכן</button>'+
+      '</div></div>';
+    el.style.display='block';
+  }catch(e){}
+}
+
+// ── 2. GIBUSH WEEK SIMULATOR (Tsevet Lohamim-inspired) ──────────
+// UNIQUE: no competitor has this
+var GIBUSH_DAYS=[
+  {day:1,name:'יום א — קבלת פנים',workouts:[
+    {name:'ריצה 8ק"מ עם ציוד',time:'5:00',detail:'כיס 15ק"ג, קצב 7 דק/ק"מ'},
+    {name:'100 מתח',time:'10:00',detail:'ב-10 סטים'},
+    {name:'200 שכיבות',time:'14:00',detail:'ב-10 סטים'},
+    {name:'ריצת לילה 5ק"מ',time:'22:00',detail:'עם פנס'}
+  ]},
+  {day:2,name:'יום ב — ניווט',workouts:[
+    {name:'ניווט 20ק"מ',time:'5:00',detail:'עם מפה בלבד'},
+    {name:'50 דיפס + 50 מתח',time:'13:00',detail:'לאחר הניווט'},
+    {name:'ריצת 3ק"מ',time:'16:00',detail:'מתחת ל-13:30'}
+  ]},
+  {day:3,name:'יום ג — אתגר כוח',workouts:[
+    {name:'Max מתח',time:'6:00',detail:'כמה שיותר ברצף'},
+    {name:'Max שכיבות',time:'7:00',detail:'כמה שיותר ברצף'},
+    {name:'Ruck 15ק"מ',time:'8:00',detail:'20ק"ג, מתחת ל-2:30'},
+    {name:'100 בר-פיז',time:'15:00',detail:'כמה שמהר יותר'}
+  ]},
+  {day:4,name:'יום ד — לחץ נפשי',workouts:[
+    {name:'שיניים 8×400מ',time:'5:00',detail:'מנוחה 2 דקות'},
+    {name:'עמידה בקיר 5 דק',time:'10:00',detail:'ברגל אחת, 90 שניות'},
+    {name:'ריצת לילה 10ק"מ',time:'23:00',detail:'עם ציוד מלא'}
+  ]},
+  {day:5,name:'יום ה — ספרינטים',workouts:[
+    {name:'20×100מ ספרינטים',time:'6:00',detail:'מנוחה 30שנ'},
+    {name:'נשיאת אלונקה 2ק"מ',time:'10:00',detail:'עם 4 חברים'},
+    {name:'ריצת סיום 5ק"מ',time:'16:00',detail:'מתחת ל-22:00'}
+  ]},
+];
+
+var _gibushDay=0;
+function startGibushSim(){
+  _gibushDay=0;
+  localStorage.setItem('cf7_gibush_start',Date.now());
+  renderGibushDay();
+  notify('⚔ גיבוש וירטואלי התחיל!','p');
+  haptic('success');
+}
+
+function renderGibushDay(){
+  try{
+    var el=document.getElementById('gibush-sim-content');if(!el)return;
+    var day=GIBUSH_DAYS[_gibushDay]||GIBUSH_DAYS[0];
+    el.innerHTML=
+      '<div style="background:linear-gradient(135deg,rgba(255,45,85,.1),rgba(124,58,237,.05));border:1px solid rgba(255,45,85,.3);border-radius:12px;padding:12px;margin-bottom:8px">'+
+        '<div style="font-size:14px;font-weight:900;color:var(--red);margin-bottom:8px">'+day.name+'</div>'+
+        day.workouts.map(function(w){
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--b1)">'+
+            '<div><div style="font-size:12px;font-weight:700;color:var(--txt)">'+w.name+'</div>'+
+            '<div style="font-size:10px;color:var(--txt3)">'+w.detail+'</div></div>'+
+            '<div style="font-size:11px;font-weight:700;color:var(--orange)">'+w.time+'</div></div>';
+        }).join('')+
+        '<div style="display:flex;gap:8px;margin-top:10px">'+
+          '<button onclick="nextGibushDay()" class="btn bp bsm" style="flex:1;min-height:44px">'+
+            (_gibushDay<GIBUSH_DAYS.length-1?'יום הבא →':'🏆 סיימתי גיבוש!')+'</button>'+
+          '<button onclick="markGibushWorkout()" class="btn bs bsm" style="min-height:44px">✅ סיימתי</button>'+
+        '</div>'+
+      '</div>'+
+      '<div style="display:flex;justify-content:center;gap:6px;margin-top:4px">'+
+        GIBUSH_DAYS.map(function(d,i){
+          return '<div style="width:8px;height:8px;border-radius:50%;background:'+(i<=_gibushDay?'var(--red)':'var(--card3)')+'"></div>';
+        }).join('')+
+      '</div>';
+  }catch(e){}
+}
+
+function nextGibushDay(){
+  if(_gibushDay<GIBUSH_DAYS.length-1){
+    _gibushDay++;renderGibushDay();haptic();
+  } else {
+    var hist=ld('cf7_gibush_hist',[]);
+    hist.unshift({date:new Date().toLocaleDateString('he-IL'),completed:true});
+    sv('cf7_gibush_hist',hist.slice(0,10));
+    checkAchievements&&checkAchievements();
+    notify('🏆 השלמת שבוע גיבוש וירטואלי!','p');
+    haptic('success');
+  }
+}
+function markGibushWorkout(){notify('✅ אימון סומן!','p');haptic();}
+
+// ── 3. PRE-RUN BRIEFING (Nike Run Club-inspired) ─────────────────
+// UNIQUE: military-style briefing before every run
+function showPreRunBriefing(){
+  try{
+    var pr=ld(K.PR,{}); var scores=ld(K.P,[]);
+    var lastScore=parseFloat(scores[0]&&scores[0].bar||60);
+    var recovery=JSON.parse(localStorage.getItem('cf7_recovery_cache')||'{}');
+    var recScore=recovery.score||70;
+    
+    var intensity=recScore>=80?'קשה':recScore>=60?'בינוני':'קל';
+    var pace=recScore>=80?'6:30-7:00':recScore>=60?'7:00-7:30':'7:30-8:30';
+    var tips=[
+      '💧 שתה 500מל מים 30 דקות לפני',
+      '🥤 אכל קלוריות 2 שעות לפני',
+      '👟 וודא שהנעליים שרוכים',
+      '📍 הודע לחבר על המסלול',
+      recScore<60?'⚠️ ציון שיקום נמוך — שקול ריצה קלה בלבד':'💪 הגוף מוכן — תן הכל',
+    ];
+    
+    var html='<div style="padding:8px">'+
+      '<div style="font-size:16px;font-weight:900;color:var(--orange);margin-bottom:10px">⚡ BRIEFING לפני ריצה</div>'+
+      '<div style="background:var(--card2);border-radius:10px;padding:10px;margin-bottom:8px">'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
+          '<div style="text-align:center"><div style="font-size:22px;font-weight:700;color:var(--orange)">'+intensity+'</div><div style="font-size:10px;color:var(--txt3)">עצימות מומלצת</div></div>'+
+          '<div style="text-align:center"><div style="font-size:18px;font-weight:700;color:var(--pri)">'+pace+'</div><div style="font-size:10px;color:var(--txt3)">קצב מומלץ (דק/ק"מ)</div></div>'+
+        '</div>'+
+      '</div>'+
+      tips.map(function(t){return '<div style="font-size:12px;color:var(--txt);padding:5px 0;border-bottom:1px solid var(--b1)">'+t+'</div>';}).join('')+
+      '<button onclick="closeModal();startVoiceCoach()" class="btn bp" style="width:100%;margin-top:10px;min-height:44px">🎙️ התחל עם מאמן קולי</button>'+
+      '<button onclick="closeModal()" class="btn bs" style="width:100%;margin-top:6px;min-height:44px">צא לריצה</button>'+
+    '</div>';
+    openModal('⚡ PRE-RUN BRIEFING',html);
+  }catch(e){}
+}
+
+// ── 4. VOICE COACH (Enhanced — Nike-style) ───────────────────────
+function startVoiceCoach(){
+  try{
+    if(!window.speechSynthesis){notify('הדפדפן לא תומך בקול','r');return;}
+    var pr=ld(K.PR,{});
+    var name=pr.name||'לוחם';
+    var unit=pr.unit||'צה"ל';
+    var msg=new SpeechSynthesisUtterance();
+    msg.lang='he-IL';
+    msg.rate=0.9;msg.pitch=1.1;msg.volume=1;
+    msg.text=name+'! ברוך הבא לאימון. יחידת יעד '+unit+'. זכור — כאב הוא חולף, אבל הגאווה היא לנצח. צא לדרך!';
+    speechSynthesis.speak(msg);
+    
+    // Interval announcements
+    var intervals=[
+      {t:5*60,  msg:'5 דקות חלפו. שמור על קצב'},
+      {t:10*60, msg:'10 דקות. אתה עושה מצוין. המשך'},
+      {t:15*60, msg:'15 דקות. אם לא כואב, הגבר עצימות'},
+      {t:20*60, msg:'20 דקות. כמעט שם. עוד קצת'},
+      {t:25*60, msg:'25 דקות. ספרינט אחרון. תן הכל'},
+      {t:30*60, msg:name+'! סיימת 30 דקות. עבודה מצוינת'},
+    ];
+    var _vcInt=null;var _vcStart=Date.now();
+    _vcInt=setInterval(function(){
+      var elapsed=Math.floor((Date.now()-_vcStart)/1000);
+      var due=intervals.filter(function(iv){return iv.t<=elapsed&&!iv._done;});
+      due.forEach(function(iv){
+        iv._done=true;
+        var m=new SpeechSynthesisUtterance(iv.msg);
+        m.lang='he-IL';m.rate=0.9;m.volume=1;
+        speechSynthesis.speak(m);
+        haptic();
+      });
+      if(elapsed>30*60)clearInterval(_vcInt);
+    },5000);
+    localStorage.setItem('cf7_vc_running','1');
+    notify('🎙️ מאמן קולי פעיל — 30 דקות','p');
+  }catch(e){notify('שגיאה במאמן קולי','r');}
+}
+
+function stopVoiceCoach(){
+  try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
+  localStorage.removeItem('cf7_vc_running');
+  notify('🎙️ מאמן קולי עצר','p');
+}
+
+// ── 5. YEAR IN REVIEW (Strava-inspired) ──────────────────────────
+function showYearReview(){
+  try{
+    var year=new Date().getFullYear();
+    var scores=ld(K.P,[]).filter(function(s){return s.date&&s.date.includes(year)||true;});
+    var sleepHist=ld('cf7_sleep',[]);
+    var badges=JSON.parse(localStorage.getItem('cf7_badges')||'[]');
+    var streak=parseInt(localStorage.getItem('cf7_streak_count')||0);
+    var gibushDone=ld('cf7_gibush_hist',[]).length;
+    
+    var avgScore=scores.length?Math.round(scores.reduce(function(s,x){return s+parseFloat(x.bar||0);},0)/scores.length):0;
+    var bestScore=scores.length?Math.max.apply(null,scores.map(function(s){return parseFloat(s.bar||0);})):0;
+    var avgSleep=sleepHist.length?(sleepHist.reduce(function(s,h){return s+h.hours;},0)/sleepHist.length).toFixed(1):0;
+    
+    var html='<div style="text-align:center;padding:8px">'+
+      '<div style="font-size:28px;font-weight:900;color:var(--pri);margin-bottom:4px">'+year+'</div>'+
+      '<div style="font-size:12px;color:var(--txt2);margin-bottom:16px">השנה שלך ב-Combat Fit IL</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">'+
+        '<div style="background:var(--card2);border-radius:10px;padding:10px">'+
+          '<div style="font-size:24px;font-weight:700;color:var(--pri)">'+scores.length+'</div>'+
+          '<div style="font-size:10px;color:var(--txt3)">מבחנים</div></div>'+
+        '<div style="background:var(--card2);border-radius:10px;padding:10px">'+
+          '<div style="font-size:24px;font-weight:700;color:var(--yellow)">'+bestScore+'</div>'+
+          '<div style="font-size:10px;color:var(--txt3)">ציון מקסימום</div></div>'+
+        '<div style="background:var(--card2);border-radius:10px;padding:10px">'+
+          '<div style="font-size:24px;font-weight:700;color:var(--orange)">'+badges.length+'</div>'+
+          '<div style="font-size:10px;color:var(--txt3)">הישגים</div></div>'+
+      '</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
+        '<div style="background:var(--card2);border-radius:10px;padding:10px">'+
+          '<div style="font-size:20px;font-weight:700;color:var(--purple)">'+streak+'</div>'+
+          '<div style="font-size:10px;color:var(--txt3)">סטריק ימים</div></div>'+
+        '<div style="background:var(--card2);border-radius:10px;padding:10px">'+
+          '<div style="font-size:20px;font-weight:700;color:var(--cyan)">'+avgSleep+'</div>'+
+          '<div style="font-size:10px;color:var(--txt3)">שינה ממוצעת</div></div>'+
+      '</div>'+
+      (avgScore>0?'<div style="margin-top:12px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);border-radius:10px;padding:10px;font-size:12px;color:var(--pri)">'+
+        (avgScore>=80?'🏆 שנה מדהימה! אתה ממש על הדרך הנכונה':
+         avgScore>=70?'💪 שנה טובה — עוד קצת ואתה עילית':
+         '📈 שנה של התחלה — הדרך ארוכה אבל הצלחות בדרך')+'</div>':'')+'</div>';
+    openModal('🎉 '+year+' ב-Combat Fit',html);
+  }catch(e){notify('שגיאה בסיכום שנתי','r');}
+}
+
+// ── 6. HRV ESTIMATION (manual) ──────────────────────────────────
+function calcHRV(){
+  try{
+    var restHR=parseInt(document.getElementById('hrv-rest')&&document.getElementById('hrv-rest').value||60);
+    var maxHR=parseInt(document.getElementById('hrv-max')&&document.getElementById('hrv-max').value||190);
+    var age=parseInt(ld(K.PR,{}).age||20);
+    // Simplified HRV estimation based on HRmax ratio
+    var estimated_hrv=Math.round(50*(maxHR/(restHR*1.8))+(220-age-maxHR)*0.5);
+    estimated_hrv=Math.max(20,Math.min(100,estimated_hrv));
+    var grade=estimated_hrv>=70?'🟢 מצוין':estimated_hrv>=50?'🟡 טוב':estimated_hrv>=35?'🟠 בינוני':'🔴 נמוך';
+    var el=document.getElementById('hrv-result');
+    if(el)el.innerHTML='<div style="text-align:center;padding:10px"><div style="font-family:var(--fd);font-size:40px;color:var(--cyan)">'+estimated_hrv+'</div>'+
+      '<div style="font-size:12px;color:var(--txt2)">HRV משוערך</div>'+
+      '<div style="font-weight:700;color:var(--cyan);font-size:13px;margin-top:4px">'+grade+'</div>'+
+      '<div style="font-size:11px;color:var(--txt2);margin-top:6px">'+(estimated_hrv>=70?'שיקום מצוין — אימון קשה מתאים':estimated_hrv>=50?'שיקום טוב — אימון רגיל':'שיקום נמוך — אימון קל בלבד')+'</div></div>';
+    localStorage.setItem('cf7_hrv',estimated_hrv);
+  }catch(e){}
+}
+
+// ── HOOK NEW FEATURES INTO DASH ────────────────────────────────
+document.addEventListener('DOMContentLoaded',function(){
+  try{
+    // Patch refreshDash to show recovery
+    var _origRD2=typeof refreshDash==='function'?refreshDash:null;
+    if(_origRD2&&!_origRD2._v13){
+      refreshDash=function(){
+        try{_origRD2.apply(this,arguments);}catch(e){}
+        try{calcDailyRecovery();}catch(e){}
+      };
+      refreshDash._v13=true;
+    }
+    // Init recovery on load
+    setTimeout(function(){try{calcDailyRecovery();}catch(e){}},1200);
+  }catch(e){}
+});
+
+// ════════════════════════════════════════════════════════════════
+// END v13 COMPETITIVE FEATURES
+// ════════════════════════════════════════════════════════════════
 </script>
 
 <!-- Firebase SDK — Multi-group combat fitness -->
