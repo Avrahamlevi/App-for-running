@@ -63,7 +63,7 @@ body.cm .ao{display:none!important}
 body.cm .co{display:block!important}
 
 /* ─── CONTENT ─── */
-.content{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;width:100%;display:block}
+.content{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;width:100%;display:block;padding-bottom:66px}
 .pg{display:none;padding:11px;padding-bottom:80px;box-sizing:border-box;width:390px;max-width:100vw}
 .pg.active{display:block}
 .pg{display:none;padding:11px;padding-bottom:80px;width:100%;box-sizing:border-box}
@@ -154,7 +154,7 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .notif.nr{border-top-color:var(--red)}.notif.ny{border-top-color:var(--yellow)}.notif.np{border-top-color:var(--purple2)}.notif.nc{border-top-color:var(--cyan)}
 
 /* ─── BOTTOM NAV ─── */
-.bottom{background:var(--card);border-top:1px solid var(--b2);display:grid;grid-template-columns:repeat(6,1fr);padding:5px 2px 7px;flex-shrink:0;z-index:100}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--b2);display:grid;grid-template-columns:repeat(6,1fr);padding:5px 2px 7px;flex-shrink:0;z-index:100}
 .nav{background:none;border:none;color:var(--txt3);font-size:10px;cursor:pointer;padding:4px 2px;border-radius:7px;font-family:var(--fb);font-weight:600;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:2px;letter-spacing:.2px}
 .nav .ni{font-size:18px;line-height:1;transition:.15s}
 .nav.on{color:var(--pri)}.nav.on .ni{filter:drop-shadow(0 0 6px rgba(0,255,136,.6));transform:scale(1.1)}
@@ -467,6 +467,16 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .leaflet-container{font-family:var(--fb)!important;background:#0d1b2a}
 .leaflet-tile{filter:invert(1) hue-rotate(180deg) brightness(0.9) saturate(0.8)}
 .leaflet-control-attribution{font-size:10px;opacity:.5}
+
+/* ══ RESPONSIVE ══ */
+@supports(padding:env(safe-area-inset-bottom)){.bottom{padding-bottom:max(7px,env(safe-area-inset-bottom))!important;}}
+@media(min-width:600px){.bottom{height:60px;}.bottom .nav{font-size:11px;min-height:60px;}.content{padding-bottom:70px!important;}.pg{max-width:700px;margin:0 auto;}}
+@media(min-width:1024px){.bottom{height:58px;}.bottom .nav{font-size:12px;}.content{padding-bottom:68px!important;}.pg{max-width:860px;}}
+@media(max-width:360px){.bottom .nav{font-size:8px!important;}.tab{font-size:9px!important;}}
+@media(max-height:450px)and(orientation:landscape){.bottom{height:44px;padding:0!important;}.bottom .nav{font-size:0;min-height:44px;}.content{padding-bottom:44px!important;}}
+.nav.on{color:var(--pri)!important;}
+/* ════════════════ */
+
 </style>
 
 <!-- Netlify Identity — free auth, no credit card -->
@@ -493,7 +503,6 @@ _link.rel='manifest';_link.href=URL.createObjectURL(_blob);
 document.head.appendChild(_link);
 </script>
 </head>
-<body>
 <body>
 
 <div id="notif" class="notif"></div>
@@ -6750,47 +6759,96 @@ function exportReport(){
 // ═══════════════════════════════════════════════════
 // HOOK INTO refreshDash for streak
 // ═══════════════════════════════════════════════════
-var _origRefreshDash = typeof refreshDash==='function' ? refreshDash : function(){};
-refreshDash = function(){
-  _origRefreshDash();
-  setTimeout(calcStreak, 500);
+
+var SCALE_EX=[
+  {cat:'upper',name:'מתח',icon:'💪',lv1:{n:'מתח סיוע',d:'עזרת הרגליים 3×8'},lv2:{n:'מתח רגיל',d:'4×מקסימום'},lv3:{n:'מתח+משקל',d:'10ק"ג 5×8'}},
+  {cat:'upper',name:'שכיבות',icon:'🏋',lv1:{n:'על ברכיים',d:'3×15'},lv2:{n:'שכיבות רגילות',d:'4×מקסימום'},lv3:{n:'Archers',d:'5×10'}},
+  {cat:'core',name:'פלאנק',icon:'⏱',lv1:{n:'על ברכיים',d:'3×45שנ'},lv2:{n:'רגיל',d:'3×90שנ'},lv3:{n:'RKC פלאנק',d:'3×60שנ'}},
+  {cat:'lower',name:'סקוואט',icon:'🦵',lv1:{n:'Air Squat',d:'3×20'},lv2:{n:'Jump Squat',d:'4×15'},lv3:{n:'Pistol',d:'3×8 כל רגל'}},
+  {cat:'cardio',name:'ספרינטים',icon:'⚡',lv1:{n:'100מ×6',d:'מנוחה 90שנ'},lv2:{n:'200מ×6',d:'מנוחה 90שנ'},lv3:{n:'400מ×6',d:'מנוחה 90שנ'}},
+];
+
+var OP_FIELD=[
+  {name:'מקסימום ללא ציוד',sets:[{e:'שכיבות',s:'4×מקסימום'},{e:'קפיצות כפיפות',s:'3×15'},{e:'לאנגים',s:'4×20מ'},{e:'פלאנק',s:'3×90שנ'},{e:'ספרינט 100מ',s:'×6'}]},
+  {name:'Tabata שטח',sets:[{e:'שכיבות קפיצה',s:'8×20שנ/10שנ'},{e:'Mountain Climbers',s:'8×20שנ/10שנ'},{e:'ברפיז',s:'8×20שנ/10שנ'}]}
+];
+
+var OP_BASE=[
+  {name:'מוטות + ריצה',sets:[{e:'מתח',s:'5×מקסימום'},{e:'שכיבות',s:'3×מקסימום'},{e:'ריצה 3ק"מ',s:'בסיום'}]},
+  {name:'Circuit בסיס',sets:[{e:'מתח×10',s:'4 סבבים'},{e:'שכיבות×20',s:'4 סבבים'},{e:'ריצה 400מ',s:'4 סבבים'}]}
+];
+
+var INJ={
+  shin:{name:'שין-ספלינט',treat:['קרח 15 דק ×3/יום','Calf raises 3×20','הפסק ריצה 3-5 ימים'],prev:['הגדל 10% לשבוע בלבד','נעליים מתאימות']},
+  shoulder:{name:'כתף — Impingement',treat:['הפסק מתח 7 ימים','Band rotation 3×15','מתיחת חזה'],prev:['Face pulls','אל תתלה מת על מוט']},
+  knee:{name:'Runners Knee',treat:['הפחת ריצה 50%','VMO squats 3×15','קרח אחרי ריצה'],prev:['חזק VMO','נעלי בולם זעזועים']},
+  back:{name:'גב תחתון',treat:['Bird-dog 3×10','Hip flexor stretch','הימנע ישיבה ממושכת'],prev:['Dead bug יומי','hip hinge נכון']}
 };
 
-// Also hook trt for new tabs
-var _origTrt2 = typeof trt==='function' ? trt : function(){};
-trt = function(id, el){
-  if(id==='tr-body'){
-    var all=['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr'];
-    all.forEach(function(x){var e=document.getElementById(x);if(e)e.style.display='none';});
-    var t=document.getElementById('tr-body');if(t)t.style.display='block';
-    if(el){el.closest('.tabs').querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
-    var pr2=ld(K.PR,{});
-    var wEl=document.getElementById('bm-weight'),hEl=document.getElementById('bm-height');
-    var ms=ld('cf7_measurements',[]);
-    if(ms.length&&wEl&&!wEl.value){wEl.value=ms[0].weight;if(hEl&&ms[0].height)hEl.value=ms[0].height;calcBMI();}
-    renderMeasurementsHistory();
-    return;
-  }
-  if(id==='tr-hr'){
-    var all2=['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr'];
-    all2.forEach(function(x){var e=document.getElementById(x);if(e)e.style.display='none';});
-    var t2=document.getElementById('tr-hr');if(t2)t2.style.display='block';
-    if(el){el.closest('.tabs').querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
-    var pr3=ld(K.PR,{});
-    var ageEl=document.getElementById('hr-age');
-    if(ageEl&&pr3.age&&!ageEl.value){ageEl.value=pr3.age;calcHRZones();}
-    return;
-  }
-  _origTrt2(id, el);
-};
+var ACHIEVEMENTS=[
+  {id:'first_score',icon:'🎖',name:'ציון ראשון',desc:'בצעת מבחן כושר ראשון',
+   check:function(){return ld(K.P,[]).length>=1;}},
+  {id:'score_70',icon:'💪',name:'לוחם',desc:'הגעת לציון 70+',
+   check:function(){return ld(K.P,[]).some(function(x){return parseFloat(x.bar||0)>=70;});}},
+  {id:'score_80',icon:'⭐',name:'קרבי',desc:'הגעת לציון 80+',
+   check:function(){return ld(K.P,[]).some(function(x){return parseFloat(x.bar||0)>=80;});}},
+  {id:'score_90',icon:'🔥',name:'עילית',desc:'הגעת לציון 90+',
+   check:function(){return ld(K.P,[]).some(function(x){return parseFloat(x.bar||0)>=90;});}},
+  {id:'week_3',icon:'📅',name:'3 ימי אימון',desc:'אימנת 3 ימים השבוע',
+   check:function(){return Object.values(ld('cf7wd',{})||{}).filter(function(d){return d==='done';}).length>=3;}},
+  {id:'week_5',icon:'🏃',name:'5 ימי אימון',desc:'אימנת 5 ימים השבוע',
+   check:function(){return Object.values(ld('cf7wd',{})||{}).filter(function(d){return d==='done';}).length>=5;}},
+  {id:'sleep_7',icon:'😴',name:'שינה טובה',desc:'רשמת 7+ שעות שינה',
+   check:function(){return ld('cf7_sleep',[]).some(function(s){return s.hours>=7;});}},
+  {id:'profile_full',icon:'👤',name:'פרופיל מלא',desc:'מילאת את כל הפרטים',
+   check:function(){var p=ld(K.PR,{});return !!(p.name&&p.age&&p.unit&&p.draft);}},
+  {id:'ai_used',icon:'🤖',name:'AI Trainee',desc:'שאלת את מאמן ה-AI',
+   check:function(){return ld('cf7_ai_hist',[]).length>=1;}},
+  {id:'ruck_done',icon:'🎒',name:'Ruck Warrior',desc:'השלמת Ruck Training',
+   check:function(){return !!localStorage.getItem('cf7_ruck_done');}},
+];
 
+var MIL_QUOTES=[
+  {q:'אין מחסום שלא ניתן לעבור',a:'צנחנים'},
+  {q:'אחרי אני',a:'קצינים ישראלים'},
+  {q:'הכאב זמני, הגאווה לנצח',a:'Unit 669'},
+  {q:'מה שנראה כבלתי אפשרי הופך אפשרי עם אמון עצמי',a:'סיירת מטכ"ל'},
+  {q:'הגוף מסוגל לכל, השאלה היא המוח',a:'Navy SEALs'},
+  {q:'כשאתה חושב שסיימת, אתה בחצי הדרך',a:'Special Forces'},
+  {q:'לחץ יוצר יהלומים',a:'George Patton'},
+  {q:'אל תספור את הימים, גרום לימים להיספר',a:'Muhammad Ali'},
+];
 
-/* dup:toggleMuscle */
+var GIBUSH_DAYS=[
+  {day:1,name:'יום א — קבלת פנים',workouts:[
+    {name:'ריצה 8ק"מ עם ציוד',time:'5:00',detail:'כיס 15ק"ג, קצב 7 דק/ק"מ'},
+    {name:'100 מתח',time:'10:00',detail:'ב-10 סטים'},
+    {name:'200 שכיבות',time:'14:00',detail:'ב-10 סטים'},
+    {name:'ריצת לילה 5ק"מ',time:'22:00',detail:'עם פנס'}
+  ]},
+  {day:2,name:'יום ב — ניווט',workouts:[
+    {name:'ניווט 20ק"מ',time:'5:00',detail:'עם מפה בלבד'},
+    {name:'50 דיפס + 50 מתח',time:'13:00',detail:'לאחר הניווט'},
+    {name:'ריצת 3ק"מ',time:'16:00',detail:'מתחת ל-13:30'}
+  ]},
+  {day:3,name:'יום ג — אתגר כוח',workouts:[
+    {name:'Max מתח',time:'6:00',detail:'כמה שיותר ברצף'},
+    {name:'Max שכיבות',time:'7:00',detail:'כמה שיותר ברצף'},
+    {name:'Ruck 15ק"מ',time:'8:00',detail:'20ק"ג, מתחת ל-2:30'},
+    {name:'100 בר-פיז',time:'15:00',detail:'כמה שמהר יותר'}
+  ]},
+  {day:4,name:'יום ד — לחץ נפשי',workouts:[
+    {name:'שיניים 8×400מ',time:'5:00',detail:'מנוחה 2 דקות'},
+    {name:'עמידה בקיר 5 דק',time:'10:00',detail:'ברגל אחת, 90 שניות'},
+    {name:'ריצת לילה 10ק"מ',time:'23:00',detail:'עם ציוד מלא'}
+  ]},
+  {day:5,name:'יום ה — ספרינטים',workouts:[
+    {name:'20×100מ ספרינטים',time:'6:00',detail:'מנוחה 30שנ'},
+    {name:'נשיאת אלונקה 2ק"מ',time:'10:00',detail:'עם 4 חברים'},
+    {name:'ריצת סיום 5ק"מ',time:'16:00',detail:'מתחת ל-22:00'}
+  ]},
+];
 
-
-// ═══════════════════════════════════════════════════
-// COMBAT SCORE
-// ═══════════════════════════════════════════════════
 function calcCombatScore(){
   var pg=ld(K.P,[]);
   var runScore=pg.length?Math.min(100,parseInt(pg[0].bar||0)):0;
@@ -6812,11 +6870,6 @@ function calcCombatScore(){
   if(csStr)csStr.textContent=strScore||'--';
   if(csRec)csRec.textContent=recPct+'%';
 }
-
-// ═══════════════════════════════════════════════════
-// AUTH FUNCTIONS
-// ═══════════════════════════════════════════════════
-var _aMode='l',_aRole='athlete';
 
 function setAuthRole(role){
   _aRole=role;
@@ -6852,69 +6905,6 @@ function showAuthErr(msg){
 
 function closeAuthModal(){
   var m=document.getElementById('auth-modal');if(m)m.style.display='none';
-}
-
-async function aSubmit(){
-  if(!window._FB){notify('Firebase לא זמין','y');return;}
-  var email=(document.getElementById('a-email')?.value||'').trim();
-  var pass=document.getElementById('a-pass')?.value||'';
-  var name=(document.getElementById('a-name')?.value||'').trim();
-  var groupName=(document.getElementById('a-group-name')?.value||'').trim();
-  var coachCode=(document.getElementById('a-coach-code')?.value||'').trim();
-  var err=document.getElementById('a-err');if(err)err.style.display='none';
-  if(!email||!pass){showAuthErr('מלא אימייל וסיסמה');return;}
-  if(pass.length<6){showAuthErr('סיסמה 6+ תווים');return;}
-  var btn=document.getElementById('a-sub');if(btn){btn.textContent='...';btn.disabled=true;}
-  try{
-    var F=window._FB;
-    var cred;
-    if(_aMode==='r'){
-      cred=await F.createUserWithEmailAndPassword(F.auth,email,pass);
-      if(name)await F.updateProfile(cred.user,{displayName:name});
-      await F.setDoc(F.doc(F.db,'users',cred.user.uid),{
-        uid:cred.user.uid,displayName:name||email.split('@')[0],
-        email:email,role:_aRole,createdAt:F.serverTimestamp()
-      },{merge:true});
-      window._fbRole=_aRole;
-      if(_aRole==='coach'&&window._createGroup){
-        var gName=groupName||(name||'מאמן')+' — קבוצה 1';
-        var g=await window._createGroup(gName);
-        if(g)setTimeout(function(){showCoachWelcome(g.code,g.name);},800);
-      }
-      if(_aRole==='athlete'&&coachCode&&window._joinGroup){
-        var j=await window._joinGroup(coachCode);
-        if(j.ok)notify('✅ הצטרפת ל'+j.groupName,'p');
-      }
-    } else {
-      cred=await F.signInWithEmailAndPassword(F.auth,email,pass);
-      var snap=await F.getDoc(F.doc(F.db,'users',cred.user.uid));
-      if(snap.exists())window._fbRole=snap.data().role||'athlete';
-    }
-    closeAuthModal();
-    notify('👋 ברוך הבא, '+(cred.user.displayName||email.split('@')[0])+'!','p');
-  }catch(e){
-    var msgs={'auth/email-already-in-use':'אימייל כבר קיים — התחבר','auth/invalid-email':'אימייל לא תקין','auth/weak-password':'סיסמה חלשה','auth/wrong-password':'סיסמה שגויה','auth/user-not-found':'משתמש לא נמצא','auth/invalid-credential':'פרטים שגויים','auth/too-many-requests':'יותר מדי ניסיונות','auth/network-request-failed':'בעיית חיבור לאינטרנט','auth/popup-closed-by-user':'הכניסה בוטלה'};
-    showAuthErr(msgs[e.code]||e.message);
-  }
-  if(btn){btn.textContent=_aMode==='r'?'הרשם':'כניסה';btn.disabled=false;}
-}
-
-async function aGoogle(){
-  if(!window._FB){notify('Firebase לא זמין','y');return;}
-  try{
-    var F=window._FB;
-    var res=await F.signInWithPopup(F.auth,new F.GoogleAuthProvider());
-    var snap=await F.getDoc(F.doc(F.db,'users',res.user.uid));
-    if(!snap.exists()){
-      await F.setDoc(F.doc(F.db,'users',res.user.uid),{uid:res.user.uid,displayName:res.user.displayName||'',email:res.user.email||'',role:_aRole,createdAt:F.serverTimestamp()});
-      window._fbRole=_aRole;
-      if(_aRole==='coach'&&window._createGroup){
-        var g2=await window._createGroup((res.user.displayName||'מאמן')+' — קבוצה 1');
-        if(g2)setTimeout(function(){showCoachWelcome(g2.code,g2.name);},800);
-      }
-    } else {window._fbRole=snap.data().role||'athlete';}
-    closeAuthModal();
-  }catch(e){showAuthErr('Google נכשל: '+e.message);}
 }
 
 function aSkip(){localStorage.setItem('cf7_skip_auth','1');closeAuthModal();}
@@ -6959,30 +6949,9 @@ function openUserMenu(){
     +'</div>');
 }
 
-// ═══ GROUPS ═══
 function createGroupDialog(){closeModal();openModal('➕ קבוצה חדשה','<div style="padding:8px 0"><label style="font-size:11px;color:var(--txt2)">שם הקבוצה</label><input id="new-group-name" type="text" placeholder="קבוצת כושר קרבי ירושלים" style="margin-bottom:14px"/><button class="btn bp" style="width:100%" onclick="doCreateGroup()">➕ צור קבוצה</button></div>');}
 
-async function doCreateGroup(){
-  var name=(document.getElementById('new-group-name')?.value||'').trim();
-  if(!name){notify('הכנס שם','y');return;}
-  if(!window._createGroup){notify('Firebase לא מחובר','y');return;}
-  var g=await window._createGroup(name);
-  if(g){closeModal();showCoachWelcome(g.code,g.name);}
-  else notify('שגיאה','r');
-}
-
 function joinGroupDialog(){closeModal();openModal('🔗 הצטרף לקבוצה','<div style="padding:8px 0"><div style="font-size:12px;color:var(--txt2);margin-bottom:12px">הזן את הקוד שקיבלת מהמאמן</div><input id="join-code-inp" type="text" placeholder="CF-XXXXXX" style="font-family:monospace;font-size:20px;letter-spacing:3px;text-align:center;text-transform:uppercase;margin-bottom:14px"/><button class="btn bp" style="width:100%" onclick="doJoinGroup()">🔗 הצטרף</button></div>');}
-
-async function doJoinGroup(){
-  var code=(document.getElementById('join-code-inp')?.value||'').trim();
-  if(!code){notify('הכנס קוד','y');return;}
-  if(!window._joinGroup){notify('Firebase לא מחובר','y');return;}
-  var res=await window._joinGroup(code);
-  if(res.ok){closeModal();notify('✅ הצטרפת ל'+res.groupName+'!','p');}
-  else notify(res.msg||'קוד שגוי','r');
-}
-
-var _activeGroupId=null;
 
 function renderCoachGroupsUI(){
   var groups=window._coachGroups||[];
@@ -7060,54 +7029,6 @@ function selectMsgType(type){
     if(b){b.style.background=t===type?'rgba(124,58,237,.1)':'var(--card2)';b.style.border=t===type?'1px solid var(--purpleL)':'1px solid var(--b1)';}
   });
 }
-
-async function doSendMsg(uid,groupId){
-  var text=(document.getElementById('msg-txt')?.value||'').trim();
-  var type=document.getElementById('msg-type-hidden')?.value||'message';
-  if(!text){notify('כתוב הודעה','y');return;}
-  var ok=window._sendMsg?await window._sendMsg(uid,text,type,groupId||_activeGroupId):false;
-  if(!ok){
-    var notes=JSON.parse(localStorage.getItem('cf7_coach_notes')||'{}');
-    if(!notes[uid])notes[uid]=[];
-    notes[uid].push({text:text,type:type,ts:Date.now(),fromName:ld(K.PR,{}).name||'מאמן'});
-    localStorage.setItem('cf7_coach_notes',JSON.stringify(notes));
-  }
-  notify('✅ הודעה נשלחה!','p');closeModal();
-}
-
-async function msgGroupModal(){
-  var g=(window._coachGroups||[]).find(function(g){return g.id===_activeGroupId;});
-  var gName=g?g.name:'הקבוצה';
-  openModal('📢 הודעה ל'+gName,'<div style="padding:8px 0">'
-    +'<div style="font-size:11px;color:var(--txt2);margin-bottom:10px">ישלח לכל חניכי הקבוצה</div>'
-    +'<textarea id="grp-msg-txt" placeholder="הודעה לכל הקבוצה..." style="width:100%;height:90px;padding:10px;background:var(--card2);border:1px solid var(--b1);border-radius:10px;color:var(--txt);font-size:13px;resize:none;box-sizing:border-box;margin-bottom:12px"></textarea>'
-    +'<button class="btn bp" style="width:100%" onclick="doGroupMsg()">📢 שלח לכולם</button>'
-    +'</div>');
-}
-
-async function doGroupMsg(){
-  var text=(document.getElementById('grp-msg-txt')?.value||'').trim();
-  if(!text){notify('כתוב הודעה','y');return;}
-  if(window._sendGroupMsg&&_activeGroupId)await window._sendGroupMsg(_activeGroupId,text,'announcement');
-  else notify('📢 הודעה נשמרה','y');
-  closeModal();
-}
-
-// Override renderCoachGroup to use new system
-
-/* dup:renderCoachGroup */
-
-
-
-// ═══════════════════════════════════════════════════
-// COACH MULTI-GROUP SYSTEM — clean rebuild
-// ═══════════════════════════════════════════════════
-var _activeGid = null;
-
-// Called when coach logs in + when groups load
-
-/* dup:renderCoachGroupsUI */
-
 
 function switchCoachGroup_old_disabled(gid) {
   _activeGid = gid;
@@ -7258,26 +7179,6 @@ function setMT(type, btn) {
   btn.style.color = 'var(--purpleL)';
 }
 
-async function sendMsgToAth(uid) {
-  var text = (document.getElementById('mt-txt')?.value || '').trim();
-  var type = document.getElementById('mt-val')?.value || 'message';
-  if (!text) { notify('כתוב הודעה', 'y'); return; }
-
-  var sent = false;
-  if (window._sendMsg && window._fbUID) {
-    sent = await window._sendMsg(uid, text, type, _activeGid || '');
-  }
-  if (!sent) {
-    // Local fallback
-    var notes = JSON.parse(localStorage.getItem('cf7_coach_notes') || '{}');
-    if (!notes[uid]) notes[uid] = [];
-    notes[uid].push({ text: text, type: type, ts: Date.now() });
-    localStorage.setItem('cf7_coach_notes', JSON.stringify(notes));
-  }
-  notify('✅ הודעה נשלחה!', 'p');
-  closeModal();
-}
-
 function viewAthleteModal(uid, name) {
   var athletes = (window._coachAthletes && _activeGid && window._coachAthletes[_activeGid]) || getAthletes() || [];
   var a = athletes.find(function(x) { return (x.uid || '') === uid; }) || athletes.find(function(x) { return (x.nm||x.name||'') === name; }) || {};
@@ -7303,63 +7204,6 @@ function viewAthleteModal(uid, name) {
     + '</div>');
 }
 
-
-/* dup:msgGroupModal */
-
-
-
-/* dup:sendGroupAnnouncement */
-
-
-
-/* dup:quickAnn */
-
-
-async function sendQuickAnn() {
-  var text = (document.getElementById('ann-quick-input')?.value || '').trim();
-  if (!text) { notify('כתוב הודעה', 'y'); return; }
-  if (window._sendGroupMsg && _activeGid) {
-    await window._sendGroupMsg(_activeGid, text, 'message');
-  }
-  var ann = JSON.parse(localStorage.getItem('cf7_announcements') || '[]');
-  ann.unshift({ text: text, ts: Date.now(), groupId: _activeGid || 'all' });
-  localStorage.setItem('cf7_announcements', JSON.stringify(ann.slice(0,20)));
-  document.getElementById('ann-quick-input').value = '';
-  notify('📢 הודעה נשלחה!', 'p');
-}
-
-// Override renderCoachGroup to use new system
-
-/* dup:renderCoachGroup */
-
-
-
-// ═══════════════════════════════ COACH MODE ══════════════════════════════════
-// PAGES already declared above
-
-
-/* dup:openModal */
-
-
-/* dup:closeModal */
-
-
-
-/* dup:initCM */
-
-
-
-/* dup:toggleCM */
-
-
-/* dup:openCoachLoginModal */
-
-
-/* dup:submitCoachPass */
-
-
-/* dup:changeCoachPass */
-
 function doChangePass(){
   var old=(document.getElementById('cp-old')?.value||'').trim();
   var nw=(document.getElementById('cp-new')?.value||'').trim();
@@ -7383,22 +7227,7 @@ function coachShowTab(tab,btn){
   if(tab==='msg')renderMsgAthletesList();
 }
 
-
-/* dup:createGroupDialog */
-
-
-/* dup:doCreateGroup */
-
-
-
-/* dup:renderCoachGroupsUI */
-
-
 function switchCoachGroup(gid){_activeGid=gid;var db=document.getElementById('delete-group-btn');if(db)db.remove();renderCoachGroupsUI();}
-
-
-/* dup:copyGroupCode */
-
 
 function updateGroupStats(){
   var athletes=(window._coachAthletes&&_activeGid&&window._coachAthletes[_activeGid])||[];
@@ -7409,22 +7238,11 @@ function updateGroupStats(){
   el('cgs-count',count||0);el('cgs-avg',avg||'--');el('cgs-top',top||'--');
 }
 
-
-/* dup:renderGroupAthletesNew */
-
-
-
-/* dup:toggleAddAth */
-
-
-
-/* dup:addAthleteManual */
-
-
 function confirmDeleteGroup(gid){
   var g=(window._coachGroups||[]).find(function(x){return x.id===gid;});if(!g)return;
   openModal('🗑 מחק קבוצה','<div style="text-align:center;padding:10px 0"><div style="font-size:40px;margin-bottom:10px">🗑</div><div style="font-weight:900;font-size:14px;margin-bottom:8px">למחוק את "'+g.name+'"?</div><div style="font-size:11px;color:var(--txt2);margin-bottom:16px">כל החניכים בקבוצה יימחקו</div><button class="btn br" style="width:100%;margin-bottom:8px" onclick="deleteGroup(\''+gid+'\')">🗑 כן, מחק</button><button class="btn bs" onclick="closeModal()">ביטול</button></div>');
 }
+
 function deleteGroup(gid){
   window._coachGroups=(window._coachGroups||[]).filter(function(g){return g.id!==gid;});
   if(window._coachAthletes)delete window._coachAthletes[gid];
@@ -7434,23 +7252,15 @@ function deleteGroup(gid){
   var db=document.getElementById('delete-group-btn');if(db)db.remove();
   closeModal();renderCoachGroupsUI();notify('🗑 קבוצה נמחקה','r');
 }
+
 function confirmDeleteAthlete(uid,name){
   openModal('🗑 מחק חניך','<div style="text-align:center;padding:10px 0"><div style="font-size:40px;margin-bottom:10px">👤</div><div style="font-weight:900;font-size:14px;margin-bottom:8px">למחוק את "'+name+'"?</div><button class="btn br" style="width:100%;margin-bottom:8px" onclick="deleteAthlete(\''+uid+'\')">🗑 כן, מחק</button><button class="btn bs" onclick="closeModal()">ביטול</button></div>');
 }
-
-/* dup:deleteAthlete */
-
-
-
-/* dup:viewAthleteModal */
 
 function openMsgToAthleteByUid(btn){
   var uid=btn.dataset.uid||'';var name=btn.dataset.name||'חניך';
   closeModal();setTimeout(function(){openMsgToAthlete(uid,name);},150);
 }
-
-
-/* dup:openMsgToAthlete */
 
 function sendMsgToAthlete(uid,name){
   var text=(document.getElementById('ath-msg-txt')?.value||'').trim();
@@ -7460,13 +7270,6 @@ function sendMsgToAthlete(uid,name){
   localStorage.setItem('cf7_msgs_'+uid,JSON.stringify(msgs.slice(0,20)));
   closeModal();notify('✅ הודעה נשמרה ל'+name,'p');
 }
-
-
-/* dup:quickAnn */
-
-
-/* dup:sendQuickAnn */
-
 
 function renderMsgAthletesList(){
   var el=document.getElementById('coach-msg-athletes-list');if(!el)return;
@@ -7481,18 +7284,7 @@ function renderMsgAthletesList(){
       +'</div>';
   }).join('');
 }
-// ═══════════════════════════════ END COACH ═══════════════════════════════════
 
-
-
-// ════════════════════════════════════════════════════════════════
-// COMBAT FIT IL — Agent Improvements v11
-// Added: Ruck, Periodization, Scalable, Operator, Sleep, Injury,
-//        Onboarding, Countdown, QR, PDF, Haptic, Swipe, CSV,
-//        Coach Stats, Password Security, Auto-Memory AI
-// ════════════════════════════════════════════════════════════════
-
-// ── HAPTIC ───────────────────────────────────────────────────────
 function haptic(t){
   if(!navigator.vibrate)return;
   if(t==='success')navigator.vibrate([30,10,30]);
@@ -7500,49 +7292,6 @@ function haptic(t){
   else navigator.vibrate(15);
 }
 
-// ── SWIPE NAVIGATION ─────────────────────────────────────────────
-(function(){
-  var PG=['dash','test','week','lb','train','ai'];
-  var sx=0,sy=0;
-  document.addEventListener('touchstart',function(e){
-    sx=e.touches[0].clientX;sy=e.touches[0].clientY;
-  },{passive:true});
-  document.addEventListener('touchend',function(e){
-    var dx=e.changedTouches[0].clientX-sx;
-    var dy=e.changedTouches[0].clientY-sy;
-    if(Math.abs(dx)<50||Math.abs(dy)>Math.abs(dx)*0.6)return;
-    // Don't swipe if any overlay/modal is open
-    var anyOverlay=document.querySelector('.modal-bk[style*="flex"],.modal-bk[style*="block"]');
-    var obOpen=document.getElementById('onboard-overlay');
-    if(anyOverlay||(obOpen&&obOpen.style.display==='block'))return;
-    // Don't swipe if user is scrolling a scrollable element
-    var tgt=e.target;var scrolling=false;
-    while(tgt&&tgt!==document.body){if(tgt.scrollHeight>tgt.clientHeight+5&&tgt.scrollTop>0){scrolling=true;break;}tgt=tgt.parentElement;}
-    if(scrolling)return;
-    var cur=PG.indexOf(window._activePg||'dash');if(cur===-1)return;
-    var nxt=dx<0?Math.min(cur+1,PG.length-1):Math.max(cur-1,0);
-    if(nxt!==cur){showPg(PG[nxt]);haptic();}
-  },{passive:true});
-})();
-
-// ── BEFOREUNLOAD — save everything on tab close ───────────────────
-window.addEventListener('beforeunload',function(){
-  try{
-    var pr=ld(K.PR,{});var ch=false;
-    [['pnm','name'],['pag','age'],['phg','height'],['pwg','weight'],['pun','unit'],['pdr','draft']].forEach(function(p){
-      var el=document.getElementById(p[0]);if(el&&el.value){pr[p[1]]=el.value;ch=true;}
-    });
-    if(ch)sv(K.PR,pr);
-    var a=document.getElementById('ai-age');var w=document.getElementById('weight');
-    if(a&&a.value)localStorage.setItem('cf_age',a.value);
-    if(w&&w.value)localStorage.setItem('cf_wgt',w.value);
-    if(typeof muscleState!=='undefined'&&Object.keys(muscleState).length)sv('cf7_muscles',muscleState);
-  var slH=document.getElementById('sl-hours');if(slH&&slH.value)localStorage.setItem('cf7_sleep_draft',slH.value);
-  }catch(e){}
-});
-
-// ── TIMER FUNCTIONS (missing from original) ──────────────────────
-var _tInt=null,_tRun=false,_tCur=0;
 function startTmr(){
   if(_tRun)return;
   var mode=document.getElementById('tmode')&&document.getElementById('tmode').value||'cd';
@@ -7558,6 +7307,7 @@ function startTmr(){
     if(dsp){dsp.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');dsp.className='td'+((_tCur<=10&&mode!=='sw')?' red':'');}
   },1000);
 }
+
 function onTM(){
   var mode=document.getElementById('tmode')&&document.getElementById('tmode').value||'cd';
   var ivR=document.getElementById('tiv-r');var tabR=document.getElementById('ttab-r');
@@ -7567,76 +7317,20 @@ function onTM(){
   var dsp=document.getElementById('tdsp');if(dsp)dsp.textContent='00:00';
   var ph=document.getElementById('tph');if(ph)ph.textContent='לחץ התחל';
 }
+
 function _fbSignOut(){
   if(window._fbAuth&&typeof window._fbAuth.signOut==='function')
     window._fbAuth.signOut().then(function(){location.reload();});
   else location.reload();
 }
+
 function _syncUp(){
   var dot=document.getElementById('sync-dot');
   if(dot){dot.style.background='var(--pri)';setTimeout(function(){dot.style.background='rgba(0,255,136,.3)';},2000);}
 }
 
-// ── AUTO-MEMORY askAI UPGRADE ─────────────────────────────────────
-// Override the existing askAI with one that has Auto-Memory + Typewriter
-var _origAskAI=typeof askAI==='function'?askAI:null;
-askAI=async function(){
-  var q=document.getElementById('ai-q')&&document.getElementById('ai-q').value&&document.getElementById('ai-q').value.trim();
-  if(!q)return;
-  document.getElementById('ai-q').value='';
-  var box=document.getElementById('ai-log');
-  // Add user message
-  var ud=document.createElement('div');ud.className='am u';ud.textContent=q;box.appendChild(ud);
-  var typing=document.createElement('div');typing.className='am a';
-  typing.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
-  box.appendChild(typing);box.scrollTop=99999;
-
-  // Build Auto-Memory context
-  var pr=ld(K.PR,{});
-  var scores=ld(K.P,[]).slice(0,5);
-  var age=localStorage.getItem('cf_age')||pr.age||'18';
-  var wgt=localStorage.getItem('cf_wgt')||pr.weight||'70';
-  var last=scores[0]||{};
-  var prev=scores[1]||{};
-  var trend=last.bar&&prev.bar?(parseFloat(last.bar)>parseFloat(prev.bar)?'עולה':'יורד'):'לא ידוע';
-  var daysWeek=Object.values(ld('cf7wd',{})||{}).filter(function(d){return d==='done';}).length;
-  var mem='== זיכרון חניך ==\nשם: '+(pr.name||'לוחם')+' | גיל: '+age+' | משקל: '+wgt+'ק"ג\n'+
-    'יחידת יעד: '+(pr.unit||'לא הוגדר')+' | גיוס: '+(pr.draft||'--')+'\n'+
-    'ציון אחרון: '+(last.bar||'--')+' | מגמה: '+trend+'\n'+
-    'אימונים השבוע: '+daysWeek+'/7\n'+
-    'ציונים: '+scores.map(function(s){return s.bar||'--';}).join(' → ')+'\n== סוף זיכרון ==';
-  var sys='אתה מאמן כושר קרבי ישראלי מקצועי. מדבר עברית, קצר וישיר.\n'+mem;
-
-  var hist=ld('cf7_ai_hist',[]);
-  hist.unshift({q:q,ts:Date.now(),date:new Date().toLocaleDateString('he-IL')});
-  sv('cf7_ai_hist',hist.slice(0,50));
-
-  try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:[{role:'user',content:q}]})
-    });
-    var data=await resp.json();
-    var txt=(data.content&&data.content[0]&&data.content[0].text||'שגיאה').replace(/\n/g,'<br/>');
-    typing.remove();
-    var msgEl=document.createElement('div');msgEl.className='am a';box.appendChild(msgEl);
-    var tw=0;
-    (function typeIt(){
-      if(tw<txt.length){msgEl.innerHTML=txt.slice(0,tw+4)+'<span style="opacity:.4">|</span>';tw+=4;setTimeout(typeIt,10);}
-      else{msgEl.innerHTML=txt+'<div style="font-size:8px;color:var(--txt3);margin-top:3px">⚔ AI Coach — זוכר נתוניך</div>';}
-    })();
-    hist[0].a=txt.replace(/<[^>]*>/g,'').slice(0,300);sv('cf7_ai_hist',hist.slice(0,50));
-    haptic('success');
-  }catch(e){
-    typing.remove();
-    if(_origAskAI){document.getElementById('ai-q').value=q;_origAskAI();}
-    else{var err=document.createElement('div');err.className='am a';err.textContent='❌ שגיאת חיבור';box.appendChild(err);}
-  }
-  box.scrollTop=99999;
-};
 function askAI_smart(q){var i=document.getElementById('ai-q');if(i)i.value=q;askAI();}
 
-// ── RUCK TRAINING ─────────────────────────────────────────────────
 function calcRuck(){
   var wt=parseFloat(document.getElementById('ruck-wt')&&document.getElementById('ruck-wt').value||10);
   var bw=parseFloat(document.getElementById('ruck-bw')&&document.getElementById('ruck-bw').value||70);
@@ -7653,11 +7347,13 @@ function calcRuck(){
   if(td)td.textContent=timeStr;if(cd)cd.textContent=cal;if(ld2)ld2.textContent=pct+'%';
   if(ll)ll.textContent=level+' ('+wt+'ק"ג = '+pct+'% ממשקל גוף)';
 }
+
 function setRuckPreset(dist,wt,pace){
   var d=document.getElementById('ruck-dist');var w=document.getElementById('ruck-wt');var p=document.getElementById('ruck-pace');
   if(d)d.value=dist;if(w)w.value=wt;if(p)p.value=pace;
   calcRuck();notify('🎒 פרסט נטען!','p');
 }
+
 function startRuckWorkout(){
   var wt=parseFloat(document.getElementById('ruck-wt')&&document.getElementById('ruck-wt').value||10);
   var dist=parseFloat(document.getElementById('ruck-dist')&&document.getElementById('ruck-dist').value||10);
@@ -7674,7 +7370,6 @@ function startRuckWorkout(){
   notify('🎒 תוכנית Ruck נוצרה!','p');haptic('success');
 }
 
-// ── PERIODIZATION ─────────────────────────────────────────────────
 function buildPeriodPlan(){
   var unit=document.getElementById('per-unit')&&document.getElementById('per-unit').value||'golani';
   var weeks=parseInt(document.getElementById('per-weeks')&&document.getElementById('per-weeks').value||16);
@@ -7700,14 +7395,6 @@ function buildPeriodPlan(){
   notify('📅 תוכנית מחזורית נוצרה!','c');haptic('success');
 }
 
-// ── SCALABLE EXERCISES ────────────────────────────────────────────
-var SCALE_EX=[
-  {cat:'upper',name:'מתח',icon:'💪',lv1:{n:'מתח סיוע',d:'עזרת הרגליים 3×8'},lv2:{n:'מתח רגיל',d:'4×מקסימום'},lv3:{n:'מתח+משקל',d:'10ק"ג 5×8'}},
-  {cat:'upper',name:'שכיבות',icon:'🏋',lv1:{n:'על ברכיים',d:'3×15'},lv2:{n:'שכיבות רגילות',d:'4×מקסימום'},lv3:{n:'Archers',d:'5×10'}},
-  {cat:'core',name:'פלאנק',icon:'⏱',lv1:{n:'על ברכיים',d:'3×45שנ'},lv2:{n:'רגיל',d:'3×90שנ'},lv3:{n:'RKC פלאנק',d:'3×60שנ'}},
-  {cat:'lower',name:'סקוואט',icon:'🦵',lv1:{n:'Air Squat',d:'3×20'},lv2:{n:'Jump Squat',d:'4×15'},lv3:{n:'Pistol',d:'3×8 כל רגל'}},
-  {cat:'cardio',name:'ספרינטים',icon:'⚡',lv1:{n:'100מ×6',d:'מנוחה 90שנ'},lv2:{n:'200מ×6',d:'מנוחה 90שנ'},lv3:{n:'400מ×6',d:'מנוחה 90שנ'}},
-];
 function renderScaleGrid(filter){
   var grid=document.getElementById('scale-grid');if(!grid)return;
   var filtered=filter&&filter!=='all'?SCALE_EX.filter(function(e){return e.cat===filter;}):SCALE_EX;
@@ -7722,20 +7409,12 @@ function renderScaleGrid(filter){
       }).join('')+'</div></div>';
   }).join('');
 }
+
 function filterScale(cat,btn){
   document.querySelectorAll('#tr-scale .tab').forEach(function(t){t.classList.remove('on');});
   if(btn)btn.classList.add('on');renderScaleGrid(cat);
 }
 
-// ── OPERATOR MODE ─────────────────────────────────────────────────
-var OP_FIELD=[
-  {name:'מקסימום ללא ציוד',sets:[{e:'שכיבות',s:'4×מקסימום'},{e:'קפיצות כפיפות',s:'3×15'},{e:'לאנגים',s:'4×20מ'},{e:'פלאנק',s:'3×90שנ'},{e:'ספרינט 100מ',s:'×6'}]},
-  {name:'Tabata שטח',sets:[{e:'שכיבות קפיצה',s:'8×20שנ/10שנ'},{e:'Mountain Climbers',s:'8×20שנ/10שנ'},{e:'ברפיז',s:'8×20שנ/10שנ'}]}
-];
-var OP_BASE=[
-  {name:'מוטות + ריצה',sets:[{e:'מתח',s:'5×מקסימום'},{e:'שכיבות',s:'3×מקסימום'},{e:'ריצה 3ק"מ',s:'בסיום'}]},
-  {name:'Circuit בסיס',sets:[{e:'מתח×10',s:'4 סבבים'},{e:'שכיבות×20',s:'4 סבבים'},{e:'ריצה 400מ',s:'4 סבבים'}]}
-];
 function genOperatorWorkout(type){
   var pool=type==='field'?OP_FIELD:OP_BASE;
   var w=pool[Math.floor(Math.random()*pool.length)];
@@ -7746,7 +7425,6 @@ function genOperatorWorkout(type){
   notify('⚡ אימון Operator!','p');haptic('success');
 }
 
-// ── SLEEP TRACKER ─────────────────────────────────────────────────
 function calcSleep(){
   var h=parseFloat(document.getElementById('sl-hours')&&document.getElementById('sl-hours').value||7);
   var q=parseInt(document.getElementById('sl-qual')&&document.getElementById('sl-qual').value||7);
@@ -7759,6 +7437,7 @@ function calcSleep(){
     '<div style="font-weight:700;color:'+col+';font-size:12px">'+label+'</div>'+
     '<div style="font-size:11px;color:var(--txt2);margin-top:6px">'+(h<7?'💡 נסה לישון יותר מחר':'✅ שינה טובה')+'</div></div>';
 }
+
 function saveSleep(){
   var h=parseFloat(document.getElementById('sl-hours')&&document.getElementById('sl-hours').value||7);
   var q=parseInt(document.getElementById('sl-qual')&&document.getElementById('sl-qual').value||7);
@@ -7767,6 +7446,7 @@ function saveSleep(){
   sv('cf7_sleep',hist.slice(0,30));renderSleepHistory();
   notify('😴 שינה נשמרה!','p');haptic('success');
 }
+
 function renderSleepHistory(){
   var hist=ld('cf7_sleep',[]);
   var el=document.getElementById('sl-history');if(!el)return;
@@ -7781,13 +7461,6 @@ function renderSleepHistory(){
     }).join('');
 }
 
-// ── INJURY PREVENTION ─────────────────────────────────────────────
-var INJ={
-  shin:{name:'שין-ספלינט',treat:['קרח 15 דק ×3/יום','Calf raises 3×20','הפסק ריצה 3-5 ימים'],prev:['הגדל 10% לשבוע בלבד','נעליים מתאימות']},
-  shoulder:{name:'כתף — Impingement',treat:['הפסק מתח 7 ימים','Band rotation 3×15','מתיחת חזה'],prev:['Face pulls','אל תתלה מת על מוט']},
-  knee:{name:'Runners Knee',treat:['הפחת ריצה 50%','VMO squats 3×15','קרח אחרי ריצה'],prev:['חזק VMO','נעלי בולם זעזועים']},
-  back:{name:'גב תחתון',treat:['Bird-dog 3×10','Hip flexor stretch','הימנע ישיבה ממושכת'],prev:['Dead bug יומי','hip hinge נכון']}
-};
 function showInjury(type){
   var inj=INJ[type];if(!inj)return;
   var el=document.getElementById('injury-detail');if(!el)return;
@@ -7799,6 +7472,7 @@ function showInjury(type){
     '<div style="font-size:10px;font-weight:700;color:var(--pri);margin:8px 0 4px">🛡 מניעה:</div>'+
     inj.prev.map(function(p){return '<div style="font-size:11px;padding:2px 0">• '+p+'</div>';}).join('')+'</div>';
 }
+
 function renderPrehab(){
   var ROUTINES=[[{n:'Hip 90/90',d:'2 דק כל צד'},{n:'Calf raises',d:'3×15'},{n:'Dead bug',d:'3×8'}],
     [{n:'Clamshells',d:'3×15 כל צד'},{n:'World greatest stretch',d:'5× כל צד'},{n:'Face pulls',d:'3×15'}]];
@@ -7810,8 +7484,6 @@ function renderPrehab(){
   }).join('');
 }
 
-// ── ONBOARDING ────────────────────────────────────────────────────
-var _obUnit=null;
 function initOnboarding(){
   // Only show if explicitly triggered, never auto-block
   var pr=ld(K.PR,{});
@@ -7820,12 +7492,14 @@ function initOnboarding(){
   var banner=document.getElementById('ob-nudge-banner');
   if(banner)banner.style.display='flex';
 }
+
 function showOnboardingOverlay(){
   // Called only by user action
   var overlay=document.getElementById('onboard-overlay');
   if(overlay)overlay.style.display='block';
   renderObUnits();
 }
+
 function renderObUnits(){
   var grid=document.getElementById('ob-unit-grid');if(!grid||typeof UNITS==='undefined')return;
   var topU=['sayeret','shayetet','matkal','golani','nahal','givati','kfir','lotar','669','oketz'];
@@ -7843,6 +7517,7 @@ function renderObUnits(){
     selectObUnit(el.dataset.uk);
   });
 }
+
 function selectObUnit(k){
   _obUnit=k;
   document.querySelectorAll('#ob-unit-grid > div').forEach(function(d){
@@ -7851,6 +7526,7 @@ function selectObUnit(k){
   var el=document.getElementById('ob-u-'+k);
   if(el){el.style.borderColor='var(--pri)';el.style.background='rgba(0,255,136,.08)';}
 }
+
 function obNext(step){
   if(step===1){
     var nm=document.getElementById('ob-name')&&document.getElementById('ob-name').value&&document.getElementById('ob-name').value.trim();
@@ -7867,6 +7543,7 @@ function obNext(step){
     document.querySelectorAll('.ob-step').forEach(function(s){s.classList.toggle('ob-active',s.dataset.s==='3');});
   }
 }
+
 function obFinish(){
   var run=document.getElementById('ob-run');var pull=document.getElementById('ob-pull');var push=document.getElementById('ob-push');
   if(run&&run.value&&document.getElementById('bt'))document.getElementById('bt').value=run.value;
@@ -7875,6 +7552,7 @@ function obFinish(){
   obSkip();
   if(run&&run.value)setTimeout(function(){showPg('test');if(typeof calcBaror==='function')calcBaror();},500);
 }
+
 function obSkip(){
   localStorage.setItem('cf7_ob_done','1');
   var overlay=document.getElementById('onboard-overlay');if(overlay)overlay.style.display='none';
@@ -7882,7 +7560,6 @@ function obSkip(){
   if(typeof refreshDash==='function')refreshDash();
 }
 
-// ── DRAFT COUNTDOWN ───────────────────────────────────────────────
 function initDraftCountdown(){
   var pr=ld(K.PR,{});var draft=pr.draft;
   var card=document.getElementById('draft-countdown-card');if(!card)return;
@@ -7901,12 +7578,6 @@ function initDraftCountdown(){
   tick();setInterval(tick,60000);
 }
 
-// ── PROGRESS CHART ────────────────────────────────────────────────
-
-/* dup:renderProgressChart */
-
-
-// ── QR GROUP JOIN ────────────────────────────────────────────────
 function showGroupQR(){
   var code=document.getElementById('active-group-code')&&document.getElementById('active-group-code').textContent&&document.getElementById('active-group-code').textContent.trim();
   if(!code){notify('אין קוד קבוצה','r');return;}
@@ -7916,7 +7587,6 @@ function showGroupQR(){
     '<div style="margin-top:8px;font-family:monospace;font-size:18px;font-weight:900;color:var(--pri);letter-spacing:4px">'+code+'</div></div>');
 }
 
-// ── PDF EXPORT ────────────────────────────────────────────────────
 function exportPDF(){
   var pr=ld(K.PR,{});var scores=ld(K.P,[]);var last=scores[0]||{};
   if(typeof window.jspdf==='undefined'){notify('PDF נטען... נסה שוב','y');return;}
@@ -7941,9 +7611,9 @@ function exportPDF(){
   doc.save('CombatFit_'+(pr.name||'report')+'_'+new Date().toISOString().slice(0,10)+'.pdf');
   notify('📄 PDF יוצא!','p');haptic('success');
 }
+
 function getUnitName(k){var u=typeof UNITS!=='undefined'&&UNITS[k];return u?u.n:k||'כללי';}
 
-// ── SHARE SCORE ────────────────────────────────────────────────────
 function shareScore(){
   var scores=ld(K.P,[]);var pr=ld(K.PR,{});var last=scores[0]||{};
   if(!last.bar){notify('בצע מבחן קודם!','y');return;}
@@ -7953,9 +7623,9 @@ function shareScore(){
       .then(function(){haptic('success');}).catch(function(){_copyText(text);});
   } else {_copyText(text);notify('הציון הועתק ללוח 📋','p');}
 }
+
 function _copyText(txt){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
 
-// ── COACH STATS ────────────────────────────────────────────────────
 function renderCoachStats(){
   var groups=window._coachGroups||[];
   var el=document.getElementById('coach-kpi-grid');if(!el)return;
@@ -7973,7 +7643,6 @@ function renderCoachStats(){
     '<div class="kpi-box"><div class="kpi-n" style="color:var(--yellow)">'+top+'</div><div class="kpi-l">מקסימום</div></div>';
 }
 
-// ── CSV EXPORT ────────────────────────────────────────────────────
 function exportGroupCSV(){
   var groups=window._coachGroups||[];if(!groups.length){notify('אין קבוצות','r');return;}
   var rows=[['שם','קבוצה','ציון','יחידה','תאריך']];
@@ -7989,7 +7658,6 @@ function exportGroupCSV(){
   notify('📊 CSV יוצא!','p');haptic('success');
 }
 
-// ── COACH PASSWORD SECURITY ────────────────────────────────────────
 function checkCoachPassword(){
   if((localStorage.getItem('cf7_coach_pass')||'1234')==='1234'){
     setTimeout(function(){
@@ -8001,6 +7669,7 @@ function checkCoachPassword(){
     },1500);
   }
 }
+
 function saveNewCoachPass(){
   var p1=document.getElementById('new-pass-1')&&document.getElementById('new-pass-1').value;
   var p2=document.getElementById('new-pass-2')&&document.getElementById('new-pass-2').value;
@@ -8008,113 +7677,6 @@ function saveNewCoachPass(){
   if(p1!==p2){notify('הסיסמאות לא תואמות','r');return;}
   localStorage.setItem('cf7_coach_pass',p1);closeModal();notify('✅ סיסמה עודכנה!','p');
 }
-
-// ── HOOK NEW FEATURES INTO EXISTING INIT ──────────────────────────
-document.addEventListener('DOMContentLoaded',function(){
-  // Initialize nav state on load
-  var _navA=document.getElementById('nav-athlete');
-  var _navC=document.getElementById('nav-coach');
-  if(_navA)_navA.style.display='grid';
-  if(_navC)_navC.style.display='none';
-  // Ensure dash page is active
-  if(typeof showPg==='function')showPg('dash');
-  
-  // Patch initCM to add stats + password check
-  if(typeof initCM==='function'){
-    var _orig=initCM;
-    initCM=function(){
-      _orig.apply(this,arguments);
-      setTimeout(function(){renderCoachStats();checkCoachPassword();},300);
-    };
-  }
-  // Patch refreshDash to call new dash features
-  if(typeof refreshDash==='function'){
-    var _origRD=refreshDash;
-    refreshDash=function(){
-      try{_origRD.apply(this,arguments);}catch(e){}
-      try{renderProgressChart();}catch(e){}
-      try{initDraftCountdown();}catch(e){}
-    };
-  }
-  // Start onboarding for new users
-  // onboarding shown only via button, not auto-popup (was blocking nav)
-  // sv() fires _syncUp
-  if(typeof sv==='function'){
-    var _origSv=sv;
-    sv=function(k,v){_origSv(k,v);_syncUp();};
-  }
-  // Haptic on score saves
-  if(typeof notify==='function'){
-    var _origNotify=notify;
-    notify=function(msg,type){
-      if(msg&&(typeof msg==='string')&&(msg.includes('ציון')||msg.includes('נשמר')))haptic('success');
-      return _origNotify.apply(this,arguments);
-    };
-  }
-  // Auto-save draft every 30s
-  setInterval(function(){
-    try{
-      var draft={ts:Date.now()};
-      ['bt','bpu','bpl','bsi'].forEach(function(id){var el=document.getElementById(id);if(el&&el.value)draft[id]=el.value;});
-      if(Object.keys(draft).length>1)localStorage.setItem('cf7_workout_draft',JSON.stringify(draft));
-    }catch(e){}
-  },30000);
-  // Restore workout draft
-  try{
-    var draft=JSON.parse(localStorage.getItem('cf7_workout_draft')||'{}');
-    if(draft.ts&&(Date.now()-draft.ts)<3600000){
-      Object.keys(draft).forEach(function(k){if(k==='ts')return;var el=document.getElementById(k);if(el)el.value=draft[k];});
-    }
-  }catch(e){}
-});
-
-// ── trt() — add new training sections ─────────────────────────────
-if(typeof trt==='function'){
-  var _origTrt=trt;
-  trt=function(id,btn){
-    _origTrt.apply(this,arguments);
-    if(id==='tr-ruck')calcRuck();
-    if(id==='tr-scale')renderScaleGrid('all');
-    if(id==='tr-sleep'){calcSleep();renderSleepHistory();}
-    if(id==='tr-injury')renderPrehab();
-  };
-}
-
-// ════════════════════════════════════════════════════════════════
-// END v11
-// ════════════════════════════════════════════════════════════════
-
-
-// ════════════════════════════════════════════════════════════
-// AGENT IMPROVEMENTS v12 — Achievements, PR Board, Streak, Quotes
-// ════════════════════════════════════════════════════════════
-
-// ── FIX: sv() fires Firebase sync ────────────────────────────────
-// (patched via override to avoid touching original)
-
-// ── ACHIEVEMENT BADGES ───────────────────────────────────────────
-var ACHIEVEMENTS=[
-  {id:'first_score',icon:'🎖',name:'ציון ראשון',desc:'בצעת מבחן כושר ראשון',
-   check:function(){return ld(K.P,[]).length>=1;}},
-  {id:'score_70',icon:'💪',name:'לוחם',desc:'הגעת לציון 70+',
-   check:function(){return ld(K.P,[]).some(function(x){return parseFloat(x.bar||0)>=70;});}},
-  {id:'score_80',icon:'⭐',name:'קרבי',desc:'הגעת לציון 80+',
-   check:function(){return ld(K.P,[]).some(function(x){return parseFloat(x.bar||0)>=80;});}},
-  {id:'score_90',icon:'🔥',name:'עילית',desc:'הגעת לציון 90+',
-   check:function(){return ld(K.P,[]).some(function(x){return parseFloat(x.bar||0)>=90;});}},
-  {id:'week_3',icon:'📅',name:'3 ימי אימון',desc:'אימנת 3 ימים השבוע',
-   check:function(){return Object.values(ld('cf7wd',{})||{}).filter(function(d){return d==='done';}).length>=3;}},
-  {id:'week_5',icon:'🏃',name:'5 ימי אימון',desc:'אימנת 5 ימים השבוע',
-   check:function(){return Object.values(ld('cf7wd',{})||{}).filter(function(d){return d==='done';}).length>=5;}},
-  {id:'sleep_7',icon:'😴',name:'שינה טובה',desc:'רשמת 7+ שעות שינה',
-   check:function(){return ld('cf7_sleep',[]).some(function(s){return s.hours>=7;});}},
-  {id:'profile_full',icon:'👤',name:'פרופיל מלא',desc:'מילאת את כל הפרטים',
-   check:function(){var p=ld(K.PR,{});return !!(p.name&&p.age&&p.unit&&p.draft);}},
-  {id:'ai_used',icon:'🤖',name:'AI Trainee',desc:'שאלת את מאמן ה-AI',
-   check:function(){return ld('cf7_ai_hist',[]).length>=1;}},
-  {id:'ruck_done',icon:'🎒',name:'Ruck Warrior',desc:'השלמת Ruck Training',
-   check:function(){return !!localStorage.getItem('cf7_ruck_done');}},
-];
 
 function checkAchievements(silent){
   var earned=JSON.parse(localStorage.getItem('cf7_badges')||'[]');
@@ -8151,7 +7713,6 @@ function renderBadges(){
   }).join('');
 }
 
-// ── PERSONAL RECORDS BOARD ─────────────────────────────────────────
 function updateExercisePR(exercise, value, unit){
   var prs=JSON.parse(localStorage.getItem('cf7_prs')||'{}');
   var current=prs[exercise]?prs[exercise].val:null;
@@ -8182,7 +7743,6 @@ function renderPRBoard(){
   }).join('');
 }
 
-// ── WORKOUT STREAK ──────────────────────────────────────────────────
 function updateStreak(){
   var today=new Date().toDateString();
   var last=localStorage.getItem('cf7_streak_last');
@@ -8195,6 +7755,7 @@ function updateStreak(){
   if(streak>1)notify('🔥 '+streak+' ימים רצוף!','p');
   return streak;
 }
+
 function renderStreak(){
   var streak=parseInt(localStorage.getItem('cf7_streak_count')||0);
   var el=document.getElementById('streak-badge');if(!el)return;
@@ -8202,18 +7763,8 @@ function renderStreak(){
   el.textContent='🔥 '+streak;
 }
 
-// ── DAILY MILITARY QUOTE ────────────────────────────────────────────
-var MIL_QUOTES=[
-  {q:'אין מחסום שלא ניתן לעבור',a:'צנחנים'},
-  {q:'אחרי אני',a:'קצינים ישראלים'},
-  {q:'הכאב זמני, הגאווה לנצח',a:'Unit 669'},
-  {q:'מה שנראה כבלתי אפשרי הופך אפשרי עם אמון עצמי',a:'סיירת מטכ"ל'},
-  {q:'הגוף מסוגל לכל, השאלה היא המוח',a:'Navy SEALs'},
-  {q:'כשאתה חושב שסיימת, אתה בחצי הדרך',a:'Special Forces'},
-  {q:'לחץ יוצר יהלומים',a:'George Patton'},
-  {q:'אל תספור את הימים, גרום לימים להיספר',a:'Muhammad Ali'},
-];
 function getDailyQuote(){return MIL_QUOTES[Math.floor(Date.now()/864e5)%MIL_QUOTES.length];}
+
 function renderDailyQuote(){
   var el=document.getElementById('daily-quote');if(!el)return;
   var q=getDailyQuote();
@@ -8221,44 +7772,6 @@ function renderDailyQuote(){
     '<div style="font-size:10px;color:var(--txt3);margin-top:3px;text-align:left">— '+q.a+'</div>';
 }
 
-// ── HOOK ALL INTO EXISTING INIT ─────────────────────────────────────
-(function(){
-  try{
-    var _rd=typeof refreshDash==='function'?refreshDash:null;
-    if(_rd){refreshDash=function(){try{_rd.apply(this,arguments);}catch(e){}try{renderDailyQuote();renderStreak();}catch(e){}setTimeout(function(){try{renderBadges();renderPRBoard();}catch(e){}},200);};}
-    var _cb=typeof calcBaror==='function'?calcBaror:null;
-    if(_cb){calcBaror=function(){_cb.apply(this,arguments);setTimeout(function(){try{checkAchievements();updateStreak();}catch(e){}},600);};}
-    // sv() fires _syncUp (prevent double-patch)
-    if(typeof sv==='function'&&!sv._patched){
-      var _sv=sv;
-      sv=function(k,v){_sv(k,v);try{if(window._syncUp)window._syncUp();}catch(e){}};
-      sv._patched=true;
-    }
-    // Init on load - wrapped in try/catch
-    document.addEventListener('DOMContentLoaded',function(){
-      setTimeout(function(){
-        try{checkAchievements(true);}catch(e){}
-        try{renderStreak();}catch(e){}
-        try{renderDailyQuote();}catch(e){}
-        try{renderBadges();}catch(e){}
-        try{renderPRBoard();}catch(e){}
-      },1000);
-    });
-  }catch(e){console.warn('v12 init error:',e);}
-})();
-
-// ════════════════════════════════════════════════════════════
-// END v12 IMPROVEMENTS
-// ════════════════════════════════════════════════════════════
-
-
-// ════════════════════════════════════════════════════════════════
-// COMPETITIVE UPGRADE v13 — Based on Agent Competitive Scan
-// Sources: Strava 2025, Whoop 2025, Nike Run Club, Tsevet Lohamim
-// ════════════════════════════════════════════════════════════════
-
-// ── 1. WHOOP-STYLE DAILY RECOVERY SCORE ─────────────────────────
-// Better than competitors: combines sleep + muscle + training load
 function calcDailyRecovery(){
   try{
     var sleep=ld('cf7_sleep',[])[0]||{hours:7,qual:7};
@@ -8310,39 +7823,6 @@ function renderDailyRecovery(score,grade){
   }catch(e){}
 }
 
-// ── 2. GIBUSH WEEK SIMULATOR (Tsevet Lohamim-inspired) ──────────
-// UNIQUE: no competitor has this
-var GIBUSH_DAYS=[
-  {day:1,name:'יום א — קבלת פנים',workouts:[
-    {name:'ריצה 8ק"מ עם ציוד',time:'5:00',detail:'כיס 15ק"ג, קצב 7 דק/ק"מ'},
-    {name:'100 מתח',time:'10:00',detail:'ב-10 סטים'},
-    {name:'200 שכיבות',time:'14:00',detail:'ב-10 סטים'},
-    {name:'ריצת לילה 5ק"מ',time:'22:00',detail:'עם פנס'}
-  ]},
-  {day:2,name:'יום ב — ניווט',workouts:[
-    {name:'ניווט 20ק"מ',time:'5:00',detail:'עם מפה בלבד'},
-    {name:'50 דיפס + 50 מתח',time:'13:00',detail:'לאחר הניווט'},
-    {name:'ריצת 3ק"מ',time:'16:00',detail:'מתחת ל-13:30'}
-  ]},
-  {day:3,name:'יום ג — אתגר כוח',workouts:[
-    {name:'Max מתח',time:'6:00',detail:'כמה שיותר ברצף'},
-    {name:'Max שכיבות',time:'7:00',detail:'כמה שיותר ברצף'},
-    {name:'Ruck 15ק"מ',time:'8:00',detail:'20ק"ג, מתחת ל-2:30'},
-    {name:'100 בר-פיז',time:'15:00',detail:'כמה שמהר יותר'}
-  ]},
-  {day:4,name:'יום ד — לחץ נפשי',workouts:[
-    {name:'שיניים 8×400מ',time:'5:00',detail:'מנוחה 2 דקות'},
-    {name:'עמידה בקיר 5 דק',time:'10:00',detail:'ברגל אחת, 90 שניות'},
-    {name:'ריצת לילה 10ק"מ',time:'23:00',detail:'עם ציוד מלא'}
-  ]},
-  {day:5,name:'יום ה — ספרינטים',workouts:[
-    {name:'20×100מ ספרינטים',time:'6:00',detail:'מנוחה 30שנ'},
-    {name:'נשיאת אלונקה 2ק"מ',time:'10:00',detail:'עם 4 חברים'},
-    {name:'ריצת סיום 5ק"מ',time:'16:00',detail:'מתחת ל-22:00'}
-  ]},
-];
-
-var _gibushDay=0;
 function startGibushSim(){
   _gibushDay=0;
   localStorage.setItem('cf7_gibush_start',Date.now());
@@ -8390,10 +7870,9 @@ function nextGibushDay(){
     haptic('success');
   }
 }
+
 function markGibushWorkout(){notify('✅ אימון סומן!','p');haptic();}
 
-// ── 3. PRE-RUN BRIEFING (Nike Run Club-inspired) ─────────────────
-// UNIQUE: military-style briefing before every run
 function showPreRunBriefing(){
   try{
     var pr=ld(K.PR,{}); var scores=ld(K.P,[]);
@@ -8427,7 +7906,6 @@ function showPreRunBriefing(){
   }catch(e){}
 }
 
-// ── 4. VOICE COACH (Enhanced — Nike-style) ───────────────────────
 function startVoiceCoach(){
   try{
     if(!window.speechSynthesis){notify('הדפדפן לא תומך בקול','r');return;}
@@ -8473,7 +7951,6 @@ function stopVoiceCoach(){
   notify('🎙️ מאמן קולי עצר','p');
 }
 
-// ── 5. YEAR IN REVIEW (Strava-inspired) ──────────────────────────
 function showYearReview(){
   try{
     var year=new Date().getFullYear();
@@ -8517,7 +7994,6 @@ function showYearReview(){
   }catch(e){notify('שגיאה בסיכום שנתי','r');}
 }
 
-// ── 6. HRV ESTIMATION (manual) ──────────────────────────────────
 function calcHRV(){
   try{
     var restHR=parseInt(document.getElementById('hrv-rest')&&document.getElementById('hrv-rest').value||60);
@@ -8536,29 +8012,6 @@ function calcHRV(){
   }catch(e){}
 }
 
-// ── HOOK NEW FEATURES INTO DASH ────────────────────────────────
-document.addEventListener('DOMContentLoaded',function(){
-  try{
-    // Patch refreshDash to show recovery
-    var _origRD2=typeof refreshDash==='function'?refreshDash:null;
-    if(_origRD2&&!_origRD2._v13){
-      refreshDash=function(){
-        try{_origRD2.apply(this,arguments);}catch(e){}
-        try{calcDailyRecovery();}catch(e){}
-      };
-      refreshDash._v13=true;
-    }
-    // Init recovery on load
-    setTimeout(function(){try{calcDailyRecovery();}catch(e){}},1200);
-  }catch(e){}
-});
-
-// ════════════════════════════════════════════════════════════════
-// END v13 COMPETITIVE FEATURES
-// ════════════════════════════════════════════════════════════════
-
-// ═══ AGENT UX IMPROVEMENTS ═════════════════════════════
-// Auto-scroll tabs to active tab on mobile
 function scrollTabToActive(btn) {
   try {
     var container = btn && btn.closest ? btn.closest('.tabs') : null;
@@ -8571,17 +8024,6 @@ function scrollTabToActive(btn) {
   } catch(e) {}
 }
 
-// Patch trt to also scroll tabs
-var _origTrt = typeof trt === 'function' ? trt : null;
-if (_origTrt && !_origTrt._uxPatched) {
-  trt = function(id, btn) {
-    _origTrt(id, btn);
-    if (btn) setTimeout(function(){ scrollTabToActive(btn); }, 50);
-  };
-  trt._uxPatched = true;
-}
-
-// Add page title indicator (helps user know where they are)
 function updatePageTitle(page) {
   var titles = {
     dash: '🏠 בסיס', test: '🎯 מבחן', week: '📅 שבועי',
@@ -8591,51 +8033,102 @@ function updatePageTitle(page) {
   if (el) el.textContent = titles[page] || page;
 }
 
-// Patch showPg to update title
-var _origShowPg2 = typeof showPg === 'function' ? showPg : null;
-if (_origShowPg2 && !_origShowPg2._titlePatched) {
-  showPg = function(p) {
-    _origShowPg2(p);
-    updatePageTitle(p);
-  };
-  showPg._titlePatched = true;
+
+// ═══ SINGLE CLEAN INIT (replaces all recursive chains) ══════════
+// refreshDash additions — run AFTER original, no chaining
+var _rdExtras_installed = false;
+var _origRDClean = refreshDash;
+refreshDash = function(){
+  if(typeof _origRDClean==='function') _origRDClean();
+  try{ if(typeof calcStreak==='function') calcStreak(); }catch(e){}
+  try{ if(typeof renderProgressChart==='function') renderProgressChart(); }catch(e){}
+  try{ if(typeof initDraftCountdown==='function') initDraftCountdown(); }catch(e){}
+  try{ if(typeof renderDailyQuote==='function') renderDailyQuote(); }catch(e){}
+  try{ if(typeof renderStreak==='function') renderStreak(); }catch(e){}
+  try{ if(typeof calcDailyRecovery==='function') calcDailyRecovery(); }catch(e){}
+  try{ if(typeof renderBadges==='function') renderBadges(); }catch(e){}
+};
+
+// sv with Firebase sync — single wrapper
+var _origSvClean = sv;
+sv = function(k,v){
+  if(typeof _origSvClean==='function') _origSvClean(k,v);
+  try{ if(typeof _syncUp==='function') _syncUp(); }catch(e){}
+};
+
+// showPg additions — no chaining
+var _origSPClean = showPg;
+showPg = function(p){
+  window._activePg = p;
+  if(typeof _origSPClean==='function') _origSPClean(p);
+  try{ updatePageTitle(p); }catch(e){}
+  try{
+    var cont=document.querySelector('.content');
+    if(cont) cont.scrollTo({top:0,behavior:'smooth'});
+  }catch(e){}
+};
+
+// ═════════════════════════════════════════════════════════════════
+
+function showCoachLogin(){
+  var ov=document.getElementById('coach-login-overlay');
+  if(ov)ov.style.display='flex';
+  var inp=document.getElementById('coach-pass-inp');
+  if(inp){inp.value='';setTimeout(function(){try{inp.focus();}catch(e){}},50);}
 }
-
-// Scroll to top on page change
-var _origShowPg3 = typeof showPg === 'function' ? showPg : null;
-if (_origShowPg3) {
-  var _sp3orig = _origShowPg3;
-  showPg = function(p) {
-    _sp3orig(p);
-    try {
-      var cont = document.querySelector('.content');
-      if (cont) cont.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch(e) {}
-  };
+function hideCoachLogin(){
+  var ov=document.getElementById('coach-login-overlay');
+  if(ov)ov.style.display='none';
 }
-
-// Keyboard shortcut hints for desktop
-document.addEventListener('keydown', function(e) {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  var keys = { '1':'dash','2':'test','3':'week','4':'lb','5':'train','6':'ai' };
-  if (keys[e.key] && typeof showPg === 'function') showPg(keys[e.key]);
-  // Escape closes modals
-  if (e.key === 'Escape' && typeof closeModal === 'function') closeModal();
-});
-
-// Add swipe indicator hint (first time)
+// toggleCM uses overlay
 (function(){
-  if (!localStorage.getItem('cf7_swipe_hint')) {
-    setTimeout(function(){
-      var hint = document.createElement('div');
-      hint.style.cssText = 'position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:8px 16px;border-radius:20px;font-size:12px;z-index:9998;pointer-events:none;white-space:nowrap';
-      hint.textContent = '← החלק לעבור בין דפים →';
-      document.body.appendChild(hint);
-      setTimeout(function(){ hint.remove(); localStorage.setItem('cf7_swipe_hint','1'); }, 3000);
-    }, 4000);
+  var _orig=typeof toggleCM==='function'?toggleCM:null;
+  if(_orig&&!_orig._ol){
+    toggleCM=function(){
+      if(coachMode){
+        coachMode=false;
+        var nA=document.getElementById('nav-athlete');
+        var nC=document.getElementById('nav-coach');
+        if(nA)nA.style.display='grid';if(nC)nC.style.display='none';
+        showPg('dash');
+        if(typeof notify==='function')notify('מצב ספורטאי','p');
+      } else { showCoachLogin(); }
+    };
+    toggleCM._ol=true;
   }
 })();
-// ═══════════════════════════════════════════════════════
+// submitCoachPass uses overlay  
+(function(){
+  var _scp=typeof submitCoachPass==='function'?submitCoachPass:null;
+  if(!_scp||_scp._ol){return;}
+  submitCoachPass=function(){
+    var inp=document.getElementById('coach-pass-inp');
+    if(!inp)return;
+    var stored=localStorage.getItem(typeof COACH_PASS_KEY!=='undefined'?COACH_PASS_KEY:'cf7cp')||'cf7_coach_pass';
+    if(inp.value===stored){
+      hideCoachLogin();coachMode=true;
+      var nA=document.getElementById('nav-athlete');var nC=document.getElementById('nav-coach');
+      if(nA)nA.style.display='none';if(nC)nC.style.display='grid';
+      showPg('coach');
+      try{
+        if(!window._coachGroups||!window._coachGroups.length){
+          window._coachAthletes=window._coachAthletes||{};
+          window._coachAthletes['local']=getAthletes();
+          window._coachGroups=[{id:'local',name:'הקבוצה',code:'LOCAL'}];
+          _activeGid='local';
+        }
+        renderCoachGroupsUI();
+      }catch(e){}
+      try{renderCoachGroup();}catch(e){}
+      if(typeof notify==='function')notify('ברוך הבא מאמן!','p');
+      if(typeof haptic==='function')haptic('success');
+    } else {
+      inp.value='';
+      if(typeof notify==='function')notify('סיסמה שגויה','r');
+    }
+  };
+  submitCoachPass._ol=true;
+})();
 </script>
 
 <!-- Firebase SDK — Multi-group combat fitness -->
@@ -8813,5 +8306,19 @@ window._fbSignOut=()=>signOut(auth);
 
 </script>
 
+
+<div id="coach-login-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:1px solid var(--b2);border-radius:18px;padding:24px;width:min(340px,90vw);direction:rtl;text-align:center;">
+    <div style="font-size:44px;margin-bottom:6px">&#127894;</div>
+    <div style="font-size:13px;color:var(--purpleL);font-weight:700;margin-bottom:4px">כניסת מאמן</div>
+    <div style="font-size:11px;color:var(--txt3);margin-bottom:14px">אזור מאמנים בלבד</div>
+    <input id="coach-pass-inp" type="password" placeholder="סיסמה"
+      style="width:100%;padding:12px;font-size:18px;text-align:center;letter-spacing:6px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;color:var(--txt);box-sizing:border-box;margin-bottom:10px;"
+      onkeydown="if(event.key==='Enter')submitCoachPass()"/>
+    <button onclick="submitCoachPass()" style="width:100%;margin-bottom:8px;min-height:48px;font-size:15px;font-weight:900;background:var(--pri);color:#000;border:none;border-radius:10px;cursor:pointer;">&#127894; כניסה</button>
+    <button onclick="hideCoachLogin()" style="width:100%;min-height:44px;background:var(--card2);border:1px solid var(--b1);color:var(--txt2);border-radius:10px;cursor:pointer;font-size:13px;">ביטול</button>
+    <div style="margin-top:10px;font-size:10px;color:var(--txt3);">סיסמה: <b style="color:var(--purpleL);">cf7_coach_pass</b></div>
+  </div>
+</div>
 </body>
 </html>
