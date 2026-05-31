@@ -477,6 +477,8 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .nav.on{color:var(--pri)!important;}
 /* ════════════════ */
 
+
+input,select,textarea{font-size:16px!important;}
 </style>
 
 <!-- Netlify Identity — free auth, no credit card -->
@@ -624,6 +626,73 @@ document.head.appendChild(_link);
   <div id="daily-recovery-card" style="display:none;background:var(--card);border:1px solid var(--b2);border-radius:14px;padding:12px;margin-bottom:10px"></div>
   <div id="daily-quote" style="background:linear-gradient(135deg,rgba(0,255,136,.06),rgba(0,229,255,.04));border:1px solid rgba(0,255,136,.15);border-radius:12px;padding:12px 14px;margin-bottom:8px;direction:rtl"></div>
   <div id="streak-badge" style="display:none;align-items:center;justify-content:center;background:rgba(255,136,0,.12);border:1px solid rgba(255,136,0,.3);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:700;color:var(--orange);margin-bottom:8px"></div>
+    <!-- PWA Install Banner -->
+  <div id="pwa-install-banner" style="display:none;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(0,229,255,.08));border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:10px 14px;margin-bottom:10px">
+    <div style="font-size:24px">📱</div>
+    <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--txt)">התקן את Combat Fit</div><div style="font-size:10px;color:var(--txt2)">הוסף למסך הבית</div></div>
+    <button onclick="installPWA()" style="background:var(--pri);color:#000;border:none;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;min-height:34px">התקן</button>
+    <button onclick="dismissPWA()" style="background:transparent;border:none;color:var(--txt3);font-size:18px;cursor:pointer;padding:2px 6px">✕</button>
+  </div>
+  <!-- Readiness Badge -->
+  <div id="readiness-badge" style="display:none;align-items:center;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);border-radius:20px;padding:5px 12px;margin-bottom:8px;font-size:12px;"></div>
+  <!-- Training Load -->
+  <div class="card" id="training-load-card" style="display:none;margin-bottom:10px"></div>
+  <!-- Goal Progress -->
+  <div id="goal-progress-card" style="display:none;background:var(--card);border:1px solid var(--b1);border-radius:14px;padding:12px;margin-bottom:10px"></div>
+  <!-- Water Tracker -->
+  <div class="card" style="margin-bottom:10px">
+    <div id="water-tracker"></div>
+  </div>
+    <!-- Relative Effort -->
+  <div class="card" style="margin-bottom:10px">
+    <div class="sh" style="color:var(--orange)">💪 מאמץ יחסי</div>
+    <div style="font-size:11px;color:var(--txt3);margin-bottom:10px;margin-top:4px">דרג את עצימות האימון האחרון שלך</div>
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"><button onclick="saveRelativeEffort(1,'workout')" style="flex:1;min-width:28px;padding:8px 4px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);min-height:40px">1</button><button onclick="saveRelativeEffort(2,'workout')" style="flex:1;min-width:28px;padding:8px 4px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);min-height:40px">2</button><button onclick="saveRelativeEffort(3,'workout')" style="flex:1;min-width:28px;padding:8px 4px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);min-height:40px">3</button><button onclick="saveRelativeEffort(4,'workout')" style="flex:1;min-width:28px;padding:8px 4px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);min-height:40px">4</button><button onclick="saveRelativeEffort(5,'workout')" style="flex:1;min-width:28px;padding:8px 4px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);min-height:40px">5</button><button onclick="saveRelativeEffort(6,'workout')" style="flex:1;min-width:28px;padding:8px 4px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);min-height:40px">6</button><button onclick="saveRelativeEffort(7,'workout')" style="flex:1;min-width:28px;padding:8px 4px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);min-height:40px">7</button><button onclick="saveRelativeEffort(8,'workout')" style="flex:1;min-width:28px;padding:8px 4px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);min-height:40px">8</button><button onclick="saveRelativeEffort(9,'workout')" style="flex:1;min-width:28px;padding:8px 4px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);min-height:40px">9</button><button onclick="saveRelativeEffort(10,'workout')" style="flex:1;min-width:28px;padding:8px 4px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--txt);min-height:40px">10</button></div>
+    <div id="effort-result"></div>
+    <div id="effort-log" style="margin-top:8px"></div>
+  </div>
+  <!-- Calorie Burn -->
+  <div class="card" style="margin-bottom:10px">
+    <div class="sh" style="color:var(--orange)">🔥 שריפת קלוריות</div>
+    <div class="r2" style="margin-top:8px">
+      <div><label>סוג אימון</label>
+        <select id="cal-type" onchange="calcCalorieBurn()">
+          <option value="run">ריצה</option>
+          <option value="strength">כוח</option>
+          <option value="hiit">HIIT</option>
+          <option value="ruck">Ruck</option>
+          <option value="swim">שחייה</option>
+          <option value="walk">הליכה</option>
+        </select>
+      </div>
+      <div><label>דקות</label><input id="cal-dur" type="number" value="30" inputmode="numeric" oninput="calcCalorieBurn()"/></div>
+    </div>
+    <div id="cal-result"></div>
+  </div>
+  <!-- Breathing Exercise -->
+  <div class="card" style="margin-bottom:10px">
+    <div class="sh" style="color:var(--cyan)">🌬 תרגיל נשימה</div>
+    <div style="display:flex;gap:6px;margin:10px 0">
+      <button onclick="startBreathing('box')" style="flex:1;padding:7px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:11px;color:var(--txt);cursor:pointer;min-height:36px">Box 4-4-4-4</button>
+      <button onclick="startBreathing('4-7-8')" style="flex:1;padding:7px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:11px;color:var(--txt);cursor:pointer;min-height:36px">4-7-8</button>
+      <button onclick="startBreathing('combat')" style="flex:1;padding:7px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:11px;color:var(--txt);cursor:pointer;min-height:36px">Combat 4-4</button>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+      <div id="breath-circle" style="width:90px;height:90px;border-radius:50%;background:var(--cyan);opacity:.85;transition:all 1s ease-in-out"></div>
+      <div id="breath-label" style="font-size:13px;color:var(--txt2)">בחר דפוס נשימה</div>
+      <button id="breath-btn" onclick="startBreathing('box')" style="padding:10px 24px;background:var(--pri);color:#000;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;min-height:44px">🌬 התחל</button>
+    </div>
+  </div>
+  <!-- Focus Timer -->
+  <div class="card" style="margin-bottom:10px">
+    <div class="sh">⏱ טיימר מיקוד</div>
+    <div id="focus-display" style="margin:10px 0"></div>
+    <div style="display:flex;gap:6px">
+      <button onclick="startFocusTimer(25)" style="flex:1;padding:9px;background:var(--pri);color:#000;border:none;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;min-height:40px">25 דק</button>
+      <button onclick="startFocusTimer(45)" style="flex:1;padding:9px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;color:var(--txt);font-size:12px;cursor:pointer;min-height:40px">45 דק</button>
+      <button onclick="startFocusTimer(60)" style="flex:1;padding:9px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;color:var(--txt);font-size:12px;cursor:pointer;min-height:40px">60 דק</button>
+    </div>
+  </div>
   <div class="mc" id="daily-mc">
     <div class="mt">🎯 משימת היום</div>
     <div class="mx" id="mission-txt">טוען...</div>
@@ -706,7 +775,18 @@ document.head.appendChild(_link);
       </div>
       <div><label>ישיבות (2 דקות)</label><input id="bsi" type="number" placeholder="70" min="0"/></div>
       <button class="btn bp" onclick="calcBaror()">חשב ציון</button>
-      <div id="br-res" style="margin-top:10px"></div>
+      
+  <!-- Goal Setting -->
+  <div class="card" style="margin-top:8px">
+    <div class="sh" style="color:var(--yellow)">🎯 הגדרת מטרה</div>
+    <div class="r2" style="margin-top:8px">
+      <div><label>ציון מטרה</label><input id="goal-score" type="number" value="80" min="30" max="100" inputmode="numeric"/></div>
+      <div><label>תאריך יעד</label><input id="goal-date" type="date"/></div>
+    </div>
+    <button class="btn bp" onclick="saveGoal()" style="margin-top:8px;min-height:44px">💾 שמור מטרה</button>
+  </div>
+
+  <div id="br-res" style="margin-top:10px"></div>
       <button class="btn bs" id="share-score-btn" style="display:none;margin-top:8px;min-height:44px" onclick="shareScore()">📤 שתף ציון</button>
     </div>
     <div class="card">
@@ -1482,7 +1562,18 @@ document.head.appendChild(_link);
   </div>
 
   <!-- ════ GOOGLE MAPS ROUTE PLANNER ════ -->
-  <div id="tr-route" style="display:none">
+  <div 
+  <!-- Pace Zones -->
+  <div class="card" style="margin-top:8px">
+    <div class="sh" style="color:var(--pri)">🏃 אזורי קצב</div>
+    <div class="r2" style="margin-top:8px">
+      <div><label>זמן מרוץ (דק:שנ)</label><input id="race-time" type="text" placeholder="30:00" oninput="calcPaceZones()"/></div>
+      <div><label>מרחק (ק"מ)</label><input id="race-dist" type="number" value="5" step="0.5" inputmode="decimal" oninput="calcPaceZones()"/></div>
+    </div>
+    <div id="pace-zones-result" style="margin-top:8px"></div>
+  </div>
+
+  id="tr-route" style="display:none">
     <!-- Active Run Overlay -->
     <div id="run-active-bar" style="display:none;background:linear-gradient(135deg,rgba(0,255,136,.12),var(--card2));border:2px solid var(--pri);border-radius:13px;padding:12px;margin-bottom:10px">
       <div style="font-family:var(--fd);font-size:11px;letter-spacing:2px;color:var(--pri);text-align:center;margin-bottom:10px">⚡ ריצה פעילה</div>
@@ -3395,9 +3486,12 @@ function renderCoachGroup(){
 // MODAL SYSTEM
 // ═══════════════════════════════════════════════════
 function openModal(title,body){
-  const bk=document.getElementById('modal-bk');
-  const mc=document.getElementById('modal-content');
-  mc.innerHTML=`<div class="modal-hdr"><div class="modal-ttl">${title}</div><button class="modal-x" onclick="closeModal()">✕</button></div>${body}`;
+  var bk=document.getElementById('modal-bk');
+  var mc=document.getElementById('modal-content');
+  if(!bk||!mc)return;
+  mc.innerHTML='<div class="modal-hdr"><div class="modal-ttl">'+title+'</div>'+
+    '<button class="modal-x" onclick="closeModal()">✕</button></div>'+body;
+  bk.style.display='flex';
   bk.classList.add('show');
   document.body.style.overflow='hidden';
 }
@@ -8129,6 +8223,422 @@ function hideCoachLogin(){
   };
   submitCoachPass._ol=true;
 })();
+
+// ══ SWIPE NAVIGATION ══════════════════════════════════════════
+(function(){
+  if(window._swipeReady)return;window._swipeReady=true;
+  var PAGES=['dash','test','week','lb','train','ai'];
+  var sx=0,sy=0;
+  document.addEventListener('touchstart',function(e){
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;
+  },{passive:true});
+  document.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-sx;
+    var dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)<50||Math.abs(dy)>Math.abs(dx)*0.7)return;
+    var ov=document.getElementById('coach-login-overlay');
+    if(ov&&ov.style.display==='flex')return;
+    var bk=document.getElementById('modal-bk');
+    if(bk&&bk.style.display==='flex')return;
+    var cur=PAGES.indexOf(window._activePg||'dash');
+    if(cur===-1)return;
+    var nxt=dx<0?Math.min(cur+1,PAGES.length-1):Math.max(cur-1,0);
+    if(nxt!==cur){
+      if(typeof showPg==='function')showPg(PAGES[nxt]);
+      if(typeof haptic==='function')haptic();
+    }
+  },{passive:true});
+})();
+
+// ══ BEFOREUNLOAD — save on tab close ══════════════════════════
+window.addEventListener('beforeunload',function(){
+  try{
+    var pr=JSON.parse(localStorage.getItem('cf7pr')||'{}');
+    var changed=false;
+    var map={pnm:'name',pag:'age',phg:'height',pwg:'weight',pun:'unit',pdr:'draft'};
+    Object.keys(map).forEach(function(id){
+      var el=document.getElementById(id);
+      if(el&&el.value){pr[map[id]]=el.value;changed=true;}
+    });
+    if(changed)localStorage.setItem('cf7pr',JSON.stringify(pr));
+    var age=document.getElementById('ai-age');
+    var wgt=document.getElementById('weight');
+    if(age&&age.value)localStorage.setItem('cf_age',age.value);
+    if(wgt&&wgt.value)localStorage.setItem('cf_wgt',wgt.value);
+    if(typeof muscleState!=='undefined'&&Object.keys(muscleState).length)
+      localStorage.setItem('cf7_muscles',JSON.stringify(muscleState));
+  }catch(e){}
+});
+// ═════════════════════════════════════════════════════════════
+
+// ══ NEW FEATURES v17 — Based on Competitive Analysis ══════════
+
+// ── 1. WATER TRACKER (MyFitnessPal-inspired) ─────────────────
+var _waterGoal = 8; // glasses per day
+function addWater(glasses) {
+  var today = new Date().toDateString();
+  var data = JSON.parse(localStorage.getItem('cf7_water') || '{}');
+  if (!data[today]) data[today] = 0;
+  data[today] = Math.min(_waterGoal, data[today] + (glasses||1));
+  localStorage.setItem('cf7_water', JSON.stringify(data));
+  renderWaterTracker();
+  if (typeof haptic === 'function') haptic();
+  if (data[today] >= _waterGoal && typeof notify === 'function')
+    notify('💧 יעד שתייה הושג! ' + _waterGoal + ' כוסות', 'p');
+}
+function renderWaterTracker() {
+  var el = document.getElementById('water-tracker');
+  if (!el || !el.style) return;
+  var today = new Date().toDateString();
+  var data = JSON.parse(localStorage.getItem('cf7_water') || '{}');
+  var cups = data[today] || 0;
+  var pct = Math.round(cups / _waterGoal * 100);
+  el.innerHTML =
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">' +
+      '<span style="font-size:12px;font-weight:700;color:var(--cyan)">💧 שתייה יומית</span>' +
+      '<span style="font-size:11px;color:var(--txt2)">' + cups + '/' + _waterGoal + ' כוסות</span>' +
+    '</div>' +
+    '<div style="background:var(--card3);border-radius:6px;height:8px;margin-bottom:8px">' +
+      '<div style="height:100%;width:' + pct + '%;background:var(--cyan);border-radius:6px;transition:width .3s"></div>' +
+    '</div>' +
+    '<div style="display:flex;gap:6px">' +
+      '<button onclick="addWater(1)" style="flex:1;padding:8px;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.3);border-radius:8px;color:var(--cyan);font-size:12px;font-weight:700;cursor:pointer;min-height:36px">+ כוס</button>' +
+      '<button onclick="addWater(2)" style="flex:1;padding:8px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2);border-radius:8px;color:var(--txt2);font-size:12px;cursor:pointer;min-height:36px">+ 2 כוסות</button>' +
+      '<button onclick="addWater(-1)" style="padding:8px 12px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;color:var(--txt3);font-size:12px;cursor:pointer;min-height:36px">↩</button>' +
+    '</div>';
+}
+
+// ── 2. MORNING READINESS CHECK-IN (Whoop-inspired) ────────────
+function showMorningReadiness() {
+  var today = new Date().toDateString();
+  if (localStorage.getItem('cf7_ready_' + today)) return; // already done
+  var html =
+    '<div style="direction:rtl;padding:4px">' +
+    '<div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:12px">איך אתה מרגיש הבוקר?</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">' +
+      ['😴 עייף','😐 בסדר','💪 מוכן'].map(function(label, i) {
+        var scores = [30, 60, 90];
+        return '<button onclick="setReadiness(' + scores[i] + ')" style="padding:12px 8px;background:var(--card2);border:1px solid var(--b1);border-radius:10px;color:var(--txt);font-size:13px;cursor:pointer;min-height:56px;">' + label + '</button>';
+      }).join('') +
+    '</div></div>';
+  if (typeof openModal === 'function') openModal('🌅 בוקר טוב!', html);
+}
+function setReadiness(score) {
+  var today = new Date().toDateString();
+  localStorage.setItem('cf7_ready_' + today, score);
+  if (typeof closeModal === 'function') closeModal();
+  var msg = score >= 80 ? '💪 מוכן לאימון קשה!' : score >= 50 ? '👍 יום טוב!' : '😴 קח את זה בקלות היום';
+  if (typeof notify === 'function') notify(msg, 'p');
+  renderReadinessBadge(score);
+}
+function renderReadinessBadge(score) {
+  var el = document.getElementById('readiness-badge');
+  if (!el || !el.style) return;
+  score = score || parseInt(localStorage.getItem('cf7_ready_' + new Date().toDateString()) || '0');
+  if (!score) { el.style.display = 'none'; return; }
+  var col = score >= 80 ? 'var(--pri)' : score >= 50 ? 'var(--yellow)' : 'var(--orange)';
+  el.style.display = 'flex';
+  el.innerHTML = '<span style="color:' + col + ';font-weight:700;font-size:12px">' +
+    (score >= 80 ? '💪' : score >= 50 ? '👍' : '😴') + ' מוכנות: ' + score + '%</span>';
+}
+
+// ── 3. TRAINING LOAD SCORE (Garmin-inspired) ──────────────────
+function calcTrainingLoad() {
+  var el = document.getElementById('training-load-card');
+  if (!el || !el.style) return;
+  var wd = JSON.parse(localStorage.getItem('cf7wd') || '{}');
+  var daysThisWeek = Object.values(wd).filter(function(d){ return d==='done'; }).length;
+  var scores = JSON.parse(localStorage.getItem('cf7p') || '[]');
+  var recentScore = scores.length ? parseFloat(scores[0].bar || 0) : 0;
+  var sleepData = JSON.parse(localStorage.getItem('cf7_sleep') || '[]');
+  var avgSleep = sleepData.length ? sleepData.slice(0,3).reduce(function(s,h){return s+h.hours;},0)/Math.min(sleepData.length,3) : 7;
+  
+  // Training load = days * intensity factor
+  var intensityFactor = recentScore >= 80 ? 1.3 : recentScore >= 60 ? 1.1 : 0.9;
+  var load = Math.round(daysThisWeek * 10 * intensityFactor);
+  var status = load >= 50 ? { label: '🔴 עומס גבוה', col: 'var(--red)', tip: 'שקול יום מנוחה מחר' }
+             : load >= 30 ? { label: '🟡 עומס בינוני', col: 'var(--yellow)', tip: 'אימון נוסף אפשרי' }
+             : { label: '🟢 עומס נמוך', col: 'var(--pri)', tip: 'זמן להגביר!' };
+  
+  el.style.display = 'block';
+  el.innerHTML =
+    '<div style="display:flex;align-items:center;gap:12px">' +
+      '<div style="text-align:center;min-width:56px">' +
+        '<div style="font-family:var(--fd);font-size:32px;color:' + status.col + ';line-height:1">' + load + '</div>' +
+        '<div style="font-size:9px;color:var(--txt3)">עומס</div>' +
+      '</div>' +
+      '<div>' +
+        '<div style="font-weight:700;color:var(--txt);margin-bottom:2px">' + status.label + '</div>' +
+        '<div style="font-size:11px;color:var(--txt2)">' + status.tip + '</div>' +
+        '<div style="font-size:10px;color:var(--txt3);margin-top:2px">' + daysThisWeek + ' ימים | ציון ' + recentScore + '</div>' +
+      '</div>' +
+    '</div>';
+}
+
+// ── 4. PWA INSTALL BANNER ─────────────────────────────────────
+(function(){
+  var _deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    _deferredPrompt = e;
+    setTimeout(function() {
+      var banner = document.getElementById('pwa-install-banner');
+      if (banner && !localStorage.getItem('cf7_pwa_dismissed'))
+        banner.style.display = 'flex';
+    }, 5000);
+  });
+  window.installPWA = function() {
+    if (!_deferredPrompt) return;
+    _deferredPrompt.prompt();
+    _deferredPrompt.userChoice.then(function(r) {
+      if (r.outcome === 'accepted') {
+        var b = document.getElementById('pwa-install-banner');
+        if (b) b.style.display = 'none';
+        if (typeof notify === 'function') notify('✅ האפליקציה הותקנה!', 'p');
+      }
+      _deferredPrompt = null;
+    });
+  };
+  window.dismissPWA = function() {
+    localStorage.setItem('cf7_pwa_dismissed', '1');
+    var b = document.getElementById('pwa-install-banner');
+    if (b) b.style.display = 'none';
+  };
+})();
+
+// ── 5. GOAL SETTING ───────────────────────────────────────────
+function saveGoal() {
+  var score = document.getElementById('goal-score');
+  var date = document.getElementById('goal-date');
+  if (!score || !date) return;
+  var goal = { score: parseInt(score.value||80), date: date.value, set: Date.now() };
+  localStorage.setItem('cf7_goal', JSON.stringify(goal));
+  renderGoalProgress();
+  if (typeof notify === 'function') notify('🎯 מטרה נשמרה!', 'p');
+  if (typeof haptic === 'function') haptic('success');
+}
+function renderGoalProgress() {
+  var el = document.getElementById('goal-progress-card');
+  if (!el || !el.style) return;
+  var goal = JSON.parse(localStorage.getItem('cf7_goal') || 'null');
+  if (!goal) { el.style.display = 'none'; return; }
+  var scores = JSON.parse(localStorage.getItem('cf7p') || '[]');
+  var current = scores.length ? parseFloat(scores[0].bar || 0) : 0;
+  var pct = Math.min(100, Math.round(current / goal.score * 100));
+  var daysLeft = goal.date ? Math.max(0, Math.ceil((new Date(goal.date) - new Date()) / 864e5)) : '?';
+  var col = pct >= 90 ? 'var(--pri)' : pct >= 70 ? 'var(--yellow)' : 'var(--orange)';
+  el.style.display = 'block';
+  el.innerHTML =
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+      '<div style="font-size:12px;font-weight:700;color:var(--txt)">🎯 מטרה: ' + goal.score + ' נקודות</div>' +
+      '<div style="font-size:11px;color:var(--txt3)">' + daysLeft + ' ימים</div>' +
+    '</div>' +
+    '<div style="background:var(--card3);border-radius:6px;height:10px;margin-bottom:6px">' +
+      '<div style="height:100%;width:' + pct + '%;background:' + col + ';border-radius:6px;transition:width .5s"></div>' +
+    '</div>' +
+    '<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--txt3)">' +
+      '<span>כעת: ' + current + '</span><span>' + pct + '%</span><span>יעד: ' + goal.score + '</span>' +
+    '</div>';
+}
+
+// ── INIT ALL NEW FEATURES ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    try { renderWaterTracker(); } catch(e) {}
+    try { renderReadinessBadge(); } catch(e) {}
+    try { calcTrainingLoad(); } catch(e) {}
+    try { renderGoalProgress(); } catch(e) {}
+    // Morning readiness — show after 2s on first daily visit
+    var today = new Date().toDateString();
+    if (!localStorage.getItem('cf7_ready_' + today)) {
+      setTimeout(function() {
+        try { showMorningReadiness(); } catch(e) {}
+      }, 2500);
+    }
+  }, 1000);
+});
+// ═════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// NEW FEATURES v18 — Competitive Additions
+// ═══════════════════════════════════════════════════════════════
+
+// ── 1. RELATIVE EFFORT (Strava-inspired) ──────────────────────
+// After each test/workout, user rates effort 1-10
+function saveRelativeEffort(score, workoutType) {
+  var log = JSON.parse(localStorage.getItem('cf7_effort') || '[]');
+  log.unshift({ score: score, type: workoutType || 'workout', date: new Date().toLocaleDateString('he-IL'), ts: Date.now() });
+  localStorage.setItem('cf7_effort', JSON.stringify(log.slice(0, 30)));
+  var el = document.getElementById('effort-result');
+  if (el) {
+    var msgs = ['','קל מאוד','קל','בינוני','בינוני+','מאמץ','קשה','קשה מאוד','כבד','מקסימלי','עד קצה!'];
+    var col = score <= 3 ? 'var(--cyan)' : score <= 6 ? 'var(--yellow)' : 'var(--red)';
+    el.innerHTML = '<div style="text-align:center;padding:8px"><div style="font-family:var(--fd);font-size:36px;color:' + col + '">' + score + '/10</div>' +
+      '<div style="font-size:13px;color:var(--txt2);margin-top:4px">' + (msgs[score]||'') + '</div></div>';
+  }
+  if (typeof notify === 'function') notify('💪 מאמץ ' + score + '/10 נשמר', 'p');
+}
+function renderEffortLog() {
+  var el = document.getElementById('effort-log');
+  if (!el) return;
+  var log = JSON.parse(localStorage.getItem('cf7_effort') || '[]');
+  if (!log.length) { el.innerHTML = '<div style="color:var(--txt3);font-size:11px;text-align:center">עוד לא דירגת אימונים</div>'; return; }
+  el.innerHTML = log.slice(0, 5).map(function(e) {
+    var col = e.score <= 3 ? 'var(--cyan)' : e.score <= 6 ? 'var(--yellow)' : 'var(--red)';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--b1)">' +
+      '<div style="font-family:var(--fd);font-size:20px;color:' + col + ';min-width:32px">' + e.score + '</div>' +
+      '<div style="flex:1"><div style="font-size:11px;color:var(--txt)">' + e.type + '</div>' +
+      '<div style="font-size:10px;color:var(--txt3)">' + e.date + '</div></div>' +
+      '<div style="background:var(--card3);border-radius:3px;height:6px;width:60px"><div style="height:100%;width:' + (e.score*10) + '%;background:' + col + ';border-radius:3px"></div></div>' +
+      '</div>';
+  }).join('');
+}
+
+// ── 2. CALORIE BURN ESTIMATOR (MyFitnessPal-inspired) ─────────
+var MET_VALS = { run: 9.8, swim: 7.0, bike: 7.5, strength: 5.0, hiit: 8.0, walk: 3.5, yoga: 2.5, ruck: 6.5 };
+function calcCalorieBurn() {
+  var typeEl = document.getElementById('cal-type');
+  var durEl  = document.getElementById('cal-dur');
+  var wgtEl  = document.getElementById('cal-wgt');
+  if (!typeEl || !durEl) return;
+  var type = typeEl.value || 'run';
+  var dur  = parseFloat(durEl.value || 30);
+  var wgt  = parseFloat((wgtEl && wgtEl.value) || localStorage.getItem('cf_wgt') || 70);
+  var met  = MET_VALS[type] || 7;
+  var cals = Math.round(met * wgt * (dur / 60));
+  var el   = document.getElementById('cal-result');
+  if (!el) return;
+  el.innerHTML =
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">' +
+    '<div style="background:var(--card2);border-radius:10px;padding:10px;text-align:center">' +
+      '<div style="font-family:var(--fd);font-size:28px;color:var(--orange)">' + cals + '</div>' +
+      '<div style="font-size:10px;color:var(--txt3)">קלוריות</div></div>' +
+    '<div style="background:var(--card2);border-radius:10px;padding:10px;text-align:center">' +
+      '<div style="font-family:var(--fd);font-size:28px;color:var(--pri)">' + Math.round(cals/4.1) + '</div>' +
+      '<div style="font-size:10px;color:var(--txt3)">גרם שומן</div></div></div>';
+}
+
+// ── 3. BREATHING EXERCISE (Headspace/Box Breathing) ───────────
+var _breathTimer = null;
+var _breathPhase = 0;
+var _breathRunning = false;
+var _breathPatterns = {
+  '4-7-8': [4, 7, 8, 0],
+  'box':   [4, 4, 4, 4],
+  'combat':[4, 0, 4, 0]
+};
+function startBreathing(pattern) {
+  if (_breathRunning) { stopBreathing(); return; }
+  _breathRunning = true;
+  _breathPhase = 0;
+  var phases = _breathPatterns[pattern] || _breathPatterns['box'];
+  var phaseNames = ['שאיפה', 'החזק', 'נשיפה', 'החזק'];
+  var colors = ['var(--cyan)', 'var(--yellow)', 'var(--orange)', 'var(--purpleL)'];
+  var el = document.getElementById('breath-circle');
+  var lbl = document.getElementById('breath-label');
+  var btn = document.getElementById('breath-btn');
+  if (btn) btn.textContent = '⏹ עצור';
+  function runPhase() {
+    if (!_breathRunning) return;
+    var dur = phases[_breathPhase];
+    if (dur === 0) { _breathPhase = (_breathPhase + 1) % 4; runPhase(); return; }
+    if (el) {
+      el.style.transform = (_breathPhase === 0) ? 'scale(1.3)' : (_breathPhase === 2) ? 'scale(0.8)' : 'scale(1.1)';
+      el.style.background = colors[_breathPhase];
+      el.style.transition = 'all ' + dur + 's ease-in-out';
+    }
+    if (lbl) lbl.textContent = phaseNames[_breathPhase] + ' ' + dur + ' שנ';
+    _breathTimer = setTimeout(function() {
+      _breathPhase = (_breathPhase + 1) % 4;
+      runPhase();
+    }, dur * 1000);
+  }
+  runPhase();
+}
+function stopBreathing() {
+  _breathRunning = false;
+  if (_breathTimer) clearTimeout(_breathTimer);
+  var el = document.getElementById('breath-circle');
+  var lbl = document.getElementById('breath-label');
+  var btn = document.getElementById('breath-btn');
+  if (el) { el.style.transform = 'scale(1)'; el.style.background = 'var(--cyan)'; el.style.transition = 'all .5s'; }
+  if (lbl) lbl.textContent = 'לחץ כדי להתחיל';
+  if (btn) btn.textContent = '🌬 התחל';
+}
+
+// ── 4. FOCUS TIMER (25/5 Pomodoro) ────────────────────────────
+var _focusTimer = null;
+var _focusRunning = false;
+var _focusRemaining = 0;
+function startFocusTimer(minutes) {
+  if (_focusRunning) { clearInterval(_focusTimer); _focusRunning = false; renderFocusTimer(0); return; }
+  _focusRunning = true;
+  _focusRemaining = (minutes || 25) * 60;
+  if (typeof haptic === 'function') haptic('success');
+  _focusTimer = setInterval(function() {
+    _focusRemaining--;
+    renderFocusTimer(_focusRemaining);
+    if (_focusRemaining <= 0) {
+      clearInterval(_focusTimer);
+      _focusRunning = false;
+      if (typeof notify === 'function') notify('✅ זמן הסתיים! הפסקה קצרה.', 'p');
+      if (typeof haptic === 'function') haptic('success');
+    }
+  }, 1000);
+}
+function renderFocusTimer(secs) {
+  var el = document.getElementById('focus-display');
+  if (!el) return;
+  var m = Math.floor(secs / 60);
+  var s = secs % 60;
+  var pct = _focusRunning ? Math.round((1 - secs / (_focusRemaining + 1)) * 100) : 0;
+  el.innerHTML =
+    '<div style="font-family:var(--fd);font-size:48px;color:var(--pri);text-align:center;letter-spacing:2px">' +
+    String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0') + '</div>' +
+    '<div style="background:var(--card3);border-radius:4px;height:6px;margin-top:8px">' +
+    '<div style="height:100%;width:' + pct + '%;background:var(--pri);border-radius:4px;transition:width 1s linear"></div></div>';
+}
+
+// ── 5. PACE ZONES (Nike-inspired) ─────────────────────────────
+function calcPaceZones() {
+  var rt = document.getElementById('race-time');
+  var rd = document.getElementById('race-dist');
+  if (!rt || !rd) return;
+  var timeParts = (rt.value || '30:00').split(':');
+  var mins = parseInt(timeParts[0]) + (parseInt(timeParts[1] || 0)) / 60;
+  var dist = parseFloat(rd.value || 5);
+  if (!mins || !dist) return;
+  var basePace = mins / dist; // min/km
+  var zones = [
+    { name: 'ריצה קלה (Z1)', factor: 1.35, col: 'var(--cyan)', desc: 'שיחוח + ריצה' },
+    { name: 'בסיס אירובי (Z2)', factor: 1.20, col: '#4ade80', desc: 'נוח, מדבר בקלות' },
+    { name: 'סף אירובי (Z3)', factor: 1.08, col: 'var(--yellow)', desc: 'מאמץ בינוני' },
+    { name: 'סף אנאירובי (Z4)', factor: 1.00, col: 'var(--orange)', desc: 'קשה לדבר' },
+    { name: 'מקסימל (Z5)', factor: 0.90, col: 'var(--red)', desc: 'ספרינט/מרוץ' },
+  ];
+  var el = document.getElementById('pace-zones-result');
+  if (!el) return;
+  el.innerHTML = zones.map(function(z) {
+    var p = basePace * z.factor;
+    var pm = Math.floor(p); var ps = Math.round((p - pm) * 60);
+    return '<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--b1)">' +
+      '<div style="width:10px;height:10px;border-radius:50%;background:' + z.col + ';flex-shrink:0"></div>' +
+      '<div style="flex:1"><div style="font-size:11px;font-weight:700;color:var(--txt)">' + z.name + '</div>' +
+      '<div style="font-size:10px;color:var(--txt3)">' + z.desc + '</div></div>' +
+      '<div style="font-family:var(--fd);font-size:13px;color:' + z.col + '">' +
+      pm + ':' + String(ps).padStart(2,'0') + '/ק"מ</div></div>';
+  }).join('');
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    try { renderFocusTimer(25*60); } catch(e) {}
+    try { renderEffortLog(); } catch(e) {}
+  }, 1200);
+});
+// ═══════════════════════════════════════════════════════════════
+
 </script>
 
 <!-- Firebase SDK — Multi-group combat fitness -->
