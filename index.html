@@ -503,6 +503,16 @@ body.light-mode .bottom { background: #ffffff; }
 body.light-mode #theme-btn { color: #f59e0b; }
 /* ═════════════════════════════════════════════════════ */
 
+
+/* ══ SKELETON LOADING ══════════════════════════════ */
+.skeleton{background:linear-gradient(90deg,var(--card2) 25%,var(--card3) 50%,var(--card2) 75%);background-size:200% 100%;animation:skelAnim 1.4s ease infinite;border-radius:8px;}
+@keyframes skelAnim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-line{height:14px;margin-bottom:8px;}
+.skel-line.short{width:40%;}
+.skel-line.med{width:65%;}
+.skel-circle{width:56px;height:56px;border-radius:50%;}
+/* ════════════════════════════════════════════════ */
+
 </style>
 
 <!-- Netlify Identity — free auth, no credit card -->
@@ -795,14 +805,14 @@ document.head.appendChild(_link);
       <div class="sh">⏱ מחשבון בר-אור</div>
       <div class="mini" style="margin-bottom:8px">ריצה 40% + שכיבות 25% + מתח 20% + ישיבות 15%</div>
       <div class="r2">
-        <div><label>ריצה 2ק"מ (ד:ש)</label><input id="bt" type="text" placeholder="9:00" inputmode="numeric"/></div>
-        <div><label>גיל</label><input id="bage" type="number" value="18" min="16" max="25"/></div>
+        <div><label>ריצה 2ק"מ (ד:ש)</label><input id="bt" type="text" placeholder="9:00" inputmode="numeric" oninput="calcBaror()"/></div>
+        <div><label>גיל</label><input id="bage" type="number" value="18" min="16" max="25" oninput="calcBaror()"/></div>
       </div>
       <div class="r2">
-        <div><label>שכיבות (2 דקות)</label><input id="bpu" type="number" placeholder="55" min="0"/></div>
-        <div><label>מתח (מקסימום)</label><input id="bpl" type="number" placeholder="12" min="0"/></div>
+        <div><label>שכיבות (2 דקות)</label><input id="bpu" type="number" placeholder="55" min="0" oninput="calcBaror()"/></div>
+        <div><label>מתח (מקסימום)</label><input id="bpl" type="number" placeholder="12" min="0" oninput="calcBaror()"/></div>
       </div>
-      <div><label>ישיבות (2 דקות)</label><input id="bsi" type="number" placeholder="70" min="0"/></div>
+      <div><label>ישיבות (2 דקות)</label><input id="bsi" type="number" placeholder="70" min="0" oninput="calcBaror()"/></div>
       <button class="btn bp" onclick="calcBaror()">חשב ציון</button>
       
   <!-- Goal Setting -->
@@ -1305,6 +1315,7 @@ document.head.appendChild(_link);
   </div>
   <div class="r2" style="margin-bottom:10px">
     <button class="btn bp" onclick="sharePerf()">📱 שתף ביצועים</button>
+    <button class="btn" style="background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.35);color:#25D366;border-radius:10px;padding:10px;font-weight:700;font-size:13px;cursor:pointer;min-height:44px" onclick="shareScoreWhatsApp()">📲 שתף בוואטסאפ</button>
     <button class="btn bs" onclick="exportReport()">📤 ייצא דוח</button>
     <button class="btn bs" onclick="refreshShareCard()">🔄 רענן כרטיס</button>
   </div>
@@ -2104,12 +2115,12 @@ document.head.appendChild(_link);
 </div><!-- /content -->
 
 <nav class="bottom" id="nav-athlete">
-  <button class="nav on" id="n-dash" data-label="בסיס" onclick="showPg('dash')"><span class="ni">🏠</span>בסיס</button>
-  <button class="nav" id="n-test" data-label="מבחן" onclick="showPg('test')"><span class="ni">🎯</span>מבחן</button>
-  <button class="nav" id="n-week" data-label="שבועי" onclick="showPg('week')"><span class="ni">📅</span>שבועי</button>
-  <button class="nav" id="n-lb" data-label="ליגה" onclick="showPg('lb')"><span class="ni">🏆</span>ליגה</button>
-  <button class="nav" id="n-train" data-label="אימון" onclick="showPg('train')"><span class="ni">💪</span>אימון</button>
-  <button class="nav" id="n-ai" data-label="AI" onclick="showPg('ai')"><span class="ni">🤖</span>AI</button>
+  <button class="nav on" id="n-dash" data-label="בסיס" onclick="showPg('dash')" tabindex="1"><span class="ni">🏠</span>בסיס</button>
+  <button class="nav" id="n-test" data-label="מבחן" onclick="showPg('test')" tabindex="2"><span class="ni">🎯</span>מבחן</button>
+  <button class="nav" id="n-week" data-label="שבועי" onclick="showPg('week')" tabindex="3"><span class="ni">📅</span>שבועי</button>
+  <button class="nav" id="n-lb" data-label="ליגה" onclick="showPg('lb')" tabindex="4"><span class="ni">🏆</span>ליגה</button>
+  <button class="nav" id="n-train" data-label="אימון" onclick="showPg('train')" tabindex="5"><span class="ni">💪</span>אימון</button>
+  <button class="nav" id="n-ai" data-label="AI" onclick="showPg('ai')" tabindex="6"><span class="ni">🤖</span>AI</button>
 </nav>
 <nav class="bottom" id="nav-coach" style="display:none;grid-template-columns:repeat(4,1fr)">
   <button class="nav on" id="cn-groups" onclick="coachShowTab('groups',this)"><span class="ni">🎖</span>קבוצות</button>
@@ -2169,8 +2180,7 @@ document.head.appendChild(_link);
 
 
 
-<script>
-'use strict';
+<script>'use strict';
 // ─── Core globals declared first to avoid TDZ ───────────────
 var PAGES=['dash','test','week','lb','train','ai','coach'];
 var _activeGid=null;
@@ -2720,6 +2730,12 @@ function calcBaror(){
   const entry={date:new Date().toLocaleDateString('he-IL'),mk:new Date().toISOString().slice(0,7),run:sec,psh:pu,pul:pl,si,bar:tot};
   if(!pg.length||pg[0].mk!==entry.mk)pg.unshift(entry);else pg[0]=entry;
   sv(K.P,pg.slice(0,60));
+  // Confetti for new personal best
+  try{
+    if(pg.length>=2 && tot > (pg[1].bar||0) && tot >= 70){
+      setTimeout(function(){ if(typeof launchConfetti==='function') launchConfetti(2500); },300);
+    }
+  }catch(e){}
   updateRings(entry);
   document.getElementById('br-res').innerHTML=
     `<div class="sd ${cls}">${tot}</div>
@@ -9054,6 +9070,314 @@ function recordFailedLogin(){
   }
 }
 function recordSuccessfulLogin(){ _loginAttempts=0; _loginLockUntil=0; }
+
+
+// =========================================================
+// FIX 1: doCreateGroup + sendQuickAnn (missing functions)
+// =========================================================
+function doCreateGroup(){
+  var inp=document.getElementById('new-group-name');
+  var name=inp?inp.value.trim():'';
+  if(!name){if(typeof notify==='function')notify('הכנס שם לקבוצה','r');return;}
+  var code=Math.random().toString(36).slice(2,7).toUpperCase();
+  var group={id:'g_'+Date.now(),name:name,code:code,created:Date.now()};
+  window._coachGroups=window._coachGroups||[];
+  window._coachGroups.push(group);
+  window._coachAthletes=window._coachAthletes||{};
+  window._coachAthletes[group.id]=[];
+  _activeGid=group.id;
+  if(typeof closeModal==='function')closeModal();
+  if(typeof renderCoachGroupsUI==='function')renderCoachGroupsUI();
+  if(typeof notify==='function')notify('✅ קבוצה "'+name+'" נוצרה! קוד: '+code,'p');
+  if(typeof haptic==='function')haptic('success');
+}
+
+function sendQuickAnn(){
+  var inp=document.getElementById('ann-quick-input');
+  if(!inp||!inp.value.trim())return;
+  var msg=inp.value.trim();
+  var anns=JSON.parse(localStorage.getItem('cf7ann')||'[]');
+  anns.unshift({t:'הודעה מהמאמן',m:msg,date:Date.now()});
+  localStorage.setItem('cf7ann',JSON.stringify(anns.slice(0,20)));
+  inp.value='';
+  if(typeof notify==='function')notify('📢 הודעה נשלחה לכל הקבוצה!','p');
+  if(typeof haptic==='function')haptic('success');
+}
+
+// =========================================================
+// FIX 2: Demo data on first load (buyer sees full app)
+// =========================================================
+(function initDemoData(){
+  // Only if truly first visit AND no real data
+  var pr=JSON.parse(localStorage.getItem('cf7pr')||'null');
+  var scores=JSON.parse(localStorage.getItem('cf7p')||'[]');
+  if(pr&&pr.name) return; // real user, skip demo
+  if(scores.length>0) return; // has data, skip
+
+  // Load demo profile
+  localStorage.setItem('cf7pr',JSON.stringify({
+    name:'דני קרבי',age:'21',unit:'golani',height:'179',weight:'76',
+    draft: new Date(Date.now()+180*864e5).toISOString().slice(0,10)
+  }));
+  localStorage.setItem('cf_age','21');
+  localStorage.setItem('cf_wgt','76');
+
+  // Load demo scores (progress over time)
+  var now=Date.now();
+  var demoScores=[
+    {bar:78,run:522,psh:54,pul:13,si:67,name:'דני קרבי',unit:'golani',
+     date:new Date().toLocaleDateString('he-IL'),ts:now},
+    {bar:71,run:541,psh:48,pul:11,si:62,name:'דני קרבי',unit:'golani',
+     date:new Date(now-30*864e5).toLocaleDateString('he-IL'),ts:now-30*864e5},
+    {bar:63,run:558,psh:42,pul:9,si:55,name:'דני קרבי',unit:'golani',
+     date:new Date(now-60*864e5).toLocaleDateString('he-IL'),ts:now-60*864e5},
+  ];
+  localStorage.setItem('cf7p',JSON.stringify(demoScores));
+
+  // Demo weekly training
+  var wd={};
+  var days=['sun','mon','tue','wed','thu'];
+  days.forEach(function(d){wd[d]='done';});
+  localStorage.setItem('cf7wd',JSON.stringify(wd));
+
+  // Demo sleep
+  localStorage.setItem('cf7_sleep',JSON.stringify([
+    {hours:7.5,qual:4},{hours:6.5,qual:3},{hours:8,qual:5}
+  ]));
+
+  // Demo water
+  var water={};
+  water[new Date().toDateString()]=6;
+  localStorage.setItem('cf7_water',JSON.stringify(water));
+
+  // Mark as demo (so real user can override)
+  localStorage.setItem('cf7_demo_loaded','1');
+})();
+
+// =========================================================
+// FIX 3: Analytics (simple, privacy-friendly)
+// =========================================================
+(function initAnalytics(){
+  // Track page views without external service (localStorage based)
+  window._cf7Analytics={
+    pv:{},events:[],
+    trackPV:function(page){
+      var k='pv_'+page; this.pv[page]=(this.pv[page]||0)+1;
+      try{var d=JSON.parse(localStorage.getItem('cf7_analytics')||'{}');
+        d[k]=(d[k]||0)+1; d.last_seen=Date.now();
+        if(!d.first_seen) d.first_seen=Date.now();
+        localStorage.setItem('cf7_analytics',JSON.stringify(d));
+      }catch(e){}
+    },
+    trackEvent:function(name,data){
+      try{var d=JSON.parse(localStorage.getItem('cf7_analytics')||'{}');
+        if(!d.events) d.events=[];
+        d.events.push({n:name,d:data,t:Date.now()});
+        d.events=d.events.slice(-50);
+        localStorage.setItem('cf7_analytics',JSON.stringify(d));
+      }catch(e){}
+    },
+    getStats:function(){
+      try{return JSON.parse(localStorage.getItem('cf7_analytics')||'{}');}catch(e){return {};}
+    }
+  };
+
+  // Track initial page
+  window._cf7Analytics.trackPV('app_open');
+
+  // Patch showPg to track navigation
+  var _origSPAnalytics=showPg;
+  showPg=function(p){
+    if(typeof _origSPAnalytics==='function') _origSPAnalytics(p);
+    window._cf7Analytics.trackPV(p);
+  };
+  showPg._analyticsPatched=true;
+})();
+// =========================================================
+
+
+// =========================================================
+// LAST MISSING FUNCTIONS — all onclick refs resolved
+// =========================================================
+
+function dismissPWA(){
+  localStorage.setItem('cf7_pwa_dismissed','1');
+  var b=document.getElementById('pwa-install-banner');
+  if(b)b.style.display='none';
+}
+
+function doJoinGroup(){
+  var inp=document.getElementById('join-group-code');
+  var code=inp?inp.value.trim().toUpperCase():'';
+  if(!code||code.length<4){
+    if(typeof notify==='function')notify('הכנס קוד קבוצה','r');
+    return;
+  }
+  localStorage.setItem('cf7_joined_group',code);
+  if(typeof closeModal==='function')closeModal();
+  if(typeof notify==='function')notify('✅ הצטרפת לקבוצה! קוד: '+code,'p');
+  if(typeof haptic==='function')haptic('success');
+}
+
+function msgGroupModal(){
+  if(typeof openModal==='function')
+    openModal('📢 הודעה לקבוצה',
+      '<div style="padding:4px">'+
+      '<textarea id="grp-msg-text" rows="4" placeholder="כתוב הודעה לכל חברי הקבוצה..." '+
+      'style="width:100%;padding:10px;background:var(--card2);border:1px solid var(--b1);border-radius:10px;color:var(--txt);font-size:12px;resize:none;box-sizing:border-box;margin-bottom:10px"></textarea>'+
+      '<button class="btn bp" style="width:100%" onclick="sendQuickAnn()">📢 שלח לכולם</button></div>');
+}
+
+function doSendMsg(uid, groupId){
+  var inp=document.getElementById('coach-msg-text');
+  var msg=inp?inp.value.trim():'';
+  if(!msg){if(typeof notify==='function')notify('כתוב הודעה','r');return;}
+  var chats=JSON.parse(localStorage.getItem('cf7chat')||'{}');
+  var key=uid||groupId||'general';
+  if(!chats[key])chats[key]=[];
+  chats[key].push({from:'coach',msg:msg,time:Date.now()});
+  localStorage.setItem('cf7chat',JSON.stringify(chats));
+  if(inp)inp.value='';
+  if(typeof closeModal==='function')closeModal();
+  if(typeof notify==='function')notify('📤 הודעה נשלחה!','p');
+}
+
+function sendMsgToAth(uid){
+  doSendMsg(uid, null);
+}
+// =========================================================
+
+
+// ═══ CONFETTI — celebrate new high score ══════════
+function launchConfetti(duration){
+  duration = duration || 2000;
+  var end = Date.now() + duration;
+  var colors = ['#00ff88','#00e5ff','#ffd60a','#ff2d55','#7c3aed'];
+  (function frame(){
+    var particles = 12;
+    for(var i=0;i<particles;i++){
+      var el=document.createElement('div');
+      el.style.cssText=[
+        'position:fixed','top:20%','left:'+(20+Math.random()*60)+'%',
+        'width:'+(6+Math.random()*8)+'px','height:'+(6+Math.random()*8)+'px',
+        'border-radius:'+(Math.random()>0.5?'50%':'2px'),
+        'background:'+colors[Math.floor(Math.random()*colors.length)],
+        'pointer-events:none','z-index:99999',
+        'animation:cfDrop '+(0.8+Math.random()*0.8)+'s ease-in forwards',
+        'opacity:1'
+      ].join(';');
+      document.body.appendChild(el);
+      setTimeout(function(e){return function(){try{e.remove();}catch(x){}};}(el), 1600);
+    }
+    if(Date.now()<end) requestAnimationFrame(frame);
+  })();
+}
+// Add CSS for confetti drop
+(function(){
+  var s=document.createElement('style');
+  s.textContent='@keyframes cfDrop{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(60vh) rotate(720deg);opacity:0}}';
+  document.head.appendChild(s);
+})();
+// ══════════════════════════════════════════════════
+
+
+// ═══ WHATSAPP SHARE ════════════════════════════════
+function shareWhatsApp(text){
+  var encoded = encodeURIComponent(text||'Combat Fit IL — בדוק את הכושר הקרבי שלך! 💪');
+  window.open('https://wa.me/?text='+encoded,'_blank');
+}
+function shareScoreWhatsApp(){
+  var pr  = JSON.parse(localStorage.getItem('cf7pr')||'{}');
+  var pg  = JSON.parse(localStorage.getItem('cf7p')||'[]');
+  var sc  = pg.length ? pg[0].bar : '?';
+  var u   = (window.UNITS && pr.unit && window.UNITS[pr.unit]) ? window.UNITS[pr.unit].n : 'קרבי';
+  var txt = '⚔ Combat Fit IL\n' +
+            '👤 ' + (pr.name||'לוחם') + ' | ' + u + '\n' +
+            '🏆 ציון קרבי: ' + sc + '/100\n' +
+            '💪 מוכן לשירות קרבי!\n' +
+            '🔗 app-for-running.vercel.app';
+  shareWhatsApp(txt);
+}
+// ══════════════════════════════════════════════════
+
+
+// ═══ PULL TO REFRESH ═══════════════════════════════
+(function(){
+  if(window._ptrReady) return;
+  window._ptrReady = true;
+  var startY=0, pulling=false, indicator=null;
+  function getIndicator(){
+    if(!indicator){
+      indicator=document.createElement('div');
+      indicator.id='ptr-indicator';
+      indicator.style.cssText='position:fixed;top:0;left:0;right:0;height:0;background:linear-gradient(135deg,rgba(0,255,136,.3),rgba(0,229,255,.2));display:flex;align-items:flex-end;justify-content:center;z-index:9990;transition:height .15s ease;overflow:hidden;color:var(--pri);font-size:12px;font-weight:700;padding-bottom:4px';
+      document.body.appendChild(indicator);
+    }
+    return indicator;
+  }
+  document.addEventListener('touchstart',function(e){
+    var cont=document.querySelector('.content');
+    if(cont&&cont.scrollTop===0) startY=e.touches[0].clientY;
+    else startY=0;
+  },{passive:true});
+  document.addEventListener('touchmove',function(e){
+    if(!startY) return;
+    var dy=e.touches[0].clientY - startY;
+    if(dy>10&&dy<80){
+      var ind=getIndicator();
+      var pct=Math.min(1,dy/60);
+      ind.style.height=(dy*0.5)+'px';
+      ind.textContent=pct>0.8?'↑ שחרר לרענן':'↓ משוך לרענן';
+      pulling=true;
+    }
+  },{passive:true});
+  document.addEventListener('touchend',function(e){
+    if(!startY||!pulling) return;
+    var ind=getIndicator();
+    var dy=e.changedTouches[0].clientY - startY;
+    ind.style.height='0';
+    if(dy>50){
+      if(typeof refreshDash==='function') refreshDash();
+      if(typeof notify==='function') notify('🔄 מרוענן...','p');
+      if(typeof haptic==='function') haptic();
+    }
+    startY=0; pulling=false;
+  },{passive:true});
+})();
+// ══════════════════════════════════════════════════
+
+
+// ═══ SKELETON LOADERS ══════════════════════════════
+function showSkeleton(containerId, rows){
+  rows=rows||3;
+  var el=document.getElementById(containerId);
+  if(!el) return;
+  var html='';
+  for(var i=0;i<rows;i++){
+    html+='<div class="skeleton skel-line '+(i%3===2?'short':i%3===1?'med':'')+'" style="margin-bottom:10px"></div>';
+  }
+  el.innerHTML=html;
+}
+
+
+// =========================================================
+
+
+// Add CSS for confetti drop
+(function(){
+  var s=document.createElement('style');
+  s.textContent='@keyframes cfDrop{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(60vh) rotate(720deg);opacity:0}}';
+  document.head.appendChild(s);
+})();
+// ══════════════════════════════════════════════════
+
+
+// ═══ PULL TO REFRESH ═══════════════════════════════
+
+// ══════════════════════════════════════════════════
+
+
+// ══════════════════════════════════════════════════
 </script>
 
 <!-- Firebase SDK — Multi-group combat fitness -->
