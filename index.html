@@ -1357,7 +1357,6 @@ document.head.appendChild(_link);
 <!-- ══════════════════════ TRAIN ══════════════════════ -->
 
 <div class="pg" id="p-train">
-  <div class="pgh"><span>💪</span> אימון</div>
   <div class="tabs" style="overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px">
     <button class="tab on" onclick="trt('tr-str',this)">כוח</button>
     <button class="tab" onclick="trt('tr-run',this)">ריצה</button>
@@ -1867,6 +1866,23 @@ document.head.appendChild(_link);
 <div class="pg" id="p-ai">
   <div class="pgh"><span>🤖</span> מאמן AI</div>
   <div class="card hot">
+    <div class="sh">🤖 שאל את המאמן</div>
+    <div class="chips">
+      <div class="chip" onclick="quickQ('איך משפר מתח מהיר?')">💪 מתח</div>
+      <div class="chip" onclick="quickQ('תוכנית 8 שבועות לבר-אור')">🏃 בר-אור</div>
+      <div class="chip" onclick="quickQ('הכנה לגיבוש אגוז')">💀 גיבוש</div>
+      <div class="chip" onclick="quickQ('תזונה נכונה לאימון קרבי')">🥩 תזונה</div>
+      <div class="chip" onclick="quickQ('כאב שין-ספלינט מה עושה?')">🩹 פציעה</div>
+      <div class="chip" onclick="quickQ('מה ההבדל בין היחידות הקרביות? מגולני עד סיירת מטכל')">🪖 יחידות</div>
+    </div>
+    <div id="ai-log" style="max-height:340px;overflow-y:auto;margin-bottom:8px"></div>
+    <div style="display:flex;gap:7px">
+      <input id="ai-q" type="text" placeholder="שאל כל שאלה..." style="flex:1"/>
+      <button class="btn bp bsm" onclick="askAI()" style="width:56px">שלח</button>
+    </div>
+  </div>
+</div>
+  <div class="card hot">
     <div class="sh">⚙ פרטים אישיים</div>
       <!-- Mental Combat Training -->
       <div class="card" style="border-color:rgba(124,58,237,.3);background:linear-gradient(180deg,rgba(124,58,237,.06),var(--card));margin-top:10px">
@@ -1896,23 +1912,6 @@ document.head.appendChild(_link);
     </div>
     <button class="btn bs" onclick="saveAISettings()">💾 שמור</button>
   </div>
-  <div class="card hot">
-    <div class="sh">🤖 שאל את המאמן</div>
-    <div class="chips">
-      <div class="chip" onclick="quickQ('איך משפר מתח מהיר?')">💪 מתח</div>
-      <div class="chip" onclick="quickQ('תוכנית 8 שבועות לבר-אור')">🏃 בר-אור</div>
-      <div class="chip" onclick="quickQ('הכנה לגיבוש אגוז')">💀 גיבוש</div>
-      <div class="chip" onclick="quickQ('תזונה נכונה לאימון קרבי')">🥩 תזונה</div>
-      <div class="chip" onclick="quickQ('כאב שין-ספלינט מה עושה?')">🩹 פציעה</div>
-      <div class="chip" onclick="quickQ('מה ההבדל בין היחידות הקרביות? מגולני עד סיירת מטכל')">🪖 יחידות</div>
-    </div>
-    <div id="ai-log" style="max-height:340px;overflow-y:auto;margin-bottom:8px"></div>
-    <div style="display:flex;gap:7px">
-      <input id="ai-q" type="text" placeholder="שאל כל שאלה..." style="flex:1"/>
-      <button class="btn bp bsm" onclick="askAI()" style="width:56px">שלח</button>
-    </div>
-  </div>
-</div>
 
 
 
@@ -2097,6 +2096,7 @@ document.head.appendChild(_link);
 <script>'use strict';
 // ─── Core globals declared first to avoid TDZ ───────────────
 var PAGES=['dash','test','week','lb','train','ai','coach'];
+var _tInt=null,_tRun=false,_tCur=0;
 var _activeGid=null;
 var muscleState={};
 var coachFilterMode='all';
@@ -2177,48 +2177,29 @@ var UNITS={
 var COACH_PASS_KEY='cf7_coach_pass';
 var DEFAULT_COACH_PASS='cf7_coach_pass'; // ניתן לשנות
 
-let coachMode=false; // always start in athlete mode for security
+var coachMode=false; // always start in athlete mode for security
 
 function initCM(){
   document.body.classList.toggle('cm',coachMode);
-  // Switch nav bars
   var navA=document.getElementById('nav-athlete');
   var navC=document.getElementById('nav-coach');
   if(navA)navA.style.display=coachMode?'none':'grid';
   if(navC)navC.style.display=coachMode?'grid':'none';
-  const b=document.getElementById('mode-btn');
+  var b=document.getElementById('mode-btn');
   if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
-  const lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v7.0':'IDF ELITE SYSTEM v7.0 PRO';
-  // Show/hide coach panel
-  // coach UI lives in p-coach
-  if(coachMode){
-    // Load groups from Firebase or local
-    if(window._coachGroups&&window._coachGroups.length){
-      renderCoachGroupsUI();
-      showPg('coach');
-    } else if(window._fbUID&&window._loadCoachGroups){
-      window._loadCoachGroups(window._fbUID);
-    } else {
-      // Fallback: local athletes
-      window._coachAthletes=window._coachAthletes||{};
-      window._coachAthletes['local']=getAthletes();
-      window._coachGroups=[{id:'local',name:'הקבוצה שלי',code:'מקומי'}];
-      _activeGid='local';
-      renderCoachGroupsUI();
-      showPg('coach');
-    }
-  }
+  var lm=document.getElementById('logo-main');
+  if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
+  var ls=document.getElementById('logo-sub');
+  if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v7.0':'IDF ELITE SYSTEM v7.0 PRO';
+  if(coachMode){ showPg('coach'); renderCoachGroupsUI(); }
 }
 
 function toggleCM(){
   if(coachMode){
-    // Already coach — switch back to athlete, no password needed
     coachMode=false; initCM();
     notify('⚔ מצב ספורטאי','p');
   } else {
-    // Entering coach — require password
-    openCoachLoginModal();
+    showCoachLogin();
   }
 }
 
@@ -2245,46 +2226,34 @@ function openCoachLoginModal(){
 
 function submitCoachPass(){
   if(!checkLoginBruteForce()) return;
-
-  var inp = document.getElementById('coach-pass-inp');
-  if (!inp) return;
-  var pass = inp.value;
-  if (!pass || pass.length < 1) return;
-
-  var stored = localStorage.getItem(typeof COACH_PASS_KEY!=='undefined' ? COACH_PASS_KEY : 'cf7cp') || '';
-  // If no password set yet, use environment default (not shown in UI)
-  if (!stored) {
-    stored = localStorage.getItem('cf7_coach_pass_hash') || 'cf7_coach_pass';
-  }
-
-  if (pass === stored) {
+  var inp=document.getElementById('coach-pass-inp');
+  if(!inp){ notify('שגיאה: שדה סיסמה חסר','r'); return; }
+  var pass=inp.value.trim();
+  if(!pass){ notify('הכנס סיסמה','r'); return; }
+  var KEY=typeof COACH_PASS_KEY!=='undefined'?COACH_PASS_KEY:'cf7_coach_pass';
+  var stored=localStorage.getItem(KEY)||'cf7_coach_pass';
+  if(pass===stored){
     recordSuccessfulLogin();
     hideCoachLogin();
-    coachMode = true;
-    var navA = document.getElementById('nav-athlete');
-    var navC = document.getElementById('nav-coach');
-    if (navA) navA.style.display = 'none';
-    if (navC) navC.style.display = 'grid';
-    var b = document.getElementById('mode-btn');
-    if (b) b.textContent = '\u2694 \u05e1\u05e4\u05d5\u05e8\u05d8\u05d0\u05d9';
-    if (typeof showPg === 'function') showPg('coach');
-    try {
-      if (!window._coachGroups || !window._coachGroups.length) {
-        window._coachAthletes = window._coachAthletes || {};
-        window._coachAthletes['local'] = getAthletes();
-        window._coachGroups = [{id:'local', name:'\u05d4\u05e7\u05d1\u05d5\u05e6\u05d4', code:'LOCAL'}];
-        _activeGid = 'local';
-      }
-      if (typeof renderCoachGroupsUI === 'function') renderCoachGroupsUI();
-    } catch(e) {}
-    try { if (typeof renderCoachGroup === 'function') renderCoachGroup(); } catch(e) {}
-    if (typeof notify === 'function') notify('\ud83c\udf96 \u05d1\u05e8\u05d5\u05da \u05d4\u05d1\u05d0 \u05de\u05d0\u05de\u05df!', 'p');
-    if (typeof haptic === 'function') haptic('success');
+    try{closeModal();}catch(e){}
+    coachMode=true;
+    window._coachAthletes=window._coachAthletes||{};
+    if(!window._coachAthletes['local']){
+      window._coachAthletes['local']=typeof getAthletes==='function'?getAthletes():[];
+    }
+    if(!window._coachGroups||!window._coachGroups.length){
+      window._coachGroups=[{id:'local',name:'הקבוצה שלי',code:'LOCAL'}];
+    }
+    if(!_activeGid) _activeGid=window._coachGroups[0].id;
+    initCM();
+    notify('🎖 ברוך הבא מאמן!','p');
+    if(typeof haptic==='function') haptic('success');
   } else {
-    inp.value = '';
-    inp.style.borderColor = 'var(--red)';
-    setTimeout(function() { if (inp) inp.style.borderColor = ''; }, 1500);
+    inp.value='';
+    inp.style.borderColor='var(--red)';
+    setTimeout(function(){inp.style.borderColor='';},1500);
     recordFailedLogin();
+    notify('❌ סיסמה שגויה','r');
   }
 }
 
@@ -7052,36 +7021,28 @@ function createGroupDialog(){closeModal();openModal('➕ קבוצה חדשה','<
 function joinGroupDialog(){closeModal();openModal('🔗 הצטרף לקבוצה','<div style="padding:8px 0"><div style="font-size:12px;color:var(--txt2);margin-bottom:12px">הזן את הקוד שקיבלת מהמאמן</div><input id="join-code-inp" type="text" placeholder="CF-XXXXXX" style="font-family:monospace;font-size:20px;letter-spacing:3px;text-align:center;text-transform:uppercase;margin-bottom:14px"/><button class="btn bp" style="width:100%" onclick="doJoinGroup()">🔗 הצטרף</button></div>');}
 
 function renderCoachGroupsUI(){
-  var groups = window._coachGroups || [];
-  if(!_activeGid && groups.length) _activeGid = groups[0].id;
-  var ag = groups.find(function(g){ return g.id === _activeGid; }) || groups[0];
-
-  var tabsEl = document.getElementById('coach-group-tabs');
+  var groups=window._coachGroups||[];
+  if(!_activeGid&&groups.length) _activeGid=groups[0].id;
+  var ag=groups.filter(function(g){return g.id===_activeGid;})[0]||groups[0];
+  var tabsEl=document.getElementById('coach-group-tabs');
   if(tabsEl){
     if(!groups.length){
-      tabsEl.innerHTML = '<div style="text-align:center;padding:10px;color:var(--txt3);font-size:11px;width:100%">אין קבוצות — לחץ ➕ ליצירה</div>';
+      tabsEl.innerHTML='<div style="color:var(--txt3);font-size:11px;padding:8px;text-align:center">אין קבוצות — <button onclick="createGroupDialog()" style="background:none;border:none;color:var(--purpleL);cursor:pointer;font-weight:900">➕ צור קבוצה</button></div>';
     } else {
-      tabsEl.innerHTML = groups.map(function(g){
-        var cnt = (window._coachAthletes && window._coachAthletes[g.id] || []).length;
-        var on = g.id === _activeGid;
+      tabsEl.innerHTML=groups.map(function(g){
+        var cnt=(window._coachAthletes&&window._coachAthletes[g.id]||[]).length;
+        var on=g.id===_activeGid;
         return '<button data-gid="'+g.id+'" onclick="switchCoachGroup(this.dataset.gid)" style="flex-shrink:0;padding:8px 14px;border-radius:20px;font-size:11px;cursor:pointer;white-space:nowrap;border:'+(on?'2px solid var(--purpleL)':'1px solid var(--b2)')+';background:'+(on?'rgba(124,58,237,.12)':'var(--card2)')+';color:'+(on?'var(--purpleL)':'var(--txt2)')+';font-weight:'+(on?'900':'700')+'">'+g.name+' <span style="font-size:9px;opacity:.7">('+cnt+')</span></button>';
-      }).join('') + '<button onclick="createGroupDialog()" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:1px dashed var(--b2);background:transparent;color:var(--txt3);font-size:11px;cursor:pointer">➕ חדשה</button>';
+      }).join('')+'<button onclick="createGroupDialog()" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:1px dashed var(--b2);background:transparent;color:var(--txt3);font-size:11px;cursor:pointer">➕ חדשה</button>';
     }
   }
-
-  var agCard = document.getElementById('active-group-card');
-  var agName = document.getElementById('active-group-name');
-  var agCode = document.getElementById('active-group-code');
+  var agCard=document.getElementById('active-group-card');
+  var agName=document.getElementById('active-group-name');
+  var agCode=document.getElementById('active-group-code');
   if(agCard){
-    if(ag){
-      agCard.style.display = 'block';
-      if(agName) agName.textContent = ag.name;
-      if(agCode) agCode.textContent = ag.code;
-    } else {
-      agCard.style.display = 'none';
-    }
+    if(ag){agCard.style.display='block';if(agName)agName.textContent=ag.name;if(agCode)agCode.textContent=ag.code;}
+    else{agCard.style.display='none';}
   }
-
   updateGroupStats();
   renderGroupAthletesNew(_activeGid);
 }
@@ -7326,7 +7287,7 @@ function coachShowTab(tab,btn){
   ['groups','athletes','msg','settings'].forEach(function(t){var el=document.getElementById('coach-tab-'+t);if(el)el.style.display=(t===tab)?'block':'none';});
   document.querySelectorAll('#nav-coach .nav').forEach(function(b){b.classList.remove('on');});
   if(btn)btn.classList.add('on');
-  if(tab==='groups'){ renderCoachGroupsUI(); }
+  if(tab==='groups'){renderCoachGroupsUI();}
   if(tab==='athletes'){
     var active=(window._coachGroups||[]).find(function(g){return g.id===_activeGid;});
     var nameEl=document.getElementById('athletes-tab-group-name');
@@ -8189,55 +8150,8 @@ function hideCoachLogin(){
   var ov=document.getElementById('coach-login-overlay');
   if(ov)ov.style.display='none';
 }
-// toggleCM uses overlay
-(function(){
-  var _orig=typeof toggleCM==='function'?toggleCM:null;
-  if(_orig&&!_orig._ol){
-    toggleCM=function(){
-      if(coachMode){
-        coachMode=false;
-        var nA=document.getElementById('nav-athlete');
-        var nC=document.getElementById('nav-coach');
-        if(nA)nA.style.display='grid';if(nC)nC.style.display='none';
-        showPg('dash');
-        if(typeof notify==='function')notify('מצב ספורטאי','p');
-      } else { showCoachLogin(); }
-    };
-    toggleCM._ol=true;
-  }
-})();
-// submitCoachPass uses overlay  
-(function(){
-  var _scp=typeof submitCoachPass==='function'?submitCoachPass:null;
-  if(!_scp||_scp._ol){return;}
-  submitCoachPass=function(){
-    var inp=document.getElementById('coach-pass-inp');
-    if(!inp)return;
-    var stored=localStorage.getItem(typeof COACH_PASS_KEY!=='undefined'?COACH_PASS_KEY:'cf7cp')||'cf7_coach_pass';
-    if(inp.value===stored){
-      hideCoachLogin();coachMode=true;
-      var nA=document.getElementById('nav-athlete');var nC=document.getElementById('nav-coach');
-      if(nA)nA.style.display='none';if(nC)nC.style.display='grid';
-      showPg('coach');
-      try{
-        if(!window._coachGroups||!window._coachGroups.length){
-          window._coachAthletes=window._coachAthletes||{};
-          window._coachAthletes['local']=getAthletes();
-          window._coachGroups=[{id:'local',name:'הקבוצה',code:'LOCAL'}];
-          _activeGid='local';
-        }
-        renderCoachGroupsUI();
-      }catch(e){}
-      try{renderCoachGroup();}catch(e){}
-      if(typeof notify==='function')notify('ברוך הבא מאמן!','p');
-      if(typeof haptic==='function')haptic('success');
-    } else {
-      inp.value='';
-      if(typeof notify==='function')notify('סיסמה שגויה','r');
-    }
-  };
-  submitCoachPass._ol=true;
-})();
+// Coach login handled directly
+
 
 // ══ SWIPE NAVIGATION ══════════════════════════════════════════
 (function(){
@@ -9504,274 +9418,5 @@ window._fbSignOut=()=>signOut(auth);
     <div style="margin-top:10px;font-size:10px;color:var(--txt3);">שכחת סיסמה? פנה למנהל המערכת</div>
   </div>
 </div>
-
-<script>
-/* ═══════════════════════════════════════════════════════
-   COACH SYSTEM - COMPLETE OVERRIDE
-   Replaces all broken coach functions with working versions
-   ═══════════════════════════════════════════════════════ */
-(function(){
-  'use strict';
-
-  /* ── Variables ── */
-  var PASS_KEY = 'cf7_coach_pass';
-  var DEFAULT_PASS = 'cf7_coach_pass';
-
-  /* ── Utility ── */
-  function el(id){ return document.getElementById(id); }
-
-  /* ── Show coach login overlay ── */
-  window.showCoachLogin = function(){
-    var ov = el('coach-login-overlay');
-    if(ov){ ov.style.display = 'flex'; }
-    var inp = el('coach-pass-inp');
-    if(inp){ inp.value = ''; setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 80); }
-  };
-
-  /* ── Hide coach login overlay ── */
-  window.hideCoachLogin = function(){
-    var ov = el('coach-login-overlay');
-    if(ov) ov.style.display = 'none';
-  };
-
-  /* ── toggleCM: enter/exit coach mode ── */
-  window.toggleCM = function(){
-    if(window.coachMode){
-      window.coachMode = false;
-      var nA = el('nav-athlete'); var nC = el('nav-coach');
-      if(nA) nA.style.display = 'grid';
-      if(nC) nC.style.display = 'none';
-      var b = el('mode-btn'); if(b) b.textContent = '🎖 מאמן';
-      document.body.classList.remove('cm');
-      if(typeof showPg === 'function') showPg('dash');
-      if(typeof notify === 'function') notify('⚔ מצב ספורטאי', 'p');
-    } else {
-      window.showCoachLogin();
-    }
-  };
-
-  /* ── submitCoachPass: verify password ── */
-  window.submitCoachPass = function(){
-    var inp = el('coach-pass-inp');
-    if(!inp) return;
-    var pass = inp.value.trim();
-    if(!pass) return;
-    var stored = localStorage.getItem(PASS_KEY) || DEFAULT_PASS;
-    if(pass !== stored){
-      inp.value = '';
-      inp.style.borderColor = 'var(--red)';
-      setTimeout(function(){ inp.style.borderColor = ''; }, 1500);
-      if(typeof notify === 'function') notify('❌ סיסמה שגויה', 'r');
-      return;
-    }
-    /* SUCCESS */
-    window.hideCoachLogin();
-    /* Also close old modal if open */
-    if(typeof closeModal === 'function') try{ closeModal(); }catch(e){}
-    window.coachMode = true;
-    document.body.classList.add('cm');
-    var nA = el('nav-athlete'); var nC = el('nav-coach');
-    if(nA) nA.style.display = 'none';
-    if(nC) nC.style.display = 'grid';
-    var b = el('mode-btn'); if(b) b.textContent = '⚔ ספורטאי';
-    /* Init coach data */
-    if(!window._coachGroups || !window._coachGroups.length){
-      window._coachAthletes = window._coachAthletes || {};
-      var localAthletes = [];
-      try{ localAthletes = (typeof getAthletes === 'function') ? getAthletes() : []; }catch(e){}
-      window._coachAthletes['local'] = localAthletes;
-      window._coachGroups = [{ id:'local', name:'הקבוצה שלי', code:'LOCAL' }];
-      window._activeGid = 'local';
-    }
-    /* Navigate and render */
-    if(typeof showPg === 'function') showPg('coach');
-    /* Small delay to let showPg complete */
-    setTimeout(function(){
-      window.renderCoachGroupsUI();
-    }, 30);
-    if(typeof notify === 'function') notify('🎖 ברוך הבא מאמן!', 'p');
-    if(typeof haptic === 'function') try{ haptic('success'); }catch(e){}
-  };
-
-  /* ── renderCoachGroupsUI: render the groups tab ── */
-  window.renderCoachGroupsUI = function(){
-    var groups = window._coachGroups || [];
-    /* Use _activeGid - the one variable consistently used everywhere else */
-    if(!window._activeGid && groups.length) window._activeGid = groups[0].id;
-    var ag = groups.filter(function(g){ return g.id === window._activeGid; })[0] || groups[0];
-
-    /* ── Group tabs ── */
-    var tabsEl = el('coach-group-tabs');
-    if(tabsEl){
-      if(!groups.length){
-        tabsEl.innerHTML = '<div style="text-align:center;padding:12px;color:var(--txt3);font-size:11px;width:100%">אין קבוצות — <button onclick="createGroupDialog()" style="background:none;border:none;color:var(--purpleL);cursor:pointer;font-weight:900;font-size:11px">➕ צור קבוצה</button></div>';
-      } else {
-        tabsEl.innerHTML = groups.map(function(g){
-          var cnt = (window._coachAthletes && window._coachAthletes[g.id] || []).length;
-          var on = g.id === window._activeGid;
-          return '<button data-gid="' + g.id + '" onclick="switchCoachGroup(this.dataset.gid)" '
-            + 'style="flex-shrink:0;padding:8px 14px;border-radius:20px;font-size:11px;'
-            + 'cursor:pointer;white-space:nowrap;border:' + (on ? '2px solid var(--purpleL)' : '1px solid var(--b2)') + ';'
-            + 'background:' + (on ? 'rgba(124,58,237,.12)' : 'var(--card2)') + ';'
-            + 'color:' + (on ? 'var(--purpleL)' : 'var(--txt2)') + ';'
-            + 'font-weight:' + (on ? '900' : '700') + '">'
-            + g.name + ' <span style="font-size:9px;opacity:.7">(' + cnt + ')</span>'
-            + '</button>';
-        }).join('') + '<button onclick="createGroupDialog()" style="flex-shrink:0;padding:8px 14px;'
-          + 'border-radius:20px;border:1px dashed var(--b2);background:transparent;'
-          + 'color:var(--txt3);font-size:11px;cursor:pointer">➕ חדשה</button>';
-      }
-    }
-
-    /* ── Active group card ── */
-    var agCard = el('active-group-card');
-    var agName = el('active-group-name');
-    var agCode = el('active-group-code');
-    if(agCard){
-      if(ag){
-        agCard.style.display = 'block';
-        if(agName) agName.textContent = ag.name;
-        if(agCode) agCode.textContent = ag.code;
-      } else {
-        agCard.style.display = 'none';
-      }
-    }
-
-    /* ── Stats ── */
-    window.updateGroupStats();
-
-    /* ── Athletes list ── */
-    window.renderGroupAthletesNew(window._activeGid);
-  };
-
-  /* ── updateGroupStats ── */
-  window.updateGroupStats = function(){
-    var athletes = (window._coachAthletes && window._activeGid && window._coachAthletes[window._activeGid]) || [];
-    var count = athletes.length;
-    var avg = count ? Math.round(athletes.reduce(function(s,a){ return s + (a.sc||0); }, 0) / count) : 0;
-    var top = count ? Math.max.apply(null, athletes.map(function(a){ return a.sc||0; })) : 0;
-    function se(id,v){ var e=el(id); if(e) e.textContent=v; }
-    se('cgs-count', count || 0);
-    se('cgs-avg',   avg   || '--');
-    se('cgs-top',   top   || '--');
-  };
-
-  /* ── switchCoachGroup ── */
-  window.switchCoachGroup = function(gid){
-    window._activeGid = gid;
-    window.renderCoachGroupsUI();
-  };
-
-  /* ── coachShowTab ── */
-  window.coachShowTab = function(tab, btn){
-    ['groups','athletes','msg','settings'].forEach(function(t){
-      var e = el('coach-tab-' + t);
-      if(e) e.style.display = (t === tab) ? 'block' : 'none';
-    });
-    document.querySelectorAll('#nav-coach .nav').forEach(function(b){ b.classList.remove('on'); });
-    if(btn) btn.classList.add('on');
-    if(tab === 'groups') window.renderCoachGroupsUI();
-    if(tab === 'athletes'){
-      var active = (window._coachGroups||[]).filter(function(g){ return g.id===window._activeGid; })[0];
-      var nameEl = el('athletes-tab-group-name');
-      if(nameEl) nameEl.textContent = active ? active.name : 'בחר קבוצה';
-      window.renderGroupAthletesNew(window._activeGid);
-    }
-    if(tab === 'msg'){
-      window.renderMsgAthletesList && window.renderMsgAthletesList();
-    }
-  };
-
-  /* ── toggleAddAth ── */
-  window.toggleAddAth = function(){
-    var c = el('add-ath-card');
-    if(c){ c.style.display = c.style.display === 'none' ? 'block' : 'none'; }
-  };
-
-  /* ── addAthleteManual ── */
-  window.addAthleteManual = function(){
-    var nm  = el('ath-name-inp')  ? el('ath-name-inp').value.trim()    : '';
-    var sc  = el('ath-score-inp') ? parseInt(el('ath-score-inp').value) || 0 : 0;
-    var pul = el('ath-pull-inp')  ? parseInt(el('ath-pull-inp').value)  || 0 : 0;
-    var psh = el('ath-push-inp')  ? parseInt(el('ath-push-inp').value)  || 0 : 0;
-    var run = el('ath-run-inp')   ? parseInt(el('ath-run-inp').value)   || 0 : 0;
-    var un  = el('ath-unit-inp')  ? el('ath-unit-inp').value            : 'gen';
-    var gid = el('ath-group-inp') ? el('ath-group-inp').value           : window._activeGid;
-    if(!gid) gid = window._activeGid;
-    if(!nm){ if(typeof notify==='function') notify('הכנס שם חניך','r'); return; }
-    if(!gid){ if(typeof notify==='function') notify('בחר קבוצה','r'); return; }
-    var ath = { nm:nm, sc:sc, pul:pul, psh:psh, run:run, un:un, uid:'u_'+Date.now() };
-    window._coachAthletes = window._coachAthletes || {};
-    window._coachAthletes[gid] = window._coachAthletes[gid] || [];
-    window._coachAthletes[gid].push(ath);
-    try{ localStorage.setItem('cf7_ath_'+gid, JSON.stringify(window._coachAthletes[gid])); }catch(e){}
-    var card = el('add-ath-card'); if(card) card.style.display = 'none';
-    window.renderCoachGroupsUI();
-    if(typeof notify==='function') notify('✅ חניך "'+nm+'" נוסף!','p');
-  };
-
-  /* ── createGroupDialog ── */
-  window.createGroupDialog = function(){
-    if(typeof openModal==='function'){
-      openModal('➕ קבוצה חדשה', '<div style="padding:8px 0"><label style="font-size:11px;color:var(--txt2)">שם הקבוצה</label><input id="new-group-name" type="text" placeholder="קבוצת כושר קרבי ירושלים" style="margin-bottom:14px"/><button class="btn bp" style="width:100%" onclick="doCreateGroup()">➕ צור קבוצה</button></div>');
-    } else {
-      var name = prompt('שם הקבוצה:');
-      if(name) window.doCreateGroup(name);
-    }
-  };
-
-  /* ── doCreateGroup ── */
-  window.doCreateGroup = function(forceName){
-    var nameInp = el('new-group-name');
-    var name = forceName || (nameInp ? nameInp.value.trim() : '');
-    if(!name){ if(typeof notify==='function') notify('הכנס שם לקבוצה','r'); return; }
-    var code = Math.random().toString(36).slice(2,7).toUpperCase();
-    var group = { id:'g_'+Date.now(), name:name, code:code };
-    window._coachGroups = window._coachGroups || [];
-    window._coachGroups.push(group);
-    window._coachAthletes = window._coachAthletes || {};
-    window._coachAthletes[group.id] = [];
-    window._activeGid = group.id;
-    if(typeof closeModal==='function') try{ closeModal(); }catch(e){}
-    window.renderCoachGroupsUI();
-    if(typeof notify==='function') notify('✅ קבוצה "'+name+'" נוצרה! קוד: '+code,'p');
-  };
-
-  /* ── copyGroupCode ── */
-  window.copyGroupCode = function(){
-    var ag = (window._coachGroups||[]).filter(function(g){ return g.id===window._activeGid; })[0];
-    if(!ag) return;
-    if(navigator.clipboard){ navigator.clipboard.writeText(ag.code).then(function(){ if(typeof notify==='function') notify('✅ קוד הועתק: '+ag.code,'p'); }); }
-    else{ if(typeof notify==='function') notify('קוד: '+ag.code,'p'); }
-  };
-
-  /* ── changeCoachPass ── */
-  window.changeCoachPass = function(){
-    var np = prompt('סיסמה חדשה (לפחות 4 תווים):');
-    if(!np || np.length < 4){ if(typeof notify==='function') notify('לפחות 4 תווים','r'); return; }
-    localStorage.setItem(PASS_KEY, np);
-    if(typeof notify==='function') notify('✅ סיסמה עודכנה!','p');
-  };
-
-  /* ── Patch the mode-btn onclick - make sure it uses new toggleCM ── */
-  setTimeout(function(){
-    var btn = el('mode-btn');
-    if(btn) btn.onclick = window.toggleCM;
-  }, 100);
-
-  /* ── Also patch Enter key on the overlay input ── */
-  setTimeout(function(){
-    var inp = el('coach-pass-inp');
-    if(inp){
-      inp.onkeydown = function(e){ if(e.key==='Enter') window.submitCoachPass(); };
-    }
-    /* Patch the overlay buttons */
-    var loginBtn = document.querySelector('#coach-login-overlay button');
-    if(loginBtn) loginBtn.onclick = window.submitCoachPass;
-  }, 200);
-
-})();
-</script>
-
 </body>
 </html>
