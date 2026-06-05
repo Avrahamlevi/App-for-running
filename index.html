@@ -7059,6 +7059,7 @@ function renderCoachGroupsUI(){
   if(!_activeGid&&groups.length) _activeGid=groups[0].id;
   var ag=groups.filter(function(g){return g.id===_activeGid;})[0]||groups[0];
 
+  // Write to coach-group-tabs (VISIBLE - was writing to coach-group-selector which is hidden)
   var tabsEl=document.getElementById('coach-group-tabs');
   if(tabsEl){
     if(!groups.length){
