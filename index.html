@@ -2,7 +2,12 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+<meta charset="UTF-8"/>
+
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
@@ -137,7 +142,7 @@ select option{background:var(--bg3)}
 .bc2{background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.25)}
 
 /* ─── TABS ─── */
-.tabs{display:flex;gap:5px;flex-wrap:nowrap;margin-bottom:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .tab{border:1px solid var(--b2);background:var(--card2);color:var(--txt2);padding:6px 10px;border-radius:8px;font-size:10px;cursor:pointer;font-family:var(--fb);font-weight:700;transition:.15s;white-space:nowrap}
 .tab.on{background:var(--pri);color:#010e05;border-color:var(--pri);font-weight:900}
 body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)}
@@ -549,6 +554,7 @@ document.head.appendChild(_link);
   </div>
   <div class="top-right">
     <button id="notif-btn" onclick="requestNotifPermission()" title="הפעל התראות" style="background:transparent;border:none;font-size:18px;cursor:pointer;padding:4px;min-width:32px;min-height:44px;display:flex;align-items:center;justify-content:center">🔕</button>
+    <button id="theme-btn" onclick="toggleTheme()" title="מצב תצוגה" style="background:transparent;border:none;font-size:18px;cursor:pointer;padding:4px;min-width:32px;min-height:44px;display:flex;align-items:center;justify-content:center">🌙</button>
     <span class="coach-badge">🎖 COACH</span>
     <div id="msg-badge" onclick="openInbox()" style="display:none;background:var(--red);color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:900;text-align:center;line-height:18px;cursor:pointer;flex-shrink:0;position:relative">0</div>
     <div id="sync-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);cursor:pointer;transition:.3s;flex-shrink:0" title="מצב שמירה" onclick="typeof openUserMenu==='function'&&openUserMenu()"></div>
@@ -972,7 +978,7 @@ document.head.appendChild(_link);
       </div>
 
       <button class="btn bp" style="width:100%" onclick="calcStrengthFull()">📊 ניתוח מלא + תוכנית שיפור</button>
-      <div id="rm-res-str" style="margin-top:10px"></div>
+      <div id="rm-res" style="margin-top:10px"></div>
     </div>
   </div>
 
@@ -1350,13 +1356,203 @@ document.head.appendChild(_link);
   <div id="lb-challenge-card" style="display:none">
   </div><!-- /lb-challenge-card -->
 
+  <!-- ══ COACH DASHBOARD ══ -->
+  <div id="ann-feed-card">
+
+    <!-- My Groups tabs -->
+    <div class="card" style="margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="sh p" style="margin:0">🎖 הקבוצות שלי</div>
+        <button onclick="createGroupDialog()" style="padding:6px 12px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--pri);border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">➕ קבוצה</button>
+      </div>
+      <!-- Group tabs scroll -->
+      <div id="coach-group-tabs" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <div style="text-align:center;padding:12px;color:var(--txt3);font-size:11px;width:100%">טוען קבוצות...</div>
+      </div>
+    </div>
+
+    <!-- Active group info + code -->
+    <div id="active-group-card" style="display:none;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);border-radius:12px;padding:12px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div id="active-group-name" style="font-weight:900;font-size:13px;color:var(--purpleL)"></div>
+          <div style="font-size:10px;color:var(--txt3);margin-top:2px">קוד הצטרפות: <strong id="active-group-code" style="font-family:monospace;color:var(--pri);letter-spacing:2px"></strong></div>
+        </div>
+        <button id="copy-code-btn" onclick="copyGroupCode()" style="padding:8px 14px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);color:var(--pri);border-radius:8px;cursor:pointer;font-size:11px;font-weight:800">📋 העתק</button>
+      </div>
+    </div>
+
+    <!-- Group actions -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <button onclick="msgGroupModal()" style="padding:10px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);color:var(--purpleL);border-radius:10px;font-size:12px;font-weight:800;cursor:pointer">📢 הודעה לקבוצה</button>
+      <button onclick="addAthleteToGroup()" style="padding:10px;background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.15);color:var(--pri);border-radius:10px;font-size:12px;font-weight:800;cursor:pointer">👤 הוסף חניך</button>
+    </div>
+
+    <!-- Athletes list -->
+    <div class="card">
+      <div id="coach-group-selector" style="display:none"></div>
+      <div id="coach-athletes-list">
+        <div style="text-align:center;padding:24px;color:var(--txt3)">
+          <div style="font-size:28px;margin-bottom:8px">👥</div>
+          <div style="font-size:12px">בחר קבוצה כדי לראות חניכים</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Announcement composer -->
+    <div class="card" style="margin-top:8px">
+      <div class="sh y">📢 הודעה מהירה</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">
+        <div onclick="quickAnn('כל הכבוד על האימון השבוע! 💪')" style="font-size:10px;padding:5px 10px;background:var(--card2);border-radius:8px;cursor:pointer;border:1px solid var(--b1)">💪 כל הכבוד</div>
+        <div onclick="quickAnn('אימון מחר בשעה 07:00 📅')" style="font-size:10px;padding:5px 10px;background:var(--card2);border-radius:8px;cursor:pointer;border:1px solid var(--b1)">📅 אימון מחר</div>
+        <div onclick="quickAnn('מבחן 3K ביום חמישי ⚡')" style="font-size:10px;padding:5px 10px;background:var(--card2);border-radius:8px;cursor:pointer;border:1px solid var(--b1)">⚡ מבחן</div>
+        <div onclick="quickAnn('מסירות מרשימה! 🔥')" style="font-size:10px;padding:5px 10px;background:var(--card2);border-radius:8px;cursor:pointer;border:1px solid var(--b1)">🔥 כוכב</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <input id="ann-quick-input" type="text" placeholder="כתוב הודעה לכל הקבוצה..." style="flex:1"/>
+        <button onclick="sendQuickAnn()" class="btn bp bsm" style="padding:0 14px;white-space:nowrap">שלח 📢</button>
+      </div>
+    </div>
+  </div>
+  <!-- Manual add athlete -->
+  <div class="card hot" style="margin-top:8px" id="add-ath-card" style="display:none">
+    <div class="sh">➕ הוסף חניך ידנית</div>
+    <div class="r2">
+      <div><label>שם / כינוי</label><input id="ath-name-inp" type="text" placeholder="ישראל ישראלי"/></div>
+      <div><label>ציון (0-100)</label><input id="ath-score-inp" type="number" inputmode="numeric" placeholder="75"/></div>
+    </div>
+    <div class="r3">
+      <div><label>מתח</label><input id="ath-pull-inp" type="number" inputmode="numeric" placeholder="14"/></div>
+      <div><label>שכיבות</label><input id="ath-push-inp" type="number" inputmode="numeric" placeholder="60"/></div>
+      <div><label>2K (שנ)</label><input id="ath-run-inp" type="number" inputmode="numeric" placeholder="520"/></div>
+    </div>
+    <select id="ath-unit-inp" style="margin-bottom:10px">
+        <optgroup label="גדודים"><option value="nahal">🌿 נח"ל</option><option value="golani">🟢 גולני</option><option value="kfir">🦁 כפיר</option><option value="para">🪂 צנחנים</option><option value="giv">🔶 גבעתי</option></optgroup>
+        <optgroup label="קומנדו"><option value="duvdevan">🍒 דובדבן</option><option value="maglan">🎯 מגלן</option><option value="egoz">💀 אגוז</option><option value="oketz">🐕 עוקץ</option></optgroup>
+        <optgroup label="עילית"><option value="unit669">🚁 669</option><option value="shaldag">🦅 שלדג</option><option value="shai">🤿 שייטת 13</option><option value="matkal">🔱 סיירת מטכ"ל</option></optgroup>
+        <option value="gen">⚔ קרבי כללי</option>
+      </select>
+    <button class="btn bp" style="width:100%" onclick="addAthleteManual()">➕ הוסף לקבוצה</button>
   </div>
 
 </div>
 
 <!-- ══════════════════════ TRAIN ══════════════════════ -->
 
+<!-- ══════════════════════ COACH PAGE ══════════════════════ -->
+<div class="pg" id="p-coach">
+
+  <!-- TAB: GROUPS -->
+  <div id="coach-tab-groups">
+    <div class="pgh" style="color:var(--purpleL)"><span>🎖</span> הקבוצות שלי</div>
+    <div style="background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);border-radius:14px;padding:12px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-family:var(--fd);font-size:11px;letter-spacing:1.5px;color:var(--purpleL)">קבוצות פעילות</div>
+        <button onclick="createGroupDialog()" style="padding:6px 13px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.35);color:var(--purpleL);border-radius:20px;font-size:11px;font-weight:900;cursor:pointer">➕ קבוצה חדשה</button>
+      </div>
+      <div id="coach-group-tabs" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        <div style="text-align:center;padding:10px;color:var(--txt3);font-size:11px;width:100%">טוען...</div>
+      </div>
+    </div>
+    <div id="active-group-card" style="display:none;background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(0,229,255,.04));border:1px solid rgba(124,58,237,.25);border-radius:12px;padding:11px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div id="active-group-name" style="font-weight:900;font-size:14px;color:var(--purpleL)"></div>
+          <div style="font-size:10px;color:var(--txt3);margin-top:3px">קוד: <strong id="active-group-code" style="font-family:monospace;font-size:14px;color:var(--cyan);letter-spacing:3px"></strong></div>
+        </div>
+        <button onclick="copyGroupCode()" style="padding:8px 14px;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);color:var(--cyan);border-radius:9px;cursor:pointer;font-size:11px;font-weight:800">📋 העתק קוד</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+      <div style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--b1)">
+        <div id="cgs-count" style="font-family:var(--fd);font-size:28px;color:var(--purpleL)">0</div>
+        <div style="font-size:9px;color:var(--txt3)">חניכים</div>
+      </div>
+      <div style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--b1)">
+        <div id="cgs-avg" style="font-family:var(--fd);font-size:28px;color:var(--pri)">--</div>
+        <div style="font-size:9px;color:var(--txt3)">ממוצע ציון</div>
+      </div>
+      <div style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--b1)">
+        <div id="cgs-top" style="font-family:var(--fd);font-size:28px;color:var(--yellow)">--</div>
+        <div style="font-size:9px;color:var(--txt3)">ציון מוביל</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: ATHLETES -->
+  <div id="coach-tab-athletes" style="display:none">
+    <div class="pgh" style="color:var(--pri)"><span>👥</span> חניכים — <span id="athletes-tab-group-name" style="font-size:13px;opacity:.7">בחר קבוצה</span></div>
+    <button onclick="toggleAddAth()" style="width:100%;padding:12px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);color:var(--pri);border-radius:12px;font-size:13px;font-weight:900;cursor:pointer;margin-bottom:10px">👤 הוסף חניך ידנית</button>
+    <div id="add-ath-card" style="display:none;background:var(--card);border:1px solid rgba(0,255,136,.2);border-radius:13px;padding:13px;margin-bottom:10px">
+      <div style="font-family:var(--fd);font-size:11px;letter-spacing:1px;color:var(--pri);margin-bottom:11px">➕ פרטי חניך</div>
+      <div style="margin-bottom:10px"><label>קבוצה</label><select id="ath-group-inp" style="width:100%"><option value="">— בחר קבוצה —</option></select></div>
+      <div class="r2">
+        <div><label>שם</label><input id="ath-name-inp" type="text" placeholder="ישראל ישראלי"/></div>
+        <div><label>ציון (0-100)</label><input id="ath-score-inp" type="number" inputmode="numeric" placeholder="75"/></div>
+      </div>
+      <div class="r3">
+        <div><label>מתח</label><input id="ath-pull-inp" type="number" inputmode="numeric" placeholder="14"/></div>
+        <div><label>שכיבות</label><input id="ath-push-inp" type="number" inputmode="numeric" placeholder="60"/></div>
+        <div><label>2K (שנ)</label><input id="ath-run-inp" type="number" inputmode="numeric" placeholder="520"/></div>
+      </div>
+      <select id="ath-unit-inp" style="margin-bottom:11px">
+        <option value="gen">⚔ קרבי כללי</option>
+        <optgroup label="גדודים"><option value="nahal">🌿 נח"ל</option><option value="golani">🟢 גולני</option><option value="kfir">🦁 כפיר</option><option value="para">🪂 צנחנים</option><option value="giv">🔶 גבעתי</option></optgroup>
+        <optgroup label="קומנדו"><option value="duvdevan">🍒 דובדבן</option><option value="maglan">🎯 מגלן</option><option value="egoz">💀 אגוז</option><option value="oketz">🐕 עוקץ</option></optgroup>
+        <optgroup label="עילית"><option value="unit669">🚁 669</option><option value="shaldag">🦅 שלדג</option><option value="shai">🤿 שייטת 13</option><option value="matkal">🔱 מטכ"ל</option></optgroup>
+      </select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button class="btn bp" onclick="addAthleteManual()">➕ הוסף</button>
+        <button class="btn bs" onclick="document.getElementById('add-ath-card').style.display='none'">ביטול</button>
+      </div>
+    </div>
+    <div id="coach-athletes-list">
+      <div style="text-align:center;padding:30px;color:var(--txt3)"><div style="font-size:32px;margin-bottom:8px">👥</div><div style="font-size:12px">צור קבוצה כדי להוסיף חניכים</div></div>
+    </div>
+  </div>
+
+  <!-- TAB: MESSAGES -->
+  <div id="coach-tab-msg" style="display:none">
+    <div class="pgh" style="color:var(--yellow)"><span>📢</span> הודעות</div>
+    <div style="background:var(--card);border:1px solid rgba(255,214,10,.2);border-radius:13px;padding:13px;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:800;color:var(--yellow);margin-bottom:10px">📢 הודעה לכל הקבוצה</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">
+        <div onclick="quickAnn('כל הכבוד על האימון! 💪')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">💪 כל הכבוד</div>
+        <div onclick="quickAnn('אימון מחר 07:00 📅')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">📅 אימון מחר</div>
+        <div onclick="quickAnn('מבחן 3K ביום חמישי ⚡')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">⚡ מבחן</div>
+        <div onclick="quickAnn('עבודה מרשימה השבוע 🔥')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">🔥 כוכב</div>
+        <div onclick="quickAnn('שימו לב לתזונה ושינה לפני הגיבוש 🥩')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">🥩 תזונה</div>
+        <div onclick="quickAnn('הכנה מנטלית — תתמקדו! 🧠')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">🧠 מנטלי</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <input id="ann-quick-input" type="text" placeholder="כתוב הודעה לכל הקבוצה..." style="flex:1"/>
+        <button onclick="sendQuickAnn()" class="btn bp bsm" style="padding:0 16px;font-weight:900">שלח</button>
+      </div>
+    </div>
+    <div style="font-size:11px;font-weight:800;color:var(--txt2);margin-bottom:8px">📤 הודעה אישית</div>
+    <div id="coach-msg-athletes-list"><div style="text-align:center;padding:20px;color:var(--txt3);font-size:11px">בחר קבוצה תחילה</div></div>
+  </div>
+
+  <!-- TAB: SETTINGS -->
+  <div id="coach-tab-settings" style="display:none">
+    <div class="pgh" style="color:var(--txt2)"><span>⚙️</span> הגדרות מאמן</div>
+    <div style="background:var(--card);border:1px solid var(--b2);border-radius:13px;padding:13px;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:800;color:var(--purpleL);margin-bottom:10px">🔑 סיסמת מאמן</div>
+      <button class="btn bs" style="width:100%" onclick="changeCoachPass()">🔑 שנה סיסמה</button>
+        <button class="btn bs bsm" onclick="exportGroupCSV()" style="min-height:44px">📊 CSV</button>
+    </div>
+    <button onclick="toggleCM()" style="width:100%;padding:14px;background:rgba(255,45,85,.08);border:1px solid rgba(255,45,85,.2);color:var(--red);border-radius:13px;font-size:13px;font-weight:900;cursor:pointer;margin-top:4px">⚔ יציאה ממצב מאמן</button>
+  </div>
+
+  <!-- hidden stubs for JS compat -->
+  <div id="ann-feed-card" style="display:none"></div>
+  <div id="coach-group-selector" style="display:none"></div>
+  <div id="lb-out" style="display:none"></div>
+  <div id="lb-challenge-card" style="display:none"></div>
+</div>
+
 <div class="pg" id="p-train">
+  <div class="pgh"><span>💪</span> אימון</div>
   <div class="tabs" style="overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px">
     <button class="tab on" onclick="trt('tr-str',this)">כוח</button>
     <button class="tab" onclick="trt('tr-run',this)">ריצה</button>
@@ -1413,7 +1609,10 @@ document.head.appendChild(_link);
         <button class="btn bp" onclick="buildRun()">צור תוכנית ריצה</button>
     </div>
     <div id="rp-out"></div>
+  </div>
 
+  <!-- ════ GOOGLE MAPS ROUTE PLANNER ════ -->
+  <div 
   <!-- Pace Zones -->
   <div class="card" style="margin-top:8px">
     <div class="sh" style="color:var(--pri)">🏃 אזורי קצב</div>
@@ -1424,8 +1623,7 @@ document.head.appendChild(_link);
     <div id="pace-zones-result" style="margin-top:8px"></div>
   </div>
 
-  <!-- ════ GOOGLE MAPS ROUTE PLANNER ════ -->
-  <div id="tr-route" style="display:none">
+  id="tr-route" style="display:none">
     <!-- Active Run Overlay -->
     <div id="run-active-bar" style="display:none;background:linear-gradient(135deg,rgba(0,255,136,.12),var(--card2));border:2px solid var(--pri);border-radius:13px;padding:12px;margin-bottom:10px">
       <div style="font-family:var(--fd);font-size:11px;letter-spacing:2px;color:var(--pri);text-align:center;margin-bottom:10px">⚡ ריצה פעילה</div>
@@ -1866,23 +2064,6 @@ document.head.appendChild(_link);
 <div class="pg" id="p-ai">
   <div class="pgh"><span>🤖</span> מאמן AI</div>
   <div class="card hot">
-    <div class="sh">🤖 שאל את המאמן</div>
-    <div class="chips">
-      <div class="chip" onclick="quickQ('איך משפר מתח מהיר?')">💪 מתח</div>
-      <div class="chip" onclick="quickQ('תוכנית 8 שבועות לבר-אור')">🏃 בר-אור</div>
-      <div class="chip" onclick="quickQ('הכנה לגיבוש אגוז')">💀 גיבוש</div>
-      <div class="chip" onclick="quickQ('תזונה נכונה לאימון קרבי')">🥩 תזונה</div>
-      <div class="chip" onclick="quickQ('כאב שין-ספלינט מה עושה?')">🩹 פציעה</div>
-      <div class="chip" onclick="quickQ('מה ההבדל בין היחידות הקרביות? מגולני עד סיירת מטכל')">🪖 יחידות</div>
-    </div>
-    <div id="ai-log" style="max-height:340px;overflow-y:auto;margin-bottom:8px"></div>
-    <div style="display:flex;gap:7px">
-      <input id="ai-q" type="text" placeholder="שאל כל שאלה..." style="flex:1"/>
-      <button class="btn bp bsm" onclick="askAI()" style="width:56px">שלח</button>
-    </div>
-  </div>
-</div>
-  <div class="card hot">
     <div class="sh">⚙ פרטים אישיים</div>
       <!-- Mental Combat Training -->
       <div class="card" style="border-color:rgba(124,58,237,.3);background:linear-gradient(180deg,rgba(124,58,237,.06),var(--card));margin-top:10px">
@@ -1912,120 +2093,25 @@ document.head.appendChild(_link);
     </div>
     <button class="btn bs" onclick="saveAISettings()">💾 שמור</button>
   </div>
-
-
-
-<!-- ══════════════════════ COACH PAGE ══════════════════════ -->
-<div class="pg" id="p-coach">
-
-  <!-- TAB: GROUPS -->
-  <div id="coach-tab-groups">
-    <div class="pgh" style="color:var(--purpleL)"><span>🎖</span> הקבוצות שלי</div>
-    <div style="background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.22);border-radius:14px;padding:12px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="font-family:var(--fd);font-size:11px;letter-spacing:1.5px;color:var(--purpleL)">קבוצות פעילות</div>
-        <button onclick="createGroupDialog()" style="padding:6px 13px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.35);color:var(--purpleL);border-radius:20px;font-size:11px;font-weight:900;cursor:pointer">➕ קבוצה חדשה</button>
-      </div>
-      <div id="coach-group-tabs" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
-        <div style="text-align:center;padding:10px;color:var(--txt3);font-size:11px;width:100%">טוען...</div>
-      </div>
+  <div class="card hot">
+    <div class="sh">🤖 שאל את המאמן</div>
+    <div class="chips">
+      <div class="chip" onclick="quickQ('איך משפר מתח מהיר?')">💪 מתח</div>
+      <div class="chip" onclick="quickQ('תוכנית 8 שבועות לבר-אור')">🏃 בר-אור</div>
+      <div class="chip" onclick="quickQ('הכנה לגיבוש אגוז')">💀 גיבוש</div>
+      <div class="chip" onclick="quickQ('תזונה נכונה לאימון קרבי')">🥩 תזונה</div>
+      <div class="chip" onclick="quickQ('כאב שין-ספלינט מה עושה?')">🩹 פציעה</div>
+      <div class="chip" onclick="quickQ('מה ההבדל בין היחידות הקרביות? מגולני עד סיירת מטכל')">🪖 יחידות</div>
     </div>
-    <div id="active-group-card" style="display:none;background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(0,229,255,.04));border:1px solid rgba(124,58,237,.25);border-radius:12px;padding:11px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div id="active-group-name" style="font-weight:900;font-size:14px;color:var(--purpleL)"></div>
-          <div style="font-size:10px;color:var(--txt3);margin-top:3px">קוד: <strong id="active-group-code" style="font-family:monospace;font-size:14px;color:var(--cyan);letter-spacing:3px"></strong></div>
-        </div>
-        <button onclick="copyGroupCode()" style="padding:8px 14px;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);color:var(--cyan);border-radius:9px;cursor:pointer;font-size:11px;font-weight:800">📋 העתק קוד</button>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
-      <div style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--b1)">
-        <div id="cgs-count" style="font-family:var(--fd);font-size:28px;color:var(--purpleL)">0</div>
-        <div style="font-size:9px;color:var(--txt3)">חניכים</div>
-      </div>
-      <div style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--b1)">
-        <div id="cgs-avg" style="font-family:var(--fd);font-size:28px;color:var(--pri)">--</div>
-        <div style="font-size:9px;color:var(--txt3)">ממוצע ציון</div>
-      </div>
-      <div style="background:var(--card2);border-radius:11px;padding:12px;text-align:center;border:1px solid var(--b1)">
-        <div id="cgs-top" style="font-family:var(--fd);font-size:28px;color:var(--yellow)">--</div>
-        <div style="font-size:9px;color:var(--txt3)">ציון מוביל</div>
-      </div>
+    <div id="ai-log" style="max-height:340px;overflow-y:auto;margin-bottom:8px"></div>
+    <div style="display:flex;gap:7px">
+      <input id="ai-q" type="text" placeholder="שאל כל שאלה..." style="flex:1"/>
+      <button class="btn bp bsm" onclick="askAI()" style="width:56px">שלח</button>
     </div>
   </div>
+</div>
 
-  <!-- TAB: ATHLETES -->
-  <div id="coach-tab-athletes" style="display:none">
-    <div class="pgh" style="color:var(--pri)"><span>👥</span> חניכים — <span id="athletes-tab-group-name" style="font-size:13px;opacity:.7">בחר קבוצה</span></div>
-    <button onclick="toggleAddAth()" style="width:100%;padding:12px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);color:var(--pri);border-radius:12px;font-size:13px;font-weight:900;cursor:pointer;margin-bottom:10px">👤 הוסף חניך ידנית</button>
-    <div id="add-ath-card" style="display:none;background:var(--card);border:1px solid rgba(0,255,136,.2);border-radius:13px;padding:13px;margin-bottom:10px">
-      <div style="font-family:var(--fd);font-size:11px;letter-spacing:1px;color:var(--pri);margin-bottom:11px">➕ פרטי חניך</div>
-      <div style="margin-bottom:10px"><label>קבוצה</label><select id="ath-group-inp" style="width:100%"><option value="">— בחר קבוצה —</option></select></div>
-      <div class="r2">
-        <div><label>שם</label><input id="ath-name-inp" type="text" placeholder="ישראל ישראלי"/></div>
-        <div><label>ציון (0-100)</label><input id="ath-score-inp" type="number" inputmode="numeric" placeholder="75"/></div>
-      </div>
-      <div class="r3">
-        <div><label>מתח</label><input id="ath-pull-inp" type="number" inputmode="numeric" placeholder="14"/></div>
-        <div><label>שכיבות</label><input id="ath-push-inp" type="number" inputmode="numeric" placeholder="60"/></div>
-        <div><label>2K (שנ)</label><input id="ath-run-inp" type="number" inputmode="numeric" placeholder="520"/></div>
-      </div>
-      <select id="ath-unit-inp" style="margin-bottom:11px">
-        <option value="gen">⚔ קרבי כללי</option>
-        <optgroup label="גדודים"><option value="nahal">🌿 נח"ל</option><option value="golani">🟢 גולני</option><option value="kfir">🦁 כפיר</option><option value="para">🪂 צנחנים</option><option value="giv">🔶 גבעתי</option></optgroup>
-        <optgroup label="קומנדו"><option value="duvdevan">🍒 דובדבן</option><option value="maglan">🎯 מגלן</option><option value="egoz">💀 אגוז</option><option value="oketz">🐕 עוקץ</option></optgroup>
-        <optgroup label="עילית"><option value="unit669">🚁 669</option><option value="shaldag">🦅 שלדג</option><option value="shai">🤿 שייטת 13</option><option value="matkal">🔱 מטכ"ל</option></optgroup>
-      </select>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <button class="btn bp" onclick="addAthleteManual()">➕ הוסף</button>
-        <button class="btn bs" onclick="document.getElementById('add-ath-card').style.display='none'">ביטול</button>
-      </div>
-    </div>
-    <div id="coach-athletes-list">
-      <div style="text-align:center;padding:30px;color:var(--txt3)"><div style="font-size:32px;margin-bottom:8px">👥</div><div style="font-size:12px">צור קבוצה כדי להוסיף חניכים</div></div>
-    </div>
-  </div>
-
-  <!-- TAB: MESSAGES -->
-  <div id="coach-tab-msg" style="display:none">
-    <div class="pgh" style="color:var(--yellow)"><span>📢</span> הודעות</div>
-    <div style="background:var(--card);border:1px solid rgba(255,214,10,.2);border-radius:13px;padding:13px;margin-bottom:10px">
-      <div style="font-size:11px;font-weight:800;color:var(--yellow);margin-bottom:10px">📢 הודעה לכל הקבוצה</div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">
-        <div onclick="quickAnn('כל הכבוד על האימון! 💪')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">💪 כל הכבוד</div>
-        <div onclick="quickAnn('אימון מחר 07:00 📅')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">📅 אימון מחר</div>
-        <div onclick="quickAnn('מבחן 3K ביום חמישי ⚡')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">⚡ מבחן</div>
-        <div onclick="quickAnn('עבודה מרשימה השבוע 🔥')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">🔥 כוכב</div>
-        <div onclick="quickAnn('שימו לב לתזונה ושינה לפני הגיבוש 🥩')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">🥩 תזונה</div>
-        <div onclick="quickAnn('הכנה מנטלית — תתמקדו! 🧠')" style="font-size:10px;padding:6px 12px;background:var(--card2);border-radius:20px;cursor:pointer;border:1px solid var(--b1)">🧠 מנטלי</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <input id="ann-quick-input" type="text" placeholder="כתוב הודעה לכל הקבוצה..." style="flex:1"/>
-        <button onclick="sendQuickAnn()" class="btn bp bsm" style="padding:0 16px;font-weight:900">שלח</button>
-      </div>
-    </div>
-    <div style="font-size:11px;font-weight:800;color:var(--txt2);margin-bottom:8px">📤 הודעה אישית</div>
-    <div id="coach-msg-athletes-list"><div style="text-align:center;padding:20px;color:var(--txt3);font-size:11px">בחר קבוצה תחילה</div></div>
-  </div>
-
-  <!-- TAB: SETTINGS -->
-  <div id="coach-tab-settings" style="display:none">
-    <div class="pgh" style="color:var(--txt2)"><span>⚙️</span> הגדרות מאמן</div>
-    <div style="background:var(--card);border:1px solid var(--b2);border-radius:13px;padding:13px;margin-bottom:10px">
-      <div style="font-size:11px;font-weight:800;color:var(--purpleL);margin-bottom:10px">🔑 סיסמת מאמן</div>
-      <button class="btn bs" style="width:100%" onclick="changeCoachPass()">🔑 שנה סיסמה</button>
-        <button class="btn bs bsm" onclick="exportGroupCSV()" style="min-height:44px">📊 CSV</button>
-    </div>
-    <button onclick="toggleCM()" style="width:100%;padding:14px;background:rgba(255,45,85,.08);border:1px solid rgba(255,45,85,.2);color:var(--red);border-radius:13px;font-size:13px;font-weight:900;cursor:pointer;margin-top:4px">⚔ יציאה ממצב מאמן</button>
-  </div>
-
-  <!-- hidden stubs for JS compat -->
-  <div id="ann-feed-card" style="display:none"></div>
-  <div id="coach-group-selector" style="display:none"></div>
-  <div id="lb-out-stub" style="display:none"></div>
-  <div id="lb-challenge-card-stub" style="display:none"></div>
-</div></div><!-- /content -->
+</div><!-- /content -->
 
 <nav class="bottom" id="nav-athlete">
   <button class="nav on" id="n-dash" data-label="בסיס" onclick="showPg('dash')" tabindex="1"><span class="ni">🏠</span>בסיס</button>
@@ -2096,7 +2182,6 @@ document.head.appendChild(_link);
 <script>'use strict';
 // ─── Core globals declared first to avoid TDZ ───────────────
 var PAGES=['dash','test','week','lb','train','ai','coach'];
-var _tInt=null,_tRun=false,_tCur=0;
 var _activeGid=null;
 var muscleState={};
 var coachFilterMode='all';
@@ -2177,7 +2262,7 @@ var UNITS={
 var COACH_PASS_KEY='cf7_coach_pass';
 var DEFAULT_COACH_PASS='cf7_coach_pass'; // ניתן לשנות
 
-var coachMode=false; // always start in athlete mode for security
+let coachMode=false; // always start in athlete mode for security
 
 function initCM(){
   document.body.classList.toggle('cm',coachMode);
@@ -2239,7 +2324,7 @@ function openCoachLoginModal(){
   <button class="btn bs" style="margin-top:6px" onclick="closeModal()">ביטול</button>
   <div style="margin-top:14px;padding:10px;background:rgba(124,58,237,.06);border-radius:9px;border:1px solid rgba(124,58,237,.15)">
     <div style="font-size:10px;color:var(--txt3);line-height:1.6">
-      🔑 סיסמה ראשונית: <strong style="color:var(--purpleL)">cf7_coach_pass</strong><br/>💡 לשינוי: הגדרות מאמן ← שנה סיסמה
+      💡 לשינוי סיסמה: היכנס → בדשבורד המאמן לחץ "🔑 שנה סיסמת מאמן"
     </div>
   </div>`;
   openModal('🔐 אימות מאמן',body);
@@ -2248,6 +2333,8 @@ function openCoachLoginModal(){
 
 function submitCoachPass(){
   if(!checkLoginBruteForce()) return;
+  // Brute force check
+  if (!checkLoginBruteForce()) return;
 
   var inp = document.getElementById('coach-pass-inp');
   if (!inp) return;
@@ -2385,7 +2472,6 @@ function tt(id,el){
   if(id==='tb-cm')initCombatMode();
 }
 function trt(id,btn){
-  window._activeTrain=id;
   // Hide all training sections safely
   ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr',
    'tr-rec','tr-body','tr-hr','tr-ruck','tr-period','tr-scale',
@@ -2777,7 +2863,7 @@ function calcStrengthFull(){
   });
 
   logWorkout({type:'strength',name:'מבחן כוח קרבי',score:avg+'/100',icon:'💪',details:[pull?'מתח: '+pull:'',push?'שכיבות: '+push:'',plank?'פלאנק: '+plank+'שנ':''].filter(Boolean)});
-  document.getElementById('rm-res-str').innerHTML=html;
+  document.getElementById('rm-res').innerHTML=html;
 }
 
 function calcGib(){
@@ -4158,7 +4244,7 @@ function exportAthletePdf(i){
   const rm=a.run<900?`${Math.floor(a.run/60)}:${String(a.run%60).padStart(2,'0')}`:'--';
   const hist=getAthHist(a.nm);
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"/><title>${a.nm} — דוח</title>
+  w.document.write(`<meta charset="UTF-8"/><title>${a.nm} — דוח</title>
     <style>body{font-family:Arial,sans-serif;padding:30px;color:#222;max-width:700px;margin:0 auto}
     h1{color:#7c3aed;border-bottom:3px solid #7c3aed;padding-bottom:8px}
     h2{color:#444;margin-top:25px;border-bottom:1px solid #ddd;padding-bottom:4px}
@@ -7056,32 +7142,26 @@ function joinGroupDialog(){closeModal();openModal('🔗 הצטרף לקבוצה'
 
 function renderCoachGroupsUI(){
   var groups=window._coachGroups||[];
-  if(!_activeGid&&groups.length) _activeGid=groups[0].id;
-  var ag=groups.filter(function(g){return g.id===_activeGid;})[0]||groups[0];
-
-  // Write to coach-group-tabs (VISIBLE - was writing to coach-group-selector which is hidden)
-  var tabsEl=document.getElementById('coach-group-tabs');
-  if(tabsEl){
-    if(!groups.length){
-      tabsEl.innerHTML='<div style="color:var(--txt3);font-size:11px;padding:10px;text-align:center">אין קבוצות — <button onclick="createGroupDialog()" style="background:none;border:none;color:var(--purpleL);cursor:pointer;font-weight:900;font-size:11px">➕ צור קבוצה</button></div>';
-    } else {
-      tabsEl.innerHTML=groups.map(function(g){
-        var cnt=(window._coachAthletes&&window._coachAthletes[g.id]||[]).length;
-        var on=g.id===_activeGid;
-        return '<button data-gid="'+g.id+'" onclick="switchCoachGroup(this.dataset.gid)" style="flex-shrink:0;padding:8px 14px;border-radius:20px;font-size:11px;cursor:pointer;white-space:nowrap;border:'+(on?'2px solid var(--purpleL)':'1px solid var(--b2)')+';background:'+(on?'rgba(124,58,237,.12)':'var(--card2)')+';color:'+(on?'var(--purpleL)':'var(--txt2)')+';font-weight:'+(on?'900':'700')+'">'+g.name+' <span style="font-size:9px;opacity:.7">('+cnt+')</span></button>';
-      }).join('')+'<button onclick="createGroupDialog()" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:1px dashed var(--b2);background:transparent;color:var(--txt3);font-size:11px;cursor:pointer">➕ חדשה</button>';
-    }
+  var selector=document.getElementById('coach-group-selector');
+  if(!selector)return;
+  if(!groups.length){
+    selector.innerHTML='<div style="text-align:center;padding:16px;color:var(--txt3)"><div style="font-size:11px">אין קבוצות עדיין</div><button class="btn bp bsm" style="margin-top:10px" onclick="createGroupDialog()">➕ צור קבוצה ראשונה</button></div>';
+    return;
   }
-
-  var agCard=document.getElementById('active-group-card');
-  var agName=document.getElementById('active-group-name');
-  var agCode=document.getElementById('active-group-code');
-  if(agCard){
-    if(ag){agCard.style.display='block';if(agName)agName.textContent=ag.name;if(agCode)agCode.textContent=ag.code;}
-    else{agCard.style.display='none';}
+  if(!_activeGroupId)_activeGroupId=groups[0].id;
+  var activeGroup=groups.find(function(g){return g.id===_activeGroupId;});
+  var html='<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;-webkit-overflow-scrolling:touch">';
+  groups.forEach(function(g){
+    var cnt=(window._coachAthletes&&window._coachAthletes[g.id]||[]).length;
+    var on=g.id===_activeGroupId;
+    html+='<button onclick="switchGroup(\''+g.id+'\')" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:'+(on?'2px solid var(--purpleL)':'1px solid var(--b2)')+';background:'+(on?'rgba(124,58,237,.1)':'var(--card2)')+';color:'+(on?'var(--purpleL)':'var(--txt2)')+';font-weight:'+(on?'900':'700')+';font-size:11px;cursor:pointer;white-space:nowrap">'+g.name+' <span style="font-size:9px;opacity:.7">('+cnt+')</span></button>';
+  });
+  html+='<button onclick="createGroupDialog()" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:1px dashed var(--b2);background:transparent;color:var(--txt3);font-size:11px;cursor:pointer">➕ חדשה</button></div>';
+  if(activeGroup){
+    html+='<div style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.15);border-radius:10px;padding:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-weight:900;font-size:12px;color:var(--purpleL)">'+activeGroup.name+'</div><div style="font-size:10px;color:var(--txt3)">קוד: <strong style="font-family:monospace;color:var(--pri)">'+activeGroup.code+'</strong></div></div><button onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+activeGroup.code+'\').then(()=>notify(\'✅ קוד הועתק!\',\'p\'))" style="padding:6px 12px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);color:var(--pri);border-radius:8px;cursor:pointer;font-size:11px;font-weight:700">📋 העתק</button></div>';
   }
-  updateGroupStats();
-  renderGroupAthletesNew(_activeGid);
+  selector.innerHTML=html;
+  renderGroupAthletes(_activeGroupId);
 }
 
 function switchGroup(gid){_activeGroupId=gid;renderCoachGroupsUI();}
@@ -7324,7 +7404,7 @@ function coachShowTab(tab,btn){
   ['groups','athletes','msg','settings'].forEach(function(t){var el=document.getElementById('coach-tab-'+t);if(el)el.style.display=(t===tab)?'block':'none';});
   document.querySelectorAll('#nav-coach .nav').forEach(function(b){b.classList.remove('on');});
   if(btn)btn.classList.add('on');
-  if(tab==='groups'){ renderCoachGroupsUI(); }
+  if(tab==='groups')updateGroupStats();
   if(tab==='athletes'){
     var active=(window._coachGroups||[]).find(function(g){return g.id===_activeGid;});
     var nameEl=document.getElementById('athletes-tab-group-name');
@@ -9297,21 +9377,7 @@ function showSkeleton(containerId, rows){
 
 
 // ══════════════════════════════════════════════════
-
-(function(){
-  if(window._trainSwipeReady)return;window._trainSwipeReady=true;
-  var S=['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr','tr-ruck','tr-period','tr-scale','tr-sleep','tr-injury','tr-gibush'];
-  var sx=0,sy=0,st=0;
-  document.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();},{passive:true});
-  document.addEventListener('touchend',function(e){
-    if(window._activePg!=='train')return;
-    var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy,dt=Date.now()-st;
-    if(Math.abs(dx)<55||Math.abs(dy)>Math.abs(dx)*.65||dt>400)return;
-    var ci=S.indexOf(window._activeTrain||'tr-str');if(ci===-1)return;
-    var ni=dx<0?Math.min(ci+1,S.length-1):Math.max(ci-1,0);
-    if(ni!==ci){trt(S[ni],null);if(typeof haptic==='function')haptic();}
-  },{passive:true});
-})();</script>
+</script>
 
 <!-- Firebase SDK — Multi-group combat fitness -->
 <script type="module">
