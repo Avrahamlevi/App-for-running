@@ -2181,25 +2181,47 @@ var coachMode=false; // always start in athlete mode for security
 
 function initCM(){
   document.body.classList.toggle('cm',coachMode);
+  // Switch nav bars
   var navA=document.getElementById('nav-athlete');
   var navC=document.getElementById('nav-coach');
   if(navA)navA.style.display=coachMode?'none':'grid';
   if(navC)navC.style.display=coachMode?'grid':'none';
-  var b=document.getElementById('mode-btn');
+  const b=document.getElementById('mode-btn');
   if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
-  var lm=document.getElementById('logo-main');
-  if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  var ls=document.getElementById('logo-sub');
-  if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v7.0':'IDF ELITE SYSTEM v7.0 PRO';
-  if(coachMode){ showPg('coach'); renderCoachGroupsUI(); }
+  const lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
+  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v7.0':'IDF ELITE SYSTEM v7.0 PRO';
+  // Show/hide coach panel
+  const afc=document.getElementById('ann-feed-card');
+  const lbo=document.getElementById('lb-out');
+  if(afc){afc.style.display=coachMode?'block':'none';}
+  if(lbo){lbo.style.display=coachMode?'none':'block';}
+  if(coachMode){
+    // Load groups from Firebase or local
+    if(window._coachGroups&&window._coachGroups.length){
+      renderCoachGroupsUI();
+      showPg('coach');
+    } else if(window._fbUID&&window._loadCoachGroups){
+      window._loadCoachGroups(window._fbUID);
+    } else {
+      // Fallback: local athletes
+      window._coachAthletes=window._coachAthletes||{};
+      window._coachAthletes['local']=getAthletes();
+      window._coachGroups=[{id:'local',name:'הקבוצה שלי',code:'מקומי'}];
+      _activeGid='local';
+      renderCoachGroupsUI();
+      showPg('coach');
+    }
+  }
 }
 
 function toggleCM(){
   if(coachMode){
+    // Already coach — switch back to athlete, no password needed
     coachMode=false; initCM();
     notify('⚔ מצב ספורטאי','p');
   } else {
-    showCoachLogin();
+    // Entering coach — require password
+    openCoachLoginModal();
   }
 }
 
@@ -2226,32 +2248,46 @@ function openCoachLoginModal(){
 
 function submitCoachPass(){
   if(!checkLoginBruteForce()) return;
-  var inp=document.getElementById('coach-pass-inp');
-  if(!inp){ notify('שגיאה: שדה סיסמה חסר','r'); return; }
-  var pass=inp.value.trim();
-  if(!pass){ notify('הכנס סיסמה','r'); return; }
-  var KEY=typeof COACH_PASS_KEY!=='undefined'?COACH_PASS_KEY:'cf7_coach_pass';
-  var stored=localStorage.getItem(KEY)||'cf7_coach_pass';
-  if(pass===stored){
+
+  var inp = document.getElementById('coach-pass-inp');
+  if (!inp) return;
+  var pass = inp.value;
+  if (!pass || pass.length < 1) return;
+
+  var stored = localStorage.getItem(typeof COACH_PASS_KEY!=='undefined' ? COACH_PASS_KEY : 'cf7cp') || '';
+  // If no password set yet, use environment default (not shown in UI)
+  if (!stored) {
+    stored = localStorage.getItem('cf7_coach_pass_hash') || 'cf7_coach_pass';
+  }
+
+  if (pass === stored) {
     recordSuccessfulLogin();
     hideCoachLogin();
-    try{closeModal();}catch(e){}
-    coachMode=true;
-    window._coachAthletes=window._coachAthletes||{};
-    if(!window._coachAthletes['local'])
-      window._coachAthletes['local']=typeof getAthletes==='function'?getAthletes():[];
-    if(!window._coachGroups||!window._coachGroups.length)
-      window._coachGroups=[{id:'local',name:'הקבוצה שלי',code:'LOCAL'}];
-    if(!_activeGid) _activeGid=window._coachGroups[0].id;
-    initCM();
-    notify('🎖 ברוך הבא מאמן!','p');
-    if(typeof haptic==='function') haptic('success');
+    coachMode = true;
+    var navA = document.getElementById('nav-athlete');
+    var navC = document.getElementById('nav-coach');
+    if (navA) navA.style.display = 'none';
+    if (navC) navC.style.display = 'grid';
+    var b = document.getElementById('mode-btn');
+    if (b) b.textContent = '\u2694 \u05e1\u05e4\u05d5\u05e8\u05d8\u05d0\u05d9';
+    if (typeof showPg === 'function') showPg('coach');
+    try {
+      if (!window._coachGroups || !window._coachGroups.length) {
+        window._coachAthletes = window._coachAthletes || {};
+        window._coachAthletes['local'] = getAthletes();
+        window._coachGroups = [{id:'local', name:'\u05d4\u05e7\u05d1\u05d5\u05e6\u05d4', code:'LOCAL'}];
+        _activeGid = 'local';
+      }
+      if (typeof renderCoachGroupsUI === 'function') renderCoachGroupsUI();
+    } catch(e) {}
+    try { if (typeof renderCoachGroup === 'function') renderCoachGroup(); } catch(e) {}
+    if (typeof notify === 'function') notify('\ud83c\udf96 \u05d1\u05e8\u05d5\u05da \u05d4\u05d1\u05d0 \u05de\u05d0\u05de\u05df!', 'p');
+    if (typeof haptic === 'function') haptic('success');
   } else {
-    inp.value='';
-    inp.style.borderColor='var(--red)';
-    setTimeout(function(){inp.style.borderColor='';},1500);
+    inp.value = '';
+    inp.style.borderColor = 'var(--red)';
+    setTimeout(function() { if (inp) inp.style.borderColor = ''; }, 1500);
     recordFailedLogin();
-    notify('❌ סיסמה שגויה','r');
   }
 }
 
@@ -7022,10 +7058,11 @@ function renderCoachGroupsUI(){
   var groups=window._coachGroups||[];
   if(!_activeGid&&groups.length) _activeGid=groups[0].id;
   var ag=groups.filter(function(g){return g.id===_activeGid;})[0]||groups[0];
+
   var tabsEl=document.getElementById('coach-group-tabs');
   if(tabsEl){
     if(!groups.length){
-      tabsEl.innerHTML='<div style="color:var(--txt3);font-size:11px;padding:8px;text-align:center">אין קבוצות — <button onclick="createGroupDialog()" style="background:none;border:none;color:var(--purpleL);cursor:pointer;font-weight:900">➕ צור קבוצה</button></div>';
+      tabsEl.innerHTML='<div style="color:var(--txt3);font-size:11px;padding:10px;text-align:center">אין קבוצות — <button onclick="createGroupDialog()" style="background:none;border:none;color:var(--purpleL);cursor:pointer;font-weight:900;font-size:11px">➕ צור קבוצה</button></div>';
     } else {
       tabsEl.innerHTML=groups.map(function(g){
         var cnt=(window._coachAthletes&&window._coachAthletes[g.id]||[]).length;
@@ -7034,6 +7071,7 @@ function renderCoachGroupsUI(){
       }).join('')+'<button onclick="createGroupDialog()" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:1px dashed var(--b2);background:transparent;color:var(--txt3);font-size:11px;cursor:pointer">➕ חדשה</button>';
     }
   }
+
   var agCard=document.getElementById('active-group-card');
   var agName=document.getElementById('active-group-name');
   var agCode=document.getElementById('active-group-code');
@@ -7285,7 +7323,7 @@ function coachShowTab(tab,btn){
   ['groups','athletes','msg','settings'].forEach(function(t){var el=document.getElementById('coach-tab-'+t);if(el)el.style.display=(t===tab)?'block':'none';});
   document.querySelectorAll('#nav-coach .nav').forEach(function(b){b.classList.remove('on');});
   if(btn)btn.classList.add('on');
-  if(tab==='groups'){renderCoachGroupsUI();}
+  if(tab==='groups'){ renderCoachGroupsUI(); }
   if(tab==='athletes'){
     var active=(window._coachGroups||[]).find(function(g){return g.id===_activeGid;});
     var nameEl=document.getElementById('athletes-tab-group-name');
@@ -8148,8 +8186,55 @@ function hideCoachLogin(){
   var ov=document.getElementById('coach-login-overlay');
   if(ov)ov.style.display='none';
 }
-// Coach login handled directly
-
+// toggleCM uses overlay
+(function(){
+  var _orig=typeof toggleCM==='function'?toggleCM:null;
+  if(_orig&&!_orig._ol){
+    toggleCM=function(){
+      if(coachMode){
+        coachMode=false;
+        var nA=document.getElementById('nav-athlete');
+        var nC=document.getElementById('nav-coach');
+        if(nA)nA.style.display='grid';if(nC)nC.style.display='none';
+        showPg('dash');
+        if(typeof notify==='function')notify('מצב ספורטאי','p');
+      } else { showCoachLogin(); }
+    };
+    toggleCM._ol=true;
+  }
+})();
+// submitCoachPass uses overlay  
+(function(){
+  var _scp=typeof submitCoachPass==='function'?submitCoachPass:null;
+  if(!_scp||_scp._ol){return;}
+  submitCoachPass=function(){
+    var inp=document.getElementById('coach-pass-inp');
+    if(!inp)return;
+    var stored=localStorage.getItem(typeof COACH_PASS_KEY!=='undefined'?COACH_PASS_KEY:'cf7cp')||'cf7_coach_pass';
+    if(inp.value===stored){
+      hideCoachLogin();coachMode=true;
+      var nA=document.getElementById('nav-athlete');var nC=document.getElementById('nav-coach');
+      if(nA)nA.style.display='none';if(nC)nC.style.display='grid';
+      showPg('coach');
+      try{
+        if(!window._coachGroups||!window._coachGroups.length){
+          window._coachAthletes=window._coachAthletes||{};
+          window._coachAthletes['local']=getAthletes();
+          window._coachGroups=[{id:'local',name:'הקבוצה',code:'LOCAL'}];
+          _activeGid='local';
+        }
+        renderCoachGroupsUI();
+      }catch(e){}
+      try{renderCoachGroup();}catch(e){}
+      if(typeof notify==='function')notify('ברוך הבא מאמן!','p');
+      if(typeof haptic==='function')haptic('success');
+    } else {
+      inp.value='';
+      if(typeof notify==='function')notify('סיסמה שגויה','r');
+    }
+  };
+  submitCoachPass._ol=true;
+})();
 
 // ══ SWIPE NAVIGATION ══════════════════════════════════════════
 (function(){
