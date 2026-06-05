@@ -4,10 +4,11 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
 <meta charset="UTF-8"/>
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
@@ -4244,7 +4245,7 @@ function exportAthletePdf(i){
   const rm=a.run<900?`${Math.floor(a.run/60)}:${String(a.run%60).padStart(2,'0')}`:'--';
   const hist=getAthHist(a.nm);
   const w=window.open('','_blank');
-  w.document.write(`<meta charset="UTF-8"/><title>${a.nm} — דוח</title>
+  w.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"/><title>${a.nm} — דוח</title>
     <style>body{font-family:Arial,sans-serif;padding:30px;color:#222;max-width:700px;margin:0 auto}
     h1{color:#7c3aed;border-bottom:3px solid #7c3aed;padding-bottom:8px}
     h2{color:#444;margin-top:25px;border-bottom:1px solid #ddd;padding-bottom:4px}
@@ -9552,6 +9553,39 @@ window._FB={auth,db,doc,setDoc,getDoc,collection,getDocs,addDoc,updateDoc,query,
 window._fbSignOut=()=>signOut(auth);
 }catch(e){console.warn('Firebase:',e);}
 
+
+function sendMsgToAthleteFixed(){
+  var uid=window._currentMsgUid;
+  var name=window._currentMsgName;
+  var textArea=document.getElementById('coach-msg-text');
+  if(!uid||!textArea)return;
+  var msg=textArea.value.trim();
+  if(!msg){notify('כתוב הודעה!','y');return;}
+  
+  // Save to localStorage
+  var key='cf7_msgs_'+uid;
+  var msgs=JSON.parse(localStorage.getItem(key)||'[]');
+  msgs.unshift({
+    text:msg,
+    from:'מאמן',
+    ts:Date.now(),
+    type:'coach'
+  });
+  localStorage.setItem(key,JSON.stringify(msgs.slice(0,50)));
+  
+  // Update UI
+  textArea.value='';
+  notify('✅ הודעה נשלחה ל'+name,'p');
+  haptic('success');
+  
+  // Try to send via API if available
+  if(typeof sendToBackend==='function'){
+    sendToBackend('coach_msg',{uid:uid,msg:msg,name:name});
+  }
+  
+  console.log('Message sent to '+name);
+  closeCoachMsg();
+}
 </script>
 
 
