@@ -589,7 +589,7 @@ document.head.appendChild(_link);
     <div id="sync-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);cursor:pointer;transition:.3s;flex-shrink:0" title="מצב שמירה" onclick="typeof openUserMenu==='function'&&openUserMenu()"></div>
     <div class="live-dot"></div>
     <div class="clk" id="clock">00:00</div>
-    <button id="auth-top-btn" onclick="document.getElementById('auth-modal').style.display='block'" style="display:none;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--pri);border-radius:8px;padding:4px 8px;font-size:10px;font-weight:800;cursor:pointer">☁ כניסה</button><div id="fb-badge" onclick="openUserMenu()" style="display:none;align-items:center;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);border-radius:16px;padding:3px 9px;font-size:10px;font-weight:800;color:var(--pri);cursor:pointer;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+    <button id="auth-top-btn" onclick="document.getElementById('auth-modal').style.display='flex'" style="display:none;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--pri);border-radius:8px;padding:4px 8px;font-size:10px;font-weight:800;cursor:pointer">☁ כניסה</button><div id="fb-badge" onclick="openUserMenu()" style="display:none;align-items:center;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);border-radius:16px;padding:3px 9px;font-size:10px;font-weight:800;color:var(--pri);cursor:pointer;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
     <button id="install-btn" onclick="installPWA()" style="display:none;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--pri);border-radius:8px;padding:4px 9px;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap">📲 התקן</button>
     <button class="mode-btn" id="mode-btn" onclick="toggleCM()">🎖 מאמן</button>
   </div>
@@ -704,9 +704,7 @@ document.head.appendChild(_link);
 
   <!-- ✅ PRESALE-FIX: Daily challenge card -->
   <div id="daily-challenge-card" style="background:var(--card2);border:1px solid var(--b1);border-radius:13px;padding:14px;margin-bottom:10px">
-    <div style="font-family:var(--fd);font-size:10px;letter-spacing:1.5px;color:var(--cyan);margin-bottom:6px">⚡ אתגר יומי</div>
-    <div id="dcc-title" style="font-weight:800;font-size:13px;margin-bottom:4px">טוען...</div>
-    <div id="dcc-desc" style="font-size:11px;color:var(--txt2)"></div>
+    <div style="font-size:11px;color:var(--txt3);text-align:center;padding:6px">⚡ טוען אתגר...</div>
   </div>
 
   <!-- Training Load -->
@@ -743,20 +741,7 @@ document.head.appendChild(_link);
     </div>
     <div id="cal-result"></div>
   </div>
-  <!-- Breathing Exercise -->
-  <div class="card" style="margin-bottom:10px">
-    <div class="sh" style="color:var(--cyan)">🌬 תרגיל נשימה</div>
-    <div style="display:flex;gap:6px;margin:10px 0">
-      <button onclick="startBreathing('box')" style="flex:1;padding:7px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:11px;color:var(--txt);cursor:pointer;min-height:44px">Box 4-4-4-4</button>
-      <button onclick="startBreathing('4-7-8')" style="flex:1;padding:7px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:11px;color:var(--txt);cursor:pointer;min-height:44px">4-7-8</button>
-      <button onclick="startBreathing('combat')" style="flex:1;padding:7px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:11px;color:var(--txt);cursor:pointer;min-height:44px">Combat 4-4</button>
-    </div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
-      <div id="breath-circle-ex" style="width:90px;height:90px;border-radius:50%;background:var(--cyan);opacity:.85;transition:all 1s ease-in-out"></div>
-      <div id="breath-label" style="font-size:13px;color:var(--txt2)">בחר דפוס נשימה</div>
-      <button id="breath-btn" onclick="startBreathing('box')" style="padding:10px 24px;background:var(--pri);color:#000;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;min-height:44px">🌬 התחל</button>
-    </div>
-  </div>
+  <!-- breathing exercise removed per user request -->
   <!-- Focus Timer -->
   <div class="card" style="margin-bottom:10px">
     <div class="sh">⏱ טיימר מיקוד</div>
@@ -1397,21 +1382,15 @@ document.head.appendChild(_link);
 <div class="pg" id="p-train">
   <div class="pgh"><span>💪</span> אימון</div>
   <div class="tabs" style="overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px">
-    <button class="tab on" onclick="trt('tr-str',this)">כוח</button>
-    <button class="tab" onclick="trt('tr-run',this)">ריצה</button>
+    <button class="tab on" onclick="trt('tr-str',this)">💪 כוח</button>
+    <button class="tab" onclick="trt('tr-run',this)">🏃 ריצה</button>
     <button class="tab" onclick="trt('tr-route',this)">🗺 מסלול</button>
     <button class="tab" onclick="trt('tr-build',this)">🤖 בונה</button>
-    <button class="tab" onclick="trt('tr-hist',this)">📜 היסטוריה</button>
     <button class="tab" onclick="trt('tr-tmr',this)">⏱ טיימר</button>
     <button class="tab" onclick="trt('tr-rec',this)">🩹 שיקום</button>
-    <button class="tab" onclick="trt('tr-body',this)">📏 מידות</button>
     <button class="tab" onclick="trt('tr-hr',this)">❤️ דופק</button>
-        <button class="tab" onclick="trt('tr-gibush',this)">⚔ גיבוש</button>
-        <button class="tab" onclick="trt('tr-ruck',this)">🎒 Ruck</button>
-        <button class="tab" onclick="trt('tr-period',this)">📅 מחזורי</button>
-        <button class="tab" onclick="trt('tr-scale',this)">⚖️ Scalable</button>
-        <button class="tab" onclick="trt('tr-sleep',this)">😴 שינה</button>
-        <button class="tab" onclick="trt('tr-injury',this)">🩹 פציעות</button>
+    <button class="tab" onclick="trt('tr-gibush',this)">⚔ גיבוש</button>
+    <button class="tab" onclick="trt('tr-hist',this)">📜 היסטוריה</button>
   </div>
 
   <div id="tr-str">
@@ -1661,6 +1640,13 @@ document.head.appendChild(_link);
   </div>
 
   <div id="tr-rec" style="display:none">
+  <!-- ✅ FIX: שינה ופציעות merged here -->
+  <div style="display:flex;gap:6px;margin-bottom:10px">
+    <button class="btn bs" style="flex:1;font-size:11px" onclick="trt('tr-sleep',document.createElement('button'))">😴 שינה</button>
+    <button class="btn bs" style="flex:1;font-size:11px" onclick="trt('tr-injury',document.createElement('button'))">🩹 פציעות</button>
+    <button class="btn bs" style="flex:1;font-size:11px" onclick="trt('tr-ruck',document.createElement('button'))">🎒 Ruck</button>
+  </div>
+
     <div class="card">
       <div class="sh c">🧊 מוניטור שיקום</div>
       <div class="recovery-meter">
@@ -2537,6 +2523,13 @@ function tt(id,el){
 }
 function trt(id,btn){
   window._activeTrain=id;
+  // When leaving route tab, disable Leaflet touch capture
+  if(window._activeTrain==='tr-route'&&window._lmap){
+    try{
+      var mc=document.getElementById('leaflet-map');
+      if(mc)mc.style.pointerEvents='none';
+    }catch(_){}
+  }
   // Hide all training sections safely
   ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr',
    'tr-rec','tr-body','tr-hr','tr-ruck','tr-period','tr-scale',
@@ -2557,10 +2550,14 @@ function trt(id,btn){
   }catch(e){}
   // Init section content
   try{
-    if(id==='tr-route'&&typeof initRoute==='function')initRoute();
+    if(id==='tr-route'){
+      var mc=document.getElementById('leaflet-map');
+      if(mc)mc.style.pointerEvents='';
+      if(typeof initRoute==='function')initRoute();
+    }
     if(id==='tr-hist'){if(typeof renderHistory==='function')renderHistory();setTimeout(function(){try{renderProgressChart&&renderProgressChart();}catch(e){}},300);}
     if(id==='tr-build'&&typeof initBuilder==='function')initBuilder();
-    if(id==='tr-rec'&&typeof initMuscleGrid==='function'){initMuscleGrid();setTimeout(function(){try{calcRecovery&&calcRecovery();}catch(e){}},50);}
+    if(id==='tr-rec'&&typeof initMuscleGrid==='function'){initMuscleGrid();setTimeout(function(){try{calcRecovery&&calcRecovery();renderSleepHistory&&renderSleepHistory();renderPrehab&&renderPrehab();}catch(e){}},50);}
     if(id==='tr-tmr'&&typeof onTM==='function')onTM();
     if(id==='tr-body'&&typeof initMuscleGrid==='function')initMuscleGrid();
     if(id==='tr-ruck'&&typeof calcRuck==='function')calcRuck();
@@ -2647,6 +2644,7 @@ function refreshDash(){
   const pg=ld(K.P,[]);
   if(pg.length){updateRings(pg[0]);}
   renderWeekTracker();
+  if(typeof renderDailyChallenge==='function')renderDailyChallenge();
   renderHeatmap();
   genQuickWorkout();
 }
@@ -2722,7 +2720,7 @@ function toggleWT(key){
 }
 
 function genQuickWorkout(){
-  const w=QUICK_WORKOUTS[Math.floor(Math.random()*QUICK_WORKOUTS.length)];
+  if(!QUICK_WORKOUTS||!QUICK_WORKOUTS.length)return;const w=QUICK_WORKOUTS[Math.floor(Math.random()*QUICK_WORKOUTS.length)];
   const bars='■'.repeat(w.i)+'□'.repeat(5-w.i);
   document.getElementById('quick-workout').innerHTML=
     `<strong style="color:var(--pri)">${w.t}</strong><div style="font-family:var(--fm);font-size:10px;color:var(--cyan);margin:3px 0">${bars}</div><div style="margin-top:4px;white-space:pre-line">${w.d}</div>`;
@@ -6646,6 +6644,7 @@ var _WEEKLY_CHS=[
 
 function getWeeklyChallenge(){
   var wk=Math.floor(Date.now()/(7*24*3600*1000));
+  if(!_WEEKLY_CHS||!_WEEKLY_CHS.length)return null;
   return _WEEKLY_CHS[wk%_WEEKLY_CHS.length];
 }
 
@@ -7520,7 +7519,7 @@ function showInjury(type){
 function renderPrehab(){
   var ROUTINES=[[{n:'Hip 90/90',d:'2 דק כל צד'},{n:'Calf raises',d:'3×15'},{n:'Dead bug',d:'3×8'}],
     [{n:'Clamshells',d:'3×15 כל צד'},{n:'World greatest stretch',d:'5× כל צד'},{n:'Face pulls',d:'3×15'}]];
-  var r=ROUTINES[Math.floor(Math.random()*ROUTINES.length)];
+  if(!ROUTINES||!ROUTINES.length)return;var r=ROUTINES[Math.floor(Math.random()*ROUTINES.length)];
   var el=document.getElementById('daily-prehab');if(!el)return;
   el.innerHTML=r.map(function(ex){
     return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b1)">'+
@@ -7538,9 +7537,21 @@ function initOnboarding(){
 }
 
 function showOnboardingOverlay(){
-  // Called only by user action
   var overlay=document.getElementById('onboard-overlay');
-  if(overlay)overlay.style.display='block';
+  if(!overlay)return;
+  // Reset to step 1 every time
+  var s1=document.getElementById('ob-1'),s2=document.getElementById('ob-2'),s3=document.getElementById('ob-3');
+  if(s1)s1.style.display='block';
+  if(s2)s2.style.display='none';
+  if(s3)s3.style.display='none';
+  // Clear previous inputs
+  var nameEl=document.getElementById('ob-name');
+  if(nameEl&&!nameEl.value)nameEl.focus();
+  // Reset step indicators
+  document.querySelectorAll('.ob-step').forEach(function(s){s.classList.toggle('ob-active',s.dataset.s==='1');});
+  _obUnit=null;
+  overlay.style.display='block';
+  // Build unit grid (always fresh)
   renderObUnits();
 }
 
@@ -7556,7 +7567,11 @@ function renderObUnits(){
     d.innerHTML='<div style="font-size:18px;margin-bottom:4px">'+(u.emoji||'🎖')+'</div>'+u.n;
     grid.appendChild(d);
   });
-  grid.addEventListener('click',function(e){
+  // Remove old listener before adding new (avoid duplicates on re-render)
+  var newGrid=grid.cloneNode(false);
+  while(grid.firstChild)newGrid.appendChild(grid.firstChild);
+  grid.parentNode.replaceChild(newGrid,grid);
+  newGrid.addEventListener('click',function(e){
     var el=e.target.closest('[data-uk]');if(!el)return;
     selectObUnit(el.dataset.uk);
   });
@@ -7582,7 +7597,8 @@ function obNext(step){
     document.getElementById('ob-1').style.display='none';document.getElementById('ob-2').style.display='block';
     document.querySelectorAll('.ob-step').forEach(function(s){s.classList.toggle('ob-active',s.dataset.s==='2');});
   } else if(step===2){
-    if(_obUnit){var pr2=ld(K.PR,{});pr2.unit=_obUnit;sv(K.PR,pr2);}
+    if(!_obUnit){notify('בחר יחידת יעד','r');return;}
+    var pr2=ld(K.PR,{});pr2.unit=_obUnit;sv(K.PR,pr2);
     document.getElementById('ob-2').style.display='none';document.getElementById('ob-3').style.display='block';
     document.querySelectorAll('.ob-step').forEach(function(s){s.classList.toggle('ob-active',s.dataset.s==='3');});
   }
@@ -8177,7 +8193,7 @@ function hideCoachLogin(){
 // ══ SWIPE NAVIGATION ══════════════════════════════════════════
 (function(){
   if(window._swipeReady)return;window._swipeReady=true;
-  var PAGES=['dash','test','week','lb','train','ai'];
+  var PAGES=['dash','test','week','lb','train','ai','coach'];
   var sx=0,sy=0;
   document.addEventListener('touchstart',function(e){
     sx=e.touches[0].clientX;sy=e.touches[0].clientY;
@@ -8856,12 +8872,14 @@ var DAILY_CHALLENGES_DATA=[
   {id:'c7',title:'מבחן מקסימום מתח',desc:'כמה שיותר ברצף אחד',pts:45,type:'strength'},
 ];
 function getDailyChallenge(){
+  if(!DAILY_CHALLENGES_DATA||!DAILY_CHALLENGES_DATA.length)return null;
   return DAILY_CHALLENGES_DATA[Math.floor(Date.now()/864e5)%DAILY_CHALLENGES_DATA.length];
 }
 function renderDailyChallenge(){
   var el=document.getElementById('daily-challenge-card');
   if(!el||!el.style)return;
   var ch=getDailyChallenge();
+  if(!ch)return;
   var accepted=localStorage.getItem('cf7_ch_'+Math.floor(Date.now()/864e5));
   var col=accepted?'rgba(0,255,136,.1)':'var(--pri)';
   var tcol=accepted?'var(--pri)':'#000';
@@ -9213,7 +9231,7 @@ function doSendMsg(uid, groupId){
   localStorage.setItem('cf7chat',JSON.stringify(chats));
   // Also try Firebase
   if(window._sendMessageToAthlete && uid && window._fbUID){
-    window._sendMessageToAthlete(window._fbUID, uid, msg, msgType).catch(function(){});
+    var _r=window._sendMessageToAthlete(window._fbUID, uid, msg, msgType);if(_r&&typeof _r.catch==='function')_r.catch(function(){});
   }
   if(inp)inp.value='';
   if(typeof closeModal==='function')closeModal();
@@ -9479,7 +9497,7 @@ function showSkeleton(containerId, rows){
 
 (function(){
   if(window._trainSwipeReady)return;window._trainSwipeReady=true;
-  var S=['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr','tr-ruck','tr-period','tr-scale','tr-sleep','tr-injury','tr-gibush'];
+  var S=['tr-str','tr-run','tr-route','tr-build','tr-tmr','tr-rec','tr-hr','tr-gibush','tr-hist'];
   var sx=0,sy=0,st=0;
   document.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();},{passive:true});
   document.addEventListener('touchend',function(e){
@@ -9504,14 +9522,29 @@ function authSignIn() {
   var email = document.getElementById('auth-email')?.value?.trim();
   var pass = document.getElementById('auth-password')?.value;
   if (!email || !pass) { authShowError('מלא דוא"ל וסיסמה'); return; }
+  if (!window._FB) {
+    // Firebase module still loading — wait up to 3s and retry
+    authShowError('מחבר לשרת... נסה שוב עוד שנייה');
+    var retries = 0;
+    var retry = setInterval(function() {
+      retries++;
+      if (window._FB) { clearInterval(retry); authSignIn(); }
+      else if (retries > 6) { clearInterval(retry); authShowError('שגיאת חיבור — בדוק אינטרנט'); }
+    }, 500);
+    return;
+  }
   if (window._FB) {
     window._FB.signInWithEmailAndPassword(window._FB.auth, email, pass)
       .then(function(cred) {
         document.getElementById('auth-modal').style.display = 'none';
         if (typeof notify === 'function') notify('✅ ברוך הבא!', 'p');
+        // Show onboarding if user hasn't completed it yet
+        if (!localStorage.getItem('cf7_ob_done') && !localStorage.getItem('cf7_onboarded')) {
+          setTimeout(function() { showOnboardingOverlay(); }, 600);
+        }
       })
       .catch(function(err) {
-        var msgs = { 'auth/wrong-password': 'סיסמה שגויה', 'auth/user-not-found': 'משתמש לא נמצא', 'auth/invalid-email': 'דוא"ל לא תקין' };
+        var msgs = { 'auth/invalid-credential': 'אימייל או סיסמה שגויים', 'auth/wrong-password': 'סיסמה שגויה', 'auth/user-not-found': 'משתמש לא נמצא', 'auth/invalid-email': 'דוא"ל לא תקין', 'auth/too-many-requests': 'יותר מדי ניסיונות — נסה שוב מאוחר יותר', 'auth/network-request-failed': 'בעיית חיבור לאינטרנט' };
         authShowError(msgs[err.code] || 'שגיאה: ' + err.message);
       });
   } else {
@@ -9531,11 +9564,8 @@ function authSignUp() {
       .then(function(cred) {
         document.getElementById('auth-modal').style.display = 'none';
         if (typeof notify === 'function') notify('🎉 ברוך הבא ל-Combat Fit!', 'p');
-        // Show onboarding
-        setTimeout(function() {
-          var ob = document.getElementById('onboard-overlay');
-          if (ob) ob.style.display = 'block';
-        }, 500);
+        // Show onboarding (uses showOnboardingOverlay to build unit grid)
+        setTimeout(function() { showOnboardingOverlay(); }, 500);
       })
       .catch(function(err) {
         var msgs = { 'auth/email-already-in-use': 'כתובת הדוא"ל כבר בשימוש', 'auth/weak-password': 'סיסמה חלשה', 'auth/invalid-email': 'דוא"ל לא תקין' };
@@ -9544,10 +9574,7 @@ function authSignUp() {
   } else {
     document.getElementById('auth-modal').style.display = 'none';
     if (typeof notify === 'function') notify('✅ הרשמה (מצב דמו)', 'p');
-    setTimeout(function() {
-      var ob = document.getElementById('onboard-overlay');
-      if (ob) ob.style.display = 'block';
-    }, 500);
+    setTimeout(function() { showOnboardingOverlay(); }, 500);
   }
 }
 
@@ -9557,11 +9584,8 @@ function authSkip() {
   if (m) m.style.display = 'none';
   if (typeof notify === 'function') notify('⏭ ממשיך ללא כניסה', 'y');
   // Show onboarding if not seen
-  if (!localStorage.getItem('cf7_onboarded')) {
-    setTimeout(function() {
-      var ob = document.getElementById('onboard-overlay');
-      if (ob) ob.style.display = 'block';
-    }, 300);
+  if (!localStorage.getItem('cf7_onboarded') && !localStorage.getItem('cf7_ob_done')) {
+    setTimeout(function() { showOnboardingOverlay(); }, 300);
   }
 }
 
