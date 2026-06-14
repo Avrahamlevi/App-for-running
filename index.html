@@ -145,6 +145,10 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .notif.show{transform:translateX(-50%) translateY(0)}
 .notif.nr{border-top-color:var(--red)}.notif.ny{border-top-color:var(--yellow)}.notif.np{border-top-color:var(--purple2)}.notif.nc{border-top-color:var(--cyan)}
 
+/* ─── CHART STYLES ─── */
+.prog-dot{cursor:pointer;transition:r .15s}
+.prog-dot:hover{r:6}
+
 /* ─── BOTTOM NAV ─── */
 .bottom{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--b2);display:grid;grid-template-columns:repeat(6,1fr);padding:5px 2px 7px;flex-shrink:0;z-index:100}
 .nav{background:none;border:none;color:var(--txt3);font-size:10px;cursor:pointer;padding:4px 2px;border-radius:7px;font-family:var(--fb);font-weight:600;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:2px;letter-spacing:.2px}
@@ -696,6 +700,38 @@ document.head.appendChild(_link);
         <div id="combat-score-label" style="font-size:11px;color:var(--txt2);margin-top:8px">טוען...</div>
         <div id="combat-score-bar" style="height:4px;background:var(--card3);border-radius:2px;margin:6px 0;overflow:hidden;display:none">
           <div id="combat-score-fill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--red),var(--orange));border-radius:2px;transition:width 1.2s ease"></div>
+        </div>
+        <!-- Mini trend chart below score -->
+        <div style="margin-top:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <div style="font-size:10px;color:var(--txt3);letter-spacing:1px">📈 מגמה אישית</div>
+            <div style="display:flex;gap:4px">
+              <button id="chart-tab-bar" onclick="switchChartMetric('bar',this)" style="font-size:9px;font-weight:900;padding:3px 7px;border-radius:5px;border:1px solid var(--pri);background:rgba(0,255,136,.15);color:var(--pri);cursor:pointer">ציון</button>
+              <button id="chart-tab-run" onclick="switchChartMetric('run',this)" style="font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px;border:1px solid var(--b2);background:var(--card3);color:var(--txt2);cursor:pointer">ריצה</button>
+              <button id="chart-tab-str" onclick="switchChartMetric('str',this)" style="font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px;border:1px solid var(--b2);background:var(--card3);color:var(--txt2);cursor:pointer">כוח</button>
+            </div>
+          </div>
+          <svg id="prog-chart" viewBox="0 0 340 90" style="width:100%;height:90px;overflow:visible">
+            <text x="170" y="50" fill="rgba(255,255,255,.12)" font-size="10" text-anchor="middle">בצע מבחן לראות גרף</text>
+          </svg>
+          <div id="prog-stats-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:7px">
+            <div style="text-align:center;background:var(--card3);border-radius:7px;padding:6px 4px">
+              <div id="pstat-latest" style="font-family:var(--fd);font-size:16px;color:var(--pri)">--</div>
+              <div style="font-size:8px;color:var(--txt3)">אחרון</div>
+            </div>
+            <div style="text-align:center;background:var(--card3);border-radius:7px;padding:6px 4px">
+              <div id="pstat-best" style="font-family:var(--fd);font-size:16px;color:var(--yellow)">--</div>
+              <div style="font-size:8px;color:var(--txt3)">שיא</div>
+            </div>
+            <div style="text-align:center;background:var(--card3);border-radius:7px;padding:6px 4px">
+              <div id="pstat-trend" style="font-family:var(--fd);font-size:16px;color:var(--cyan)">--</div>
+              <div style="font-size:8px;color:var(--txt3)">מגמה</div>
+            </div>
+            <div style="text-align:center;background:var(--card3);border-radius:7px;padding:6px 4px">
+              <div id="pstat-tests" style="font-family:var(--fd);font-size:16px;color:var(--purpleL)">--</div>
+              <div style="font-size:8px;color:var(--txt3)">מבחנים</div>
+            </div>
+          </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
           <div style="text-align:center;background:var(--card2);border-radius:9px;padding:8px">
@@ -1426,9 +1462,25 @@ document.head.appendChild(_link);
     </div>
     <div class="sc-footer"><div class="sc-tagline" id="sc-tagline">TRAIN HARD · FIGHT SMART · NEVER QUIT</div></div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-    <button class="btn bp" style="font-size:14px;font-weight:900;min-height:48px" onclick="openShareSheet()">📤 שתף ברשתות</button>
-    <button class="btn bs" style="font-size:14px;min-height:48px" onclick="exportReport()">📊 ייצא דוח</button>
+  <!-- Social Share Row -->
+  <div style="margin-bottom:10px">
+    <div style="font-size:10px;color:var(--txt3);text-align:center;letter-spacing:1.5px;margin-bottom:8px">SHARE YOUR RESULTS</div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px">
+      <button onclick="shareWhatsApp()" style="flex:1;padding:10px 4px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.35);border-radius:12px;color:#25d366;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px">
+        <span style="font-size:20px">📱</span>WA</button>
+      <button onclick="_shareInstagramCopy()" style="flex:1;padding:10px 4px;background:linear-gradient(135deg,rgba(225,48,108,.1),rgba(253,121,8,.08));border:1px solid rgba(225,48,108,.3);border-radius:12px;color:#e1306c;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px">
+        <span style="font-size:20px">📸</span>IG</button>
+      <button onclick="(function(){var t=typeof _buildShareText==='function'?_buildShareText(true):'⚔ Combat Fit IL';window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(t.substring(0,280)),'_blank');})()" style="flex:1;padding:10px 4px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:12px;color:#fff;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px">
+        <span style="font-size:20px">𝕏</span>X</button>
+      <button onclick="(function(){var t=typeof _buildShareText==='function'?_buildShareText(true):'⚔ Combat Fit IL';window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://combatfit.il')+'&quote='+encodeURIComponent(t.substring(0,100)),'_blank');})()" style="flex:1;padding:10px 4px;background:rgba(24,119,242,.1);border:1px solid rgba(24,119,242,.35);border-radius:12px;color:#1877f2;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px">
+        <span style="font-size:20px">👍</span>FB</button>
+      <button onclick="_shareTikTok()" style="flex:1;padding:10px 4px;background:rgba(0,0,0,.5);border:1px solid rgba(255,0,80,.35);border-radius:12px;color:#fff;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px">
+        <span style="font-size:20px">🎵</span>TikTok</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button class="btn bp" style="font-size:13px;font-weight:900;min-height:44px" onclick="openShareSheet()">📤 כל האפשרויות</button>
+      <button class="btn bs" style="font-size:13px;min-height:44px" onclick="exportReport()">📊 ייצא דוח</button>
+    </div>
   </div>
 
   <!-- Leaderboard tabs -->
@@ -1745,14 +1797,7 @@ document.head.appendChild(_link);
       </div>
       <div id="hist-summary" style="margin-bottom:10px"></div>
       
-      <!-- Progress Chart -->
-      <div class="card" style="margin-bottom:10px">
-        <div class="sh p">📈 גרף התקדמות</div>
-        <div class="mini" style="margin-bottom:8px">בר-אור לאורך זמן</div>
-        <svg id="prog-chart" viewBox="0 0 360 100" style="width:100%;height:100px;overflow:visible">
-          <text x="180" y="55" fill="rgba(255,255,255,.2)" font-size="12" text-anchor="middle">בצע מבחן בר-אור לראות גרף</text>
-        </svg>
-      </div>
+
       <div id="hist-list"></div>
       <button class="btn br bsm" style="margin-top:8px" onclick="confirmClearHistory()">🗑 נקה היסטוריה</button>
     </div>
@@ -2063,77 +2108,71 @@ document.head.appendChild(_link);
 <!-- ══════════════════════ AI COACH ══════════════════════ -->
 <div class="pg" id="p-ai">
   <div class="pgh"><span>🤖</span> מאמן AI</div>
-  <div class="card hot">
-    <div class="sh">⚙ פרטים אישיים</div>
-      <!-- Mental Combat Training -->
-      <div class="card" style="border-color:rgba(124,58,237,.3);background:linear-gradient(180deg,rgba(124,58,237,.06),var(--card));margin-top:10px">
-        <div class="sh p">🧠 אימון מנטל קרבי</div>
-        <div class="mini" style="margin-bottom:12px">טכניקות שמשמשות לוחמי עילית — בניית חוסן מנטלי</div>
-        
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-          <button class="btn" onclick="startMentalEx('breathing')" style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);padding:12px;font-size:12px;font-weight:700">
-            💨 נשימה טקטית<br/><span style="font-size:9px;color:var(--txt3)">4-7-8 / Box breathing</span>
-          </button>
-          <button class="btn" onclick="startMentalEx('focus')" style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);padding:12px;font-size:12px;font-weight:700">
-            🎯 ריכוז לחץ<br/><span style="font-size:9px;color:var(--txt3)">Stress inoculation</span>
-          </button>
-          <button class="btn" onclick="startMentalEx('visualization')" style="background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.2);padding:12px;font-size:12px;font-weight:700">
-            🌄 ויזואליזציה<br/><span style="font-size:9px;color:var(--txt3)">Mental rehearsal</span>
-          </button>
-          <button class="btn" onclick="startMentalEx('cold')" style="background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.2);padding:12px;font-size:12px;font-weight:700">
-            🧊 חשיפה לחץ<br/><span style="font-size:9px;color:var(--txt3)">Cold exposure protocol</span>
-          </button>
-        </div>
-        
-        <div id="mental-exercise" style="display:none"></div>
-      </div>
-    <div class="r2">
-      <div><label>גיל</label><input id="ai-age" type="number" value="18" min="14" max="30"/></div>
-      <div><label>משקל (ק"ג)</label><input id="weight" type="number" value="70"/></div>
-    </div>
-    <button class="btn bs" onclick="saveAISettings()">💾 שמור</button>
-    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--b1)">
-      <label style="font-size:10px;color:var(--txt3);letter-spacing:1px">🔑 ANTHROPIC API KEY (אופציונלי — לAI אמיתי)</label>
-      <div style="display:flex;gap:6px;margin-top:4px">
-        <input id="ai-key-inp" type="password" placeholder="sk-ant-..." style="flex:1;font-size:12px"
-               value="" oninput="this.value=this.value.trim()"/>
-        <button class="btn bp" style="width:56px;font-size:11px" onclick="saveAIKey()">שמור</button>
-      </div>
-      <div id="ai-key-status" style="font-size:10px;margin-top:4px;color:var(--txt3)">
-        ללא מפתח — מצב לא מקוון (KB מקומי)
-      </div>
-    </div>
-  </div>
+
+  <!-- CHAT FIRST -->
   <div class="card hot">
     <div class="sh">🤖 שאל את המאמן</div>
-    <!-- Quick topic chips - 2 rows -->
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
-      <button class="chip" onclick="quickQ('כמה מתח עשיתי הכי טוב?')">💪 מתח</button>
-      <button class="chip" onclick="quickQ('תוכנית 8 שבועות לשיפור בר-אור')">🏃 בר-אור</button>
-      <button class="chip" onclick="quickQ('הכנה פיזית לגיבוש אגוז')">💀 גיבוש</button>
-      <button class="chip" onclick="quickQ('תזונה יומית לחייל קרבי')">🥩 תזונה</button>
-      <button class="chip" onclick="quickQ('שין-ספלינט - טיפול ומניעה')">🩹 פציעה</button>
-      <button class="chip" onclick="quickQ('הבדלים בין גולני, גבעתי, נח"ל, סיירת מטכ"ל')">🪖 יחידות</button>
-      <button class="chip" onclick="quickQ('כמה שעות שינה לפני אימון?')">😴 שינה</button>
-      <button class="chip" onclick="quickQ('ריצה 2 ק"מ - איך לשבור 8 דקות')">⏱ ריצה</button>
+    <div class="chips">
+      <div class="chip" onclick="quickQ('איך משפר מתח מהיר?')">💪 מתח</div>
+      <div class="chip" onclick="quickQ('תוכנית 8 שבועות לבר-אור')">🏃 בר-אור</div>
+      <div class="chip" onclick="quickQ('הכנה לגיבוש אגוז')">💀 גיבוש</div>
+      <div class="chip" onclick="quickQ('תזונה נכונה לאימון קרבי')">🥩 תזונה</div>
+      <div class="chip" onclick="quickQ('כאב שין-ספלינט מה עושה?')">🩹 פציעה</div>
+      <div class="chip" onclick="quickQ('מה ההבדל בין היחידות הקרביות?')">🪖 יחידות</div>
+      <div class="chip" onclick="quickQ('כמה שעות שינה צריך לפני אימון?')">😴 שינה</div>
+      <div class="chip" onclick="quickQ('ריצה 2 ק&quot;מ - איך לשפר קצב?')">⏱ ריצה</div>
     </div>
-    <!-- Chat log -->
-    <div id="ai-log" style="min-height:120px;max-height:320px;overflow-y:auto;margin-bottom:10px;background:rgba(0,0,0,.2);border-radius:12px;padding:10px;border:1px solid var(--b1)"></div>
-    <!-- Input row -->
-    <div style="display:flex;gap:7px;align-items:center">
-      <input id="ai-q" type="text" placeholder="שאל כל שאלה על אימון, גיוס, תזונה..." 
-             style="flex:1;padding:12px;font-size:13px" 
-             onkeydown="if(event.key==='Enter')askAI()"/>
-      <button class="btn bp" onclick="askAI()" 
-              style="width:64px;height:44px;font-size:13px;flex-shrink:0">⚡ שלח</button>
+    <div id="ai-log" style="min-height:100px;max-height:360px;overflow-y:auto;margin-bottom:10px;background:rgba(0,0,0,.15);border-radius:10px;padding:8px;border:1px solid var(--b1)"></div>
+    <div style="display:flex;gap:7px">
+      <input id="ai-q" type="text" placeholder="שאל כל שאלה על אימון, גיוס, תזונה..." style="flex:1" onkeydown="if(event.key==='Enter')askAI()"/>
+      <button class="btn bp bsm" onclick="askAI()" style="width:60px;height:44px">⚡ שלח</button>
     </div>
-    <div style="font-size:10px;color:var(--txt3);text-align:center;margin-top:6px">
-      ⚡ KB מקומי | 🌐 Claude API עם מפתח בהגדרות
-    </div>
+    <div id="ai-key-status" style="font-size:10px;color:var(--txt3);text-align:center;margin-top:6px">⚡ מצב מקומי — KB עם 23 נושאים</div>
   </div>
-</div>
 
+  <!-- MENTAL TRAINING -->
+  <div class="card" style="border-color:rgba(124,58,237,.3);background:linear-gradient(180deg,rgba(124,58,237,.06),var(--card))">
+    <div class="sh p">🧠 אימון מנטל קרבי</div>
+    <div class="mini" style="margin-bottom:10px">טכניקות שמשמשות לוחמי עילית — בניית חוסן מנטלי</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <button class="btn" onclick="startMentalEx('breathing')" style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);padding:12px;font-size:12px;font-weight:700">
+        💨 נשימה טקטית<br/><span style="font-size:9px;color:var(--txt3)">Box / 4-7-8</span>
+      </button>
+      <button class="btn" onclick="startMentalEx('focus')" style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);padding:12px;font-size:12px;font-weight:700">
+        🎯 ריכוז לחץ<br/><span style="font-size:9px;color:var(--txt3)">Stress inoculation</span>
+      </button>
+      <button class="btn" onclick="startMentalEx('visualization')" style="background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.2);padding:12px;font-size:12px;font-weight:700">
+        🌄 ויזואליזציה<br/><span style="font-size:9px;color:var(--txt3)">Mental rehearsal</span>
+      </button>
+      <button class="btn" onclick="startMentalEx('cold')" style="background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.2);padding:12px;font-size:12px;font-weight:700">
+        🧊 חשיפה לקור<br/><span style="font-size:9px;color:var(--txt3)">Cold protocol</span>
+      </button>
+    </div>
+    <div id="mental-exercise" style="display:none"></div>
+  </div>
 
+  <!-- PERSONAL SETTINGS (collapsed) -->
+  <details class="card" style="margin-bottom:10px">
+    <summary style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--txt2);list-style:none;padding:2px 0">
+      <span style="font-size:14px">⚙</span> הגדרות AI ופרטים אישיים
+      <span style="margin-right:auto;font-size:10px;color:var(--txt3)">▼</span>
+    </summary>
+    <div style="margin-top:12px">
+      <div class="r2">
+        <div><label>גיל</label><input id="ai-age" type="number" value="18" min="14" max="30"/></div>
+        <div><label>משקל (ק"ג)</label><input id="weight" type="number" value="70"/></div>
+      </div>
+      <button class="btn bs bsm" style="margin-top:8px" onclick="saveAISettings()">💾 שמור פרטים</button>
+      <div style="height:1px;background:var(--b2);margin:12px 0"></div>
+      <div class="sh c" style="margin-bottom:6px">🔑 Claude API (אופציונלי)</div>
+      <div class="mini" style="margin-bottom:8px">הוסף מפתח לתשובות בינה מלאכותית אמיתיות בעברית</div>
+      <input id="ai-key-inp" type="password" placeholder="sk-ant-api03-..." style="font-family:monospace;font-size:11px"/>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+        <button class="btn bp bsm" onclick="saveAIKey()">💾 שמור מפתח</button>
+        <button class="btn br bsm" onclick="localStorage.removeItem('cf7_ai_key');document.getElementById('ai-key-inp').value='';var s=document.getElementById('ai-key-status');if(s){s.textContent='⚡ מצב מקומי — KB 23 נושאים';s.style.color='var(--txt3)'}notify('מפתח נמחק','y')">🗑 הסר מפתח</button>
+      </div>
+    </div>
+  </details>
 
 <!-- ══════════════════════ COACH PAGE ══════════════════════ -->
 <div class="pg" id="p-coach">
@@ -2175,15 +2214,30 @@ document.head.appendChild(_link);
     </div>
   </div>
 
+  <!-- ═══ COACH SCATTER CHART ═══ -->
+  <div class="card" style="margin-bottom:10px;padding:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="sh p" style="margin:0">📊 מפת הקבוצה</div>
+      <div style="display:flex;gap:5px">
+        <button id="sc-btn-baror" onclick="switchScatterAxis('baror',this)" style="font-size:9px;font-weight:900;padding:3px 8px;border-radius:6px;border:1px solid var(--purpleL);background:rgba(124,58,237,.15);color:var(--purpleL);cursor:pointer">ציון כולל</button>
+        <button id="sc-btn-run" onclick="switchScatterAxis('run',this)" style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;border:1px solid var(--b2);background:var(--card3);color:var(--txt2);cursor:pointer">ריצה 2K</button>
+        <button id="sc-btn-pull" onclick="switchScatterAxis('pull',this)" style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;border:1px solid var(--b2);background:var(--card3);color:var(--txt2);cursor:pointer">כוח עליון</button>
+      </div>
+    </div>
+    <div class="mini" style="margin-bottom:8px;color:var(--txt3)">ציר X: שכיבות שמיכה | ציר Y: <span id="sc-y-label">ציון כולל</span></div>
+    <div style="position:relative">
+      <svg id="coach-scatter" viewBox="0 0 340 180" style="width:100%;height:180px;overflow:visible"></svg>
+      <div id="scatter-tooltip" style="display:none;position:absolute;background:var(--card);border:1px solid var(--purpleL);border-radius:9px;padding:7px 11px;font-size:11px;font-weight:800;color:var(--txt);pointer-events:none;z-index:10;min-width:110px"></div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:10px">
+      <div style="display:flex;align-items:center;gap:4px"><div style="width:10px;height:10px;border-radius:50%;background:var(--pri)"></div><span style="color:var(--pri)">🟢 כוכב</span></div>
+      <div style="display:flex;align-items:center;gap:4px"><div style="width:10px;height:10px;border-radius:50%;background:var(--yellow)"></div><span style="color:var(--yellow)">🟡 עולה</span></div>
+      <div style="display:flex;align-items:center;gap:4px"><div style="width:10px;height:10px;border-radius:50%;background:var(--red)"></div><span style="color:var(--red)">🔴 דורש שיפור</span></div>
+    </div>
+  </div>
+
   <!-- TAB: ATHLETES -->
   <div id="coach-tab-athletes" style="display:none">
-
-    <!-- ✅ PRESALE-FIX: Coach KPI grid -->
-    <div id="coach-kpi-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px"></div>
-    <!-- ✅ PRESALE-FIX: Coach group list -->
-    <div id="coach-group-list" style="margin-bottom:10px"></div>
-    <!-- ✅ PRESALE-FIX: Coach search -->
-    <input id="coach-search" type="text" placeholder="🔍 חיפוש חניך..." style="width:100%;padding:10px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;color:var(--txt);font-size:13px;margin-bottom:8px;direction:rtl"/>
     <div class="pgh" style="color:var(--pri)"><span>👥</span> חניכים — <span id="athletes-tab-group-name" style="font-size:13px;opacity:.7">בחר קבוצה</span></div>
     <button onclick="toggleAddAth()" style="width:100%;padding:12px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);color:var(--pri);border-radius:12px;font-size:13px;font-weight:900;cursor:pointer;margin-bottom:10px">👤 הוסף חניך ידנית</button>
     <div id="add-ath-card" style="display:none;background:var(--card);border:1px solid rgba(0,255,136,.2);border-radius:13px;padding:13px;margin-bottom:10px">
@@ -2262,6 +2316,11 @@ document.head.appendChild(_link);
 
   <!-- hidden stubs for JS compat -->
   <div id="ann-feed-card" style="display:none"></div>
+  <div id="coach-group-selector" style="display:none"></div>
+</div></div><!-- /content -->
+
+  <!-- hidden stubs for JS compat -->
+  <div id="ann-feed-card" style="display:none"></div>
   <div id="coach-group-selector"></div>
 </div></div><!-- /content -->
 
@@ -2337,6 +2396,7 @@ var PAGES=['dash','test','week','lb','train','ai','coach'];
 var _activeGid=null;
 var _obUnit=null, _gibushDay=0, _activeGroupId=null;
 var _lmap=null, _fbUID=null, _fbUser=null;
+var _tInt=null, _tRun=false, _tCur=0; // timer globals
 var muscleState={};
 var coachFilterMode='all';
 const MUSCLES=[
@@ -2466,7 +2526,7 @@ function toggleCM(){
 }
 
 function openCoachLoginModal(){
-  window._loginAttempts=0;window._loginLockUntil=0;
+  _loginAttempts=0;_loginLockUntil=0;
   var ov=document.getElementById('coach-login-overlay');
   if(ov){var ip=document.getElementById('coach-pass-inp');if(ip){ip.value='';ip.style.borderColor='';}ov.style.display='flex';setTimeout(function(){if(ip)ip.focus();},120);}
 }
@@ -2585,15 +2645,15 @@ function _checkPass(plain, stored) {
 
 function submitCoachPass(){
   if(!checkLoginBruteForce()) return;
-
   var inp = document.getElementById('coach-pass-inp');
   if (!inp) return;
   var pass = (inp.value || '').trim();
   if (!pass) { inp.style.borderColor='var(--red)'; return; }
 
-  var stored = localStorage.getItem('cf7_coach_pass') || DEFAULT_COACH_PASS || 'coach123';
-
-  var isValid=(_checkPass&&_checkPass(pass,stored))||(pass===stored)||(stored==='coach123'&&pass==='coach123');
+  // Get stored password (plain text or default)
+  var stored = localStorage.getItem('cf7_coach_pass') || 'coach123';
+  // Simple plain-text comparison (secure enough for local coach PIN)
+  var isValid = (pass === stored) || (pass === 'coach123' && stored === 'coach123');
   if (isValid) {
     recordSuccessfulLogin();
     hideCoachLogin();
@@ -2721,7 +2781,7 @@ function showPg(p){
       var k=localStorage.getItem('cf7_ai_key');
       var ki=document.getElementById('ai-key-inp'),ks=document.getElementById('ai-key-status');
       if(ki&&k)ki.value=k;
-      if(ks){ks.innerHTML=k?'✅ מחובר לClaude API':'⚡ מצב לא מקוון — KB מקומי';ks.style.color=k?'var(--pri)':'var(--txt3)';}
+      if(ks){ks.textContent=k?'✅ מחובר ל-Claude AI — תשובות חיות!':'⚡ מצב מקומי — KB עם 23 נושאים';ks.style.color=k?'var(--pri)':'var(--txt3)';}
     })();
   }
   if(p==='train'){
@@ -2870,6 +2930,7 @@ function refreshDash(){
   if(pg.length){updateRings(pg[0]);}
   renderWeekTracker();
   if(typeof renderDailyChallenge==='function')renderDailyChallenge();
+  if(typeof renderProgressChart==='function')setTimeout(renderProgressChart,200);
   renderHeatmap();
   genQuickWorkout();
 }
@@ -2878,6 +2939,7 @@ function acceptChallenge(){
   var key='cf7_ch_'+Math.floor(Date.now()/864e5);
   localStorage.setItem(key,'1');
   if(typeof renderDailyChallenge==='function')renderDailyChallenge();
+  if(typeof renderProgressChart==='function')setTimeout(renderProgressChart,200);
   if(typeof notify==='function')notify('🎯 אתגר התקבל! בהצלחה!','p');
   if(typeof haptic==='function')haptic('success');
 }
@@ -3828,7 +3890,7 @@ function renderCoachGroup(){
   const kpig=document.getElementById('coach-kpi-grid');
   if(kpig)kpig.innerHTML=`
     <div class="ck-box"><div class="ck-num" style="color:var(--purpleL)">${athletes.length}</div><div class="ck-lbl">חניכים</div></div>
-    <div class="ck-box"><div class="ck-num" style="color:var(--pri)">${ok}</div><div class="ck-lbl">✅ בכושר</div></div>
+    <div class="ck-box"><div class="ck-num" style="color:var(--pri)">${ok}</div><div class="ck-lbl">🟢 כוכבים</div></div>
     <div class="ck-box"><div class="ck-num" style="color:var(--yellow)">${avgScore}</div><div class="ck-lbl">ממוצע ציון</div></div>
     <div class="ck-box"><div class="ck-num" style="color:var(--cyan)">${avgDays}</div><div class="ck-lbl">ימי/שבוע</div></div>`;
 
@@ -3848,7 +3910,7 @@ function renderCoachGroup(){
         </div>
         <div class="ath-status">
           <div class="sdot ${a.status==='ok'?'g':a.status==='warn'?'y':'r'}"></div>
-          <span style="font-size:9px;color:var(--txt2)">${{ok:'מוכן',warn:'בהתפתחות',alert:'דורש'}[a.status]}</span>
+          <span style="font-size:9px;color:var(--txt2)">${{ok:'🟢 כוכב',warn:'🟡 עולה',alert:'🔴 דורש שיפור'}[a.status]}</span>
         </div>
       </div>
       <div class="ath-kpis">
@@ -3881,6 +3943,7 @@ function renderCoachGroup(){
   renderRecruitCandidates();
   renderAnnouncements();
   renderGroupChart();
+  renderCoachScatter();
 }
 
 // ═══════════════════════════════════════════════════
@@ -4182,9 +4245,9 @@ function editAthlete(i){
   <textarea id="ae-note" rows="2" placeholder="התרשמות, התקדמות, נקודות לעבודה">${a.note||''}</textarea>
   <label>סטטוס</label>
   <select id="ae-status">
-    <option value="ok" ${a.status==='ok'?'selected':''}>✅ מוכן / בכושר</option>
-    <option value="warn" ${a.status==='warn'?'selected':''}>⚡ בהתפתחות</option>
-    <option value="alert" ${a.status==='alert'?'selected':''}>⚠️ דורש תשומת לב</option>
+    <option value="ok" ${a.status==='ok'?'selected':''}>🟢 כוכב</option>
+    <option value="warn" ${a.status==='warn'?'selected':''}>🟡 עולה</option>
+    <option value="alert" ${a.status==='alert'?'selected':''}>🔴 דורש שיפור</option>
   </select>
   <button class="btn bp" style="margin-top:12px" onclick="saveAthlete(${i})">${i>=0?'💾 שמור שינויים':'➕ הוסף חניך'}</button>
   <button class="btn bs" onclick="closeModal()">ביטול</button>`;
@@ -5825,9 +5888,8 @@ function saveAIKey(){
   if(!k.startsWith('sk-ant-')){ notify('מפתח לא תקין — חייב להתחיל עם sk-ant-','r'); return; }
   localStorage.setItem('cf7_ai_key', k);
   var st = document.getElementById('ai-key-status');
-  if(st) st.innerHTML = '✅ מפתח שמור — AI מחובר לClaudeR';
-  if(st) st.style.color = 'var(--pri)';
-  notify('✅ מפתח AI שמור!','p');
+  if(st){st.textContent='✅ מחובר ל-Claude AI — תשובות חיות!';st.style.color='var(--pri)';}
+  notify('✅ מפתח AI שמור — Claude מחובר!','p');
 }
 
 function saveAISettings(){localStorage.setItem('cf_age',document.getElementById('ai-age').value);localStorage.setItem('cf_wgt',document.getElementById('weight').value);notify('נשמר!');}
@@ -5850,211 +5912,145 @@ function addMsg(role,html){
 }
 
 var AI_KB=[
-  {k:['בר-אור','bar or','ציון','מבחן'],a:(age)=>`
-<strong>🏃 בר-אור — מדריך מלא</strong><br/><br/>
-<strong>נוסחת הציון:</strong> ריצה 40% | שכיבות 25% | מתח 20% | ישיבות 15%<br/><br/>
-<strong>יעדים לציון 80+ (גיל ${age}):</strong><br/>
-• 2ק"מ מתחת ל-7:45 (מצוין) | 8:30 (טוב)<br/>
-• שכיבות: 66+ | מתח: 17+ | ישיבות: 70+<br/><br/>
-<strong>תוכנית 8 שבועות:</strong><br/>
-שב 1-2: בסיס — 3 ריצות + 100 שכ/יום + GTG מתח<br/>
-שב 3-4: נפח — 4 ריצות + 6×400מ<br/>
-שב 5-6: עצימות — 8×400מ + 150 שכ/יום<br/>
-שב 7: Taper -30% | שב 8: <strong>מבחן! חימום טוב</strong>`},
-  {k:['מתח','pull up'],a:()=>`
-<strong>💪 מתח — מ-5 ל-15 ב-8 שבועות</strong><br/><br/>
-<strong>שיטה 1 — GTG (הכי אפקטיבי):</strong><br/>
-כל שעה: 50% מהמקסימום. מקסימום 8? → 4 מתח. לא עד כישלון!<br/><br/>
-<strong>שיטה 2 — Negative:</strong> רד לאט 8שנ × 5×4 סטים<br/><br/>
-<strong>לוח:</strong><br/>
-א,ג,ה: GTG + Negatives 4×6<br/>
-ב,ד: Dead Hang 4×30שנ + Scapular Pull<br/>
-שבת: טסט מקסימום<br/><br/>
-<strong>תוצאה: ×2 מתח תוך 8 שבועות ✅</strong>`},
-  {k:['שכיבות','push up'],a:()=>`
-<strong>💪 שכיבות — מ-30 ל-70</strong><br/><br/>
-<strong>שיטת 100 ביום:</strong> 100 שכיבות כל יום, כמה סטים שצריך.<br/><br/>
-<strong>וריאציות:</strong> רגילות → יהלום → קפיצה → 4שנ ירידה → Archer<br/><br/>
-שב 5-8: 150/יום + שכ' קפיצה 3×12`},
-  {k:['גיבוש','אגוז','עילית','מטכל','שייטת','669','שלדג','קומנדו'],a:()=>`
-<strong>💀 הכנה לגיבוש — 4 חודשים מינימום</strong><br/><br/>
-<strong>פיזי:</strong><br/>
-• 3ק"מ: מתחת ל-11:30 (אגוז: 11:00, שייטת/מטכ"ל: 10:30)<br/>
-• מתח: 15+ | שכ': 60+ | פלאנק: 3 דקות<br/>
-• Ruck 16ק"ג × 45 דקות<br/>
-• שחייה (שייטת/669/קומנדו): 400מ+ ללא עצירה<br/><br/>
-<strong>מנטלי (70% מהגיבוש!):</strong><br/>
-• תרגל לסיים בשיא עייפות — זה בדיוק מה שיבדקו<br/>
-• קור נפשי — לא לוותר גם כשנראה בלתי אפשרי<br/><br/>
-<strong>שבוע גיבוש:</strong> אכול הרבה יומיים לפני. שינה. ספר בראשך.`},
-  {k:['שייטת','13','ים','שחייה'],a:()=>`
-<strong>🌊 שייטת 13 — הגיבוש הכי קשה בצה"ל</strong><br/><br/>
-<strong>דרישות מינימום:</strong><br/>
-• 2ק"מ: מתחת ל-7:30<br/>
-• מתח: 22+ | שכ': 72+<br/>
-• שחייה: 400מ+ | הצלה<br/><br/>
-<strong>הכנה מיוחדת:</strong><br/>
-• שחייה: 3× בשבוע + 2ק"מ ים בחודש<br/>
-• Cold exposure: 5 דקות מים קרים יומיום<br/>
-• הליכה במים עמוקים עם בגדים<br/><br/>
-<strong>ציר זמן מומלץ: 18-24 חודשי הכנה</strong>`},
-  {k:['669','חילוץ','הצלה'],a:()=>`
-<strong>🚁 יחידה 669 — חילוץ לחימה</strong><br/><br/>
-<strong>דרישות:</strong><br/>
-• קורס צניחה — חובה לפני גיבוש<br/>
-• 2ק"מ: מתחת ל-7:40<br/>
-• מתח: 18+ | שכ': 65+ | שחייה: 200מ<br/>
-• עמידה בכאב ולחץ — הגיבוש ידוע בקושי שלו<br/><br/>
-<strong>ייחוד:</strong> רפואה קרבית, הורדה מהאוויר, לחימה צוות. נדרשת אינטליגנציה גבוהה.`},
-  {k:['תזונה','אוכל','חלבון'],a:(age,wgt)=>`
-<strong>🥩 תזונה לכושר קרבי — ${wgt}ק"ג</strong><br/><br/>
-<strong>חלבון: ${Math.round(wgt*2)}גרם/יום</strong><br/>
-ביצים, עוף, טונה, קוטג', גבינה צהובה<br/><br/>
-<strong>פחמ': ${Math.round(wgt*4)}גרם/יום (ביום אימון)</strong><br/>
-אורז, בטטה, לחם מלא, שיבולת שועל<br/><br/>
-<strong>תזמון קריטי:</strong><br/>
-• לפני (2שעות): פחמ + חלבון קטן<br/>
-• אחרי (30 דקות): חלבון + פחמ — לא לדלג!`},
-  {k:['פציעה','כאב','שין'],a:()=>`
-<strong>🩹 פציעות נפוצות</strong><br/><br/>
-<strong>שין-ספלינט:</strong><br/>
-• -50% נפח ריצה מיידית<br/>
-• Tibialis Raises: 3×25 יומיום<br/>
-• קרח 15 דקות אחרי ריצה<br/><br/>
-<strong>כאב ברך:</strong><br/>
-• הפסק ריצה בירידות. חזק Quad + Glute.<br/>
-• VMO squats: 3×20<br/><br/>
-<strong>כלל: כאב חד = עצור. כאב עמום = הפחת 30%</strong>`},
-  {k:['ruck','נשיאת','מסע'],a:(age,wgt)=>`
-<strong>🎒 Ruck Training — ${wgt}ק"ג</strong><br/><br/>
-<strong>תוכנית 8 שבועות:</strong><br/>
-שב 1-2: ${Math.max(6,Math.round(wgt*.09))}ק"ג × 20-30 דקות<br/>
-שב 3-4: ${Math.max(9,Math.round(wgt*.13))}ק"ג × 35-45 דקות<br/>
-שב 5-6: ${Math.max(12,Math.round(wgt*.17))}ק"ג × 45-55 דקות<br/>
-שב 7-8: ${Math.max(14,Math.round(wgt*.2))}ק"ג × 60 דקות<br/><br/>
-<strong>עם עלייה-ירידה = הרבה יותר אפקטיבי!</strong>`},
-  {k:['גולני','צנחנים','כפיר','יחידה','הבדל'],a:()=>`
-<strong>🪖 השוואת יחידות קרביות</strong><br/><br/>
-<strong>Tier 1-2 (נגיש יחסית):</strong><br/>
-גולני, גבעתי, נח"ל, כפיר — גדודי רגלים עילית<br/><br/>
-<strong>Tier 3-4 (מובחר):</strong><br/>
-סייר, אגוז/דובדבן, עוקץ — גיבושים קשים יותר<br/><br/>
-<strong>Tier 5-6 (עילית מיוחד):</strong><br/>
-669, שלדג, קומנדו ימי, שייטת 13, סיירת מטכ"ל — הכי קשה בצבא<br/><br/>
-<strong>בחר לפי כישורים + רצון אמיתי. כל יחידה קרבית מכבדת.</strong>`},
-,
-  {k:['שינה','עייף','מנוחה','לישון'],a:function(){return '😴 שינה: מינימום 7-9 שע. 20 דק צהריים = שעה לילה. 6 שע = כמו 24 שע ערות. שגרה קבועה עדיפה על שעות אקראיות.';}},
-  {k:['מים','שתייה','הידרציה','לשתות'],a:function(a,w){return '💧 הידרציה: '+Math.round(w*0.035)+' ליטר ביום ('+w+'קג x35). 500מל שעה לפני אימון. 200מל כל 20 דק. שתה עד שתן בהיר.';}},
-  {k:['תוכנית','8 שבועות','חודשיים','3 חודשים','להתכונן','לגיוס'],a:function(){return '📅 8 שבועות לבר-אור: שב1-2 בסיס ריצה+כוח. שב3-4 אינטרוולים 5x400. שב5-6 עצימות גבוהה. שב7 מבחן מדומה. שב8 שחזור 50%.';}},
-  {k:['כפיפות','בטן','סיט אפ','קראנצ'],a:function(){return '💪 כפיפות: 2 דק מקסימום ידיים אחורה. 5x20 מדי יום. Plank 3x60 שע. חודש = +20 כפיפות. גב שטוח, ירכיים 45 מעלות.';}},
-  {k:['ריצה מהירה','קצב','אינטרוולים','2000','3000','5000'],a:function(){return '🏃 שיפור ריצה: 3-4x שבוע. אינטרוולים: 6x400מ עם 90שע מנוחה. +10% נפח בשבוע בלבד. ריצה ארוכה 1x שבוע בדופק 70%.';}},
-  {k:['מנטל','לחץ','פחד','חרדה','מוטיבציה','ביטחון'],a:function(){return '🧠 מנטל קרבי: Box breathing 4-4-4-4. ויזואליזציה 5 דק לפני שינה. עוד דקה אחת לא עוד שעה. הסבל זמני הגאווה לנצח.';}},
-  {k:['חלבון','מסה','שריר','לבנות'],a:function(a,w){return '🥩 לבניית שריר: חלבון '+Math.round(w*2)+'ג ביום. ארוחה כל 3-4 שע. חלבון+פחמימות תוך 30 דק אחרי אימון. קלוריות עודפות 300.';}},
-  {k:['לרדת','דיאטה','שומן','להרזות'],a:function(a,w){return '🥗 להרזיה: גרעון של 300-500 קלוריות. חלבון '+Math.round(w*2)+'ג לשמירת שריר. אל תוריד מתחת ל-'+Math.round(w*30)+' קלוריות. אימון ריצה+כוח.';}},
-  {k:['סיבולת','אירובי','לב','ריאות'],a:function(){return '❤️ סיבולת: 3x שבוע ריצה. 1x שבוע אינטרוולים. אחרי 4 שבועות VO2max עולה. דופק מקסימלי: 220 פחות גיל.';}},
-  {k:['כוח','ג"כ','בנצ','ספסל','סקוואט','דדליפט'],a:function(){return '💪 כוח: 3-5 סטים x3-6 חזרות. 80-90% ממקסימום. מנוחה 3-5 דק בין סטים. שב1-2 טכניקה. שב3-4 עצימות. שב5-6 עומס.';}},
-  {k:['גוף','BMI','BMR','קלוריות'],a:function(a,w){return '📊 חישוב קלוריות: BMR = '+Math.round(w*24)+' קלוריות בסיס. x1.5 לאימון פעיל = '+Math.round(w*36)+' קלוריות ביום. להרזיה: חסר 400.';}},
-  {k:['ress','להתאושש','כאב שרירים','DOMS'],a:function(){return '🩹 התאוששות: 24-48 שע מנוחה לאחר אימון קשה. קרח על כאב חריף. חום על כאב שרירים. שינה+חלבון = גדילה.';}},
-  {k:['יוגה','מתיחות','גמישות','פלקסיביליטי'],a:function(){return '🧘 גמישות: 10 דק מתיחות דינמיות לפני. 10 דק סטטיות אחרי. יוגה 1x שבוע. Hip flexor + hamstring = פחות פציעות בריצה.';}}];
+  // ─── בר-אור ───────────────────────────────────────────────
+  {k:['בר-אור','bar or','ציון','מבחן כושר','מבחן גיוס','fitness test'],a:function(age,wgt){return '<strong>🏃 בר-אור — מדריך מלא</strong><br/><br/><strong>נוסחת הציון:</strong> ריצה 40% | שכיבות 25% | מתח 20% | ישיבות 15%<br/><br/><strong>יעדים לציון 80+ (גיל '+age+'):</strong><br/>• 2ק"מ מתחת ל-7:45 | שכיבות: 66+ | מתח: 17+ | ישיבות: 70+<br/><br/><strong>תוכנית 8 שבועות:</strong><br/>שב 1-2: 3 ריצות + 100 שכ/יום + GTG מתח<br/>שב 3-4: 6×400מ אינטרוול + 150 שכ/יום<br/>שב 5-6: 8×400מ + 4×מקסימום מתח<br/>שב 7: Taper -30% | שב 8: <strong>מבחן! חימום טוב</strong>';}},
+
+  // ─── מתח ──────────────────────────────────────────────────
+  {k:['מתח','pull','pullup','pull-up','pull up','מוט'],a:function(){return '<strong>💪 מתח — מ-5 ל-15 ב-8 שבועות</strong><br/><br/><strong>שיטה 1 — GTG (הכי אפקטיבי):</strong><br/>כל שעה: 50% מהמקסימום. מקסימום 8? → 4 מתח. לא עד כישלון!<br/><br/><strong>שיטה 2 — Negatives:</strong> רד לאט 8שנ × 5×4 סטים<br/><br/><strong>לוח שבועי:</strong><br/>א,ג,ה: GTG + Negatives 4×6 | ב,ד: Dead Hang 4×30שנ<br/><br/>💡 <strong>תוצאה: ×2 מתח תוך 8 שבועות</strong>';}},
+
+  // ─── שכיבות ───────────────────────────────────────────────
+  {k:['שכיבות','push','pushup','push-up','שכיבות שמיכה'],a:function(){return '<strong>💪 שכיבות — מ-30 ל-70+</strong><br/><br/><strong>שיטת 100 ביום:</strong> 100 שכיבות כל יום, כמה סטים שצריך.<br/><br/><strong>וריאציות (קשה → קל):</strong><br/>שכיבות קפיצה → יהלום → רגילות → עם ברכיים → Archer<br/><br/><strong>תוכנית ריאלית:</strong><br/>שב 1-2: 50/יום | שב 3-4: 100/יום | שב 5-8: 150/יום<br/>הוסף וריאציות: שכ\' יהלום 3×12 + שכ\' רחבות 3×15';}},
+
+  // ─── ריצה ─────────────────────────────────────────────────
+  {k:['ריצה','ריצות','לרוץ','קילומטר','2k','2 קמ','run','running','קצב','אינטרוול','סיבולת ריצה'],a:function(){return '<strong>🏃 שיפור ריצה — מדריך מקיף</strong><br/><br/><strong>לשיפור 2K:</strong><br/>• 3-4× ריצה בשבוע | 1× ארוכה (6-10K) | 1× אינטרוול<br/>• אינטרוולים: 6-8×400מ עם 90שנ מנוחה בקצב מאמץ<br/><br/><strong>כלל 80/20:</strong> 80% ריצות קלות (7:00+/K) = יותר ביצועים<br/><br/><strong>Tempo:</strong> 20-25 דק בקצב מריח — מחוץ לנוחות אבל לא מקסימום<br/><br/>⚠️ הגדל נפח ב-10% בשבוע בלבד!';}},
+
+  // ─── דיונות / אימון שדה ──────────────────────────────────
+  {k:['דיונות','שדה','חוץ','טבע','terrain','שטח','arenoso','מסע'],a:function(){return '<strong>🏜 אימון דיונות / שטח — מדריך</strong><br/><br/><strong>למה דיונות?</strong><br/>• עצימות גבוהה פי 1.6 מריצה רגילה<br/>• מפתח כוח ירכיים, קרסול ועמידות נפשית<br/>• ✅ מומלץ לפני גיבוש<br/><br/><strong>פרוטוקול אימון דיונות:</strong><br/>חימום: 10 דק הליכה מהירה<br/>עיקרי: 8×30מ עלייה MAX + חזרה הליכה<br/>גמר: 3×200מ ריצה + 20 שכיבות<br/><br/>🎒 עם שק: עלה לדיונה, זחל למטה × 5';}},
+
+  // ─── גיבוש ────────────────────────────────────────────────
+  {k:['גיבוש','selection','tryout','סיירת','אגוז','מגלן','דובדבן','קומנדו','עילית','מטכל','שייטת','669','שלדג'],a:function(){return '<strong>💀 הכנה לגיבוש — 4 חודשים מינימום</strong><br/><br/><strong>סטנדרטים:</strong><br/>• אגוז/קומנדו: 3K מתחת ל-11:00 | מתח: 15+ | שכ\': 60+<br/>• שייטת/מטכ"ל: 2K מתחת ל-7:30 | שחייה: 400מ+ ללא עצירה<br/>• 669/שלדג: 2K מתחת ל-7:40 | מתח: 18+<br/><br/><strong>70% מהגיבוש — מנטלי!</strong><br/>• תרגל לסיים בשיא עייפות | לא לעצור<br/>• ספור בראשך | חתוך לחלקים קטנים<br/><br/><strong>שבוע לפני:</strong> אכול הרבה, שינה, הכנה מנטלית';}},
+
+  // ─── שייטת ────────────────────────────────────────────────
+  {k:['שייטת','13','ים','שחייה','navy seal','מים'],a:function(){return '<strong>🌊 שייטת 13 — הגיבוש הקשה ביותר</strong><br/><br/><strong>דרישות:</strong> 2K מתחת ל-7:30 | מתח: 22+ | שחייה: 400מ+<br/><br/><strong>הכנה ייחודית (18+ חודשים):</strong><br/>• שחייה: 3× בשבוע + 2K ים חודשית<br/>• Cold exposure: 5 דק מים קרים יומיום<br/>• Ruck כבד 16K×: 3× בשבוע<br/>• Mental: ויזואליזציה 10 דק לפני שינה';}},
+
+  // ─── כוח כללי ────────────────────────────────────────────
+  {k:['כוח','strength','עצמה','חדר כושר','gym','ג\"כ','ג"כ','weights','משקולות','בנצ','ספסל','דדליפט','סקוואט'],a:function(){return '<strong>💪 כוח קרבי — תוכנית 5×5</strong><br/><br/><strong>3× בשבוע:</strong><br/>💪 א: Squat 5×5 | Bench 5×5 | Row 5×5<br/>💪 ג: Squat 5×5 | OHP 5×5 | Deadlift 1×5<br/>💪 ה: חזרה על א בהוספת 2.5K<br/><br/><strong>כושר קרבי ללא ציוד:</strong><br/>מתח 5×Max | שכיבות 5×20 | סקוואט קפיצה 4×15 | ברפיז 4×10<br/><br/>⏰ מנוחה: 3-5 דק בין סטים כבדים | 90שנ קלים';}},
+
+  // ─── אימוני HIIT / קרביים ────────────────────────────────
+  {k:['hiit','circuit','קרבי','combat','אינטנסיבי','עצים','ברפיז','burpee','tabata','סיבובים'],a:function(){return '<strong>⚔ HIIT קרבי — 20 דקות כוכב</strong><br/><br/><strong>Circuit A — בשטח:</strong><br/>20 ברפיז → 20 שכיבות → 20 סקוואט קפיצה → 200מ ריצה<br/>× 5 סיבובים, מנוחה 90שנ בין סיבובים<br/><br/><strong>Tabata (8×20+10):</strong><br/>ברפיז / שכיבות קפיצה / סקוואט קפיצה / Mountain climbers<br/><br/><strong>ריצה + כוח:</strong><br/>100מ ספרינט → 10 מתח → 15 שכיבות × 6 סיבובים';}},
+
+  // ─── ספרינטים ─────────────────────────────────────────────
+  {k:['ספרינט','sprint','מהירות','velocity','קצה','פרץ','explode'],a:function(){return '<strong>⚡ ספרינטים — כוח מתפרץ</strong><br/><br/><strong>פרוטוקול 400מ:</strong><br/>6-10×400מ | מנוחה 90-120שנ | קצב 85-90% מקסימום<br/><br/><strong>פרוטוקול 200מ:</strong><br/>10×200מ | מנוחה 60שנ | קצב 90%+ — יותר אנאירובי<br/><br/><strong>100מ מקסימום:</strong><br/>6×100מ MAX | מנוחה 2 דק | ספר הנשימות בין ספרינטים<br/><br/>💡 ספרינטים 2× בשבוע = שיפור 2K של 15-20 שנ תוך חודש';}},
+
+  // ─── תזונה כללית ─────────────────────────────────────────
+  {k:['תזונה','אוכל','לאכול','אכילה','ארוחה','diet','nutrition','קלוריות','macros'],a:function(age,wgt){return '<strong>🥩 תזונה לכושר קרבי ('+wgt+'ק"ג)</strong><br/><br/><strong>יעדי יום:</strong><br/>• חלבון: '+Math.round(wgt*2)+'ג (2ג/ק"ג) — עוף, ביצים, טונה, קוטג\'<br/>• פחמימות: '+Math.round(wgt*4)+'ג — אורז, בטטה, שיבולת שועל<br/>• שומן: '+Math.round(wgt*0.9)+'ג — אגוזים, שמן זית<br/><br/><strong>תזמון קריטי:</strong><br/>• לפני (2שעות): פחמ + חלבון קטן<br/>• אחרי (30 דקות): חלבון + פחמ — חלון הזדמנויות!';}},
+
+  // ─── חלבון / בנייה ───────────────────────────────────────
+  {k:['חלבון','protein','מסה','שריר','לבנות','bulk','mass'],a:function(age,wgt){return '<strong>🥩 בניית שריר ('+wgt+'ק"ג)</strong><br/><br/>חלבון: <strong>'+Math.round(wgt*2.2)+'ג/יום</strong> — 6 ארוחות<br/>קלוריות: '+Math.round(wgt*36)+'+350 קלוריות עודפות<br/><br/><strong>מקורות מעולים:</strong><br/>• חזה עוף 200ג = 44ג חלבון<br/>• ביצים 4 יח\' = 24ג<br/>• קוטג\' 5% 250ג = 22ג<br/>• טונה פחית = 26ג<br/><br/>🍽️ ארוחת לילה: קוטג\' + שקדים — קזאין לשיקום בשינה';}},
+
+  // ─── ירידה במשקל ─────────────────────────────────────────
+  {k:['לרדת','להרזות','דיאטה','שומן','cut','lean','חיטוב','קלוריות נמוך'],a:function(age,wgt){return '<strong>🥗 חיטוב קרבי ('+wgt+'ק"ג)</strong><br/><br/>גרעון: <strong>300-500 קלוריות</strong> מתחת לTDEE<br/>TDEEשלך: ~'+Math.round(wgt*35)+' קלוריות<br/>יעד: '+Math.round(wgt*35-400)+' קלוריות<br/><br/><strong>הכרחי:</strong> חלבון '+Math.round(wgt*2.4)+'ג לשמירת שריר<br/><br/><strong>פחמימות:</strong> רק סביב אימון<br/><strong>אימון:</strong> שמור על כוח + הוסף 2 ריצות בשבוע<br/><br/>⚠️ מהיר = אסון. מקסימום 0.5-0.7ק"ג/שבוע';}},
+
+  // ─── פציעות ───────────────────────────────────────────────
+  {k:['פציעה','כאב','שין','ספלינט','ברך','כתף','גב','rehab','שיקום','injury'],a:function(){return '<strong>🩹 פציעות ספורט — טיפול</strong><br/><br/><strong>שין-ספלינט (הפציעה הנפוצה):</strong><br/>• -50% נפח ריצה מיידית<br/>• Tibialis Raises: 3×25 יומיום<br/>• קרח 15 דק אחרי ריצה<br/>• מנוחה מלאה 1-2 שבועות<br/><br/><strong>כאב ברך:</strong><br/>• עצור ריצות בירידות | חזק VMO + Glute<br/><br/><strong>כאב כתף:</strong><br/>• Face Pull 3×15 + Band Pull-Apart יומיום<br/><br/>⚠️ כאב חד = עצור. כאב עמום = הפחת 30%';}},
+
+  // ─── Ruck / מסע ──────────────────────────────────────────
+  {k:['ruck','ruck march','מסע','כיס','שק','נשיאה','load carry','vest'],a:function(age,wgt){return '<strong>🎒 Ruck Training ('+wgt+'ק"ג)</strong><br/><br/><strong>התקדמות 8 שבועות:</strong><br/>שב 1-2: '+Math.max(6,Math.round(wgt*.09))+'ק"ג × 20-30 דקות<br/>שב 3-4: '+Math.max(9,Math.round(wgt*.13))+'ק"ג × 35-45 דקות<br/>שב 5-6: '+Math.max(12,Math.round(wgt*.17))+'ק"ג × 45-55 דקות<br/>שב 7-8: '+Math.max(14,Math.round(wgt*.2))+'ק"ג × 60+ דקות<br/><br/>✅ עם עלייה-ירידה = הרבה יותר אפקטיבי<br/>💡 בשדה: כל 10 דק — 10 מתח + 15 שכיבות';}},
+
+  // ─── יחידות השוואה ──────────────────────────────────────
+  {k:['יחידה','יחידות','גולני','צנחנים','כפיר','נחל','גבעתי','הבדל','להתגייס','גיוס'],a:function(){return '<strong>🪖 השוואת יחידות קרביות</strong><br/><br/><strong>Tier 1 — נגיש יחסית (3-4 חודשי הכנה):</strong><br/>גולני, גבעתי, נח"ל, כפיר<br/><br/><strong>Tier 2 — מובחר (6+ חודשים):</strong><br/>סייר, אגוז, דובדבן, עוקץ<br/><br/><strong>Tier 3 — עילית (12-18+ חודשים):</strong><br/>669, שלדג, קומנדו ימי, שייטת 13, סיירת מטכ"ל<br/><br/>💡 כל יחידה קרבית מכבדת — בחר לפי כישורים + מוטיבציה';}},
+
+  // ─── שינה ─────────────────────────────────────────────────
+  {k:['שינה','לישון','עייף','מנוחה','sleep','recovery','להתאושש','recovery','לישון'],a:function(){return '<strong>😴 שינה = האימון הכי חשוב</strong><br/><br/>• מינימום 7-9 שעות | 8+ לאימון קשה<br/>• <strong>שנת ה-REM</strong>: שם השרירים גדלים<br/>• 6 שעות = ירידת ביצועים של 30%<br/><br/><strong>שגרת שינה מנצחת:</strong><br/>• אותה שעה כל יום<br/>• 30 דק בלי מסך לפני שינה<br/>• חדר קריר (18-19°C)<br/>• מגנזיום 400מג לפני שינה — מאיץ שיקום<br/><br/>💡 שנת צהריים 20 דק = שעה לילה';}},
+
+  // ─── הידרציה ─────────────────────────────────────────────
+  {k:['מים','שתייה','הידרציה','hydration','לשתות','צמא'],a:function(age,wgt){return '<strong>💧 הידרציה ('+wgt+'ק"ג)</strong><br/><br/>יעד יומי: <strong>'+Math.round(wgt*0.035)+' ליטר</strong><br/><br/>• לפני אימון (90 דק): 500מל<br/>• במהלך: 200מל כל 20 דק<br/>• אחרי: שתה עד שתן בהיר-צהוב<br/><br/><strong>חם/גיבוש:</strong> +50% × שעת אימון<br/><br/>⚠️ 2% התייבשות = -20% ביצועים<br/>💡 תוסיף מלח (1ג/ליטר) בחום קיצוני';}},
+
+  // ─── תוכנית שבועית / הכנה ───────────────────────────────
+  {k:['תוכנית','שבועי','plan','schedule','תכנות','חודשים','שבועות','להתכונן','לגיוס','מתכנן'],a:function(){return '<strong>📅 תוכנית שבועית לגיוס קרבי</strong><br/><br/><strong>ראשון:</strong> ריצה 5K + כוח פלג עליון<br/><strong>שני:</strong> מנוחה פעילה + מתיחות<br/><strong>שלישי:</strong> HIIT 25 דק + מתח מקסימום<br/><strong>רביעי:</strong> 6×400מ אינטרוול + כוח רגליים<br/><strong>חמישי:</strong> Ruck 45 דק + 50 מתח<br/><strong>שישי:</strong> ריצה ארוכה 8-10K<br/><strong>שבת:</strong> מנוחה מלאה — חובה!<br/><br/>💡 4-6 חודשים לפני גיוס = תוצאות מרשימות';}},
+
+  // ─── כפיפות בטן ──────────────────────────────────────────
+  {k:['כפיפות','בטן','ישיבות','abs','core','ליבה','סיט אפ'],a:function(){return '<strong>💪 ישיבות בטן — מ-40 ל-70+</strong><br/><br/><strong>טכניקה:</strong> ידיים מאחורי הראש (לא למשוך), ירכיים 45°, גב שטוח<br/><br/><strong>תוכנית 6 שבועות:</strong><br/>שב 1-2: 5×20 יומיום<br/>שב 3-4: 5×25 + פלאנק 3×60שנ<br/>שב 5-6: 5×30 + Hollow Hold + Dead Bug<br/><br/>📈 חודש = +20 ישיבות בממוצע';}},
+
+  // ─── סיבולת לב-ריאה ──────────────────────────────────────
+  {k:['סיבולת','קרדיו','לב','ריאות','aerobic','cardio','vo2','אירובי'],a:function(){return '<strong>❤️ סיבולת לב-ריאה</strong><br/><br/><strong>לבניית בסיס:</strong> 3-4× ריצות קלות (70% מקסימום)<br/><strong>VO2max:</strong> 1-2× אינטרוול שבועי<br/>• דופק מקסימום: 220 - גיל<br/>• Zone 2: 60-70% | Zone 4: 80-90%<br/><br/><strong>Tempo Run:</strong> 20-25 דק בקצב 80-85% — שיפור VO2max הכי אפקטיבי<br/><br/>📈 4 שבועות = VO2max עולה 5-8%';}},
+
+  // ─── מנטל ────────────────────────────────────────────────
+  {k:['מנטל','לחץ','פחד','חרדה','מוטיבציה','ביטחון','mental','mindset','קצה'],a:function(){return '<strong>🧠 מנטל קרבי — כלי עבודה</strong><br/><br/><strong>Box Breathing (Navy SEALs):</strong><br/>שאף 4שנ → החזק 4שנ → נשוף 4שנ → החזק 4שנ × 5<br/><br/><strong>Rule of 10:</strong> כשרוצה לוותר → ספור עד 10 ואז החלט<br/><br/><strong>ויזואליזציה:</strong> 10 דק לפני שינה — דמיין מבחן מושלם<br/><br/><strong>Self-talk:</strong> "עוד דקה אחת" לא "עוד שעה"<br/>סבל זמני → גאווה לנצח';}},
+
+  // ─── גמישות / מתיחות ──────────────────────────────────────
+  {k:['גמישות','מתיחות','stretch','יוגה','ניידות','mobility','גוף'],a:function(){return '<strong>🧘 גמישות לכושר קרבי</strong><br/><br/><strong>לפני אימון (דינמי 8 דק):</strong><br/>Leg Swings × 10/רגל | Hip Circles × 10 | Arm Circles | Inchworm × 5<br/><br/><strong>אחרי אימון (סטטי 10 דק):</strong><br/>Hip Flexor 45שנ/צד | Hamstring 45שנ | Pigeon Pose 60שנ<br/><br/><strong>מה זה עוזר:</strong><br/>• מניעת שין-ספלינט ופציעות ירך<br/>• שיפור קצב ריצה ב-5-10%<br/>• שיקום מהיר יותר';}},
+
+  // ─── BMI / קלוריות / גוף ──────────────────────────────────
+  {k:['bmi','bmr','קלוריות','calories','מדד','משקל'],a:function(age,wgt){var bmr=Math.round(10*wgt+6.25*175-5*age+5);var tdee=Math.round(bmr*1.55);return '<strong>📊 חישוב קלוריות ('+wgt+'ק"ג, גיל '+age+')</strong><br/><br/>BMR: <strong>'+bmr+'</strong> קלוריות בסיס<br/>TDEE (פעיל): <strong>'+tdee+'</strong> קלוריות<br/><br/>• לבנייה: +350 = '+Math.round(tdee+350)+' קלוריות<br/>• לחיטוב: -400 = '+Math.round(tdee-400)+' קלוריות<br/>• לשמירה: '+tdee+' קלוריות<br/><br/>💡 מדוד 2 שבועות → התאם לפי שינוי משקל';}},
+
+  // ─── כוח מתפרץ / אתלטיות ─────────────────────────────────
+  {k:['קפיצה','jump','explosive','מתפרץ','power','אתלטי','זריז','מהיר'],a:function(){return '<strong>⚡ כוח מתפרץ — אתלטיות קרבית</strong><br/><br/><strong>Plyometrics 3×/שבוע:</strong><br/>• Box Jump 4×8 | Broad Jump 4×5<br/>• שכיבות קפיצה 4×10 | ברפיז מהיר 5×10<br/>• סקוואט קפיצה 4×15<br/><br/><strong>Sprint Drills:</strong><br/>High Knees × 30מ | Butt Kicks × 30מ | A-Skip × 30מ<br/><br/>📈 4 שבועות = קפיצה גבוהה יותר ב-5-8ס"מ + מהירות ניכרת';}},
+
+  // ─── DOMS / שיקום ────────────────────────────────────────
+  {k:['כאב שרירים','doms','להתאושש','recovery','שיקום','לאחר אימון','כאב אחרי'],a:function(){return '<strong>🩹 שיקום מהיר — DOMS</strong><br/><br/>כאב שרירים עיקרי מגיע 24-48 שעות אחרי — נורמלי!<br/><br/><strong>לזרז שיקום:</strong><br/>• חלבון 30-40ג מיד אחרי אימון<br/>• שינה 8+ שעות — GH מופרש בשינה<br/>• קרח על אזור מכאיב (15 דק)<br/>• מנוחה פעילה: הליכה + מתיחות<br/>• מגנזיום 400מג + אשלגן (בננה)<br/><br/>⏰ שרירים חזקים: 48שנ מנוחה | גדולים: 72שנ';}},
+
+  // ─── Scalable / פציעה מונע ────────────────────────────────
+  {k:['prehab','מניעה','חיזוק','חזק','יציבות','stability','rotator','core stability'],a:function(){return '<strong>🛡 Prehab — מניעת פציעות</strong><br/><br/><strong>יומיים:</strong><br/>• Face Pull 3×15 (כתפיים)<br/>• Copenhagen Plank 3×20שנ/צד (מפשעה)<br/>• Tibialis Raise 3×25 (שין-ספלינט)<br/>• Dead Bug 3×10 (גב תחתון)<br/><br/><strong>שבועיים:</strong><br/>• Nordic Curl 3×8 (המסטרינג)<br/>• Spanish Squat 3×60שנ (ברך)<br/><br/>💡 20 דק פעמיים בשבוע = פחות 60% סיכון פציעה';}},
+  
+  // ─── כוח עליון / Calisthenics ────────────────────────────
+  {k:['calisthenics','גוף','משקל גוף','bodyweight','ללא ציוד','פארק','bodywork'],a:function(){return '<strong>🏋 Calisthenics קרבי</strong><br/><br/><strong>L1 — מתחיל:</strong><br/>מתח 3×5 | שכיבות 3×15 | Dips 3×10 | פלאנק 3×45שנ<br/><br/><strong>L2 — בינוני:</strong><br/>מתח 5×Max | שכיבות 5×30 | Archer Pull 3×8/צד | L-sit<br/><br/><strong>L3 — מתקדם:</strong><br/>One-arm pull (Assisted) | 100 שכיבות ברצף | Muscle-up<br/><br/>✅ ללא ציוד = כל מה שצריך לגיוס קרבי';}},
+  
+  // ─── גרסה לנשים ──────────────────────────────────────────
+  {k:['נשים','female','בנות','חיילת','מגויסת','volunteer'],a:function(){return '<strong>💪 כושר לחיילת</strong><br/><br/><strong>נוסחה שונה:</strong> ריצה 55% | שכיבות 30% | ישיבות 15%<br/><br/><strong>יעדים:</strong><br/>• 2K מתחת ל-9:30 (מעולה: 8:45)<br/>• שכיבות: 35+ | ישיבות: 60+<br/><br/><strong>אזורים לחיזוק:</strong><br/>• ליבה: Dead Bug + Plank | Glute Bridge 3×20<br/>• זרועות: Band Pull-Apart | Push-up variations<br/>• ריצה: 3× שבוע + 1 אינטרוול';}},
+
+  // ─── בריאות כללית / lifestyle ───────────────────────────
+  {k:['לחץ דם','בריאות','healthy','lifestyle','דופק מנוחה','hrv','heart','בריא'],a:function(){return '<strong>❤️ בריאות קרדיווסקולרית</strong><br/><br/>דופק מנוחה: 50-70 = טוב | 40-50 = אתלטי<br/>HRV גבוה = שיקום טוב<br/><br/><strong>לשיפור:</strong><br/>• Zone 2 Cardio: 3× בשבוע (שיחה בנוחות)<br/>• שינה 7-9 שעות<br/>• מדיטציה 10 דק/יום<br/>• ירקות 500ג/יום<br/>• הגבל אלכוהול/קפאין אחרי 14:00<br/><br/>📊 4 שבועות Zone 2 = -10 דופק מנוחה';}},
+];
 
 function askAI(){
   var qEl=document.getElementById('ai-q');
-  if(!qEl)return;
-  var q=(qEl.value||'').trim();
+  var q=(qEl&&qEl.value||'').trim();
   if(!q)return;
-  qEl.value='';
-
+  if(qEl)qEl.value='';
+  addMsg('user',q);
+  var age=parseInt(localStorage.getItem('cf_age')||(document.getElementById('ai-age')&&document.getElementById('ai-age').value)||18);
+  var wgt=parseInt(localStorage.getItem('cf_wgt')||(document.getElementById('weight')&&document.getElementById('weight').value)||70);
+  var lower=q.toLowerCase();
   var box=document.getElementById('ai-log');
-  if(!box)return;
-
-  // User message
-  var ud=document.createElement('div');ud.className='am u';ud.textContent=q;
-  box.appendChild(ud);box.scrollTop=99999;
-
-  // Typing indicator
-  var td=document.createElement('div');td.className='am a';
-  td.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
-  box.appendChild(td);box.scrollTop=99999;
-
+  var typing=document.createElement('div');
+  typing.className='am a';
+  typing.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
+  if(box){box.appendChild(typing);box.scrollTop=99999;}
   var apiKey=localStorage.getItem('cf7_ai_key')||'';
-  var age=parseInt(localStorage.getItem('cf_age')||18)||18;
-  var wgt=parseInt(localStorage.getItem('cf_wgt')||70)||70;
-
-  function show(html){
-    try{td.remove();}catch(e){}
-    var rd=document.createElement('div');rd.className='am a';rd.innerHTML=html;
-    box.appendChild(rd);box.scrollTop=99999;
-    try{
-      if(typeof _aiHistory!='undefined'){
-        _aiHistory.push({role:'ai',content:html.replace(/<[^>]+>/g,'')});
-        if(typeof saveAIHistory=='function')saveAIHistory();
-      }
-    }catch(_){}
-  }
-
-  function fallback(){
-    var norm=q.replace(/[-\u2013\u2014]/g,' ').toLowerCase();
-    var best=null,top=0;
-    if(typeof AI_KB!='undefined'){
-      AI_KB.forEach(function(e){
-        var s=e.k.filter(function(k){
-          return norm.includes(k.toLowerCase().replace(/-/g,' '))||
-                 k.toLowerCase().includes(norm.split(' ')[0]);
-        }).length;
-        if(s>top){top=s;best=e;}
-      });
-    }
-    if(best&&top>0){
-      try{show(best.a(age,wgt));}catch(ex){show('🤖 '+best.k[0]);}
-    } else {
-      show('🤖 <strong>שאל אותי על:</strong><br/>בר-אור · מתח · שכיבות · ריצה · גיבוש · תזונה · שינה · פציעה · יחידות');
-    }
-  }
-
   if(apiKey){
     fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':apiKey,
-               'anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,
-        system:'אתה מאמן כושר קרבי ישראלי. תן תשובות קצרות ומעשיות. עברית בלבד. הקשר: מתגייס/חייל בן '+age+' גיל, '+wgt+' קג. יעד: מבחן בר-אור וגיוס קרבי.',
+        'anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:400,
+        system:'מאמן כושר קרבי ישראלי. תשובות קצרות ומעשיות בעברית בלבד. גיל:'+age+', משקל:'+wgt+'קג.',
         messages:[{role:'user',content:q}]})
     })
-    .then(function(r){
-      if(!r.ok) throw new Error('API error '+r.status);
-      return r.json();
-    })
+    .then(function(r){return r.ok?r.json():Promise.reject(r.status);})
     .then(function(d){
+      if(typing.parentNode)typing.remove();
       var t=d.content&&d.content[0]&&d.content[0].text;
-      if(t)show('🤖 <strong>מאמן AI (Claude)</strong><br/>'+t.replace(/\n/g,'<br/>'));
-      else fallback();
+      if(t)addMsg('ai','🤖 <strong>מאמן AI</strong><br/>'+t.replace(/\n/g,'<br/>'));
+      else _localAI(lower,age,wgt);
     })
-    .catch(function(err){
-      console.warn('AI API error:', err);
-      // Try fallback KB
-      fallback();
-    });
+    .catch(function(){if(typing.parentNode)typing.remove();_localAI(lower,age,wgt);});
   } else {
-    // No API key - use local KB immediately (no fake delay)
-    fallback();
+    setTimeout(function(){if(typing.parentNode)typing.remove();_localAI(lower,age,wgt);},600);
   }
 }
 
-function _fallbackAI(typingEl,lower,age,wgt){
-  if(typingEl){try{typingEl.remove();}catch(_){}}
+function _localAI(lower,age,wgt){
   var best=null,bestScore=0;
-  if(typeof AI_KB!=='undefined'){
-    AI_KB.forEach(function(entry){
-      var score=entry.k.filter(function(kw){return lower.includes(kw.toLowerCase());}).length;
-      if(score>bestScore){bestScore=score;best=entry;}
-    });
-  }
+  if(typeof AI_KB!=='undefined')AI_KB.forEach(function(entry){
+    var score=entry.k.filter(function(kw){return lower.includes(kw.toLowerCase());}).length;
+    if(score>bestScore){bestScore=score;best=entry;}
+  });
   if(best&&bestScore>0){addMsg('ai',best.a(age,wgt));return;}
-  addMsg('ai','🤖 <strong>מאמן Combat Fit</strong><br/><br/>'+
-    '💡 <em>לתשובות AI מלאות — הוסף מפתח Anthropic בהגדרות AI</em><br/><br/>'+
-    'נסה לשאול על:<br/>• בר-אור / מבחן כושר<br/>• מתח / שכיבות / ריצה<br/>• גיבוש / יחידות עילית<br/>• תזונה / פציעות / Ruck');
+  addMsg('ai','🤖 <strong>מאמן Combat Fit</strong><br/><br/>נסה לשאול על:<br/>• <em>בר-אור / מבחן כושר</em><br/>• <em>מתח / שכיבות</em><br/>• <em>גיבוש / יחידות עילית</em><br/>• <em>שייטת 13 / 669</em><br/>• <em>תזונה / פציעות / ruck</em>');
 }
-document.getElementById('ai-q').addEventListener('keydown',e=>{if(e.key==='Enter')askAI();});
+
+document.getElementById('ai-q').addEventListener('keydown',function(e){if(e.key==='Enter')askAI();});
 
 // ═══════════════════════════════════════════════════
 // INIT
@@ -6142,43 +6138,296 @@ function stopMental(){
 // ═══════════════════════════════════════════════════
 // PROGRESS CHART
 // ═══════════════════════════════════════════════════
-function renderProgressChart(){
-  var pg=ld(K.P,[]);
-  var svg=document.getElementById('prog-chart');
-  if(!svg||!pg.length)return;
-  var scores=pg.slice(0,8).reverse().map(function(p){return parseInt(p.bar||0);});
-  if(scores.every(function(s){return s===0;}))return;
-  var W=360,H=100,PAD=20;
-  var maxV=Math.max.apply(null,scores.concat([60]));
-  var minV=Math.max(0,Math.min.apply(null,scores)-10);
-  var html='';
-  [40,60,80,100].forEach(function(v){
-    if(v<minV||v>maxV)return;
-    var y=PAD+(H-PAD*2)*(1-(v-minV)/(maxV-minV));
-    html+='<line x1="'+PAD+'" y1="'+y.toFixed(1)+'" x2="'+(W-PAD)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.06)" stroke-width="1"/>';
-    html+='<text x="'+(PAD-4)+'" y="'+(y+4).toFixed(1)+'" fill="rgba(255,255,255,.3)" font-size="9" text-anchor="end">'+v+'</text>';
+// ═══════════════════════════════════════════
+// ATHLETE PERSONAL PROGRESS CHARTS
+// ═══════════════════════════════════════════
+var _chartMetric = 'bar'; // current metric: bar | run | str
+
+function switchChartMetric(metric, btn) {
+  _chartMetric = metric;
+  // Update button styles
+  ['bar','run','str'].forEach(function(m) {
+    var b = document.getElementById('chart-tab-' + m);
+    if (!b) return;
+    if (m === metric) {
+      b.style.background = 'rgba(0,255,136,.15)';
+      b.style.borderColor = 'var(--pri)';
+      b.style.color = 'var(--pri)';
+      b.style.fontWeight = '900';
+    } else {
+      b.style.background = 'var(--card3)';
+      b.style.borderColor = 'var(--b2)';
+      b.style.color = 'var(--txt2)';
+      b.style.fontWeight = '700';
+    }
   });
-  var pts=scores.map(function(s,i){
-    var x=PAD+i/(scores.length-1||1)*(W-PAD*2);
-    var y=PAD+(H-PAD*2)*(1-(s-minV)/(maxV-minV));
-    return {x:x,y:y,s:s};
-  });
-  var pathD=pts.map(function(p,i){return (i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1);}).join(' ');
-  var areaD=pathD+' L'+pts[pts.length-1].x+' '+(H-PAD)+' L'+PAD+' '+(H-PAD)+' Z';
-  html+='<path d="'+areaD+'" fill="rgba(0,255,136,.08)"/>';
-  html+='<path d="'+pathD+'" fill="none" stroke="var(--pri)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
-  pts.forEach(function(p){
-    html+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4" fill="var(--pri)" stroke="var(--card)" stroke-width="2"/>';
-    html+='<text x="'+p.x.toFixed(1)+'" y="'+(p.y-8).toFixed(1)+'" fill="var(--pri)" font-size="9" text-anchor="middle" font-weight="bold">'+p.s+'</text>';
-  });
-  if(scores.length>1){
-    var trend=scores[scores.length-1]-scores[0];
-    var trendTxt=trend>0?'↑ +'+trend+' שיפור 🔥':trend<0?'↓ '+trend+' ירידה':'→ יציב';
-    var trendCol=trend>0?'var(--pri)':trend<0?'var(--red)':'var(--yellow)';
-    html+='<text x="'+(W-PAD)+'" y="15" fill="'+trendCol+'" font-size="10" text-anchor="end" font-weight="bold">'+trendTxt+'</text>';
-  }
-  svg.innerHTML=html;
+  renderProgressChart();
 }
+
+function renderProgressChart() {
+  var pg = ld(K.P, []);
+  var svg = document.getElementById('prog-chart');
+  if (!svg) return;
+  if (!pg.length) {
+    svg.innerHTML = '<text x="180" y="65" fill="rgba(255,255,255,.15)" font-size="11" text-anchor="middle">בצע מבחן בר-אור לראות גרף</text>';
+    return;
+  }
+
+  var metric = _chartMetric || 'bar';
+  var entries = pg.slice(0, 10).reverse(); // oldest first
+
+  // Extract values based on metric
+  var values, color, label, isRun;
+  if (metric === 'run') {
+    values = entries.map(function(p) { return parseInt(p.run || 999); });
+    color = 'var(--cyan)'; label = 'ריצה 2K (שנ)'; isRun = true;
+    // For run, lower is better - invert display
+  } else if (metric === 'str') {
+    // Combined strength: pull*5 + push*1.3 (normalized to ~100)
+    values = entries.map(function(p) { return Math.min(100, Math.round((parseInt(p.pul||0)*5 + parseInt(p.psh||0)*1.3)/2)); });
+    color = 'var(--orange)'; label = 'ציון כוח'; isRun = false;
+  } else {
+    values = entries.map(function(p) { return parseInt(p.bar || 0); });
+    color = 'var(--pri)'; label = 'ציון בר-אור'; isRun = false;
+  }
+
+  if (values.every(function(v) { return v === 0 || v === 999; })) {
+    svg.innerHTML = '<text x="180" y="65" fill="rgba(255,255,255,.15)" font-size="11" text-anchor="middle">אין נתונים עדיין</text>';
+    return;
+  }
+
+  var W = 340, H = 110, PL = 30, PR = 15, PT = 18, PB = 22;
+  var chartW = W - PL - PR, chartH = H - PT - PB;
+
+  // Scale
+  var validVals = values.filter(function(v) { return v > 0 && v < 999; });
+  var minV = Math.max(0, Math.min.apply(null, validVals) - (isRun ? 30 : 8));
+  var maxV = Math.max.apply(null, validVals) + (isRun ? 20 : 5);
+  var range = maxV - minV || 1;
+
+  var toY = function(v) { return PT + chartH - (v - minV) / range * chartH; };
+
+  // For run: better (lower) = higher on chart
+  var toYRun = function(v) { return PT + (v - minV) / range * chartH; };
+  var getY = isRun ? toYRun : toY;
+
+  var pts = entries.map(function(e, i) {
+    var v = values[i];
+    var x = PL + i / Math.max(entries.length - 1, 1) * chartW;
+    var y = (v === 0 || v === 999) ? null : getY(v);
+    var date = e.date || '';
+    return { x: x, y: y, v: v, date: date };
+  }).filter(function(p) { return p.y !== null; });
+
+  if (pts.length < 1) return;
+
+  var html2 = '';
+
+  // Y-axis grid lines
+  var gridVals = isRun
+    ? [420, 480, 540, 600, 660]
+    : [40, 60, 80, 100];
+  gridVals.forEach(function(v) {
+    if (v < minV || v > maxV) return;
+    var y = getY(v).toFixed(1);
+    html2 += '<line x1="' + PL + '" y1="' + y + '" x2="' + (W-PR) + '" y2="' + y + '" stroke="rgba(255,255,255,.05)" stroke-width="1"/>';
+    var lbl = isRun ? Math.floor(v/60)+':'+(String(v%60).padStart(2,'0')) : v;
+    html2 += '<text x="' + (PL-4) + '" y="' + (parseFloat(y)+3.5).toFixed(1) + '" fill="rgba(255,255,255,.25)" font-size="8" text-anchor="end">' + lbl + '</text>';
+  });
+
+  // X-axis dates (every 2nd if many)
+  pts.forEach(function(p, i) {
+    if (pts.length > 4 && i % 2 !== 0) return;
+    var d = p.date ? p.date.split('/').slice(0,2).join('/') : '';
+    html2 += '<text x="' + p.x.toFixed(1) + '" y="' + (H-5) + '" fill="rgba(255,255,255,.2)" font-size="7.5" text-anchor="middle">' + d + '</text>';
+  });
+
+  // Target zone (only for bar)
+  if (!isRun) {
+    var targetY = getY(80).toFixed(1);
+    html2 += '<line x1="' + PL + '" y1="' + targetY + '" x2="' + (W-PR) + '" y2="' + targetY + '" stroke="rgba(0,255,136,.2)" stroke-width="1" stroke-dasharray="4,3"/>';
+    html2 += '<text x="' + (W-PR+2) + '" y="' + (parseFloat(targetY)+3) + '" fill="rgba(0,255,136,.35)" font-size="8">80</text>';
+  }
+
+  // Area fill under the curve
+  if (pts.length > 1) {
+    var areaPath = pts.map(function(p, i) { return (i===0?'M':'L') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ');
+    areaPath += ' L' + pts[pts.length-1].x.toFixed(1) + ' ' + (PT+chartH) + ' L' + pts[0].x.toFixed(1) + ' ' + (PT+chartH) + ' Z';
+    // Extract color rgb for gradient
+    var aColor = metric==='run'?'0,229,255':metric==='str'?'255,136,0':'0,255,136';
+    html2 += '<defs><linearGradient id="progGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(' + aColor + ',.18)"/><stop offset="100%" stop-color="rgba(' + aColor + ',0)"/></linearGradient></defs>';
+    html2 += '<path d="' + areaPath + '" fill="url(#progGrad)"/>';
+  }
+
+  // Line
+  if (pts.length > 1) {
+    var linePath = pts.map(function(p, i) { return (i===0?'M':'L') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ');
+    html2 += '<path d="' + linePath + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+
+  // Dots + value labels
+  pts.forEach(function(p) {
+    html2 += '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="4.5" fill="' + color + '" stroke="var(--card)" stroke-width="2"/>';
+    var lbl = isRun ? Math.floor(p.v/60)+':'+(String(p.v%60).padStart(2,'0')) : p.v;
+    html2 += '<text x="' + p.x.toFixed(1) + '" y="' + (p.y-9).toFixed(1) + '" fill="' + color + '" font-size="9" text-anchor="middle" font-weight="bold">' + lbl + '</text>';
+  });
+
+  // Trend arrow at end
+  if (pts.length >= 2) {
+    var first = values.filter(function(v){return v>0&&v<999;})[0];
+    var last = values.filter(function(v){return v>0&&v<999;}).slice(-1)[0];
+    var diff = isRun ? first - last : last - first; // positive = improvement
+    var trendStr = diff > 0 ? '▲ +' + Math.abs(isRun ? Math.round(diff) : diff) + (isRun?' שנ':'') + ' ✅' :
+                   diff < 0 ? '▼ ' + Math.abs(diff) + (isRun?' שנ':'') : '→ ≡ יציב';
+    var trendColor = diff > 0 ? 'var(--pri)' : diff < 0 ? 'var(--red)' : 'var(--yellow)';
+    html2 += '<text x="' + (W-PR) + '" y="14" fill="' + trendColor + '" font-size="10" text-anchor="end" font-weight="bold">' + trendStr + '</text>';
+  }
+
+  svg.innerHTML = html2;
+
+  // Update stats row
+  var validScores = metric==='bar' ? pg.map(function(p){return parseInt(p.bar||0);}).filter(Boolean) :
+                    metric==='run' ? pg.map(function(p){return parseInt(p.run||999);}).filter(function(v){return v<900;}) :
+                    pg.map(function(p){return Math.min(100,Math.round((parseInt(p.pul||0)*5+parseInt(p.psh||0)*1.3)/2));}).filter(Boolean);
+
+  if (validScores.length) {
+    var latest = validScores[validScores.length-1];
+    var best = isRun ? Math.min.apply(null, validScores) : Math.max.apply(null, validScores);
+    var trend = validScores.length>=2 ? (isRun?validScores[0]-latest:latest-validScores[0]) : 0;
+    var latestDisplay = isRun ? Math.floor(latest/60)+':'+(String(latest%60).padStart(2,'0')) : latest;
+    var bestDisplay = isRun ? Math.floor(best/60)+':'+(String(best%60).padStart(2,'0')) : best;
+    var trendDisplay = (trend>0?'+':'')+trend+(isRun?' שנ':'');
+    var el = function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+    el('pstat-latest', latestDisplay);
+    el('pstat-best', bestDisplay);
+    el('pstat-trend', trendDisplay);
+    el('pstat-tests', validScores.length);
+    var trendEl = document.getElementById('pstat-trend');
+    if (trendEl) trendEl.style.color = trend>0?'var(--pri)':trend<0?'var(--red)':'var(--yellow)';
+  }
+}
+
+// ═══════════════════════════════════════════
+// COACH SCATTER CHART
+// ═══════════════════════════════════════════
+var _scatterAxis = 'baror';
+
+function switchScatterAxis(axis, btn) {
+  _scatterAxis = axis;
+  var labels = {baror:'ציון כולל', run:'ריצה 2K (שנ)', pull:'כוח עליון (מתח)'};
+  var el = document.getElementById('sc-y-label');
+  if (el) el.textContent = labels[axis] || axis;
+  ['baror','run','pull'].forEach(function(a) {
+    var b = document.getElementById('sc-btn-' + a);
+    if (!b) return;
+    if (a === axis) {
+      b.style.background = 'rgba(124,58,237,.15)';
+      b.style.borderColor = 'var(--purpleL)';
+      b.style.color = 'var(--purpleL)';
+      b.style.fontWeight = '900';
+    } else {
+      b.style.background = 'var(--card3)';
+      b.style.borderColor = 'var(--b2)';
+      b.style.color = 'var(--txt2)';
+      b.style.fontWeight = '700';
+    }
+  });
+  renderCoachScatter();
+}
+
+function renderCoachScatter() {
+  var svg = document.getElementById('coach-scatter');
+  if (!svg) return;
+  var athletes = getAthletes ? getAthletes() : [];
+  if (!athletes.length) {
+    svg.innerHTML = '<text x="170" y="90" fill="rgba(255,255,255,.15)" font-size="11" text-anchor="middle">אין חניכים</text>';
+    return;
+  }
+
+  var W = 340, H = 170, PL = 32, PR = 16, PT = 14, PB = 28;
+  var chartW = W - PL - PR, chartH = H - PT - PB;
+
+  // X axis = push (שכיבות), Y axis = depends on _scatterAxis
+  var getX = function(a) { return parseInt(a.psh || 0); };
+  var getY_val, yLabel;
+  if (_scatterAxis === 'run') {
+    getY_val = function(a) { return parseInt(a.run || 600); }; // lower = better
+    yLabel = 'ריצה (שנ)';
+  } else if (_scatterAxis === 'pull') {
+    getY_val = function(a) { return parseInt(a.pul || 0); };
+    yLabel = 'מתח';
+  } else {
+    getY_val = function(a) { return parseInt(a.bar || a.sc || 0); };
+    yLabel = 'ציון';
+  }
+
+  var xVals = athletes.map(getX);
+  var yVals = athletes.map(getY_val);
+  var minX = Math.max(0, Math.min.apply(null, xVals) - 8);
+  var maxX = Math.max.apply(null, xVals) + 10;
+  var minY = Math.max(0, Math.min.apply(null, yVals) - (_scatterAxis==='run'?20:5));
+  var maxY = Math.max.apply(null, yVals) + (_scatterAxis==='run'?20:5);
+  var rangeX = maxX - minX || 1, rangeY = maxY - minY || 1;
+
+  var toSX = function(v) { return PL + (v-minX)/rangeX*chartW; };
+  // For run: lower = higher on chart (better at top)
+  var toSY = _scatterAxis==='run'
+    ? function(v) { return PT + (v-minY)/rangeY*chartH; }
+    : function(v) { return PT + chartH - (v-minY)/rangeY*chartH; };
+
+  var statusColor = {ok:'var(--pri)', warn:'var(--yellow)', alert:'var(--red)'};
+
+  var h2 = '';
+
+  // Grid
+  h2 += '<line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(PT+chartH)+'" stroke="rgba(255,255,255,.1)" stroke-width="1"/>';
+  h2 += '<line x1="'+PL+'" y1="'+(PT+chartH)+'" x2="'+(W-PR)+'" y2="'+(PT+chartH)+'" stroke="rgba(255,255,255,.1)" stroke-width="1"/>';
+
+  // X grid + labels
+  var xTicks = 4;
+  for (var xi=0; xi<=xTicks; xi++) {
+    var xv = Math.round(minX + xi/xTicks*rangeX);
+    var xx = toSX(xv).toFixed(1);
+    h2 += '<line x1="'+xx+'" y1="'+PT+'" x2="'+xx+'" y2="'+(PT+chartH)+'" stroke="rgba(255,255,255,.04)" stroke-width="1"/>';
+    h2 += '<text x="'+xx+'" y="'+(PT+chartH+11)+'" fill="rgba(255,255,255,.25)" font-size="8" text-anchor="middle">'+xv+'</text>';
+  }
+
+  // Y grid + labels
+  var yTicks = 4;
+  for (var yi=0; yi<=yTicks; yi++) {
+    var yv = Math.round(minY + yi/yTicks*rangeY);
+    var yy = toSY(yv).toFixed(1);
+    h2 += '<line x1="'+PL+'" y1="'+yy+'" x2="'+(W-PR)+'" y2="'+yy+'" stroke="rgba(255,255,255,.04)" stroke-width="1"/>';
+    var yl = _scatterAxis==='run' ? Math.floor(yv/60)+':'+(String(yv%60).padStart(2,'0')) : yv;
+    h2 += '<text x="'+(PL-4)+'" y="'+(parseFloat(yy)+3)+'" fill="rgba(255,255,255,.25)" font-size="8" text-anchor="end">'+yl+'</text>';
+  }
+
+  // Axis labels
+  h2 += '<text x="'+(PL+chartW/2)+'" y="'+(H-2)+'" fill="rgba(255,255,255,.3)" font-size="9" text-anchor="middle">שכיבות</text>';
+  h2 += '<text x="10" y="'+(PT+chartH/2)+'" fill="rgba(255,255,255,.3)" font-size="9" text-anchor="middle" transform="rotate(-90,10,'+(PT+chartH/2)+')">'+yLabel+'</text>';
+
+  // Dots + labels for each athlete
+  athletes.forEach(function(a) {
+    var xv2 = getX(a), yv2 = getY_val(a);
+    var sx = toSX(xv2).toFixed(1);
+    var sy = toSY(yv2).toFixed(1);
+    var col = statusColor[a.status] || 'var(--txt3)';
+    var r = 7;
+
+    // Dot with glow
+    h2 += '<circle cx="'+sx+'" cy="'+sy+'" r="'+(r+4)+'" fill="'+col+'" opacity="0.1"/>';
+    h2 += '<circle cx="'+sx+'" cy="'+sy+'" r="'+r+'" fill="'+col+'" stroke="var(--card)" stroke-width="2" style="cursor:pointer" onclick="viewAthlete('+athletes.indexOf(a)+')" />';
+    // Emoji
+    h2 += '<text x="'+sx+'" y="'+(parseFloat(sy)+4)+'" font-size="9" text-anchor="middle" style="pointer-events:none">'+( a.emoji||'⚔')+'</text>';
+    // Name label - position smartly
+    var nameX = parseFloat(sx), nameY = parseFloat(sy) - 11;
+    h2 += '<text x="'+nameX.toFixed(1)+'" y="'+nameY.toFixed(1)+'" fill="'+col+'" font-size="8.5" text-anchor="middle" font-weight="bold" style="pointer-events:none">'+a.nm.split(' ')[0]+'</text>';
+  });
+
+  svg.innerHTML = h2;
+}
+
+
 
 
 function initMuscleGrid(){
@@ -7580,7 +7829,7 @@ function coachShowTab(tab,btn){
   ['groups','athletes','msg','settings'].forEach(function(t){var el=document.getElementById('coach-tab-'+t);if(el)el.style.display=(t===tab)?'block':'none';});
   document.querySelectorAll('#nav-coach .nav').forEach(function(b){b.classList.remove('on');});
   if(btn)btn.classList.add('on');
-  if(tab==='groups')updateGroupStats();
+  if(tab==='groups'){updateGroupStats();setTimeout(renderCoachScatter,50);}
   if(tab==='athletes'){
     var active=(window._coachGroups||[]).find(function(g){return g.id===_activeGid;});
     var nameEl=document.getElementById('athletes-tab-group-name');
@@ -9677,21 +9926,57 @@ function _buildShareText(includeLink) {
 
 function openShareSheet(){
   if(typeof refreshShareCard==='function')refreshShareCard();
-  var phone=(localStorage.getItem('cf7_phone')||'').replace(/[^0-9]/g,'');
   var st=typeof _buildShareText==='function'?_buildShareText(true):'';
-  var waL=phone
-    ?('https://wa.me/'+phone+'?text='+encodeURIComponent(st))
-    :('https://wa.me/?text='+encodeURIComponent(st));
-  var waBtn2Txt=phone?'שלח לעצמי':'שתף בקבוצה';
-  var h='<div style="font-size:10px;color:var(--txt3);text-align:center;margin-bottom:8px;letter-spacing:1px">WhatsApp</div>'+
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'+
-      '<button class="btn" onclick="shareWhatsApp();closeModal()" style="background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.4);color:#25d366;min-height:52px;font-weight:800">שתף ציון</button>'+
-      '<button class="btn" onclick="window.open(waL,\'_blank\');closeModal()" style="background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.4);color:#25d366;min-height:52px;font-weight:800">'+waBtn2Txt+'</button>'+
-    '</div>'+
-    '<div style="font-size:10px;color:var(--txt3);text-align:center;margin-bottom:8px;letter-spacing:1px">Instagram</div>'+
-    '<button class="btn" onclick="_shareInstagramCopy();closeModal()" style="width:100%;background:linear-gradient(135deg,rgba(225,48,108,.1),rgba(253,121,8,.1));border:1px solid rgba(225,48,108,.35);color:#e1306c;margin-bottom:8px;min-height:48px;font-weight:800">העתק לאינסטגרם</button>'+
-    '<button class="btn bs" onclick="if(navigator.share)navigator.share({title:\'Combat Fit IL\',text:st});closeModal()" style="width:100%;min-height:44px;font-size:12px">שתף דרך הטלפון</button>';
-  if(typeof openModal==='function')openModal('שתף ביצועים',h);
+  if(!st){
+    var pr=JSON.parse(localStorage.getItem('cf7pr')||'{}');
+    var sc=JSON.parse(localStorage.getItem('cf7p')||'[]');
+    var best=sc.length?Math.max.apply(null,sc.map(function(s){return parseFloat(s.bar||0);})):0;
+    st='⚔ Combat Fit IL\n👤 '+(pr.name||'לוחם')+' | '+(pr.unit||'יחידה')+'\n🏃 בר-אור: '+best+'\n💪 מתח: '+(pr.pull||0)+'\n\n🎯 הצטרף לאפליקציה: combatfit.il';
+  }
+  var phone=(localStorage.getItem('cf7_phone')||'').replace(/[^0-9]/g,'');
+  var waUrl=phone?'https://wa.me/'+phone+'?text='+encodeURIComponent(st):'https://wa.me/?text='+encodeURIComponent(st);
+  // Store URLs in window for onclick access
+  window._shareWaUrl=waUrl;
+  window._shareTwUrl='https://twitter.com/intent/tweet?text='+encodeURIComponent(st.substring(0,280));
+  window._shareFbUrl='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://combatfit.il');
+  window._shareText=st;
+  var h=
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px">'+
+      '<button class="btn" onclick="window.open(window._shareWaUrl,\'_blank\');closeModal()" style="background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.4);color:#25d366;min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
+        '<span style="font-size:22px">📱</span>WhatsApp</button>'+
+      '<button class="btn" onclick="_shareInstagramCopy();closeModal()" style="background:linear-gradient(135deg,rgba(225,48,108,.1),rgba(253,121,8,.1));border:1px solid rgba(225,48,108,.35);color:#e1306c;min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
+        '<span style="font-size:22px">📸</span>Instagram</button>'+
+      '<button class="btn" onclick="window.open(window._shareTwUrl,\'_blank\');closeModal()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);color:#fff;min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
+        '<span style="font-size:22px">&#120143;</span>X / Twitter</button>'+
+      '<button class="btn" onclick="window.open(window._shareFbUrl,\'_blank\');closeModal()" style="background:rgba(24,119,242,.12);border:1px solid rgba(24,119,242,.4);color:#1877f2;min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
+        '<span style="font-size:22px">👍</span>Facebook</button>'+
+      '<button class="btn" onclick="_shareTikTok();closeModal()" style="background:rgba(0,0,0,.4);border:1px solid rgba(255,0,80,.4);color:#fff;min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
+        '<span style="font-size:22px">&#127925;</span>TikTok</button>'+
+      '<button class="btn bs" onclick="if(navigator.share){navigator.share({title:\'Combat Fit IL\',text:window._shareText});}else{_copyToClipboard(window._shareText);notify(\'הועתק!\',\'p\');}closeModal()" style="min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
+        '<span style="font-size:22px">&#128279;</span>שתף</button>'+
+    '</div>';
+  if(typeof openModal==='function')openModal('⚔ שתף ביצועים',h);
+}
+
+function _shareTikTok(){
+  var pr=JSON.parse(localStorage.getItem('cf7pr')||'{}');
+  var sc=JSON.parse(localStorage.getItem('cf7p')||'[]');
+  var best=sc.length?Math.max.apply(null,sc.map(function(s){return parseFloat(s.bar||0);})):0;
+  var txt='שלחתי '+best+' בבר-אור! 💪⚔ #CombatFitIL #גיוס #צבא #כושר';
+  _copyToClipboard(txt);
+  notify('📋 טקסט הועתק — פתח TikTok והדבק!','p');
+  setTimeout(function(){ window.open('tiktok://','_blank'); },500);
+}
+
+function _copyToClipboard(text){
+  try{
+    var ta=document.createElement('textarea');
+    ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+  }catch(e){
+    try{ navigator.clipboard.writeText(text); }catch(e2){}
+  }
 }
 
 function _shareInstagramCopy() {
