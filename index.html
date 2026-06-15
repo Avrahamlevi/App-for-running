@@ -2,7 +2,13 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
@@ -58,6 +64,8 @@ body.cm .co{display:block!important}
 
 /* ─── CONTENT ─── */
 .content{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;width:100%;display:block;padding-bottom:66px}
+.pg{display:none;padding:11px;padding-bottom:80px;box-sizing:border-box;width:390px;max-width:100vw}
+.pg.active{display:block}
 .pg{display:none;padding:11px;padding-bottom:80px;width:100%;box-sizing:border-box}
 .pg.active{display:block;animation:pgIn .2s ease}
 @keyframes pgIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
@@ -144,10 +152,6 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 .notif{position:fixed;top:65px;left:50%;transform:translateX(-50%) translateY(-90px);background:var(--card3);border:1px solid var(--b2);border-top:2px solid var(--pri);border-radius:11px;padding:9px 16px;font-size:12px;font-weight:700;z-index:10000;transition:.35s cubic-bezier(.4,0,.2,1);white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.6);max-width:90vw;text-align:center}
 .notif.show{transform:translateX(-50%) translateY(0)}
 .notif.nr{border-top-color:var(--red)}.notif.ny{border-top-color:var(--yellow)}.notif.np{border-top-color:var(--purple2)}.notif.nc{border-top-color:var(--cyan)}
-
-/* ─── CHART STYLES ─── */
-.prog-dot{cursor:pointer;transition:r .15s}
-.prog-dot:hover{r:6}
 
 /* ─── BOTTOM NAV ─── */
 .bottom{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--b2);display:grid;grid-template-columns:repeat(6,1fr);padding:5px 2px 7px;flex-shrink:0;z-index:100}
@@ -476,40 +480,6 @@ body.cm .tab.on{background:var(--purple2);color:#fff;border-color:var(--purple2)
 
 input,select,textarea{font-size:16px!important;}
 
-/* ✅ v7-FIX: Message Badge Pulse Animation */
-#msg-badge {
-  animation: badge-pulse 1.5s infinite;
-}
-@keyframes badge-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.15); }
-}
-
-
-/* ✅ AGENT2: Training Accordion */
-.acc-header{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:11px 13px;cursor:pointer;user-select:none;
-  background:var(--card2);border:1px solid var(--b1);
-  border-radius:11px;margin-bottom:6px;
-  font-size:12px;font-weight:800;color:var(--txt);
-  min-height:44px;transition:background .15s;
-}
-.acc-header:active{background:var(--card3);}
-.acc-header .acc-icon{font-size:16px;margin-left:6px;}
-.acc-chevron{color:var(--txt3);transition:transform .25s;font-size:14px;}
-.acc-body{overflow:hidden;transition:max-height .3s ease;max-height:0;}
-.acc-body.open{max-height:2000px;}
-.acc-wrap{margin-bottom:4px;}
-
-/* ✅ v7-FIX: RTL Input Direction */
-input, select, textarea {
-  direction: rtl;
-  text-align: right;
-  text-align-last: right;
-}
-
-
 /* ══ LIGHT MODE ══════════════════════════════════════ */
 body.light-mode {
   --bg:    #f0f2f5;
@@ -534,22 +504,6 @@ body.light-mode #theme-btn { color: #f59e0b; }
 /* ═════════════════════════════════════════════════════ */
 
 
-
-/* ✅ FIX: Offline Banner */
-#offline-banner {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  background: var(--red);
-  color: #fff;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 800;
-  padding: 6px;
-  z-index: 99999;
-  letter-spacing: 1px;
-}
-
 /* ══ SKELETON LOADING ══════════════════════════════ */
 .skeleton{background:linear-gradient(90deg,var(--card2) 25%,var(--card3) 50%,var(--card2) 75%);background-size:200% 100%;animation:skelAnim 1.4s ease infinite;border-radius:8px;}
 @keyframes skelAnim{0%{background-position:200% 0}100%{background-position:-200% 0}}
@@ -559,15 +513,10 @@ body.light-mode #theme-btn { color: #f59e0b; }
 .skel-circle{width:56px;height:56px;border-radius:50%;}
 /* ════════════════════════════════════════════════ */
 
-
-/* Animated Score Ring */
-.score-ring-svg { transform: rotate(-90deg); }
-.score-ring-bg { fill: none; stroke: rgba(255,255,255,.08); stroke-width: 8; }
-.score-ring-fill { fill: none; stroke-width: 8; stroke-linecap: round;
-  stroke-dasharray: 283; stroke-dashoffset: 283; transition: stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1); }
 </style>
 
-<!-- ✅ v7-FIX: Netlify Identity removed (using Firebase Auth instead) -->
+<!-- Netlify Identity — free auth, no credit card -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -594,62 +543,15 @@ document.head.appendChild(_link);
   <meta name="description" content="Combat Fit IL — מערכת כושר קרבי מתקדמת. מבחן בר-אור, תוכניות אימון, סימולטור גיבוש, מעקב ביצועים ועוד. הכנה מקיפה לצבא ולגיבושים."/>
 </head>
 <body>
-<!-- ═══ SPLASH SCREEN ═══ -->
-<div id="splash" style="position:fixed;inset:0;background:#020405;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;direction:rtl;transition:opacity .5s">
-  <div style="position:relative;margin-bottom:24px">
-    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00ff88,#00e5ff);display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 0 40px rgba(0,255,136,.4)">⚔</div>
-    <div style="position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(0,255,136,.3);animation:splash-pulse 1.5s ease-in-out infinite"></div>
-  </div>
-  <div style="font-family:'Bebas Neue',Barlow,Impact,sans-serif;font-size:32px;letter-spacing:4px;color:#fff;margin-bottom:4px">COMBAT FIT</div>
-  <div style="font-size:11px;color:#00ff88;letter-spacing:3px;margin-bottom:32px">ISRAEL DEFENSE TRAINING</div>
-  <div style="width:200px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden">
-    <div id="splash-bar" style="height:100%;background:linear-gradient(90deg,#00ff88,#00e5ff);width:0%;transition:width .1s;border-radius:2px"></div>
-  </div>
-  <div id="splash-txt" style="font-size:11px;color:rgba(255,255,255,.4);margin-top:10px;letter-spacing:1px">מאתחל...</div>
-</div>
-<style>
-@keyframes splash-pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.1);opacity:1}}
-</style>
-<script>
-(function(){
-  var bar = document.getElementById('splash-bar');
-  var txt = document.getElementById('splash-txt');
-  var steps = ['מאתחל...','טוען נתונים...','מכין אימון...','מוכן!'];
-  var pct = 0;
-  var si = 0;
-  var iv = setInterval(function(){
-    pct += Math.random()*15+5;
-    if(pct>95) pct=95;
-    if(bar) bar.style.width = pct+'%';
-    if(txt && steps[si]) { txt.textContent = steps[si]; si = Math.min(si+1, steps.length-1); }
-  }, 300);
-  window.hideSplash = function(){
-    clearInterval(iv);
-    if(bar) bar.style.width = '100%';
-    if(txt) txt.textContent = 'מוכן! ⚔';
-    setTimeout(function(){
-      var s = document.getElementById('splash');
-      if(s){ s.style.opacity='0'; setTimeout(function(){ s.style.display='none'; },500); }
-    }, 300);
-  };
-  // Hide after max 4s
-  setTimeout(function(){ if(typeof window.hideSplash==='function') window.hideSplash(); }, 4000);
-})();
-</script>
 
-
-
-<!-- ✅ FIX: Offline Banner -->
-<div id="offline-banner">📡 אין חיבור לאינטרנט — עובד במצב לא מקוון</div>
-
-<div id="notif" class="notif" role="status" aria-live="polite" aria-atomic="true"></div>
+<div id="notif" class="notif"></div>
 
 <!-- ─── TOP BAR ─── -->
 <div class="top">
   <div>
     <div class="logo-main" id="logo-main">⚔ COMBAT FIT</div>
     <div id="page-title-indicator" style="font-size:10px;color:var(--txt3);letter-spacing:.5px;margin-top:1px">🏠 בסיס</div>
-    <div class="logo-sub" id="logo-sub">IDF ELITE TRAINING SYSTEM v10</div>
+    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v7.0 PRO</div>
   </div>
   <div class="top-right">
     <button id="notif-btn" onclick="requestNotifPermission()" title="הפעל התראות" style="background:transparent;border:none;font-size:18px;cursor:pointer;padding:4px;min-width:32px;min-height:44px;display:flex;align-items:center;justify-content:center">🔕</button>
@@ -659,13 +561,13 @@ document.head.appendChild(_link);
     <div id="sync-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);cursor:pointer;transition:.3s;flex-shrink:0" title="מצב שמירה" onclick="typeof openUserMenu==='function'&&openUserMenu()"></div>
     <div class="live-dot"></div>
     <div class="clk" id="clock">00:00</div>
-    <button id="auth-top-btn" onclick="document.getElementById('auth-modal').style.display='flex'" style="display:none;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--pri);border-radius:8px;padding:4px 8px;font-size:10px;font-weight:800;cursor:pointer">☁ כניסה</button><div id="fb-badge" onclick="openUserMenu()" style="display:none;align-items:center;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);border-radius:16px;padding:3px 9px;font-size:10px;font-weight:800;color:var(--pri);cursor:pointer;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+    <button id="auth-top-btn" onclick="document.getElementById('auth-modal').style.display='block'" style="display:none;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--pri);border-radius:8px;padding:4px 8px;font-size:10px;font-weight:800;cursor:pointer">☁ כניסה</button><div id="fb-badge" onclick="openUserMenu()" style="display:none;align-items:center;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.25);border-radius:16px;padding:3px 9px;font-size:10px;font-weight:800;color:var(--pri);cursor:pointer;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
     <button id="install-btn" onclick="installPWA()" style="display:none;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:var(--pri);border-radius:8px;padding:4px 9px;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap">📲 התקן</button>
     <button class="mode-btn" id="mode-btn" onclick="toggleCM()">🎖 מאמן</button>
   </div>
 </div>
 
-<main class="content" role="main" id="main-content">
+<div class="content">
 
 <!-- ══════════════════════ DASHBOARD ══════════════════════ -->
 <div class="pg active" id="p-dash">
@@ -685,54 +587,12 @@ document.head.appendChild(_link);
           <button class="btn bs" onclick="document.getElementById('welcome-card').style.display='none'" style="font-size:12px;padding:12px">אחר כך</button>
         </div>
       </div>
-          <!-- Animated SVG Ring -->
-          <div style="position:relative;width:80px;height:80px;flex-shrink:0">
-            <svg class="score-ring-svg" viewBox="0 0 100 100" width="80" height="80">
-              <circle class="score-ring-bg" cx="50" cy="50" r="45"/>
-              <circle id="score-ring-arc" class="score-ring-fill" cx="50" cy="50" r="45" stroke="var(--red)"/>
-            </svg>
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-              <div id="combat-score-ring" style="font-family:var(--fd);font-size:22px;font-weight:900;color:var(--red);line-height:1">--</div>
-              <div style="font-size:8px;color:var(--txt3);letter-spacing:1px">ציון</div>
-            </div>
-          </div>
+          <div id="combat-score-ring" style="font-family:var(--fd);font-size:28px;color:var(--red)">--</div>
         </div>
-        <div id="combat-score-label" style="font-size:11px;color:var(--txt2);margin-top:8px">טוען...</div>
-        <div id="combat-score-bar" style="height:4px;background:var(--card3);border-radius:2px;margin:6px 0;overflow:hidden;display:none">
-          <div id="combat-score-fill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--red),var(--orange));border-radius:2px;transition:width 1.2s ease"></div>
+        <div id="combat-score-bar" style="height:6px;background:var(--card3);border-radius:3px;margin:10px 0;overflow:hidden">
+          <div id="combat-score-fill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--red),var(--orange));border-radius:3px;transition:width 1.2s ease"></div>
         </div>
-        <!-- Mini trend chart below score -->
-        <div style="margin-top:10px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-            <div style="font-size:10px;color:var(--txt3);letter-spacing:1px">📈 מגמה אישית</div>
-            <div style="display:flex;gap:4px">
-              <button id="chart-tab-bar" onclick="switchChartMetric('bar',this)" style="font-size:9px;font-weight:900;padding:3px 7px;border-radius:5px;border:1px solid var(--pri);background:rgba(0,255,136,.15);color:var(--pri);cursor:pointer">ציון</button>
-              <button id="chart-tab-run" onclick="switchChartMetric('run',this)" style="font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px;border:1px solid var(--b2);background:var(--card3);color:var(--txt2);cursor:pointer">ריצה</button>
-              <button id="chart-tab-str" onclick="switchChartMetric('str',this)" style="font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px;border:1px solid var(--b2);background:var(--card3);color:var(--txt2);cursor:pointer">כוח</button>
-            </div>
-          </div>
-          <svg id="prog-chart" viewBox="0 0 340 90" style="width:100%;height:90px;overflow:visible">
-            <text x="170" y="50" fill="rgba(255,255,255,.12)" font-size="10" text-anchor="middle">בצע מבחן לראות גרף</text>
-          </svg>
-          <div id="prog-stats-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:7px">
-            <div style="text-align:center;background:var(--card3);border-radius:7px;padding:6px 4px">
-              <div id="pstat-latest" style="font-family:var(--fd);font-size:16px;color:var(--pri)">--</div>
-              <div style="font-size:8px;color:var(--txt3)">אחרון</div>
-            </div>
-            <div style="text-align:center;background:var(--card3);border-radius:7px;padding:6px 4px">
-              <div id="pstat-best" style="font-family:var(--fd);font-size:16px;color:var(--yellow)">--</div>
-              <div style="font-size:8px;color:var(--txt3)">שיא</div>
-            </div>
-            <div style="text-align:center;background:var(--card3);border-radius:7px;padding:6px 4px">
-              <div id="pstat-trend" style="font-family:var(--fd);font-size:16px;color:var(--cyan)">--</div>
-              <div style="font-size:8px;color:var(--txt3)">מגמה</div>
-            </div>
-            <div style="text-align:center;background:var(--card3);border-radius:7px;padding:6px 4px">
-              <div id="pstat-tests" style="font-family:var(--fd);font-size:16px;color:var(--purpleL)">--</div>
-              <div style="font-size:8px;color:var(--txt3)">מבחנים</div>
-            </div>
-          </div>
-        </div>
+        <div id="combat-score-label" style="font-size:11px;color:var(--txt2)">טוען...</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
           <div style="text-align:center;background:var(--card2);border-radius:9px;padding:8px">
             <div id="cs-run" style="font-family:var(--fd);font-size:18px;color:var(--pri)">--</div>
@@ -813,12 +673,6 @@ document.head.appendChild(_link);
   </div>
   <!-- Readiness Badge -->
   <div id="readiness-badge" style="display:none;align-items:center;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);border-radius:20px;padding:5px 12px;margin-bottom:8px;font-size:12px;"></div>
-
-  <!-- ✅ PRESALE-FIX: Daily challenge card -->
-  <div id="daily-challenge-card" style="background:var(--card2);border:1px solid var(--b1);border-radius:13px;padding:14px;margin-bottom:10px">
-    <div style="font-size:11px;color:var(--txt3);text-align:center;padding:6px">⚡ טוען אתגר...</div>
-  </div>
-
   <!-- Training Load -->
   <div class="card" id="training-load-card" style="display:none;margin-bottom:10px"></div>
   <!-- Goal Progress -->
@@ -853,7 +707,20 @@ document.head.appendChild(_link);
     </div>
     <div id="cal-result"></div>
   </div>
-  <!-- breathing exercise removed per user request -->
+  <!-- Breathing Exercise -->
+  <div class="card" style="margin-bottom:10px">
+    <div class="sh" style="color:var(--cyan)">🌬 תרגיל נשימה</div>
+    <div style="display:flex;gap:6px;margin:10px 0">
+      <button onclick="startBreathing('box')" style="flex:1;padding:7px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:11px;color:var(--txt);cursor:pointer;min-height:44px">Box 4-4-4-4</button>
+      <button onclick="startBreathing('4-7-8')" style="flex:1;padding:7px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:11px;color:var(--txt);cursor:pointer;min-height:44px">4-7-8</button>
+      <button onclick="startBreathing('combat')" style="flex:1;padding:7px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;font-size:11px;color:var(--txt);cursor:pointer;min-height:44px">Combat 4-4</button>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+      <div id="breath-circle-ex" style="width:90px;height:90px;border-radius:50%;background:var(--cyan);opacity:.85;transition:all 1s ease-in-out"></div>
+      <div id="breath-label" style="font-size:13px;color:var(--txt2)">בחר דפוס נשימה</div>
+      <button id="breath-btn" onclick="startBreathing('box')" style="padding:10px 24px;background:var(--pri);color:#000;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;min-height:44px">🌬 התחל</button>
+    </div>
+  </div>
   <!-- Focus Timer -->
   <div class="card" style="margin-bottom:10px">
     <div class="sh">⏱ טיימר מיקוד</div>
@@ -915,16 +782,6 @@ document.head.appendChild(_link);
       <span class="bd bo2" id="challenge-days">? ימים</span>
       <button class="btn bp bsm" onclick="acceptChallenge()">אני מקבל!</button>
     </div>
-  </div>
-
-  <!-- SHARE-DASH-BTN -->
-  <div style="background:linear-gradient(135deg,rgba(0,255,136,.07),rgba(0,255,136,.02));border:1px solid rgba(0,255,136,.18);border-radius:14px;padding:14px;margin-bottom:10px">
-    <div style="font-family:var(--fd);font-size:10px;color:var(--pri);letter-spacing:2px;margin-bottom:10px;text-align:center">שתף את הביצועים שלך</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <button onclick="shareWhatsApp()" class="btn" style="background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.35);color:#25d366;min-height:48px;font-size:14px;font-weight:800">WhatsApp</button>
-      <button onclick="_shareInstagramCopy()" class="btn" style="background:linear-gradient(135deg,rgba(225,48,108,.1),rgba(253,121,8,.1));border:1px solid rgba(225,48,108,.3);color:#e1306c;min-height:48px;font-size:14px;font-weight:800">Instagram</button>
-    </div>
-    <button onclick="openShareSheet()" class="btn bp" style="width:100%;min-height:44px;font-size:12px">כל אפשרויות השיתוף</button>
   </div>
 </div>
 
@@ -1431,15 +1288,8 @@ document.head.appendChild(_link);
 <!-- ══════════════════════ LEADERBOARD ══════════════════════ -->
 <div class="pg" id="p-lb">
   <div class="pgh"><span>🏆</span> ליגה ושיתוף</div>
-    <!-- SHARE-LB-BTN -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-      <button onclick="shareWhatsApp()" class="btn" style="background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.35);color:#25d366;min-height:44px;font-size:12px">שתף ווטסאפ</button>
-      <button onclick="_shareInstagramCopy()" class="btn" style="background:linear-gradient(135deg,rgba(225,48,108,.1),rgba(253,121,8,.1));border:1px solid rgba(225,48,108,.3);color:#e1306c;min-height:44px;font-size:12px">אינסטגרם</button>
-    </div>
 
   <!-- My share card -->
-  
- 
   <div class="share-card" id="my-share-card" style="">
     <div class="sc-hd">
       <div class="sc-logo">⚔ COMBAT FIT IL</div>
@@ -1462,25 +1312,9 @@ document.head.appendChild(_link);
     </div>
     <div class="sc-footer"><div class="sc-tagline" id="sc-tagline">TRAIN HARD · FIGHT SMART · NEVER QUIT</div></div>
   </div>
-  <!-- Social Share Row -->
-  <div style="margin-bottom:10px">
-    <div style="font-size:10px;color:var(--txt3);text-align:center;letter-spacing:1.5px;margin-bottom:8px">SHARE YOUR RESULTS</div>
-    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:8px">
-      <button onclick="shareWhatsApp()" style="flex:1;padding:10px 4px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.35);border-radius:12px;color:#25d366;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px">
-        <span style="font-size:20px">📱</span>WA</button>
-      <button onclick="_shareInstagramCopy()" style="flex:1;padding:10px 4px;background:linear-gradient(135deg,rgba(225,48,108,.1),rgba(253,121,8,.08));border:1px solid rgba(225,48,108,.3);border-radius:12px;color:#e1306c;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px">
-        <span style="font-size:20px">📸</span>IG</button>
-      <button onclick="(function(){var t=typeof _buildShareText==='function'?_buildShareText(true):'⚔ Combat Fit IL';window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(t.substring(0,280)),'_blank');})()" style="flex:1;padding:10px 4px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:12px;color:#fff;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px">
-        <span style="font-size:20px">𝕏</span>X</button>
-      <button onclick="(function(){var t=typeof _buildShareText==='function'?_buildShareText(true):'⚔ Combat Fit IL';window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://combatfit.il')+'&quote='+encodeURIComponent(t.substring(0,100)),'_blank');})()" style="flex:1;padding:10px 4px;background:rgba(24,119,242,.1);border:1px solid rgba(24,119,242,.35);border-radius:12px;color:#1877f2;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px">
-        <span style="font-size:20px">👍</span>FB</button>
-      <button onclick="_shareTikTok()" style="flex:1;padding:10px 4px;background:rgba(0,0,0,.5);border:1px solid rgba(255,0,80,.35);border-radius:12px;color:#fff;font-size:11px;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:56px">
-        <span style="font-size:20px">🎵</span>TikTok</button>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <button class="btn bp" style="font-size:13px;font-weight:900;min-height:44px" onclick="openShareSheet()">📤 כל האפשרויות</button>
-      <button class="btn bs" style="font-size:13px;min-height:44px" onclick="exportReport()">📊 ייצא דוח</button>
-    </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+    <button class="btn bp" style="font-size:14px;font-weight:900;min-height:48px" onclick="openShareSheet()">📤 שתף ברשתות</button>
+    <button class="btn bs" style="font-size:14px;min-height:48px" onclick="exportReport()">📊 ייצא דוח</button>
   </div>
 
   <!-- Leaderboard tabs -->
@@ -1527,13 +1361,21 @@ document.head.appendChild(_link);
 <div class="pg" id="p-train">
   <div class="pgh"><span>💪</span> אימון</div>
   <div class="tabs" style="overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px">
-    <button class="tab on" id="tab-str"    onclick="trt('tr-str',this)">💪 כוח</button>
-    <button class="tab"    id="tab-run"    onclick="trt('tr-run',this)">🏃 ריצה</button>
-    <button class="tab"    id="tab-build"  onclick="trt('tr-build',this)">🤖 בונה</button>
-    <button class="tab"    id="tab-tools"  onclick="trt('tr-tmr',this)">⏱ כלים</button>
-    <button class="tab"    id="tab-rec"    onclick="trt('tr-rec',this)">🩹 שיקום</button>
-    <button class="tab"    id="tab-gibush" onclick="trt('tr-gibush',this)">⚔ גיבוש</button>
-    <button class="tab"    id="tab-hist"   onclick="trt('tr-hist',this)">📜 היסטוריה</button>
+    <button class="tab on" onclick="trt('tr-str',this)">כוח</button>
+    <button class="tab" onclick="trt('tr-run',this)">ריצה</button>
+    <button class="tab" onclick="trt('tr-route',this)">🗺 מסלול</button>
+    <button class="tab" onclick="trt('tr-build',this)">🤖 בונה</button>
+    <button class="tab" onclick="trt('tr-hist',this)">📜 היסטוריה</button>
+    <button class="tab" onclick="trt('tr-tmr',this)">⏱ טיימר</button>
+    <button class="tab" onclick="trt('tr-rec',this)">🩹 שיקום</button>
+    <button class="tab" onclick="trt('tr-body',this)">📏 מידות</button>
+    <button class="tab" onclick="trt('tr-hr',this)">❤️ דופק</button>
+        <button class="tab" onclick="trt('tr-gibush',this)">⚔ גיבוש</button>
+        <button class="tab" onclick="trt('tr-ruck',this)">🎒 Ruck</button>
+        <button class="tab" onclick="trt('tr-period',this)">📅 מחזורי</button>
+        <button class="tab" onclick="trt('tr-scale',this)">⚖️ Scalable</button>
+        <button class="tab" onclick="trt('tr-sleep',this)">😴 שינה</button>
+        <button class="tab" onclick="trt('tr-injury',this)">🩹 פציעות</button>
   </div>
 
   <div id="tr-str">
@@ -1572,36 +1414,7 @@ document.head.appendChild(_link);
           <button class="btn bs bsm" onclick="startVoiceCoach()" style="min-height:44px;font-size:12px">🎙️ מאמן קולי</button>
         </div>
         <button class="btn bp" onclick="buildRun()">צור תוכנית ריצה</button>
-    
-  <!-- ✅ AGENT2: Accordion links to merged tabs -->
-  <div class="acc-wrap">
-    <div class="acc-header" id="acc-route-hdr" onclick="accToggle('acc-route-hdr');if(document.getElementById('acc-route-body').classList.contains('open')&&typeof initRoute==='function')initRoute();">
-      <span><span class="acc-icon">🗺</span> מסלול ריצה</span>
-      <span class="acc-chevron">▼</span>
     </div>
-    <div class="acc-body" id="acc-route-body" style="max-height:0">
-      <div id="tr-route-embed"></div>
-    </div>
-  </div>
-  <div class="acc-wrap">
-    <div class="acc-header" id="acc-hr-hdr" onclick="accToggle('acc-hr-hdr');if(document.getElementById('acc-hr-body').classList.contains('open')&&typeof onTM==='function'){var hrel=document.getElementById('hr-cd');if(hrel)hrel.style.display='block';}">
-      <span><span class="acc-icon">❤️</span> דופק ועצימות</span>
-      <span class="acc-chevron">▼</span>
-    </div>
-    <div class="acc-body" id="acc-hr-body" style="max-height:0">
-      <div id="tr-hr-embed"></div>
-    </div>
-  </div>
-  <div class="acc-wrap">
-    <div class="acc-header" id="acc-ruck-hdr" onclick="accToggle('acc-ruck-hdr');if(document.getElementById('acc-ruck-body').classList.contains('open')&&typeof calcRuck==='function')calcRuck();">
-      <span><span class="acc-icon">🎒</span> Ruck — ריצה עם משקל</span>
-      <span class="acc-chevron">▼</span>
-    </div>
-    <div class="acc-body" id="acc-ruck-body" style="max-height:0">
-      <div id="tr-ruck-embed"></div>
-    </div>
-  </div>
-</div>
     <div id="rp-out"></div>
   </div>
 
@@ -1617,7 +1430,7 @@ document.head.appendChild(_link);
     <div id="pace-zones-result" style="margin-top:8px"></div>
   </div>
 
-<div id="tr-route" style="display:none">
+  id="tr-route" style="display:none">
     <!-- Active Run Overlay -->
     <div id="run-active-bar" style="display:none;background:linear-gradient(135deg,rgba(0,255,136,.12),var(--card2));border:2px solid var(--pri);border-radius:13px;padding:12px;margin-bottom:10px">
       <div style="font-family:var(--fd);font-size:11px;letter-spacing:2px;color:var(--pri);text-align:center;margin-bottom:10px">⚡ ריצה פעילה</div>
@@ -1760,27 +1573,7 @@ document.head.appendChild(_link);
       <label>🎖 יחידת יעד (אופציונלי)</label>
       <select id="wb-unit"><option value="">— ללא —</option></select>
       <button class="btn bp" onclick="buildWorkout()">⚡ בנה אימון</button>
-    
-  <!-- ✅ AGENT2: Builder sub-sections -->
-  <div class="acc-wrap">
-    <div class="acc-header" id="acc-scale-hdr" onclick="accToggle('acc-scale-hdr');if(document.getElementById('acc-scale-body').classList.contains('open')&&typeof renderScaleGrid==='function')renderScaleGrid('all');">
-      <span><span class="acc-icon">⚖️</span> תרגילים Scalable</span>
-      <span class="acc-chevron">▼</span>
     </div>
-    <div class="acc-body" id="acc-scale-body" style="max-height:0">
-      <div id="tr-scale-embed"></div>
-    </div>
-  </div>
-  <div class="acc-wrap">
-    <div class="acc-header" id="acc-period-hdr" onclick="accToggle('acc-period-hdr');">
-      <span><span class="acc-icon">📅</span> אימון מחזורי</span>
-      <span class="acc-chevron">▼</span>
-    </div>
-    <div class="acc-body" id="acc-period-body" style="max-height:0">
-      <div id="tr-period-embed"></div>
-    </div>
-  </div>
-</div>
     <div id="wb-output"></div>
   </div>
 
@@ -1797,7 +1590,14 @@ document.head.appendChild(_link);
       </div>
       <div id="hist-summary" style="margin-bottom:10px"></div>
       
-
+      <!-- Progress Chart -->
+      <div class="card" style="margin-bottom:10px">
+        <div class="sh p">📈 גרף התקדמות</div>
+        <div class="mini" style="margin-bottom:8px">בר-אור לאורך זמן</div>
+        <svg id="prog-chart" viewBox="0 0 360 100" style="width:100%;height:100px;overflow:visible">
+          <text x="180" y="55" fill="rgba(255,255,255,.2)" font-size="12" text-anchor="middle">בצע מבחן בר-אור לראות גרף</text>
+        </svg>
+      </div>
       <div id="hist-list"></div>
       <button class="btn br bsm" style="margin-top:8px" onclick="confirmClearHistory()">🗑 נקה היסטוריה</button>
     </div>
@@ -1821,48 +1621,10 @@ document.head.appendChild(_link);
         <button class="btn bs" onclick="pauseTmr()">השהה</button>
         <button class="btn br" style="width:100%" onclick="resetTmr()">אפס</button>
       </div>
-    
-  <!-- ✅ AGENT2: Timer + Body sub-sections -->
-  <div class="acc-wrap">
-    <div class="acc-header" id="acc-body-hdr" onclick="accToggle('acc-body-hdr');if(document.getElementById('acc-body-body2').classList.contains('open')&&typeof initMuscleGrid==='function')initMuscleGrid();">
-      <span><span class="acc-icon">📏</span> מידות גוף ומשקל</span>
-      <span class="acc-chevron">▼</span>
     </div>
-    <div class="acc-body" id="acc-body-body2" style="max-height:0">
-      <div id="tr-body-embed"></div>
-    </div>
-  </div>
-</div>
   </div>
 
   <div id="tr-rec" style="display:none">
-  <!-- ✅ FIX: שינה ופציעות merged here -->
-  <div style="display:flex;gap:6px;margin-bottom:10px">
-    <button class="btn bs" style="flex:1;font-size:11px" onclick="trt('tr-sleep',document.createElement('button'))">😴 שינה</button>
-    <button class="btn bs" style="flex:1;font-size:11px" onclick="trt('tr-injury',document.createElement('button'))">🩹 פציעות</button>
-    <button class="btn bs" style="flex:1;font-size:11px" onclick="trt('tr-ruck',document.createElement('button'))">🎒 Ruck</button>
-  
-  <!-- ✅ AGENT2: Recovery sub-sections (removing old manual buttons) -->
-  <div class="acc-wrap">
-    <div class="acc-header" id="acc-sleep-hdr" onclick="accToggle('acc-sleep-hdr');if(document.getElementById('acc-sleep-body').classList.contains('open')&&typeof calcSleep==='function'){calcSleep();renderSleepHistory&&renderSleepHistory();}">
-      <span><span class="acc-icon">😴</span> שינה ומנוחה</span>
-      <span class="acc-chevron">▼</span>
-    </div>
-    <div class="acc-body" id="acc-sleep-body" style="max-height:0">
-      <div id="tr-sleep-embed"></div>
-    </div>
-  </div>
-  <div class="acc-wrap">
-    <div class="acc-header" id="acc-injury-hdr" onclick="accToggle('acc-injury-hdr');if(document.getElementById('acc-injury-body').classList.contains('open')&&typeof renderPrehab==='function')renderPrehab();">
-      <span><span class="acc-icon">🩹</span> פציעות ושיקום</span>
-      <span class="acc-chevron">▼</span>
-    </div>
-    <div class="acc-body" id="acc-injury-body" style="max-height:0">
-      <div id="tr-injury-embed"></div>
-    </div>
-  </div>
-</div>
-
     <div class="card">
       <div class="sh c">🧊 מוניטור שיקום</div>
       <div class="recovery-meter">
@@ -2108,8 +1870,36 @@ document.head.appendChild(_link);
 <!-- ══════════════════════ AI COACH ══════════════════════ -->
 <div class="pg" id="p-ai">
   <div class="pgh"><span>🤖</span> מאמן AI</div>
-
-  <!-- CHAT FIRST -->
+  <div class="card hot">
+    <div class="sh">⚙ פרטים אישיים</div>
+      <!-- Mental Combat Training -->
+      <div class="card" style="border-color:rgba(124,58,237,.3);background:linear-gradient(180deg,rgba(124,58,237,.06),var(--card));margin-top:10px">
+        <div class="sh p">🧠 אימון מנטל קרבי</div>
+        <div class="mini" style="margin-bottom:12px">טכניקות שמשמשות לוחמי עילית — בניית חוסן מנטלי</div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+          <button class="btn" onclick="startMentalEx('breathing')" style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);padding:12px;font-size:12px;font-weight:700">
+            💨 נשימה טקטית<br/><span style="font-size:9px;color:var(--txt3)">4-7-8 / Box breathing</span>
+          </button>
+          <button class="btn" onclick="startMentalEx('focus')" style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);padding:12px;font-size:12px;font-weight:700">
+            🎯 ריכוז לחץ<br/><span style="font-size:9px;color:var(--txt3)">Stress inoculation</span>
+          </button>
+          <button class="btn" onclick="startMentalEx('visualization')" style="background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.2);padding:12px;font-size:12px;font-weight:700">
+            🌄 ויזואליזציה<br/><span style="font-size:9px;color:var(--txt3)">Mental rehearsal</span>
+          </button>
+          <button class="btn" onclick="startMentalEx('cold')" style="background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.2);padding:12px;font-size:12px;font-weight:700">
+            🧊 חשיפה לחץ<br/><span style="font-size:9px;color:var(--txt3)">Cold exposure protocol</span>
+          </button>
+        </div>
+        
+        <div id="mental-exercise" style="display:none"></div>
+      </div>
+    <div class="r2">
+      <div><label>גיל</label><input id="ai-age" type="number" value="18" min="14" max="30"/></div>
+      <div><label>משקל (ק"ג)</label><input id="weight" type="number" value="70"/></div>
+    </div>
+    <button class="btn bs" onclick="saveAISettings()">💾 שמור</button>
+  </div>
   <div class="card hot">
     <div class="sh">🤖 שאל את המאמן</div>
     <div class="chips">
@@ -2118,61 +1908,32 @@ document.head.appendChild(_link);
       <div class="chip" onclick="quickQ('הכנה לגיבוש אגוז')">💀 גיבוש</div>
       <div class="chip" onclick="quickQ('תזונה נכונה לאימון קרבי')">🥩 תזונה</div>
       <div class="chip" onclick="quickQ('כאב שין-ספלינט מה עושה?')">🩹 פציעה</div>
-      <div class="chip" onclick="quickQ('מה ההבדל בין היחידות הקרביות?')">🪖 יחידות</div>
-      <div class="chip" onclick="quickQ('כמה שעות שינה צריך לפני אימון?')">😴 שינה</div>
-      <div class="chip" onclick="quickQ('ריצה 2 ק&quot;מ - איך לשפר קצב?')">⏱ ריצה</div>
+      <div class="chip" onclick="quickQ('מה ההבדל בין היחידות הקרביות? מגולני עד סיירת מטכל')">🪖 יחידות</div>
     </div>
-    <div id="ai-log" style="min-height:100px;max-height:360px;overflow-y:auto;margin-bottom:10px;background:rgba(0,0,0,.15);border-radius:10px;padding:8px;border:1px solid var(--b1)"></div>
+    <div id="ai-log" style="max-height:340px;overflow-y:auto;margin-bottom:8px"></div>
     <div style="display:flex;gap:7px">
-      <input id="ai-q" type="text" placeholder="שאל כל שאלה על אימון, גיוס, תזונה..." style="flex:1" onkeydown="if(event.key==='Enter')askAI()"/>
-      <button class="btn bp bsm" onclick="askAI()" style="width:60px;height:44px">⚡ שלח</button>
+      <input id="ai-q" type="text" placeholder="שאל כל שאלה..." style="flex:1"/>
+      <button class="btn bp bsm" onclick="askAI()" style="width:56px">שלח</button>
     </div>
-    <div id="ai-key-status" style="font-size:10px;color:var(--txt3);text-align:center;margin-top:6px">⚡ מצב מקומי — KB עם 23 נושאים</div>
   </div>
-
-  <!-- MENTAL TRAINING -->
-  <div class="card" style="border-color:rgba(124,58,237,.3);background:linear-gradient(180deg,rgba(124,58,237,.06),var(--card))">
-    <div class="sh p">🧠 אימון מנטל קרבי</div>
-    <div class="mini" style="margin-bottom:10px">טכניקות שמשמשות לוחמי עילית — בניית חוסן מנטלי</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <button class="btn" onclick="startMentalEx('breathing')" style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);padding:12px;font-size:12px;font-weight:700">
-        💨 נשימה טקטית<br/><span style="font-size:9px;color:var(--txt3)">Box / 4-7-8</span>
-      </button>
-      <button class="btn" onclick="startMentalEx('focus')" style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);padding:12px;font-size:12px;font-weight:700">
-        🎯 ריכוז לחץ<br/><span style="font-size:9px;color:var(--txt3)">Stress inoculation</span>
-      </button>
-      <button class="btn" onclick="startMentalEx('visualization')" style="background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.2);padding:12px;font-size:12px;font-weight:700">
-        🌄 ויזואליזציה<br/><span style="font-size:9px;color:var(--txt3)">Mental rehearsal</span>
-      </button>
-      <button class="btn" onclick="startMentalEx('cold')" style="background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.2);padding:12px;font-size:12px;font-weight:700">
-        🧊 חשיפה לקור<br/><span style="font-size:9px;color:var(--txt3)">Cold protocol</span>
-      </button>
-    </div>
-    <div id="mental-exercise" style="display:none"></div>
-  </div>
-
-  <!-- PERSONAL SETTINGS (collapsed) -->
+  <!-- Claude API (optional) -->
   <details class="card" style="margin-bottom:10px">
-    <summary style="cursor:pointer;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;color:var(--txt2);list-style:none;padding:2px 0">
-      <span style="font-size:14px">⚙</span> הגדרות AI ופרטים אישיים
-      <span style="margin-right:auto;font-size:10px;color:var(--txt3)">▼</span>
+    <summary style="cursor:pointer;font-size:12px;font-weight:800;color:var(--txt2);list-style:none;padding:2px 0;display:flex;align-items:center;gap:8px">
+      <span>⚙</span> הגדרות AI (אופציונלי) <span style="margin-right:auto;font-size:10px;color:var(--txt3)">▼</span>
     </summary>
-    <div style="margin-top:12px">
-      <div class="r2">
-        <div><label>גיל</label><input id="ai-age" type="number" value="18" min="14" max="30"/></div>
-        <div><label>משקל (ק"ג)</label><input id="weight" type="number" value="70"/></div>
-      </div>
-      <button class="btn bs bsm" style="margin-top:8px" onclick="saveAISettings()">💾 שמור פרטים</button>
-      <div style="height:1px;background:var(--b2);margin:12px 0"></div>
-      <div class="sh c" style="margin-bottom:6px">🔑 Claude API (אופציונלי)</div>
-      <div class="mini" style="margin-bottom:8px">הוסף מפתח לתשובות בינה מלאכותית אמיתיות בעברית</div>
+    <div style="margin-top:10px">
+      <div class="mini" style="margin-bottom:8px">מפתח Claude API לתשובות חיות (אופציונלי)</div>
       <input id="ai-key-inp" type="password" placeholder="sk-ant-api03-..." style="font-family:monospace;font-size:11px"/>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
         <button class="btn bp bsm" onclick="saveAIKey()">💾 שמור מפתח</button>
-        <button class="btn br bsm" onclick="localStorage.removeItem('cf7_ai_key');document.getElementById('ai-key-inp').value='';var s=document.getElementById('ai-key-status');if(s){s.textContent='⚡ מצב מקומי — KB 23 נושאים';s.style.color='var(--txt3)'}notify('מפתח נמחק','y')">🗑 הסר מפתח</button>
+        <button class="btn bs bsm" onclick="localStorage.removeItem('cf7_ai_key');notify('מפתח נמחק','y')">🗑 הסר</button>
       </div>
+      <div id="ai-key-status" style="font-size:10px;color:var(--txt3);margin-top:6px;text-align:center">⚡ מצב מקומי — KB 30 נושאים</div>
     </div>
   </details>
+</div>
+
+
 
 <!-- ══════════════════════ COACH PAGE ══════════════════════ -->
 <div class="pg" id="p-coach">
@@ -2211,28 +1972,6 @@ document.head.appendChild(_link);
         <div id="cgs-top" style="font-family:var(--fd);font-size:28px;color:var(--yellow)">--</div>
         <div style="font-size:9px;color:var(--txt3)">ציון מוביל</div>
       </div>
-    </div>
-  </div>
-
-  <!-- ═══ COACH SCATTER CHART ═══ -->
-  <div class="card" style="margin-bottom:10px;padding:14px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div class="sh p" style="margin:0">📊 מפת הקבוצה</div>
-      <div style="display:flex;gap:5px">
-        <button id="sc-btn-baror" onclick="switchScatterAxis('baror',this)" style="font-size:9px;font-weight:900;padding:3px 8px;border-radius:6px;border:1px solid var(--purpleL);background:rgba(124,58,237,.15);color:var(--purpleL);cursor:pointer">ציון כולל</button>
-        <button id="sc-btn-run" onclick="switchScatterAxis('run',this)" style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;border:1px solid var(--b2);background:var(--card3);color:var(--txt2);cursor:pointer">ריצה 2K</button>
-        <button id="sc-btn-pull" onclick="switchScatterAxis('pull',this)" style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;border:1px solid var(--b2);background:var(--card3);color:var(--txt2);cursor:pointer">כוח עליון</button>
-      </div>
-    </div>
-    <div class="mini" style="margin-bottom:8px;color:var(--txt3)">ציר X: שכיבות שמיכה | ציר Y: <span id="sc-y-label">ציון כולל</span></div>
-    <div style="position:relative">
-      <svg id="coach-scatter" viewBox="0 0 340 180" style="width:100%;height:180px;overflow:visible"></svg>
-      <div id="scatter-tooltip" style="display:none;position:absolute;background:var(--card);border:1px solid var(--purpleL);border-radius:9px;padding:7px 11px;font-size:11px;font-weight:800;color:var(--txt);pointer-events:none;z-index:10;min-width:110px"></div>
-    </div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:10px">
-      <div style="display:flex;align-items:center;gap:4px"><div style="width:10px;height:10px;border-radius:50%;background:var(--pri)"></div><span style="color:var(--pri)">🟢 כוכב</span></div>
-      <div style="display:flex;align-items:center;gap:4px"><div style="width:10px;height:10px;border-radius:50%;background:var(--yellow)"></div><span style="color:var(--yellow)">🟡 עולה</span></div>
-      <div style="display:flex;align-items:center;gap:4px"><div style="width:10px;height:10px;border-radius:50%;background:var(--red)"></div><span style="color:var(--red)">🔴 דורש שיפור</span></div>
     </div>
   </div>
 
@@ -2319,12 +2058,7 @@ document.head.appendChild(_link);
   <div id="coach-group-selector" style="display:none"></div>
 </div></div><!-- /content -->
 
-  <!-- hidden stubs for JS compat -->
-  <div id="ann-feed-card" style="display:none"></div>
-  <div id="coach-group-selector"></div>
-</div></div><!-- /content -->
-
-<nav class="bottom" id="nav-athlete" role="navigation" aria-label="ניווט ראשי">
+<nav class="bottom" id="nav-athlete">
   <button class="nav on" id="n-dash" data-label="בסיס" onclick="showPg('dash')" tabindex="1"><span class="ni">🏠</span>בסיס</button>
   <button class="nav" id="n-test" data-label="מבחן" onclick="showPg('test')" tabindex="2"><span class="ni">🎯</span>מבחן</button>
   <button class="nav" id="n-week" data-label="שבועי" onclick="showPg('week')" tabindex="3"><span class="ni">📅</span>שבועי</button>
@@ -2332,7 +2066,7 @@ document.head.appendChild(_link);
   <button class="nav" id="n-train" data-label="אימון" onclick="showPg('train')" tabindex="5"><span class="ni">💪</span>אימון</button>
   <button class="nav" id="n-ai" data-label="AI" onclick="showPg('ai')" tabindex="6"><span class="ni">🤖</span>AI</button>
 </nav>
-<nav class="bottom" id="nav-coach" role="navigation" aria-label="ניווט מאמן" style="display:none;grid-template-columns:repeat(4,1fr)">
+<nav class="bottom" id="nav-coach" style="display:none;grid-template-columns:repeat(4,1fr)">
   <button class="nav on" id="cn-groups" onclick="coachShowTab('groups',this)"><span class="ni">🎖</span>קבוצות</button>
   <button class="nav" id="cn-athletes" onclick="coachShowTab('athletes',this)"><span class="ni">👥</span>חניכים</button>
   <button class="nav" id="cn-msg" onclick="coachShowTab('msg',this)"><span class="ni">📢</span>הודעות</button>
@@ -2394,9 +2128,6 @@ document.head.appendChild(_link);
 // ─── Core globals declared first to avoid TDZ ───────────────
 var PAGES=['dash','test','week','lb','train','ai','coach'];
 var _activeGid=null;
-var _obUnit=null, _gibushDay=0, _activeGroupId=null;
-var _lmap=null, _fbUID=null, _fbUser=null;
-var _tInt=null, _tRun=false, _tCur=0; // timer globals
 var muscleState={};
 var coachFilterMode='all';
 const MUSCLES=[
@@ -2474,8 +2205,7 @@ var UNITS={
 // COACH PASSWORD SYSTEM
 // ═══════════════════════════════════════════════════
 var COACH_PASS_KEY='cf7_coach_pass';
-var DEFAULT_COACH_PASS='coach123';
-(function(){if(!localStorage.getItem('cf7_coach_pass'))localStorage.setItem('cf7_coach_pass','coach123');})();
+var DEFAULT_COACH_PASS='cf7_coach_pass'; // ניתן לשנות
 
 let coachMode=false; // always start in athlete mode for security
 
@@ -2489,7 +2219,7 @@ function initCM(){
   const b=document.getElementById('mode-btn');
   if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
   const lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v7.0':'IDF ELITE TRAINING SYSTEM v10';
+  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v7.0':'IDF ELITE SYSTEM v7.0 PRO';
   // Show/hide coach panel
   const afc=document.getElementById('ann-feed-card');
   const lbo=document.getElementById('lb-out');
@@ -2526,135 +2256,43 @@ function toggleCM(){
 }
 
 function openCoachLoginModal(){
-  _loginAttempts=0;_loginLockUntil=0;
-  var ov=document.getElementById('coach-login-overlay');
-  if(ov){var ip=document.getElementById('coach-pass-inp');if(ip){ip.value='';ip.style.borderColor='';}ov.style.display='flex';setTimeout(function(){if(ip)ip.focus();},120);}
-}
-
-function deleteMyAccount() {
-  if (!confirm('⚠️ האם אתה בטוח שברצונך למחוק את החשבון וכל הנתונים? פעולה זו בלתי הפיכה!')) return;
-  if (!confirm('אישור סופי: מחיקת כל הנתונים?')) return;
-  
-  // Clear localStorage
-  var keys = Object.keys(localStorage).filter(function(k) { return k.startsWith('cf7'); });
-  keys.forEach(function(k) { localStorage.removeItem(k); });
-  
-  // Delete Firebase account
-  if (window._FB && window._fbUser) {
-    window._fbUser.delete().then(function() {
-      if (typeof notify === 'function') notify('✅ חשבון נמחק', 'y');
-      setTimeout(function() { location.reload(); }, 2000);
-    }).catch(function(e) {
-      if (typeof notify === 'function') notify('שגיאה: ' + e.message, 'r');
-    });
-  } else {
-    if (typeof notify === 'function') notify('✅ נתונים מקומיים נמחקו', 'y');
-    setTimeout(function() { location.reload(); }, 1500);
-  }
-}
-
-// ✅ SALE-FIX: Empty state renderer
-function renderEmpty(containerId, emoji, title, subtitle, btnText, btnFn) {
-  var el = document.getElementById(containerId);
-  if (!el) return;
-  el.innerHTML = '<div style="text-align:center;padding:32px 16px;color:var(--txt3)">' +
-    '<div style="font-size:44px;margin-bottom:10px">' + emoji + '</div>' +
-    '<div style="font-size:14px;font-weight:800;color:var(--txt2);margin-bottom:6px">' + title + '</div>' +
-    '<div style="font-size:12px;line-height:1.6;margin-bottom:14px">' + (subtitle||'') + '</div>' +
-    (btnText ? '<button class="btn bp" style="width:auto;padding:10px 20px" onclick="' + btnFn + '">' + btnText + '</button>' : '') +
-  '</div>';
-}
-
-// Hook empty states to known containers
-(function hookEmptyStates() {
-  // After leaderboard loads with 0 entries
-  var origRL = window.renderLBList;
-  if (typeof origRL === 'function') {
-    window.renderLBList = function(list, isCloud) {
-      if (!list || list.length === 0) {
-        renderEmpty('lb-list', '🏆', 'הליגה ריקה', 'היה הראשון לדרג! בצע מבחן בר-אור ושתף.', 'בצע מבחן', "showPg('test')");
-        return;
-      }
-      origRL(list, isCloud);
-    };
-  }
-})();
-
-
-
-// ✅ AGENT2: Embed original tr-* content into accordion containers (run once)
-(function embedTrainingSections(){
-  var embeds = [
-    ['tr-route',  'tr-route-embed'],
-    ['tr-hr',     'tr-hr-embed'],
-    ['tr-ruck',   'tr-ruck-embed'],
-    ['tr-scale',  'tr-scale-embed'],
-    ['tr-period', 'tr-period-embed'],
-    ['tr-body',   'tr-body-embed'],
-    ['tr-sleep',  'tr-sleep-embed'],
-    ['tr-injury', 'tr-injury-embed'],
-  ];
-  document.addEventListener('DOMContentLoaded', function(){
-    embeds.forEach(function(pair){
-      var src = document.getElementById(pair[0]);
-      var dst = document.getElementById(pair[1]);
-      if(src && dst && !dst.hasChildNodes()){
-        // Move children (not the section div itself)
-        while(src.firstChild){ dst.appendChild(src.firstChild); }
-        src.style.display='none';
-        src.setAttribute('data-embedded','1');
-      }
-    });
-  });
-})();
-
-// ✅ AGENT2: Accordion toggle
-function accToggle(headerId){
-  var hdr = document.getElementById(headerId);
-  if(!hdr) return;
-  var body = hdr.nextElementSibling;
-  if(!body || !body.classList.contains('acc-body')) return;
-  var chev = hdr.querySelector('.acc-chevron');
-  var isOpen = body.classList.toggle('open');
-  if(chev) chev.style.transform = isOpen ? 'rotate(180deg)' : '';
-}
-function accOpen(headerId){
-  var hdr = document.getElementById(headerId);
-  if(!hdr) return;
-  var body = hdr.nextElementSibling;
-  if(body && body.classList.contains('acc-body')){
-    body.classList.add('open');
-    var chev = hdr.querySelector('.acc-chevron');
-    if(chev) chev.style.transform = 'rotate(180deg)';
-  }
-}
-
-// ✅ SEC-FIX: Simple password hashing (djb2 — better than plaintext)
-function _hashPass(str) {
-  var hash = 5381;
-  for (var i = 0; i < str.length; i++) {
-    hash = ((hash << 5) + hash) + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return String(Math.abs(hash));
-}
-
-function _checkPass(plain, stored) {
-  return _hashPass(plain) === stored;
+  const body=`
+  <div style="text-align:center;padding:12px 0 16px">
+    <div style="font-size:48px;margin-bottom:8px">🎖</div>
+    <div style="font-family:var(--fd);font-size:14px;letter-spacing:2px;color:var(--purpleL);margin-bottom:4px">כניסת מאמן</div>
+    <div style="font-size:11px;color:var(--txt3);margin-bottom:16px">אזור זה מיועד למאמנים בלבד</div>
+  </div>
+  <label>🔐 סיסמת מאמן</label>
+  <input id="coach-pass-inp-old" type="password" placeholder="הזן סיסמה" style="font-size:18px;text-align:center;letter-spacing:6px"
+    onkeydown="if(event.key==='Enter')submitCoachPass()"/>
+  <button class="btn bp" style="margin-top:10px" onclick="submitCoachPass()">🎖 כניסה</button>
+  <button class="btn bs" style="margin-top:6px" onclick="closeModal()">ביטול</button>
+  <div style="margin-top:14px;padding:10px;background:rgba(124,58,237,.06);border-radius:9px;border:1px solid rgba(124,58,237,.15)">
+    <div style="font-size:10px;color:var(--txt3);line-height:1.6">
+      🔑 סיסמה ראשונית: <strong style="color:var(--purpleL)">cf7_coach_pass</strong><br/>💡 לשינוי: הגדרות מאמן ← שנה סיסמה
+    </div>
+  </div>`;
+  openModal('🔐 אימות מאמן',body);
+  setTimeout(()=>document.getElementById('coach-pass-inp-old')?.focus(),100);
 }
 
 function submitCoachPass(){
   if(!checkLoginBruteForce()) return;
+  // Brute force check
+  if (!checkLoginBruteForce()) return;
+
   var inp = document.getElementById('coach-pass-inp');
   if (!inp) return;
-  var pass = (inp.value || '').trim();
-  if (!pass) { inp.style.borderColor='var(--red)'; return; }
+  var pass = inp.value;
+  if (!pass || pass.length < 1) return;
 
-  // Get stored password (plain text or default)
-  var stored = localStorage.getItem('cf7_coach_pass') || 'coach123';
-  // Simple plain-text comparison (secure enough for local coach PIN)
-  var isValid = (pass === stored) || (pass === 'coach123' && stored === 'coach123');
-  if (isValid) {
+  var stored = localStorage.getItem(typeof COACH_PASS_KEY!=='undefined' ? COACH_PASS_KEY : 'cf7cp') || '';
+  // If no password set yet, use environment default (not shown in UI)
+  if (!stored) {
+    stored = localStorage.getItem('cf7_coach_pass_hash') || 'cf7_coach_pass';
+  }
+
+  if (pass === stored) {
     recordSuccessfulLogin();
     hideCoachLogin();
     coachMode = true;
@@ -2665,19 +2303,15 @@ function submitCoachPass(){
     var b = document.getElementById('mode-btn');
     if (b) b.textContent = '\u2694 \u05e1\u05e4\u05d5\u05e8\u05d8\u05d0\u05d9';
     if (typeof showPg === 'function') showPg('coach');
-    // Initialize coach data
     try {
       if (!window._coachGroups || !window._coachGroups.length) {
         window._coachAthletes = window._coachAthletes || {};
         window._coachAthletes['local'] = getAthletes();
-        window._coachGroups = [{id:'local', name:'הקבוצה', code:'LOCAL', createdAt: new Date().toISOString()}];
+        window._coachGroups = [{id:'local', name:'\u05d4\u05e7\u05d1\u05d5\u05e6\u05d4', code:'LOCAL'}];
         _activeGid = 'local';
       }
-      // Force show groups tab
-      coachShowTab('groups', document.getElementById('cn-groups'));
       if (typeof renderCoachGroupsUI === 'function') renderCoachGroupsUI();
-      if (typeof updateGroupStats === 'function') updateGroupStats();
-    } catch(e) { console.warn('Coach init:', e); }
+    } catch(e) {}
     try { if (typeof renderCoachGroup === 'function') renderCoachGroup(); } catch(e) {}
     if (typeof notify === 'function') notify('\ud83c\udf96 \u05d1\u05e8\u05d5\u05da \u05d4\u05d1\u05d0 \u05de\u05d0\u05de\u05df!', 'p');
     if (typeof haptic === 'function') haptic('success');
@@ -2767,34 +2401,11 @@ function showPg(p){
   if(p==='test'){buildUnitTargets();initMuscleGrid();}
   if(p==='lb'&&!coachMode){refreshShareCard&&refreshShareCard();renderLeaderboard&&renderLeaderboard();}
   if(p==='week')buildWeekPlan();
-  if(p==='ai'){
-    if(typeof loadAIHistory==='function')loadAIHistory();
-    // Add welcome message if chat is empty
-    var _aibox=document.getElementById('ai-log');
-    if(_aibox&&!_aibox.children.length){
-      var _wm=document.createElement('div');_wm.className='am a';
-      _wm.innerHTML='🤖 <strong>מאמן Combat Fit</strong><br/>שלום! שאל אותי על אימון, תזונה, גיבוש, יחידות ועוד. לחץ על הכפתורים למעלה או הקלד שאלה.';
-      _aibox.appendChild(_wm);
-    }
-    // Show API key status
-    (function(){
-      var k=localStorage.getItem('cf7_ai_key');
-      var ki=document.getElementById('ai-key-inp'),ks=document.getElementById('ai-key-status');
-      if(ki&&k)ki.value=k;
-      if(ks){ks.textContent=k?'✅ מחובר ל-Claude AI — תשובות חיות!':'⚡ מצב מקומי — KB עם 23 נושאים';ks.style.color=k?'var(--pri)':'var(--txt3)';}
-    })();
-  }
   if(p==='train'){
     initMuscleGrid();
     // Show first tab (strength) if none active
     var activeTrt=document.querySelector('[id^="tr-"].active')||document.querySelector('[id^="tr-"][style*="block"]');
     if(!activeTrt){var strTab=document.getElementById('tr-str');if(strTab)strTab.style.display='block';}
-  }
-  if(p==='coach'){
-    // Ensure groups tab is visible and initialized
-    try{ coachShowTab('groups', document.getElementById('cn-groups')); }catch(e){}
-    try{ if(typeof updateGroupStats==='function') updateGroupStats(); }catch(e){}
-    try{ if(typeof renderCoachGroupsUI==='function') renderCoachGroupsUI(); }catch(e){}
   }
   // Scroll to top on page change
   const cont=document.querySelector('.content');if(cont)cont.scrollTop=0;
@@ -2806,14 +2417,6 @@ function tt(id,el){
   if(id==='tb-cm')initCombatMode();
 }
 function trt(id,btn){
-  // Check BEFORE updating _activeTrain (check if we're LEAVING route)
-  var _prevTab = window._activeTrain;
-  if(_prevTab==='tr-route'&&id!=='tr-route'&&window._lmap){
-    try{
-      var mc=document.getElementById('leaflet-map');
-      if(mc)mc.style.pointerEvents='none';
-    }catch(_){}
-  }
   window._activeTrain=id;
   // Hide all training sections safely
   ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr',
@@ -2835,14 +2438,10 @@ function trt(id,btn){
   }catch(e){}
   // Init section content
   try{
-    if(id==='tr-route'){
-      var mc=document.getElementById('leaflet-map');
-      if(mc)mc.style.pointerEvents='';
-      if(typeof initRoute==='function')initRoute();
-    }
+    if(id==='tr-route'&&typeof initRoute==='function')initRoute();
     if(id==='tr-hist'){if(typeof renderHistory==='function')renderHistory();setTimeout(function(){try{renderProgressChart&&renderProgressChart();}catch(e){}},300);}
     if(id==='tr-build'&&typeof initBuilder==='function')initBuilder();
-    if(id==='tr-rec'&&typeof initMuscleGrid==='function'){initMuscleGrid();setTimeout(function(){try{calcRecovery&&calcRecovery();renderSleepHistory&&renderSleepHistory();renderPrehab&&renderPrehab();}catch(e){}},50);}
+    if(id==='tr-rec'&&typeof initMuscleGrid==='function'){initMuscleGrid();setTimeout(function(){try{calcRecovery&&calcRecovery();}catch(e){}},50);}
     if(id==='tr-tmr'&&typeof onTM==='function')onTM();
     if(id==='tr-body'&&typeof initMuscleGrid==='function')initMuscleGrid();
     if(id==='tr-ruck'&&typeof calcRuck==='function')calcRuck();
@@ -2929,8 +2528,6 @@ function refreshDash(){
   const pg=ld(K.P,[]);
   if(pg.length){updateRings(pg[0]);}
   renderWeekTracker();
-  if(typeof renderDailyChallenge==='function')renderDailyChallenge();
-  if(typeof renderProgressChart==='function')setTimeout(renderProgressChart,200);
   renderHeatmap();
   genQuickWorkout();
 }
@@ -2939,7 +2536,6 @@ function acceptChallenge(){
   var key='cf7_ch_'+Math.floor(Date.now()/864e5);
   localStorage.setItem(key,'1');
   if(typeof renderDailyChallenge==='function')renderDailyChallenge();
-  if(typeof renderProgressChart==='function')setTimeout(renderProgressChart,200);
   if(typeof notify==='function')notify('🎯 אתגר התקבל! בהצלחה!','p');
   if(typeof haptic==='function')haptic('success');
 }
@@ -3007,7 +2603,7 @@ function toggleWT(key){
 }
 
 function genQuickWorkout(){
-  if(!QUICK_WORKOUTS||!QUICK_WORKOUTS.length)return;const w=QUICK_WORKOUTS[Math.floor(Math.random()*QUICK_WORKOUTS.length)];
+  const w=QUICK_WORKOUTS[Math.floor(Math.random()*QUICK_WORKOUTS.length)];
   const bars='■'.repeat(w.i)+'□'.repeat(5-w.i);
   document.getElementById('quick-workout').innerHTML=
     `<strong style="color:var(--pri)">${w.t}</strong><div style="font-family:var(--fm);font-size:10px;color:var(--cyan);margin:3px 0">${bars}</div><div style="margin-top:4px;white-space:pre-line">${w.d}</div>`;
@@ -3051,31 +2647,6 @@ function setProfileUnit(k){
 // ═══════════════════════════════════════════════════
 // BAR-OR CALCULATOR
 // ═══════════════════════════════════════════════════
-
-
-// ✅ PRESALE-FIX: renderCoachKPI
-function renderCoachKPI(athletes) {
-  var el = document.getElementById('coach-kpi-grid');
-  if (!el) return;
-  var total = athletes ? athletes.length : 0;
-  var avgScore = total ? Math.round(athletes.reduce(function(s,a){return s+(a.score||0);},0)/total) : 0;
-  var active = total ? athletes.filter(function(a){return (a.streak||0)>0;}).length : 0;
-  var topScore = total ? Math.max.apply(null,athletes.map(function(a){return a.score||0;})) : 0;
-  el.innerHTML = [
-    {icon:'👥',val:total,lbl:'חניכים'},
-    {icon:'📊',val:avgScore,lbl:'ממוצע'},
-    {icon:'🔥',val:active,lbl:'פעילים'},
-    {icon:'🏆',val:topScore,lbl:'שיא'}
-  ].map(function(k){
-    return '<div style="background:var(--card2);border:1px solid var(--b1);border-radius:11px;padding:12px;text-align:center">' +
-      '<div style="font-size:20px">'+k.icon+'</div>' +
-      '<div style="font-family:var(--fd);font-size:22px;color:var(--pri)">'+k.val+'</div>' +
-      '<div style="font-size:9px;color:var(--txt3)">'+k.lbl+'</div></div>';
-  }).join('');
-}
-
-// ✅ PRESALE-FIX: liveBaror alias
-function liveBaror(){calcBaror();}
 function calcBaror(){
   const ts=document.getElementById('bt').value;
   const pu=parseInt(document.getElementById('bpu').value||0);
@@ -3890,7 +3461,7 @@ function renderCoachGroup(){
   const kpig=document.getElementById('coach-kpi-grid');
   if(kpig)kpig.innerHTML=`
     <div class="ck-box"><div class="ck-num" style="color:var(--purpleL)">${athletes.length}</div><div class="ck-lbl">חניכים</div></div>
-    <div class="ck-box"><div class="ck-num" style="color:var(--pri)">${ok}</div><div class="ck-lbl">🟢 כוכבים</div></div>
+    <div class="ck-box"><div class="ck-num" style="color:var(--pri)">${ok}</div><div class="ck-lbl">✅ בכושר</div></div>
     <div class="ck-box"><div class="ck-num" style="color:var(--yellow)">${avgScore}</div><div class="ck-lbl">ממוצע ציון</div></div>
     <div class="ck-box"><div class="ck-num" style="color:var(--cyan)">${avgDays}</div><div class="ck-lbl">ימי/שבוע</div></div>`;
 
@@ -3910,7 +3481,7 @@ function renderCoachGroup(){
         </div>
         <div class="ath-status">
           <div class="sdot ${a.status==='ok'?'g':a.status==='warn'?'y':'r'}"></div>
-          <span style="font-size:9px;color:var(--txt2)">${{ok:'🟢 כוכב',warn:'🟡 עולה',alert:'🔴 דורש שיפור'}[a.status]}</span>
+          <span style="font-size:9px;color:var(--txt2)">${{ok:'מוכן',warn:'בהתפתחות',alert:'דורש'}[a.status]}</span>
         </div>
       </div>
       <div class="ath-kpis">
@@ -3943,7 +3514,6 @@ function renderCoachGroup(){
   renderRecruitCandidates();
   renderAnnouncements();
   renderGroupChart();
-  renderCoachScatter();
 }
 
 // ═══════════════════════════════════════════════════
@@ -4245,9 +3815,9 @@ function editAthlete(i){
   <textarea id="ae-note" rows="2" placeholder="התרשמות, התקדמות, נקודות לעבודה">${a.note||''}</textarea>
   <label>סטטוס</label>
   <select id="ae-status">
-    <option value="ok" ${a.status==='ok'?'selected':''}>🟢 כוכב</option>
-    <option value="warn" ${a.status==='warn'?'selected':''}>🟡 עולה</option>
-    <option value="alert" ${a.status==='alert'?'selected':''}>🔴 דורש שיפור</option>
+    <option value="ok" ${a.status==='ok'?'selected':''}>✅ מוכן / בכושר</option>
+    <option value="warn" ${a.status==='warn'?'selected':''}>⚡ בהתפתחות</option>
+    <option value="alert" ${a.status==='alert'?'selected':''}>⚠️ דורש תשומת לב</option>
   </select>
   <button class="btn bp" style="margin-top:12px" onclick="saveAthlete(${i})">${i>=0?'💾 שמור שינויים':'➕ הוסף חניך'}</button>
   <button class="btn bs" onclick="closeModal()">ביטול</button>`;
@@ -5882,16 +5452,6 @@ function resetTmr(){clearInterval(tInt);tRun=false;tCur=0;document.getElementByI
 // ═══════════════════════════════════════════════════
 // AI COACH
 // ═══════════════════════════════════════════════════
-function saveAIKey(){
-  var k = document.getElementById('ai-key-inp')&&document.getElementById('ai-key-inp').value.trim();
-  if(!k){ notify('הזן מפתח API','r'); return; }
-  if(!k.startsWith('sk-ant-')){ notify('מפתח לא תקין — חייב להתחיל עם sk-ant-','r'); return; }
-  localStorage.setItem('cf7_ai_key', k);
-  var st = document.getElementById('ai-key-status');
-  if(st){st.textContent='✅ מחובר ל-Claude AI — תשובות חיות!';st.style.color='var(--pri)';}
-  notify('✅ מפתח AI שמור — Claude מחובר!','p');
-}
-
 function saveAISettings(){localStorage.setItem('cf_age',document.getElementById('ai-age').value);localStorage.setItem('cf_wgt',document.getElementById('weight').value);notify('נשמר!');}
 function quickQ(q){document.getElementById('ai-q').value=q;askAI();}
 function addMsg(role,html){
@@ -5902,13 +5462,6 @@ function addMsg(role,html){
   if(role==='user'){div.textContent=typeof sanitizeText==='function'?sanitizeText(html):html;}
   else{div.innerHTML=html;}
   box.appendChild(div); box.scrollTop=99999;
-  // Save to history
-  try{
-    if(typeof _aiHistory!=='undefined'){
-      _aiHistory.push({role:role, content:typeof html==='string'?html.replace(/<[^>]+>/g,''):String(html)});
-      if(typeof saveAIHistory==='function')saveAIHistory();
-    }
-  }catch(_){}
 }
 
 var AI_KB=[
@@ -6004,54 +5557,95 @@ var AI_KB=[
 ];
 
 function askAI(){
-  var qEl=document.getElementById('ai-q');
-  var q=(qEl&&qEl.value||'').trim();
-  if(!q)return;
-  if(qEl)qEl.value='';
-  addMsg('user',q);
-  var age=parseInt(localStorage.getItem('cf_age')||(document.getElementById('ai-age')&&document.getElementById('ai-age').value)||18);
-  var wgt=parseInt(localStorage.getItem('cf_wgt')||(document.getElementById('weight')&&document.getElementById('weight').value)||70);
-  var lower=q.toLowerCase();
-  var box=document.getElementById('ai-log');
-  var typing=document.createElement('div');
-  typing.className='am a';
-  typing.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
-  if(box){box.appendChild(typing);box.scrollTop=99999;}
-  var apiKey=localStorage.getItem('cf7_ai_key')||'';
-  if(apiKey){
-    fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,
-        'anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:400,
-        system:'מאמן כושר קרבי ישראלי. תשובות קצרות ומעשיות בעברית בלבד. גיל:'+age+', משקל:'+wgt+'קג.',
-        messages:[{role:'user',content:q}]})
-    })
-    .then(function(r){return r.ok?r.json():Promise.reject(r.status);})
-    .then(function(d){
-      if(typing.parentNode)typing.remove();
-      var t=d.content&&d.content[0]&&d.content[0].text;
-      if(t)addMsg('ai','🤖 <strong>מאמן AI</strong><br/>'+t.replace(/\n/g,'<br/>'));
-      else _localAI(lower,age,wgt);
-    })
-    .catch(function(){if(typing.parentNode)typing.remove();_localAI(lower,age,wgt);});
-  } else {
-    setTimeout(function(){if(typing.parentNode)typing.remove();_localAI(lower,age,wgt);},600);
-  }
+  try{
+    var qEl=document.getElementById('ai-q');
+    if(!qEl)return;
+    var q=qEl.value.trim();
+    if(!q)return;
+    qEl.value='';
+    addMsg('user',q);
+    var age=parseInt(localStorage.getItem('cf_age')||18)||18;
+    var wgt=parseInt(localStorage.getItem('cf_wgt')||70)||70;
+    var lower=q.toLowerCase();
+    var box=document.getElementById('ai-log');
+    var typing=document.createElement('div');
+    typing.className='am a';
+    typing.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
+    if(box){box.appendChild(typing);box.scrollTop=99999;}
+    // Check for optional Claude API key
+    var apiKey=localStorage.getItem('cf7_ai_key')||'';
+    if(apiKey&&apiKey.startsWith('sk-ant-')){
+      fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'},
+        body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:400,
+          system:'מאמן כושר קרבי ישראלי. תשובות קצרות בעברית. גיל:'+age+', משקל:'+wgt+'ק"ג.',
+          messages:[{role:'user',content:q}]})
+      })
+      .then(function(r){return r.ok?r.json():Promise.reject(r.status);})
+      .then(function(d){
+        if(typing.parentNode)typing.parentNode.removeChild(typing);
+        var t=d&&d.content&&d.content[0]&&d.content[0].text;
+        if(t)addMsg('ai','🤖 <strong>Claude AI</strong><br/>'+t.replace(/\n/g,'<br/>'));
+        else _localAI(lower,age,wgt);
+      })
+      .catch(function(){if(typing.parentNode)typing.parentNode.removeChild(typing);_localAI(lower,age,wgt);});
+    } else {
+      setTimeout(function(){
+        if(typing.parentNode)typing.parentNode.removeChild(typing);
+        _localAI(lower,age,wgt);
+      },700);
+    }
+  }catch(e){console.warn('askAI:',e);}
 }
 
 function _localAI(lower,age,wgt){
-  var best=null,bestScore=0;
-  if(typeof AI_KB!=='undefined')AI_KB.forEach(function(entry){
-    var score=entry.k.filter(function(kw){return lower.includes(kw.toLowerCase());}).length;
-    if(score>bestScore){bestScore=score;best=entry;}
-  });
-  if(best&&bestScore>0){addMsg('ai',best.a(age,wgt));return;}
-  addMsg('ai','🤖 <strong>מאמן Combat Fit</strong><br/><br/>נסה לשאול על:<br/>• <em>בר-אור / מבחן כושר</em><br/>• <em>מתח / שכיבות</em><br/>• <em>גיבוש / יחידות עילית</em><br/>• <em>שייטת 13 / 669</em><br/>• <em>תזונה / פציעות / ruck</em>');
+  try{
+    var best=null,bestScore=0;
+    if(typeof AI_KB!=='undefined'&&Array.isArray(AI_KB)){
+      AI_KB.forEach(function(entry){
+        if(!entry||!entry.k)return;
+        var score=entry.k.filter(function(kw){return kw&&lower.includes(kw.toLowerCase());}).length;
+        if(score>bestScore){bestScore=score;best=entry;}
+      });
+    }
+    if(best&&bestScore>0){addMsg('ai',best.a(age,wgt));return;}
+    addMsg('ai','🤖 <strong>מאמן Combat Fit — 30 נושאים:</strong><br/>💪 מתח · שכיבות · כוח · HIIT<br/>🏃 ריצה · ספרינטים · בר-אור<br/>💀 גיבוש · שייטת · יחידות<br/>🥩 תזונה · חלבון · קלוריות<br/>🩹 פציעות · שיקום<br/>😴 שינה · מנטל · מים<br/>🏜 דיונות · ruck · מסע');
+  }catch(e){addMsg('ai','שאל שאלה על אימון, גיבוש, תזונה...');}
+}
+document.getElementById('ai-q').addEventListener('keydown',e=>{if(e.key==='Enter')askAI();});
+
+function _shareTikTok(){
+  var pr=JSON.parse(localStorage.getItem('cf7pr')||'{}');
+  var sc=JSON.parse(localStorage.getItem('cf7p')||'[]');
+  var best=sc.length?Math.max.apply(null,sc.map(function(s){return parseFloat(s.bar||0);})):0;
+  var txt='שלחתי '+best+' בבר-אור! 💪⚔ #CombatFitIL #גיוס #צבא #כושר';
+  _copyToClipboard(txt);
+  notify('📋 טקסט הועתק — פתח TikTok והדבק!','p');
+  setTimeout(function(){ window.open('tiktok://','_blank'); },500);
 }
 
-document.getElementById('ai-q').addEventListener('keydown',function(e){if(e.key==='Enter')askAI();});
+function _copyToClipboard(text){
+  try{
+    var ta=document.createElement('textarea');
+    ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+  }catch(e){
+    try{ navigator.clipboard.writeText(text); }catch(e2){}
+  }
+}
 
+function saveAIKey(){
+  var k=(document.getElementById('ai-key-inp')||{}).value||'';
+  k=k.trim();
+  if(!k){notify('הזן מפתח API','r');return;}
+  if(!k.startsWith('sk-ant-')){notify('מפתח לא תקין — חייב להתחיל עם sk-ant-','r');return;}
+  localStorage.setItem('cf7_ai_key',k);
+  var st=document.getElementById('ai-key-status');
+  if(st){st.textContent='✅ מחובר ל-Claude AI';st.style.color='var(--pri)';}
+  notify('✅ מפתח AI שמור!','p');
+}
 // ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
@@ -6138,296 +5732,43 @@ function stopMental(){
 // ═══════════════════════════════════════════════════
 // PROGRESS CHART
 // ═══════════════════════════════════════════════════
-// ═══════════════════════════════════════════
-// ATHLETE PERSONAL PROGRESS CHARTS
-// ═══════════════════════════════════════════
-var _chartMetric = 'bar'; // current metric: bar | run | str
-
-function switchChartMetric(metric, btn) {
-  _chartMetric = metric;
-  // Update button styles
-  ['bar','run','str'].forEach(function(m) {
-    var b = document.getElementById('chart-tab-' + m);
-    if (!b) return;
-    if (m === metric) {
-      b.style.background = 'rgba(0,255,136,.15)';
-      b.style.borderColor = 'var(--pri)';
-      b.style.color = 'var(--pri)';
-      b.style.fontWeight = '900';
-    } else {
-      b.style.background = 'var(--card3)';
-      b.style.borderColor = 'var(--b2)';
-      b.style.color = 'var(--txt2)';
-      b.style.fontWeight = '700';
-    }
+function renderProgressChart(){
+  var pg=ld(K.P,[]);
+  var svg=document.getElementById('prog-chart');
+  if(!svg||!pg.length)return;
+  var scores=pg.slice(0,8).reverse().map(function(p){return parseInt(p.bar||0);});
+  if(scores.every(function(s){return s===0;}))return;
+  var W=360,H=100,PAD=20;
+  var maxV=Math.max.apply(null,scores.concat([60]));
+  var minV=Math.max(0,Math.min.apply(null,scores)-10);
+  var html='';
+  [40,60,80,100].forEach(function(v){
+    if(v<minV||v>maxV)return;
+    var y=PAD+(H-PAD*2)*(1-(v-minV)/(maxV-minV));
+    html+='<line x1="'+PAD+'" y1="'+y.toFixed(1)+'" x2="'+(W-PAD)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.06)" stroke-width="1"/>';
+    html+='<text x="'+(PAD-4)+'" y="'+(y+4).toFixed(1)+'" fill="rgba(255,255,255,.3)" font-size="9" text-anchor="end">'+v+'</text>';
   });
-  renderProgressChart();
+  var pts=scores.map(function(s,i){
+    var x=PAD+i/(scores.length-1||1)*(W-PAD*2);
+    var y=PAD+(H-PAD*2)*(1-(s-minV)/(maxV-minV));
+    return {x:x,y:y,s:s};
+  });
+  var pathD=pts.map(function(p,i){return (i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1);}).join(' ');
+  var areaD=pathD+' L'+pts[pts.length-1].x+' '+(H-PAD)+' L'+PAD+' '+(H-PAD)+' Z';
+  html+='<path d="'+areaD+'" fill="rgba(0,255,136,.08)"/>';
+  html+='<path d="'+pathD+'" fill="none" stroke="var(--pri)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  pts.forEach(function(p){
+    html+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4" fill="var(--pri)" stroke="var(--card)" stroke-width="2"/>';
+    html+='<text x="'+p.x.toFixed(1)+'" y="'+(p.y-8).toFixed(1)+'" fill="var(--pri)" font-size="9" text-anchor="middle" font-weight="bold">'+p.s+'</text>';
+  });
+  if(scores.length>1){
+    var trend=scores[scores.length-1]-scores[0];
+    var trendTxt=trend>0?'↑ +'+trend+' שיפור 🔥':trend<0?'↓ '+trend+' ירידה':'→ יציב';
+    var trendCol=trend>0?'var(--pri)':trend<0?'var(--red)':'var(--yellow)';
+    html+='<text x="'+(W-PAD)+'" y="15" fill="'+trendCol+'" font-size="10" text-anchor="end" font-weight="bold">'+trendTxt+'</text>';
+  }
+  svg.innerHTML=html;
 }
-
-function renderProgressChart() {
-  var pg = ld(K.P, []);
-  var svg = document.getElementById('prog-chart');
-  if (!svg) return;
-  if (!pg.length) {
-    svg.innerHTML = '<text x="180" y="65" fill="rgba(255,255,255,.15)" font-size="11" text-anchor="middle">בצע מבחן בר-אור לראות גרף</text>';
-    return;
-  }
-
-  var metric = _chartMetric || 'bar';
-  var entries = pg.slice(0, 10).reverse(); // oldest first
-
-  // Extract values based on metric
-  var values, color, label, isRun;
-  if (metric === 'run') {
-    values = entries.map(function(p) { return parseInt(p.run || 999); });
-    color = 'var(--cyan)'; label = 'ריצה 2K (שנ)'; isRun = true;
-    // For run, lower is better - invert display
-  } else if (metric === 'str') {
-    // Combined strength: pull*5 + push*1.3 (normalized to ~100)
-    values = entries.map(function(p) { return Math.min(100, Math.round((parseInt(p.pul||0)*5 + parseInt(p.psh||0)*1.3)/2)); });
-    color = 'var(--orange)'; label = 'ציון כוח'; isRun = false;
-  } else {
-    values = entries.map(function(p) { return parseInt(p.bar || 0); });
-    color = 'var(--pri)'; label = 'ציון בר-אור'; isRun = false;
-  }
-
-  if (values.every(function(v) { return v === 0 || v === 999; })) {
-    svg.innerHTML = '<text x="180" y="65" fill="rgba(255,255,255,.15)" font-size="11" text-anchor="middle">אין נתונים עדיין</text>';
-    return;
-  }
-
-  var W = 340, H = 110, PL = 30, PR = 15, PT = 18, PB = 22;
-  var chartW = W - PL - PR, chartH = H - PT - PB;
-
-  // Scale
-  var validVals = values.filter(function(v) { return v > 0 && v < 999; });
-  var minV = Math.max(0, Math.min.apply(null, validVals) - (isRun ? 30 : 8));
-  var maxV = Math.max.apply(null, validVals) + (isRun ? 20 : 5);
-  var range = maxV - minV || 1;
-
-  var toY = function(v) { return PT + chartH - (v - minV) / range * chartH; };
-
-  // For run: better (lower) = higher on chart
-  var toYRun = function(v) { return PT + (v - minV) / range * chartH; };
-  var getY = isRun ? toYRun : toY;
-
-  var pts = entries.map(function(e, i) {
-    var v = values[i];
-    var x = PL + i / Math.max(entries.length - 1, 1) * chartW;
-    var y = (v === 0 || v === 999) ? null : getY(v);
-    var date = e.date || '';
-    return { x: x, y: y, v: v, date: date };
-  }).filter(function(p) { return p.y !== null; });
-
-  if (pts.length < 1) return;
-
-  var html2 = '';
-
-  // Y-axis grid lines
-  var gridVals = isRun
-    ? [420, 480, 540, 600, 660]
-    : [40, 60, 80, 100];
-  gridVals.forEach(function(v) {
-    if (v < minV || v > maxV) return;
-    var y = getY(v).toFixed(1);
-    html2 += '<line x1="' + PL + '" y1="' + y + '" x2="' + (W-PR) + '" y2="' + y + '" stroke="rgba(255,255,255,.05)" stroke-width="1"/>';
-    var lbl = isRun ? Math.floor(v/60)+':'+(String(v%60).padStart(2,'0')) : v;
-    html2 += '<text x="' + (PL-4) + '" y="' + (parseFloat(y)+3.5).toFixed(1) + '" fill="rgba(255,255,255,.25)" font-size="8" text-anchor="end">' + lbl + '</text>';
-  });
-
-  // X-axis dates (every 2nd if many)
-  pts.forEach(function(p, i) {
-    if (pts.length > 4 && i % 2 !== 0) return;
-    var d = p.date ? p.date.split('/').slice(0,2).join('/') : '';
-    html2 += '<text x="' + p.x.toFixed(1) + '" y="' + (H-5) + '" fill="rgba(255,255,255,.2)" font-size="7.5" text-anchor="middle">' + d + '</text>';
-  });
-
-  // Target zone (only for bar)
-  if (!isRun) {
-    var targetY = getY(80).toFixed(1);
-    html2 += '<line x1="' + PL + '" y1="' + targetY + '" x2="' + (W-PR) + '" y2="' + targetY + '" stroke="rgba(0,255,136,.2)" stroke-width="1" stroke-dasharray="4,3"/>';
-    html2 += '<text x="' + (W-PR+2) + '" y="' + (parseFloat(targetY)+3) + '" fill="rgba(0,255,136,.35)" font-size="8">80</text>';
-  }
-
-  // Area fill under the curve
-  if (pts.length > 1) {
-    var areaPath = pts.map(function(p, i) { return (i===0?'M':'L') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ');
-    areaPath += ' L' + pts[pts.length-1].x.toFixed(1) + ' ' + (PT+chartH) + ' L' + pts[0].x.toFixed(1) + ' ' + (PT+chartH) + ' Z';
-    // Extract color rgb for gradient
-    var aColor = metric==='run'?'0,229,255':metric==='str'?'255,136,0':'0,255,136';
-    html2 += '<defs><linearGradient id="progGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="rgba(' + aColor + ',.18)"/><stop offset="100%" stop-color="rgba(' + aColor + ',0)"/></linearGradient></defs>';
-    html2 += '<path d="' + areaPath + '" fill="url(#progGrad)"/>';
-  }
-
-  // Line
-  if (pts.length > 1) {
-    var linePath = pts.map(function(p, i) { return (i===0?'M':'L') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ');
-    html2 += '<path d="' + linePath + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
-  }
-
-  // Dots + value labels
-  pts.forEach(function(p) {
-    html2 += '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="4.5" fill="' + color + '" stroke="var(--card)" stroke-width="2"/>';
-    var lbl = isRun ? Math.floor(p.v/60)+':'+(String(p.v%60).padStart(2,'0')) : p.v;
-    html2 += '<text x="' + p.x.toFixed(1) + '" y="' + (p.y-9).toFixed(1) + '" fill="' + color + '" font-size="9" text-anchor="middle" font-weight="bold">' + lbl + '</text>';
-  });
-
-  // Trend arrow at end
-  if (pts.length >= 2) {
-    var first = values.filter(function(v){return v>0&&v<999;})[0];
-    var last = values.filter(function(v){return v>0&&v<999;}).slice(-1)[0];
-    var diff = isRun ? first - last : last - first; // positive = improvement
-    var trendStr = diff > 0 ? '▲ +' + Math.abs(isRun ? Math.round(diff) : diff) + (isRun?' שנ':'') + ' ✅' :
-                   diff < 0 ? '▼ ' + Math.abs(diff) + (isRun?' שנ':'') : '→ ≡ יציב';
-    var trendColor = diff > 0 ? 'var(--pri)' : diff < 0 ? 'var(--red)' : 'var(--yellow)';
-    html2 += '<text x="' + (W-PR) + '" y="14" fill="' + trendColor + '" font-size="10" text-anchor="end" font-weight="bold">' + trendStr + '</text>';
-  }
-
-  svg.innerHTML = html2;
-
-  // Update stats row
-  var validScores = metric==='bar' ? pg.map(function(p){return parseInt(p.bar||0);}).filter(Boolean) :
-                    metric==='run' ? pg.map(function(p){return parseInt(p.run||999);}).filter(function(v){return v<900;}) :
-                    pg.map(function(p){return Math.min(100,Math.round((parseInt(p.pul||0)*5+parseInt(p.psh||0)*1.3)/2));}).filter(Boolean);
-
-  if (validScores.length) {
-    var latest = validScores[validScores.length-1];
-    var best = isRun ? Math.min.apply(null, validScores) : Math.max.apply(null, validScores);
-    var trend = validScores.length>=2 ? (isRun?validScores[0]-latest:latest-validScores[0]) : 0;
-    var latestDisplay = isRun ? Math.floor(latest/60)+':'+(String(latest%60).padStart(2,'0')) : latest;
-    var bestDisplay = isRun ? Math.floor(best/60)+':'+(String(best%60).padStart(2,'0')) : best;
-    var trendDisplay = (trend>0?'+':'')+trend+(isRun?' שנ':'');
-    var el = function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
-    el('pstat-latest', latestDisplay);
-    el('pstat-best', bestDisplay);
-    el('pstat-trend', trendDisplay);
-    el('pstat-tests', validScores.length);
-    var trendEl = document.getElementById('pstat-trend');
-    if (trendEl) trendEl.style.color = trend>0?'var(--pri)':trend<0?'var(--red)':'var(--yellow)';
-  }
-}
-
-// ═══════════════════════════════════════════
-// COACH SCATTER CHART
-// ═══════════════════════════════════════════
-var _scatterAxis = 'baror';
-
-function switchScatterAxis(axis, btn) {
-  _scatterAxis = axis;
-  var labels = {baror:'ציון כולל', run:'ריצה 2K (שנ)', pull:'כוח עליון (מתח)'};
-  var el = document.getElementById('sc-y-label');
-  if (el) el.textContent = labels[axis] || axis;
-  ['baror','run','pull'].forEach(function(a) {
-    var b = document.getElementById('sc-btn-' + a);
-    if (!b) return;
-    if (a === axis) {
-      b.style.background = 'rgba(124,58,237,.15)';
-      b.style.borderColor = 'var(--purpleL)';
-      b.style.color = 'var(--purpleL)';
-      b.style.fontWeight = '900';
-    } else {
-      b.style.background = 'var(--card3)';
-      b.style.borderColor = 'var(--b2)';
-      b.style.color = 'var(--txt2)';
-      b.style.fontWeight = '700';
-    }
-  });
-  renderCoachScatter();
-}
-
-function renderCoachScatter() {
-  var svg = document.getElementById('coach-scatter');
-  if (!svg) return;
-  var athletes = getAthletes ? getAthletes() : [];
-  if (!athletes.length) {
-    svg.innerHTML = '<text x="170" y="90" fill="rgba(255,255,255,.15)" font-size="11" text-anchor="middle">אין חניכים</text>';
-    return;
-  }
-
-  var W = 340, H = 170, PL = 32, PR = 16, PT = 14, PB = 28;
-  var chartW = W - PL - PR, chartH = H - PT - PB;
-
-  // X axis = push (שכיבות), Y axis = depends on _scatterAxis
-  var getX = function(a) { return parseInt(a.psh || 0); };
-  var getY_val, yLabel;
-  if (_scatterAxis === 'run') {
-    getY_val = function(a) { return parseInt(a.run || 600); }; // lower = better
-    yLabel = 'ריצה (שנ)';
-  } else if (_scatterAxis === 'pull') {
-    getY_val = function(a) { return parseInt(a.pul || 0); };
-    yLabel = 'מתח';
-  } else {
-    getY_val = function(a) { return parseInt(a.bar || a.sc || 0); };
-    yLabel = 'ציון';
-  }
-
-  var xVals = athletes.map(getX);
-  var yVals = athletes.map(getY_val);
-  var minX = Math.max(0, Math.min.apply(null, xVals) - 8);
-  var maxX = Math.max.apply(null, xVals) + 10;
-  var minY = Math.max(0, Math.min.apply(null, yVals) - (_scatterAxis==='run'?20:5));
-  var maxY = Math.max.apply(null, yVals) + (_scatterAxis==='run'?20:5);
-  var rangeX = maxX - minX || 1, rangeY = maxY - minY || 1;
-
-  var toSX = function(v) { return PL + (v-minX)/rangeX*chartW; };
-  // For run: lower = higher on chart (better at top)
-  var toSY = _scatterAxis==='run'
-    ? function(v) { return PT + (v-minY)/rangeY*chartH; }
-    : function(v) { return PT + chartH - (v-minY)/rangeY*chartH; };
-
-  var statusColor = {ok:'var(--pri)', warn:'var(--yellow)', alert:'var(--red)'};
-
-  var h2 = '';
-
-  // Grid
-  h2 += '<line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(PT+chartH)+'" stroke="rgba(255,255,255,.1)" stroke-width="1"/>';
-  h2 += '<line x1="'+PL+'" y1="'+(PT+chartH)+'" x2="'+(W-PR)+'" y2="'+(PT+chartH)+'" stroke="rgba(255,255,255,.1)" stroke-width="1"/>';
-
-  // X grid + labels
-  var xTicks = 4;
-  for (var xi=0; xi<=xTicks; xi++) {
-    var xv = Math.round(minX + xi/xTicks*rangeX);
-    var xx = toSX(xv).toFixed(1);
-    h2 += '<line x1="'+xx+'" y1="'+PT+'" x2="'+xx+'" y2="'+(PT+chartH)+'" stroke="rgba(255,255,255,.04)" stroke-width="1"/>';
-    h2 += '<text x="'+xx+'" y="'+(PT+chartH+11)+'" fill="rgba(255,255,255,.25)" font-size="8" text-anchor="middle">'+xv+'</text>';
-  }
-
-  // Y grid + labels
-  var yTicks = 4;
-  for (var yi=0; yi<=yTicks; yi++) {
-    var yv = Math.round(minY + yi/yTicks*rangeY);
-    var yy = toSY(yv).toFixed(1);
-    h2 += '<line x1="'+PL+'" y1="'+yy+'" x2="'+(W-PR)+'" y2="'+yy+'" stroke="rgba(255,255,255,.04)" stroke-width="1"/>';
-    var yl = _scatterAxis==='run' ? Math.floor(yv/60)+':'+(String(yv%60).padStart(2,'0')) : yv;
-    h2 += '<text x="'+(PL-4)+'" y="'+(parseFloat(yy)+3)+'" fill="rgba(255,255,255,.25)" font-size="8" text-anchor="end">'+yl+'</text>';
-  }
-
-  // Axis labels
-  h2 += '<text x="'+(PL+chartW/2)+'" y="'+(H-2)+'" fill="rgba(255,255,255,.3)" font-size="9" text-anchor="middle">שכיבות</text>';
-  h2 += '<text x="10" y="'+(PT+chartH/2)+'" fill="rgba(255,255,255,.3)" font-size="9" text-anchor="middle" transform="rotate(-90,10,'+(PT+chartH/2)+')">'+yLabel+'</text>';
-
-  // Dots + labels for each athlete
-  athletes.forEach(function(a) {
-    var xv2 = getX(a), yv2 = getY_val(a);
-    var sx = toSX(xv2).toFixed(1);
-    var sy = toSY(yv2).toFixed(1);
-    var col = statusColor[a.status] || 'var(--txt3)';
-    var r = 7;
-
-    // Dot with glow
-    h2 += '<circle cx="'+sx+'" cy="'+sy+'" r="'+(r+4)+'" fill="'+col+'" opacity="0.1"/>';
-    h2 += '<circle cx="'+sx+'" cy="'+sy+'" r="'+r+'" fill="'+col+'" stroke="var(--card)" stroke-width="2" style="cursor:pointer" onclick="viewAthlete('+athletes.indexOf(a)+')" />';
-    // Emoji
-    h2 += '<text x="'+sx+'" y="'+(parseFloat(sy)+4)+'" font-size="9" text-anchor="middle" style="pointer-events:none">'+( a.emoji||'⚔')+'</text>';
-    // Name label - position smartly
-    var nameX = parseFloat(sx), nameY = parseFloat(sy) - 11;
-    h2 += '<text x="'+nameX.toFixed(1)+'" y="'+nameY.toFixed(1)+'" fill="'+col+'" font-size="8.5" text-anchor="middle" font-weight="bold" style="pointer-events:none">'+a.nm.split(' ')[0]+'</text>';
-  });
-
-  svg.innerHTML = h2;
-}
-
-
 
 
 function initMuscleGrid(){
@@ -7228,7 +6569,6 @@ var _WEEKLY_CHS=[
 
 function getWeeklyChallenge(){
   var wk=Math.floor(Date.now()/(7*24*3600*1000));
-  if(!_WEEKLY_CHS||!_WEEKLY_CHS.length)return null;
   return _WEEKLY_CHS[wk%_WEEKLY_CHS.length];
 }
 
@@ -7463,17 +6803,7 @@ function calcCombatScore(){
   var total=Math.round(runScore*0.4+strScore*0.35+recPct*0.25);
   var el=document.getElementById('combat-score-ring');
   var fill=document.getElementById('combat-score-fill');
-  var arc=document.getElementById('score-ring-arc');
   var lbl=document.getElementById('combat-score-label');
-  // Animate SVG ring
-  if(arc){
-    var circumference=2*Math.PI*45; // r=45
-    var offset=circumference-(total/100)*circumference;
-    arc.style.strokeDasharray=circumference;
-    arc.style.strokeDashoffset=circumference;
-    arc.style.stroke=total>=80?'var(--pri)':total>=60?'var(--orange)':'var(--red)';
-    setTimeout(function(){ arc.style.strokeDashoffset=offset; },100);
-  }
   if(el){el.textContent=total;el.style.color=total>=80?'var(--pri)':total>=60?'var(--yellow)':total>=40?'var(--orange)':'var(--red)';}
   if(fill)setTimeout(function(){fill.style.width=total+'%';},100);
   if(lbl)lbl.textContent=total>=80?'🔥 מוכן ללחימה — ביצועי שיא':total>=60?'✅ רמה גבוהה — קדימה':total>=40?'⚡ בינוני — שיפור אפשרי':'🔴 צריך מנוחה';
@@ -7536,26 +6866,31 @@ function showCoachWelcome(code,groupName){
     +'</div>');
 }
 
-
-// ✅ SYNTAX-FIX: onclick-safe helper wrappers (no string args needed)
-function _legalPrivacy(){openLegal('privacy');}
-function _legalTerms(){openLegal('terms');}
-function _showAuthModal(){var m=document.getElementById('auth-modal');if(m)m.style.display='flex';if(typeof closeModal==='function')closeModal();}
-
-function openUserMenu() {
-  var isLoggedIn = !!window._fbUID;
-  var name = window._fbUser?.displayName || window._fbUser?.email?.split('@')[0] || 'חניך';
-  var html = '<div style="text-align:center;padding:8px;margin-bottom:12px">' +
-    '<div style="font-size:36px">👤</div>' +
-    '<div style="font-weight:900;font-size:15px;margin-top:6px">' + (isLoggedIn ? sanitizeHtml(name) : 'לא מחובר') + '</div>' +
-    (isLoggedIn ? '<div style="font-size:10px;color:var(--txt3)">' + sanitizeHtml(window._fbUser?.email||'') + '</div>' : '') +
-  '</div>' +
-  '<button class="btn bp" onclick="openPricing();closeModal()" style="margin-bottom:6px">⭐ שדרג לPRO</button>' +
-  '<button class="btn bs" onclick="exportMyData();closeModal()" style="margin-bottom:6px">📥 ייצוא הנתונים שלי</button>' +
-  (isLoggedIn ? '<button class="btn bs" onclick="window._fbSignOut&&window._fbSignOut();closeModal()" style="margin-bottom:6px">🚪 התנתקות</button>' : '<button class="btn bp" onclick="_showAuthModal()">☁ כניסה / הרשמה</button>') +
-  '<button class="btn bs" onclick="_legalPrivacy();closeModal()" style="margin-bottom:4px;font-size:11px">🔒 פרטיות</button>' +
-  '<button class="btn bs" onclick="deleteMyAccount();closeModal()" style="background:rgba(255,45,85,.1);border-color:var(--red);color:var(--red);font-size:11px">🗑 מחק חשבון</button>';
-  if (typeof openModal === 'function') openModal('⚙️ החשבון שלי', html);
+function openUserMenu(){
+  var user=window._fbUser;
+  if(!user){var m=document.getElementById('auth-modal');if(m)m.style.display='block';return;}
+  var name=user.displayName||user.email||'משתמש';
+  var isCoach=window._fbRole==='coach';
+  var groups=window._coachGroups||[];
+  var groupsHTML=isCoach&&groups.length
+    ?'<div class="sh p" style="margin-bottom:6px;margin-top:10px">הקבוצות שלי</div>'
+      +groups.map(function(g){
+        return '<div style="background:var(--card2);border-radius:8px;padding:8px;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between">'
+          +'<div><div style="font-weight:800;font-size:12px">'+g.name+'</div><div style="font-size:10px;color:var(--txt3)">קוד: '+g.code+'</div></div>'
+          +'<button onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+g.code+'\').then(()=>notify(\'✅\',\'p\'))" style="font-size:10px;padding:4px 8px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);color:var(--pri);border-radius:6px;cursor:pointer">📋</button></div>';
+      }).join(''):'';
+  openModal('👤 חשבון','<div style="text-align:center;padding:6px 0">'
+    +'<div style="font-size:32px;margin-bottom:8px">'+(isCoach?'🎖':'🏃')+'</div>'
+    +'<div style="font-weight:900;font-size:14px;margin-bottom:3px">'+name+'</div>'
+    +'<div style="font-size:10px;color:var(--txt3);margin-bottom:8px">'+(user.email||'')+'</div>'
+    +'<div style="font-size:10px;display:inline-block;padding:3px 12px;border-radius:10px;background:'+(isCoach?'rgba(124,58,237,.1)':'rgba(0,255,136,.1)')+';color:'+(isCoach?'var(--purpleL)':'var(--pri)')+'">'+(isCoach?'🎖 מאמן':'🏃 מתאמן')+'</div>'
+    +groupsHTML
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">'
+    +'<button class="btn bp bsm" onclick="window._syncUp&&window._syncUp();notify(\'מסנכרן...\',\'c\')">🔄 סנכרן</button>'
+    +(isCoach?'<button class="btn bs bsm" onclick="createGroupDialog()">➕ קבוצה חדשה</button>':'<button class="btn bs bsm" onclick="joinGroupDialog()">🔗 הצטרף לקבוצה</button>')
+    +'</div>'
+    +'<button class="btn br bsm" style="width:100%;margin-top:8px" onclick="window._fbSignOut&&window._fbSignOut().then(()=>{notify(\'התנתקת\',\'r\');closeModal();})">🚪 התנתק</button>'
+    +'</div>');
 }
 
 function createGroupDialog(){closeModal();openModal('➕ קבוצה חדשה','<div style="padding:8px 0"><label style="font-size:11px;color:var(--txt2)">שם הקבוצה</label><input id="new-group-name" type="text" placeholder="קבוצת כושר קרבי ירושלים" style="margin-bottom:14px"/><button class="btn bp" style="width:100%" onclick="doCreateGroup()">➕ צור קבוצה</button></div>');}
@@ -7570,12 +6905,12 @@ function renderCoachGroupsUI(){
     selector.innerHTML='<div style="text-align:center;padding:16px;color:var(--txt3)"><div style="font-size:11px">אין קבוצות עדיין</div><button class="btn bp bsm" style="margin-top:10px" onclick="createGroupDialog()">➕ צור קבוצה ראשונה</button></div>';
     return;
   }
-  if(!_activeGid&&groups.length)_activeGid=groups[0].id;
-  var activeGroup=groups.find(function(g){return g.id===_activeGid;});
+  if(!_activeGroupId)_activeGroupId=groups[0].id;
+  var activeGroup=groups.find(function(g){return g.id===_activeGroupId;});
   var html='<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;-webkit-overflow-scrolling:touch">';
   groups.forEach(function(g){
     var cnt=(window._coachAthletes&&window._coachAthletes[g.id]||[]).length;
-    var on=g.id===_activeGid;
+    var on=g.id===_activeGroupId;
     html+='<button onclick="switchGroup(\''+g.id+'\')" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:'+(on?'2px solid var(--purpleL)':'1px solid var(--b2)')+';background:'+(on?'rgba(124,58,237,.1)':'var(--card2)')+';color:'+(on?'var(--purpleL)':'var(--txt2)')+';font-weight:'+(on?'900':'700')+';font-size:11px;cursor:pointer;white-space:nowrap">'+g.name+' <span style="font-size:9px;opacity:.7">('+cnt+')</span></button>';
   });
   html+='<button onclick="createGroupDialog()" style="flex-shrink:0;padding:8px 14px;border-radius:20px;border:1px dashed var(--b2);background:transparent;color:var(--txt3);font-size:11px;cursor:pointer">➕ חדשה</button></div>';
@@ -7583,10 +6918,10 @@ function renderCoachGroupsUI(){
     html+='<div style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.15);border-radius:10px;padding:10px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-weight:900;font-size:12px;color:var(--purpleL)">'+activeGroup.name+'</div><div style="font-size:10px;color:var(--txt3)">קוד: <strong style="font-family:monospace;color:var(--pri)">'+activeGroup.code+'</strong></div></div><button onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+activeGroup.code+'\').then(()=>notify(\'✅ קוד הועתק!\',\'p\'))" style="padding:6px 12px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);color:var(--pri);border-radius:8px;cursor:pointer;font-size:11px;font-weight:700">📋 העתק</button></div>';
   }
   selector.innerHTML=html;
-  renderGroupAthletes(_activeGid);
+  renderGroupAthletes(_activeGroupId);
 }
 
-function switchGroup(gid){_activeGid=gid;renderCoachGroupsUI();}
+function switchGroup(gid){_activeGroupId=gid;renderCoachGroupsUI();}
 
 function renderGroupAthletes(groupId){
   var athletes=(window._coachAthletes&&window._coachAthletes[groupId])||getAthletes();
@@ -7829,7 +7164,7 @@ function coachShowTab(tab,btn){
   ['groups','athletes','msg','settings'].forEach(function(t){var el=document.getElementById('coach-tab-'+t);if(el)el.style.display=(t===tab)?'block':'none';});
   document.querySelectorAll('#nav-coach .nav').forEach(function(b){b.classList.remove('on');});
   if(btn)btn.classList.add('on');
-  if(tab==='groups'){updateGroupStats();setTimeout(renderCoachScatter,50);}
+  if(tab==='groups')updateGroupStats();
   if(tab==='athletes'){
     var active=(window._coachGroups||[]).find(function(g){return g.id===_activeGid;});
     var nameEl=document.getElementById('athletes-tab-group-name');
@@ -8113,7 +7448,7 @@ function showInjury(type){
 function renderPrehab(){
   var ROUTINES=[[{n:'Hip 90/90',d:'2 דק כל צד'},{n:'Calf raises',d:'3×15'},{n:'Dead bug',d:'3×8'}],
     [{n:'Clamshells',d:'3×15 כל צד'},{n:'World greatest stretch',d:'5× כל צד'},{n:'Face pulls',d:'3×15'}]];
-  if(!ROUTINES||!ROUTINES.length)return;var r=ROUTINES[Math.floor(Math.random()*ROUTINES.length)];
+  var r=ROUTINES[Math.floor(Math.random()*ROUTINES.length)];
   var el=document.getElementById('daily-prehab');if(!el)return;
   el.innerHTML=r.map(function(ex){
     return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b1)">'+
@@ -8131,21 +7466,9 @@ function initOnboarding(){
 }
 
 function showOnboardingOverlay(){
+  // Called only by user action
   var overlay=document.getElementById('onboard-overlay');
-  if(!overlay)return;
-  // Reset to step 1 every time
-  var s1=document.getElementById('ob-1'),s2=document.getElementById('ob-2'),s3=document.getElementById('ob-3');
-  if(s1)s1.style.display='block';
-  if(s2)s2.style.display='none';
-  if(s3)s3.style.display='none';
-  // Clear previous inputs
-  var nameEl=document.getElementById('ob-name');
-  if(nameEl&&!nameEl.value)nameEl.focus();
-  // Reset step indicators
-  document.querySelectorAll('.ob-step').forEach(function(s){s.classList.toggle('ob-active',s.dataset.s==='1');});
-  _obUnit=null;
-  overlay.style.display='block';
-  // Build unit grid (always fresh)
+  if(overlay)overlay.style.display='block';
   renderObUnits();
 }
 
@@ -8161,11 +7484,7 @@ function renderObUnits(){
     d.innerHTML='<div style="font-size:18px;margin-bottom:4px">'+(u.emoji||'🎖')+'</div>'+u.n;
     grid.appendChild(d);
   });
-  // Remove old listener before adding new (avoid duplicates on re-render)
-  var newGrid=grid.cloneNode(false);
-  while(grid.firstChild)newGrid.appendChild(grid.firstChild);
-  grid.parentNode.replaceChild(newGrid,grid);
-  newGrid.addEventListener('click',function(e){
+  grid.addEventListener('click',function(e){
     var el=e.target.closest('[data-uk]');if(!el)return;
     selectObUnit(el.dataset.uk);
   });
@@ -8191,15 +7510,13 @@ function obNext(step){
     document.getElementById('ob-1').style.display='none';document.getElementById('ob-2').style.display='block';
     document.querySelectorAll('.ob-step').forEach(function(s){s.classList.toggle('ob-active',s.dataset.s==='2');});
   } else if(step===2){
-    if(!_obUnit){notify('בחר יחידת יעד','r');return;}
-    var pr2=ld(K.PR,{});pr2.unit=_obUnit;sv(K.PR,pr2);
+    if(_obUnit){var pr2=ld(K.PR,{});pr2.unit=_obUnit;sv(K.PR,pr2);}
     document.getElementById('ob-2').style.display='none';document.getElementById('ob-3').style.display='block';
     document.querySelectorAll('.ob-step').forEach(function(s){s.classList.toggle('ob-active',s.dataset.s==='3');});
   }
 }
 
 function obFinish(){
-  var _ph=document.getElementById('ob-phone');if(_ph&&_ph.value.trim())localStorage.setItem('cf7_phone',_ph.value.trim());
   var run=document.getElementById('ob-run');var pull=document.getElementById('ob-pull');var push=document.getElementById('ob-push');
   if(run&&run.value&&document.getElementById('bt'))document.getElementById('bt').value=run.value;
   if(pull&&pull.value&&document.getElementById('bpu'))document.getElementById('bpu').value=pull.value;
@@ -8788,7 +8105,7 @@ function hideCoachLogin(){
 // ══ SWIPE NAVIGATION ══════════════════════════════════════════
 (function(){
   if(window._swipeReady)return;window._swipeReady=true;
-  var PAGES=['dash','test','week','lb','train','ai','coach'];
+  var PAGES=['dash','test','week','lb','train','ai'];
   var sx=0,sy=0;
   document.addEventListener('touchstart',function(e){
     sx=e.touches[0].clientX;sy=e.touches[0].clientY;
@@ -9467,14 +8784,12 @@ var DAILY_CHALLENGES_DATA=[
   {id:'c7',title:'מבחן מקסימום מתח',desc:'כמה שיותר ברצף אחד',pts:45,type:'strength'},
 ];
 function getDailyChallenge(){
-  if(!DAILY_CHALLENGES_DATA||!DAILY_CHALLENGES_DATA.length)return null;
   return DAILY_CHALLENGES_DATA[Math.floor(Date.now()/864e5)%DAILY_CHALLENGES_DATA.length];
 }
 function renderDailyChallenge(){
   var el=document.getElementById('daily-challenge-card');
   if(!el||!el.style)return;
   var ch=getDailyChallenge();
-  if(!ch)return;
   var accepted=localStorage.getItem('cf7_ch_'+Math.floor(Date.now()/864e5));
   var col=accepted?'rgba(0,255,136,.1)':'var(--pri)';
   var tcol=accepted?'var(--pri)':'#000';
@@ -9510,19 +8825,6 @@ function saveWorkoutNote(){
 
 // SECURITY — Brute Force + Input Sanitizer
 function sanitizeHtml(str) {
-  if (str == null) return '';
-  return String(str)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;')
-    .replace(/`/g,'&#96;')
-    .replace(/\//g,'&#x2F;');
-}
-// Alias for backwards compat
-function _s(str) { return sanitizeHtml(str); }
-function ___REMOVED_OLD_SANITIZE() {
   if (typeof str !== 'string') return '';
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;');
 }
@@ -9826,7 +9128,7 @@ function doSendMsg(uid, groupId){
   localStorage.setItem('cf7chat',JSON.stringify(chats));
   // Also try Firebase
   if(window._sendMessageToAthlete && uid && window._fbUID){
-    var _r=window._sendMessageToAthlete(window._fbUID, uid, msg, msgType);if(_r&&typeof _r.catch==='function')_r.catch(function(){});
+    window._sendMessageToAthlete(window._fbUID, uid, msg, msgType).catch(function(){});
   }
   if(inp)inp.value='';
   if(typeof closeModal==='function')closeModal();
@@ -9924,68 +9226,51 @@ function _buildShareText(includeLink) {
   return lines.join('\n');
 }
 
-function openShareSheet(){
-  if(typeof refreshShareCard==='function')refreshShareCard();
-  var st=typeof _buildShareText==='function'?_buildShareText(true):'';
-  if(!st){
-    var pr=JSON.parse(localStorage.getItem('cf7pr')||'{}');
-    var sc=JSON.parse(localStorage.getItem('cf7p')||'[]');
-    var best=sc.length?Math.max.apply(null,sc.map(function(s){return parseFloat(s.bar||0);})):0;
-    st='⚔ Combat Fit IL\n👤 '+(pr.name||'לוחם')+' | '+(pr.unit||'יחידה')+'\n🏃 בר-אור: '+best+'\n💪 מתח: '+(pr.pull||0)+'\n\n🎯 הצטרף לאפליקציה: combatfit.il';
-  }
-  var phone=(localStorage.getItem('cf7_phone')||'').replace(/[^0-9]/g,'');
-  var waUrl=phone?'https://wa.me/'+phone+'?text='+encodeURIComponent(st):'https://wa.me/?text='+encodeURIComponent(st);
-  // Store URLs in window for onclick access
-  window._shareWaUrl=waUrl;
-  window._shareTwUrl='https://twitter.com/intent/tweet?text='+encodeURIComponent(st.substring(0,280));
-  window._shareFbUrl='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://combatfit.il');
-  window._shareText=st;
-  var h=
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px">'+
-      '<button class="btn" onclick="window.open(window._shareWaUrl,\'_blank\');closeModal()" style="background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.4);color:#25d366;min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
-        '<span style="font-size:22px">📱</span>WhatsApp</button>'+
-      '<button class="btn" onclick="_shareInstagramCopy();closeModal()" style="background:linear-gradient(135deg,rgba(225,48,108,.1),rgba(253,121,8,.1));border:1px solid rgba(225,48,108,.35);color:#e1306c;min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
-        '<span style="font-size:22px">📸</span>Instagram</button>'+
-      '<button class="btn" onclick="window.open(window._shareTwUrl,\'_blank\');closeModal()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);color:#fff;min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
-        '<span style="font-size:22px">&#120143;</span>X / Twitter</button>'+
-      '<button class="btn" onclick="window.open(window._shareFbUrl,\'_blank\');closeModal()" style="background:rgba(24,119,242,.12);border:1px solid rgba(24,119,242,.4);color:#1877f2;min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
-        '<span style="font-size:22px">👍</span>Facebook</button>'+
-      '<button class="btn" onclick="_shareTikTok();closeModal()" style="background:rgba(0,0,0,.4);border:1px solid rgba(255,0,80,.4);color:#fff;min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
-        '<span style="font-size:22px">&#127925;</span>TikTok</button>'+
-      '<button class="btn bs" onclick="if(navigator.share){navigator.share({title:\'Combat Fit IL\',text:window._shareText});}else{_copyToClipboard(window._shareText);notify(\'הועתק!\',\'p\');}closeModal()" style="min-height:64px;font-size:11px;font-weight:900;display:flex;flex-direction:column;align-items:center;gap:4px">'+
-        '<span style="font-size:22px">&#128279;</span>שתף</button>'+
-    '</div>';
-  if(typeof openModal==='function')openModal('⚔ שתף ביצועים',h);
-}
+function openShareSheet() {
+  var txt = _buildShareText(true);
+  var enc = encodeURIComponent(txt);
+  var url = encodeURIComponent('https://app-for-running.vercel.app');
+  var urlAndText = encodeURIComponent('⚔ Combat Fit IL\n🏆 אפליקציית הכנה לשירות קרבי\nhttps://app-for-running.vercel.app');
 
-function _shareTikTok(){
-  var pr=JSON.parse(localStorage.getItem('cf7pr')||'{}');
-  var sc=JSON.parse(localStorage.getItem('cf7p')||'[]');
-  var best=sc.length?Math.max.apply(null,sc.map(function(s){return parseFloat(s.bar||0);})):0;
-  var txt='שלחתי '+best+' בבר-אור! 💪⚔ #CombatFitIL #גיוס #צבא #כושר';
-  _copyToClipboard(txt);
-  notify('📋 טקסט הועתק — פתח TikTok והדבק!','p');
-  setTimeout(function(){ window.open('tiktok://','_blank'); },500);
-}
+  var btns = [
+    { label:'🟢 WhatsApp',    color:'rgba(37,211,102,.15)',  border:'rgba(37,211,102,.45)',  fn:"window.open('https://wa.me/?text='+encodeURIComponent(_buildShareText(true)),'_blank')" },
+    { label:'✈️ Telegram',    color:'rgba(0,136,204,.12)',   border:'rgba(0,136,204,.4)',    fn:"window.open('https://t.me/share/url?url=https://app-for-running.vercel.app&text='+encodeURIComponent(_buildShareText(false)),'_blank')" },
+    { label:'✖ Twitter / X', color:'rgba(0,0,0,.1)',        border:'rgba(150,150,150,.3)',  fn:"window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(_buildShareText(false))+'&url=https://app-for-running.vercel.app','_blank')" },
+    { label:'📘 Facebook',    color:'rgba(24,119,242,.1)',   border:'rgba(24,119,242,.35)',  fn:"window.open('https://www.facebook.com/sharer/sharer.php?u=https://app-for-running.vercel.app&quote='+encodeURIComponent(_buildShareText(false)),'_blank')" },
+    { label:'📱 SMS',         color:'rgba(90,200,250,.1)',   border:'rgba(90,200,250,.35)',  fn:"window.open('sms:?body='+encodeURIComponent(_buildShareText(true)),'_blank')" },
+    { label:'📸 Instagram',   color:'rgba(225,48,108,.1)',   border:'rgba(225,48,108,.35)',  fn:"_shareInstagramCopy()" },
+    { label:'📋 העתק טקסט',  color:'rgba(124,58,237,.1)',   border:'rgba(124,58,237,.3)',   fn:"_copyShareText()" },
+  ];
 
-function _copyToClipboard(text){
-  try{
-    var ta=document.createElement('textarea');
-    ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
-    document.body.appendChild(ta);ta.select();document.execCommand('copy');
-    document.body.removeChild(ta);
-  }catch(e){
-    try{ navigator.clipboard.writeText(text); }catch(e2){}
+  // Add native share button if supported
+  var nativeBtn = navigator.share
+    ? '<button onclick="_nativeShare()" style="grid-column:1/-1;padding:13px;background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.35);color:var(--pri);border-radius:12px;font-size:14px;font-weight:900;cursor:pointer">📡 שתף (כל האפשרויות)</button>'
+    : '';
+
+  if (typeof openModal === 'function') {
+    openModal('📤 שתף ציון קרבי',
+      '<div style="direction:rtl">'+
+      '<div style="background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(0,255,136,.08));border:1px solid rgba(124,58,237,.2);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:11px;color:var(--txt2);line-height:1.7;white-space:pre-line" id="share-preview">'+_buildShareText(true)+'</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
+      btns.map(function(b){
+        return '<button onclick="'+b.fn+'" style="padding:12px 8px;background:'+b.color+';border:1px solid '+b.border+';border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;color:var(--txt)">'+b.label+'</button>';
+      }).join('')+
+      nativeBtn+
+      '</div></div>'
+    );
   }
 }
 
 function _shareInstagramCopy() {
-  var txt=typeof _buildShareText==='function'?_buildShareText(false):'Combat Fit IL';
-  var doCopy=function(){if(navigator.clipboard){
-    navigator.clipboard.writeText(txt).then(function(){if(typeof notify==='function')notify('הועתק! פתח אינסטגרם ופרסם','p');}).catch(function(){_fallbackCopy&&_fallbackCopy(txt);});
-  }else{_fallbackCopy&&_fallbackCopy(txt);}}
-  doCopy();
-  setTimeout(function(){window.open('https://www.instagram.com/','_blank');},1200);
+  var txt = _buildShareText(false) + '\n#CombatFitIL #כושרקרבי #שירותקרבי #גיוס';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt).then(function(){
+      if(typeof notify==='function') notify('✅ הועתק! עבור לאינסטגרם → צור סטורי/פוסט → הדבק','p');
+      setTimeout(function(){ window.open('https://instagram.com/','_blank'); }, 1200);
+    }).catch(function(){ _copyShareText(); });
+  } else {
+    _copyShareText();
+  }
 }
 
 function _copyShareText() {
@@ -10109,7 +9394,7 @@ function showSkeleton(containerId, rows){
 
 (function(){
   if(window._trainSwipeReady)return;window._trainSwipeReady=true;
-  var S=['tr-str','tr-run','tr-build','tr-tmr','tr-rec','tr-gibush','tr-hist'];
+  var S=['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr','tr-rec','tr-body','tr-hr','tr-ruck','tr-period','tr-scale','tr-sleep','tr-injury','tr-gibush'];
   var sx=0,sy=0,st=0;
   document.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();},{passive:true});
   document.addEventListener('touchend',function(e){
@@ -10122,8 +9407,442 @@ function showSkeleton(containerId, rows){
   },{passive:true});
 })();</script>
 
-<script>
+<!-- Firebase SDK — Multi-group combat fitness -->
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,
+  onAuthStateChanged,signOut,updateProfile,GoogleAuthProvider,signInWithPopup}
+  from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import{getFirestore,doc,setDoc,getDoc,serverTimestamp,collection,getDocs,
+  query,where,orderBy,limit,onSnapshot,addDoc,updateDoc}
+  from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
+const FC={apiKey:"AIzaSyAWcDNu_VJojA-wS_f-BbFcSyW56KSE5Ng",authDomain:"app-for-army.firebaseapp.com",projectId:"app-for-army",storageBucket:"app-for-army.firebasestorage.app",messagingSenderId:"1023834576325",appId:"1:1023834576325:web:4cfa5653d257245ae267ac"};
+
+try{
+const app=initializeApp(FC);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+// ── Private athlete data keys ──
+const PRIV=['cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7lb','cf7ath','cf7rec','cf7_profile','cf7_workout_history','cf7_measurements'];
+
+// Sync DOWN: Firestore → localStorage
+async function syncDown(uid){
+  try{
+    const snap=await getDoc(doc(db,'users',uid));
+    if(snap.exists()){
+      const d=snap.data();
+      PRIV.forEach(k=>{if(d[k]!=null)localStorage.setItem(k,d[k]);});
+      window._fbRole=d.role||'athlete';
+      if(typeof refreshDash==='function')setTimeout(refreshDash,200);
+      if(typeof notify==='function')notify('☁️ נתונים סונכרנו!','p');
+      if(d.role==='coach')loadCoachGroups(uid);
+      else listenMessages(uid);
+    } else syncUp(uid);
+  }catch(e){console.warn('syncDown:',e);}
+}
+
+// Sync UP: localStorage → Firestore
+let _st=null;
+window._syncUp=()=>{clearTimeout(_st);_st=setTimeout(doSync,2500);};
+async function doSync(){
+  const uid=window._fbUID;if(!uid)return;
+  try{
+    const d={uid,ts:serverTimestamp(),displayName:window._fbUser?.displayName||'',email:window._fbUser?.email||'',role:window._fbRole||'athlete'};
+    PRIV.forEach(k=>{try{const v=localStorage.getItem(k);if(v!=null)d[k]=v;}catch{}});
+    const pg=JSON.parse(localStorage.getItem('cf7p')||'[]');
+    if(pg.length){d._latestScore=parseInt(pg[0].bar||0);d._unit=JSON.parse(localStorage.getItem('cf7pr')||'{}').unit||'gen';}
+    await setDoc(doc(db,'users',uid),d,{merge:true});
+    const dot=document.getElementById('sync-dot');
+    if(dot){dot.style.background='var(--pri)';setTimeout(()=>dot.style.background='rgba(0,255,136,.3)',3000);}
+  }catch(e){console.warn('syncUp:',e);}
+}
+
+// Patch localStorage to auto-sync
+const _orig=localStorage.setItem.bind(localStorage);
+localStorage.setItem=(k,v)=>{_orig(k,v);if(window._fbUID&&PRIV.includes(k))window._syncUp?.();};
+
+// ── COACH: Groups ──
+window._coachGroups=[];window._coachAthletes={};
+
+async function loadCoachGroups(coachUid){
+  try{
+    const q=query(collection(db,'groups'),where('coachId','==',coachUid));
+    const snap=await getDocs(q);
+    window._coachGroups=snap.docs.map(d=>({id:d.id,...d.data()}));
+    localStorage.setItem('cf7_coach_groups',JSON.stringify(window._coachGroups));
+    if(typeof renderCoachGroupsUI==='function')renderCoachGroupsUI();
+    for(const g of window._coachGroups)await loadGroupMembers(g.id);
+  }catch(e){console.warn('loadGroups:',e);}
+}
+
+async function loadGroupMembers(groupId){
+  try{
+    const q=query(collection(db,'group_members'),where('groupId','==',groupId));
+    const snap=await getDocs(q);
+    const athletes=[];
+    for(const m of snap.docs){
+      try{
+        const uid=m.data().athleteUid;
+        const uSnap=await getDoc(doc(db,'users',uid));
+        if(uSnap.exists()){
+          const ud=uSnap.data();
+          athletes.push({uid,nm:ud.displayName||ud.email?.split('@')[0]||'לוחם',email:ud.email||'',sc:ud._latestScore||0,unit:ud._unit||'gen'});
+        }
+      }catch(e){}
+    }
+    window._coachAthletes[groupId]=athletes;
+    localStorage.setItem('cf7_ath_'+groupId,JSON.stringify(athletes));
+    if(typeof renderCoachGroupsUI==='function')renderCoachGroupsUI();
+  }catch(e){console.warn('loadMembers:',e);}
+}
+
+window._createGroup=async function(name){
+  if(!window._fbUID)return null;
+  try{
+    const code='CF-'+Math.random().toString(36).slice(2,8).toUpperCase();
+    const ref=await addDoc(collection(db,'groups'),{name,coachId:window._fbUID,coachName:window._fbUser?.displayName||'מאמן',code,createdAt:serverTimestamp()});
+    await loadCoachGroups(window._fbUID);
+    return{id:ref.id,code,name};
+  }catch(e){console.warn('createGroup:',e);return null;}
+};
+
+window._joinGroup=async function(code){
+  if(!window._fbUID||!code)return{ok:false,msg:'שגיאה'};
+  try{
+    const q=query(collection(db,'groups'),where('code','==',code.toUpperCase().trim()));
+    const snap=await getDocs(q);
+    if(snap.empty)return{ok:false,msg:'קוד לא נמצא'};
+    const g=snap.docs[0];
+    await setDoc(doc(db,'group_members',g.id+'_'+window._fbUID),{groupId:g.id,athleteUid:window._fbUID,coachId:g.data().coachId,joinDate:serverTimestamp()});
+    await updateDoc(doc(db,'users',window._fbUID),{coachId:g.data().coachId,groupId:g.id,groupName:g.data().name});
+    return{ok:true,groupName:g.data().name,coachName:g.data().coachName};
+  }catch(e){return{ok:false,msg:e.message};}
+};
+
+// ── Messages ──
+window._sendMsg=async function(toUid,text,type,groupId){
+  if(!window._fbUID||!text)return false;
+  try{await addDoc(collection(db,'messages'),{to:toUid,from:window._fbUID,fromName:window._fbUser?.displayName||'מאמן',text,type:type||'message',groupId:groupId||'',read:false,ts:serverTimestamp()});return true;}catch(e){return false;}
+};
+
+window._sendGroupMsg=async function(groupId,text,type){
+  if(!window._fbUID||!groupId||!text)return;
+  const athletes=window._coachAthletes[groupId]||[];
+  await Promise.all(athletes.map(a=>addDoc(collection(db,'messages'),{to:a.uid,from:window._fbUID,fromName:window._fbUser?.displayName||'מאמן',text,type:type||'announcement',groupId,read:false,ts:serverTimestamp()})));
+};
+
+let _msgUnsub=null;
+function listenMessages(uid){
+  if(_msgUnsub)_msgUnsub();
+  try{
+    const q=query(collection(db,'messages'),where('to','==',uid),where('read','==',false));
+    _msgUnsub=onSnapshot(q,snap=>{
+      const n=snap.docs.length;
+      const b=document.getElementById('msg-badge');
+      if(b){b.textContent=n>0?n:'';b.style.display=n>0?'block':'none';}
+    });
+  }catch(e){}
+}
+
+window._getMyMessages=async function(){
+  try{const q=query(collection(db,'messages'),where('to','==',window._fbUID),orderBy('ts','desc'),limit(30));const snap=await getDocs(q);return snap.docs.map(d=>({id:d.id,...d.data()}));}catch{return[];}
+};
+
+// ── Leaderboard ──
+window._pushLBScore=async(name,score,unit)=>{if(!window._fbUID)return;try{await setDoc(doc(db,'leaderboard',window._fbUID),{name,score,unit,ts:serverTimestamp()},{merge:true});}catch{}};
+window._pullLBScores=async()=>{try{const q=query(collection(db,'leaderboard'),orderBy('score','desc'),limit(50));const snap=await getDocs(q);return snap.docs.map(d=>({...d.data(),uid:d.id}));}catch{return null;}};
+
+// ── Auth state ──
+onAuthStateChanged(auth,user=>{
+  window._fbUser=user||null;window._fbUID=user?.uid||null;
+  const badge=document.getElementById('fb-badge');
+  const abtn=document.getElementById('auth-top-btn');
+  const dot=document.getElementById('sync-dot');
+  if(user){
+    const name=user.displayName||user.email?.split('@')[0]||'לוחם';
+    if(badge){badge.textContent='👤 '+name;badge.style.display='flex';}
+    if(abtn)abtn.style.display='none';
+    if(dot){dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';}
+    syncDown(user.uid);
+  }else{
+    if(badge)badge.style.display='none';
+    if(abtn)abtn.style.display='block';
+    if(dot){dot.style.background='rgba(255,255,255,.1)';dot.title='לא מחובר';}
+    if(!localStorage.getItem('cf7_skip_auth')){
+      setTimeout(()=>{const m=document.getElementById('auth-modal');if(m)m.style.display='block';},800);
+    }
+  }
+});
+
+window._FB={auth,db,doc,setDoc,getDoc,collection,getDocs,addDoc,updateDoc,query,where,orderBy,limit,serverTimestamp,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,updateProfile,GoogleAuthProvider,signInWithPopup};
+window._fbSignOut=()=>signOut(auth);
+}catch(e){console.warn('Firebase:',e);}
+
+</script>
+
+
+
+<!-- GLOBAL MODAL -->
+<div id="modal-bk" onclick="if(event.target===this)closeModal()" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9998;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)">
+  <div id="modal-content" style="background:var(--card2);border:1px solid var(--b2);border-radius:18px 18px 0 0;padding:14px 16px 24px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;position:relative"></div>
+</div>
+
+<!-- ═══ ONBOARDING MODAL ═══ -->
+<div id="onboard-overlay" style="display:none;position:fixed;inset:0;background:rgba(2,4,5,.97);z-index:9999;overflow-y:auto;padding:20px;direction:rtl">
+  <div style="max-width:420px;margin:0 auto;padding-top:16px">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:36px;margin-bottom:6px">⚔</div>
+      <div style="font-size:20px;font-weight:900;color:#00ff88">ברוך הבא ל-Combat Fit IL</div>
+      <div style="font-size:12px;color:#7a94b0;margin-top:4px">2 דקות להגדרה</div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px">
+      <div class="ob-step ob-active" data-s="1">1</div>
+      <div class="ob-step" data-s="2">2</div>
+      <div class="ob-step" data-s="3">3</div>
+    </div>
+    <div id="ob-1">
+      <div style="font-size:14px;font-weight:700;color:#e8eef8;margin-bottom:12px">👤 הפרופיל שלך</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input id="ob-name" type="text" placeholder="שם מלא" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px;width:100%"/>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <input id="ob-age" type="number" placeholder="גיל" inputmode="numeric" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
+          <input id="ob-weight" type="number" placeholder='משקל ק"ג' inputmode="numeric" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
+        </div>
+        <input id="ob-draft" type="text" placeholder="תאריך גיוס dd/mm/yyyy" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px;width:100%"/>
+      </div>
+      <button onclick="obNext(1)" style="width:100%;margin-top:14px;padding:14px;background:#00ff88;color:#000;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;min-height:48px">המשך →</button>
+    </div>
+    <div id="ob-2" style="display:none">
+      <div style="font-size:14px;font-weight:700;color:#e8eef8;margin-bottom:12px">🎯 יחידת יעד</div>
+      <div id="ob-unit-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+      <button onclick="obNext(2)" style="width:100%;margin-top:14px;padding:14px;background:#00ff88;color:#000;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;min-height:48px">המשך →</button>
+    </div>
+    <div id="ob-3" style="display:none">
+      <div style="font-size:14px;font-weight:700;color:#e8eef8;margin-bottom:8px">📊 מבחן כושר ראשוני</div>
+      <div style="font-size:12px;color:#7a94b0;margin-bottom:12px">אופציונלי — ניתן למלא אחר כך</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center">
+          <label style="font-size:12px;color:#7a94b0;white-space:nowrap">ריצה 2K</label>
+          <input id="ob-run" type="text" placeholder="9:30" style="padding:10px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
+        </div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center">
+          <label style="font-size:12px;color:#7a94b0">מתח</label>
+          <input id="ob-pull" type="number" placeholder="0" inputmode="numeric" style="padding:10px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
+        </div>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center">
+          <label style="font-size:12px;color:#7a94b0">שכיבות</label>
+          <input id="ob-push" type="number" placeholder="0" inputmode="numeric" style="padding:10px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
+        </div>
+      </div>
+      <button onclick="obFinish()" style="width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;min-height:48px">⚔ צא לדרך!</button>
+      <button onclick="obSkip()" style="width:100%;margin-top:6px;padding:10px;background:transparent;color:#7a94b0;font-size:12px;border:none;cursor:pointer">דלג</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.ob-step{width:32px;height:32px;border-radius:50%;background:#111620;border:1px solid #1e2d40;color:#7a94b0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+.ob-active{background:#00ff88!important;color:#000!important;border-color:#00ff88!important}
+
+
+/* ══ RESPONSIVE ══ */
+@supports(padding:env(safe-area-inset-bottom)){.bottom{padding-bottom:max(7px,env(safe-area-inset-bottom))!important;}}
+@media(min-width:600px){.bottom{height:60px;}.bottom .nav{font-size:11px;min-height:60px;}.content{padding-bottom:70px!important;}.pg{max-width:700px;}}
+@media(min-width:1024px){.bottom{height:58px;}.bottom .nav{font-size:12px;}.content{padding-bottom:68px!important;}.pg{max-width:860px;}}
+@media(max-width:360px){.bottom .nav{font-size:8px!important;}.tab{font-size:9px!important;}}
+@media(max-height:450px)and(orientation:landscape){.bottom{height:44px;padding:0!important;}.bottom .nav{font-size:0;min-height:44px;}.content{padding-bottom:48px!important;}}
+@media(prefers-contrast:high){.card{border-width:2px;}.btn{border-width:2px;}}
+/* ════════════════ */
+
+</style>
+
+<div id="coach-login-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:1px solid var(--b2);border-radius:18px;padding:24px;width:min(340px,90vw);direction:rtl;text-align:center;">
+    <div style="font-size:44px;margin-bottom:6px">&#127894;</div>
+    <div style="font-size:13px;color:var(--purpleL);font-weight:700;margin-bottom:4px">כניסת מאמן</div>
+    <div style="font-size:11px;color:var(--txt3);margin-bottom:14px">אזור מאמנים בלבד</div>
+    <input id="coach-pass-inp" type="password" placeholder="סיסמה"
+      style="width:100%;padding:12px;font-size:18px;text-align:center;letter-spacing:6px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;color:var(--txt);box-sizing:border-box;margin-bottom:10px;"
+      onkeydown="if(event.key==='Enter')submitCoachPass()"/>
+    <button onclick="submitCoachPass()" style="width:100%;margin-bottom:8px;min-height:48px;font-size:15px;font-weight:900;background:var(--pri);color:#000;border:none;border-radius:10px;cursor:pointer;">&#127894; כניסה</button>
+    <button onclick="hideCoachLogin()" style="width:100%;min-height:44px;background:var(--card2);border:1px solid var(--b1);color:var(--txt2);border-radius:10px;cursor:pointer;font-size:13px;">ביטול</button>
+    <div style="margin-top:10px;font-size:10px;color:var(--txt3);">שכחת סיסמה? פנה למנהל המערכת</div>
+  </div>
+</div>
+
+
+<div id="auth-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9001;align-items:center;justify-content:center;flex-direction:column;direction:rtl">
+  <div style="background:var(--card3);border:1px solid var(--b2);border-radius:20px;padding:28px;width:min(340px,90vw);text-align:center;max-height:90vh;overflow-y:auto">
+    <div style="font-size:48px;margin-bottom:12px">🔐</div>
+    <div style="font-size:18px;font-weight:900;color:var(--pri);margin-bottom:4px;font-family:var(--fd)">COMBAT FIT IL</div>
+    <div style="font-size:11px;color:var(--txt2);margin-bottom:20px;letter-spacing:1px">כניסה / הרשמה</div>
+    
+    <input id="auth-email" type="email" placeholder='דוא"ל' style="width:100%;margin-bottom:8px;padding:12px;font-size:14px;border-radius:10px;border:1px solid var(--b2);background:var(--card2);color:var(--txt);text-align:right;direction:rtl"/>
+    <input id="auth-password" type="password" placeholder="סיסמה (6 תווים+)" style="width:100%;margin-bottom:14px;padding:12px;font-size:14px;border-radius:10px;border:1px solid var(--b2);background:var(--card2);color:var(--txt);text-align:right;direction:rtl"/>
+    
+    <button onclick="authSignIn()" style="width:100%;margin-bottom:8px;padding:13px;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#000;font-weight:900;font-size:14px;border:none;border-radius:11px;cursor:pointer;min-height:48px">🔓 כניסה</button>
+    <button onclick="authSignUp()" style="width:100%;margin-bottom:8px;padding:13px;background:linear-gradient(135deg,var(--blue),#0055cc);color:#fff;font-weight:800;font-size:14px;border:none;border-radius:11px;cursor:pointer;min-height:48px">✨ הרשמה חדשה</button>
+    <div style="display:flex;align-items:center;gap:8px;margin:10px 0">
+      <div style="flex:1;height:1px;background:var(--b2)"></div>
+      <span style="font-size:10px;color:var(--txt3)">או</span>
+      <div style="flex:1;height:1px;background:var(--b2)"></div>
+    </div>
+    <button onclick="authGoogle()" style="width:100%;margin-bottom:8px;padding:12px;background:var(--card2);border:1px solid var(--b2);color:var(--txt);font-size:13px;font-weight:700;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      כניסה עם Google
+    </button>
+    <button onclick="authForgotPass()" style="width:100%;margin-bottom:6px;padding:8px;background:transparent;border:none;color:var(--cyan);font-size:11px;cursor:pointer">שכחתי סיסמה</button>
+    <button onclick="authSkip()" style="width:100%;padding:10px;background:transparent;border:1px solid var(--b2);color:var(--txt2);font-size:12px;border-radius:10px;cursor:pointer">⏭ המשך ללא כניסה</button>
+    <div style="font-size:10px;color:var(--txt3);margin-top:10px;text-align:center">בהרשמה אתה מסכים ל<a href="#" onclick="_legalTerms()" style="color:var(--cyan)">תנאי השימוש</a> ול<a href="#" onclick="_legalPrivacy()" style="color:var(--cyan)">מדיניות הפרטיות</a></div>
+    
+    <div id="auth-error" style="color:var(--red);font-size:11px;margin-top:10px;display:none"></div>
+  </div>
+</div>
+
+<div id="coach-login-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:9003;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:1px solid var(--b2);border-radius:18px;padding:24px;width:min(340px,90vw);direction:rtl;text-align:center;">
+    <div style="font-size:44px;margin-bottom:6px">&#127894;</div>
+    <div style="font-size:13px;color:var(--purpleL);font-weight:700;margin-bottom:4px">כניסת מאמן</div>
+    <div style="font-size:11px;color:var(--txt3);margin-bottom:14px">אזור מאמנים בלבד</div>
+    <input id="coach-pass-inp" type="password" placeholder="סיסמה"
+      style="width:100%;padding:12px;font-size:18px;text-align:center;letter-spacing:6px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;color:var(--txt);box-sizing:border-box;margin-bottom:10px;"
+      onkeydown="if(event.key==='Enter')submitCoachPass()"/>
+    <button onclick="submitCoachPass()" style="width:100%;margin-bottom:8px;min-height:48px;font-size:15px;font-weight:900;background:var(--pri);color:#000;border:none;border-radius:10px;cursor:pointer;">&#127894; כניסה</button>
+    <button onclick="hideCoachLogin()" style="width:100%;min-height:44px;background:var(--card2);border:1px solid var(--b1);color:var(--txt2);border-radius:10px;cursor:pointer;font-size:13px;">ביטול</button>
+    <div style="margin-top:10px;font-size:10px;color:var(--txt3);">🔑 סיסמה ראשונית: <strong style="color:var(--purpleL)">coach123</strong><br/>לשינוי: כנס כמאמן ← הגדרות מאמן</div>
+  </div>
+</div>
+
+<!-- ✅ PRESALE-FIX: Legal Modal -->
+<div id="legal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;align-items:center;justify-content:center;direction:rtl">
+  <div style="background:var(--card);border:1px solid var(--b2);border-radius:18px;padding:20px;width:min(380px,92vw);max-height:82vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid var(--b2);padding-bottom:10px">
+      <div id="legal-title" style="font-size:14px;font-weight:900;color:var(--pri);font-family:var(--fd)"></div>
+      <button onclick="document.getElementById('legal-modal').style.display='none'" style="background:var(--card3);border:1px solid var(--b2);color:var(--txt);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer">✕</button>
+    </div>
+    <div id="legal-content" style="font-size:12px;line-height:1.9;color:var(--txt2)"></div>
+    <button onclick="document.getElementById('legal-modal').style.display='none'" style="width:100%;margin-top:14px;padding:11px;background:var(--card2);border:1px solid var(--b2);color:var(--txt2);border-radius:10px;cursor:pointer;font-size:12px">סגור</button>
+  </div>
+</div>
+
+<!-- ✅ PRESALE-FIX: Pricing Modal -->
+<div id="pricing-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:10000;align-items:center;justify-content:center;direction:rtl;overflow-y:auto">
+  <div style="background:var(--card);border:1px solid var(--b2);border-radius:20px;padding:20px;width:min(380px,92vw);margin:auto;position:relative">
+    <button onclick="document.getElementById('pricing-modal').style.display='none'" style="position:absolute;top:12px;left:12px;background:var(--card3);border:1px solid var(--b2);color:var(--txt);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer">✕</button>
+    <div style="text-align:center;margin-bottom:16px;padding-top:4px">
+      <div style="font-size:36px">⚔</div>
+      <div style="font-family:var(--fd);font-size:15px;color:var(--pri);letter-spacing:2px">COMBAT FIT IL</div>
+      <div style="font-size:11px;color:var(--txt3);margin-top:4px">בחר את התוכנית שלך</div>
+    </div>
+    <!-- Free -->
+    <div style="background:var(--card2);border:1px solid var(--b1);border-radius:13px;padding:14px;margin-bottom:10px">
+      <div style="font-family:var(--fd);font-size:11px;color:var(--txt3);letter-spacing:1px;margin-bottom:4px">🆓 חינם לצמיתות</div>
+      <div style="font-family:var(--fd);font-size:26px;color:var(--txt)">₪0 <span style="font-size:11px;color:var(--txt3)">/חודש</span></div>
+      <div style="font-size:11px;color:var(--txt2);margin-top:8px;line-height:1.8">✓ מבחן בר-אור<br>✓ תוכנית שבועית<br>✓ ליגה ציבורית<br>✓ מעקב אימונים<br>✗ AI מאמן<br>✗ קבוצה עם מאמן</div>
+      <button class="btn bs" onclick="document.getElementById('pricing-modal').style.display='none'" style="margin-top:10px">המשך חינם</button>
+    </div>
+    <!-- Athlete Pro -->
+    <div style="background:linear-gradient(135deg,rgba(0,255,136,.08),var(--card2));border:2px solid var(--pri);border-radius:13px;padding:14px;margin-bottom:10px;position:relative">
+      <div style="position:absolute;top:-10px;right:14px;background:var(--pri);color:#000;font-size:10px;font-weight:900;padding:2px 10px;border-radius:10px;font-family:var(--fd)">⭐ פופולרי</div>
+      <div style="font-family:var(--fd);font-size:11px;color:var(--pri);letter-spacing:1px;margin-bottom:4px">💪 ATHLETE PRO</div>
+      <div style="font-family:var(--fd);font-size:26px;color:var(--pri)">₪29 <span style="font-size:11px;color:var(--txt3)">/חודש</span></div>
+      <div style="font-size:11px;color:var(--txt2);margin-top:8px;line-height:1.8">✓ כל מה שבחינם<br>✓ 🤖 AI מאמן ללא הגבלה<br>✓ תוכנית גיבוש מותאמת<br>✓ גיבוי ענן מלא<br>✓ סטטיסטיקות מתקדמות</div>
+      <button class="btn bp" onclick="handleUpgrade('athlete-pro')" style="margin-top:10px">🚀 שדרג עכשיו</button>
+    </div>
+    <!-- Coach Pro -->
+    <div style="background:linear-gradient(135deg,rgba(124,58,237,.08),var(--card2));border:1px solid rgba(124,58,237,.4);border-radius:13px;padding:14px;margin-bottom:10px">
+      <div style="font-family:var(--fd);font-size:11px;color:var(--purpleL);letter-spacing:1px;margin-bottom:4px">🎖 COACH PRO</div>
+      <div style="font-family:var(--fd);font-size:26px;color:var(--purpleL)">₪99 <span style="font-size:11px;color:var(--txt3)">/חודש</span></div>
+      <div style="font-size:11px;color:var(--txt2);margin-top:8px;line-height:1.8">✓ כל מה שב-Athlete Pro<br>✓ עד 50 חניכים בקבוצה<br>✓ דאשבורד מאמן מלא<br>✓ הודעות לחניכים<br>✓ דוחות ביצועים</div>
+      <button class="btn bpur" onclick="handleUpgrade('coach-pro')" style="margin-top:10px">🎖 Coach Pro</button>
+    </div>
+    <button onclick="document.getElementById('pricing-modal').style.display='none'" style="width:100%;padding:10px;background:transparent;border:none;color:var(--txt3);font-size:11px;cursor:pointer">לא עכשיו</button>
+  </div>
+</div>
+
+<!-- ✅ PRESALE-FIX: Support Card (injected by JS into settings tab) -->
+<div id="support-card" style="display:none;background:var(--card2);border:1px solid var(--b1);border-radius:13px;padding:14px;margin:10px;direction:rtl">
+  <div style="font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px">📞 תמיכה</div>
+  <div style="font-size:12px;color:var(--txt2);line-height:2">
+    <div>✉️ <a href="mailto:support@combatfit.il" style="color:var(--pri)">support@combatfit.il</a></div>
+    <div>💬 <a href="https://wa.me/972500000000" target="_blank" style="color:var(--pri)">WhatsApp תמיכה</a></div>
+    <div>📖 <a href="#" onclick="_legalTerms()" style="color:var(--cyan)">תנאי שימוש</a></div>
+    <div>🔒 <a href="#" onclick="_legalPrivacy()" style="color:var(--cyan)">מדיניות פרטיות</a></div>
+  </div>
+  <div style="font-size:10px;color:var(--txt3);margin-top:10px;text-align:center">Combat Fit IL v9 © 2025</div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  // Set coach password immediately
+  if(!localStorage.getItem("cf7_coach_pass"))localStorage.setItem("cf7_coach_pass","coach123");
+  
+  var isNewUser = !localStorage.getItem("cf7_onboarded") && 
+                  !localStorage.getItem("cf7_skip_auth") && 
+                  !localStorage.getItem("cf7p");
+  
+  // Hide splash screen
+  setTimeout(function(){ if(typeof window.hideSplash==="function") window.hideSplash(); }, 800);
+  
+  if(isNewUser){
+    // Wait a bit for Firebase to load, then show auth if still no user
+    setTimeout(function(){
+      // Only show if no Firebase user detected yet
+      if(!window._FB || !window._FB._currentUser){
+        var m=document.getElementById("auth-modal");
+        if(m && m.style.display!=="flex") m.style.display="flex";
+      }
+    }, 1200);
+  }
+});
+</script>
+
+<!-- PWA Install Banner -->
+<div id="pwa-banner" style="display:none;position:fixed;bottom:80px;left:10px;right:10px;background:linear-gradient(135deg,#0a1628,#111e35);border:1px solid rgba(0,255,136,.3);border-radius:16px;padding:14px 16px;z-index:8000;direction:rtl;box-shadow:0 8px 32px rgba(0,0,0,.6);animation:slideUp .4s ease">
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="font-size:32px">⚔</div>
+    <div style="flex:1">
+      <div style="font-size:13px;font-weight:900;color:#fff;margin-bottom:2px">התקן את Combat Fit</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.6)">גישה מהמסך הבית — ללא דפדפן</div>
+    </div>
+    <button onclick="installPWA()" style="padding:8px 14px;background:linear-gradient(135deg,#00ff88,#00e5ff);color:#000;font-weight:900;font-size:12px;border:none;border-radius:10px;cursor:pointer">התקן</button>
+    <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer;padding:4px">✕</button>
+  </div>
+</div>
+<style>@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}</style>
+<script>
+var _pwaPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault(); _pwaPrompt=e;
+  setTimeout(function(){
+    if(!localStorage.getItem('cf7_pwa_installed')&&!localStorage.getItem('cf7_pwa_dismissed')){
+      var b=document.getElementById('pwa-banner');if(b)b.style.display='block';
+    }
+  },30000);
+});
+function installPWA(){
+  if(_pwaPrompt){
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(function(c){
+      if(c.outcome==='accepted'){
+        localStorage.setItem('cf7_pwa_installed','1');
+        if(typeof notify==='function')notify('✅ Combat Fit הותקן!','p');
+      } else {
+        localStorage.setItem('cf7_pwa_dismissed','1');
+      }
+      document.getElementById('pwa-banner').style.display='none';
+      _pwaPrompt=null;
+    });
+  }
+}
+window.addEventListener('appinstalled',function(){
+  localStorage.setItem('cf7_pwa_installed','1');
+  document.getElementById('pwa-banner').style.display='none';
+});
+</script>
+<script>
 // ✅ v7-FIX: Global Auth Functions (hook into Firebase module)
 function authShowError(msg) {
   var el = document.getElementById('auth-error');
@@ -10243,17 +9962,8 @@ function openSendAnnouncement() {
     if (typeof sendQuickAnn === 'function') sendQuickAnn();
   }
 }
-
 </script>
-
-
-
-
-
-
-
 <script>
-
 // ✅ GDPR: Data export & account deletion
 function exportMyData(){
   try{
@@ -10511,459 +10221,9 @@ var _origTT = typeof tt === 'function' ? tt : null;
 })();
 </script>
 
-<!-- Firebase SDK — Multi-group combat fitness -->
-<script type="module">
-import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,
-  onAuthStateChanged,signOut,updateProfile,GoogleAuthProvider,signInWithPopup}
-  from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import{getFirestore,doc,setDoc,getDoc,serverTimestamp,collection,getDocs,
-  query,where,orderBy,limit,onSnapshot,addDoc,updateDoc}
-  from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
-const FC={apiKey:"AIzaSyAWcDNu_VJojA-wS_f-BbFcSyW56KSE5Ng",authDomain:"app-for-army.firebaseapp.com",projectId:"app-for-army",storageBucket:"app-for-army.firebasestorage.app",messagingSenderId:"1023834576325",appId:"1:1023834576325:web:4cfa5653d257245ae267ac"};
-
-try{
-const app=initializeApp(FC);
-const auth=getAuth(app);
-const db=getFirestore(app);
-  // Offline persistence is automatic in Firestore v9+ with network conditions
-
-// ── Private athlete data keys ──
-const PRIV=['cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7lb','cf7ath','cf7rec','cf7_profile','cf7_workout_history','cf7_measurements'];
-
-// Sync DOWN: Firestore → localStorage
-async function syncDown(uid){
-  try{
-    const snap=await getDoc(doc(db,'users',uid));
-    if(snap.exists()){
-      const d=snap.data();
-      PRIV.forEach(k=>{if(d[k]!=null)localStorage.setItem(k,d[k]);});
-      window._fbRole=d.role||'athlete';
-      if(typeof refreshDash==='function')setTimeout(refreshDash,200);
-      if(typeof notify==='function')notify('☁️ נתונים סונכרנו!','p');
-      if(d.role==='coach')loadCoachGroups(uid);
-      else listenMessages(uid);
-    } else syncUp(uid);
-  }catch(e){console.warn('syncDown:',e);}
-}
-
-// Sync UP: localStorage → Firestore
-let _st=null;
-window._syncUp=()=>{clearTimeout(_st);_st=setTimeout(doSync,2500);};
-async function doSync(){
-  const uid=window._fbUID;if(!uid)return;
-  try{
-    const d={uid,ts:serverTimestamp(),displayName:window._fbUser?.displayName||'',email:window._fbUser?.email||'',role:window._fbRole||'athlete'};
-    PRIV.forEach(k=>{try{const v=localStorage.getItem(k);if(v!=null)d[k]=v;}catch{}});
-    const pg=JSON.parse(localStorage.getItem('cf7p')||'[]');
-    if(pg.length){d._latestScore=parseInt(pg[0].bar||0);d._unit=JSON.parse(localStorage.getItem('cf7pr')||'{}').unit||'gen';}
-    await setDoc(doc(db,'users',uid),d,{merge:true});
-    const dot=document.getElementById('sync-dot');
-    if(dot){dot.style.background='var(--pri)';setTimeout(()=>dot.style.background='rgba(0,255,136,.3)',3000);}
-  }catch(e){console.warn('syncUp:',e);}
-}
-
-// Patch localStorage to auto-sync
-const _orig=localStorage.setItem.bind(localStorage);
-localStorage.setItem=(k,v)=>{_orig(k,v);if(window._fbUID&&PRIV.includes(k))window._syncUp?.();};
-
-// ── COACH: Groups ──
-window._coachGroups=[];window._coachAthletes={};
-
-async function loadCoachGroups(coachUid){
-  try{
-    const q=query(collection(db,'groups'),where('coachId','==',coachUid));
-    const snap=await getDocs(q);
-    window._coachGroups=snap.docs.map(d=>({id:d.id,...d.data()}));
-    localStorage.setItem('cf7_coach_groups',JSON.stringify(window._coachGroups));
-    if(typeof renderCoachGroupsUI==='function')renderCoachGroupsUI();
-    for(const g of window._coachGroups)await loadGroupMembers(g.id);
-  }catch(e){console.warn('שגיאה בטעינת קבוצות:',e);}
-}
-
-async function loadGroupMembers(groupId){
-  try{
-    const q=query(collection(db,'group_members'),where('groupId','==',groupId));
-    const snap=await getDocs(q);
-    const athletes=[];
-    for(const m of snap.docs){
-      try{
-        const uid=m.data().athleteUid;
-        const uSnap=await getDoc(doc(db,'users',uid));
-        if(uSnap.exists()){
-          const ud=uSnap.data();
-          athletes.push({uid,nm:ud.displayName||ud.email?.split('@')[0]||'לוחם',email:ud.email||'',sc:ud._latestScore||0,unit:ud._unit||'gen'});
-        }
-      }catch(e){}
-    }
-    window._coachAthletes[groupId]=athletes;
-    localStorage.setItem('cf7_ath_'+groupId,JSON.stringify(athletes));
-    if(typeof renderCoachGroupsUI==='function')renderCoachGroupsUI();
-  }catch(e){console.warn('loadMembers:',e);}
-}
-
-window._createGroup=async function(name){
-  if(!window._fbUID)return null;
-  try{
-    const code='CF-'+Math.random().toString(36).slice(2,8).toUpperCase();
-    const ref=await addDoc(collection(db,'groups'),{name,coachId:window._fbUID,coachName:window._fbUser?.displayName||'מאמן',code,createdAt:serverTimestamp()});
-    await loadCoachGroups(window._fbUID);
-    return{id:ref.id,code,name};
-  }catch(e){console.warn('createGroup:',e);return null;}
-};
-
-window._joinGroup=async function(code){
-  if(!window._fbUID||!code)return{ok:false,msg:'שגיאה'};
-  try{
-    const q=query(collection(db,'groups'),where('code','==',code.toUpperCase().trim()));
-    const snap=await getDocs(q);
-    if(snap.empty)return{ok:false,msg:'קוד לא נמצא'};
-    const g=snap.docs[0];
-    await setDoc(doc(db,'group_members',g.id+'_'+window._fbUID),{groupId:g.id,athleteUid:window._fbUID,coachId:g.data().coachId,joinDate:serverTimestamp()});
-    await updateDoc(doc(db,'users',window._fbUID),{coachId:g.data().coachId,groupId:g.id,groupName:g.data().name});
-    return{ok:true,groupName:g.data().name,coachName:g.data().coachName};
-  }catch(e){return{ok:false,msg:e.message};}
-};
-
-// ── Messages ──
-window._sendMsg=async function(toUid,text,type,groupId){
-  if(!window._fbUID||!text)return false;
-  try{await addDoc(collection(db,'messages'),{to:toUid,from:window._fbUID,fromName:window._fbUser?.displayName||'מאמן',text,type:type||'message',groupId:groupId||'',read:false,ts:serverTimestamp()});return true;}catch(e){return false;}
-};
-
-window._sendGroupMsg=async function(groupId,text,type){
-  if(!window._fbUID||!groupId||!text)return;
-  const athletes=window._coachAthletes[groupId]||[];
-  await Promise.all(athletes.map(a=>addDoc(collection(db,'messages'),{to:a.uid,from:window._fbUID,fromName:window._fbUser?.displayName||'מאמן',text,type:type||'announcement',groupId,read:false,ts:serverTimestamp()})));
-};
-
-let _msgUnsub=null;
-function listenMessages(uid){
-  if(_msgUnsub)_msgUnsub();
-  try{
-    const q=query(collection(db,'messages'),where('to','==',uid),where('read','==',false));
-    _msgUnsub=onSnapshot(q,snap=>{
-      const n=snap.docs.length;
-      const b=document.getElementById('msg-badge');
-      if(b){b.textContent=n>0?n:'';b.style.display=n>0?'block':'none';}
-    });
-  }catch(e){}
-}
 
 
-// ✅ FIX: Real-time announcements listener for athletes
-window._listenAnnouncements = function(uid, groupId) {
-  if (!window._FB || !uid || !groupId) return;
-  try {
-    var q = window._FB.query(
-      window._FB.collection(window._FB.db, 'messages'),
-      window._FB.where('to', '==', uid),
-      window._FB.where('type', '==', 'announcement'),
-      window._FB.orderBy('ts', 'desc'),
-      window._FB.limit(20)
-    );
-    window._FB.onSnapshot(q, function(snap) {
-      var el = document.getElementById('announcements-list');
-      if (!el) return;
-      if (snap.empty) {
-        el.innerHTML = '<div style="text-align:center;color:var(--txt3);padding:20px;font-size:12px">אין הודעות עדיין</div>';
-        return;
-      }
-      el.innerHTML = snap.docs.map(function(d) {
-        var data = d.data();
-        var ts = data.ts?.toDate?.() || new Date();
-        return '<div class="ann-card"><div class="ann-t">' + sanitizeHtml(data.fromName || 'מאמן') + '</div>' +
-               '<div class="ann-m">' + sanitizeHtml(data.text || '') + '</div>' +
-               '<div class="ann-d">' + ts.toLocaleString('he-IL') + '</div></div>';
-      }).join('');
-    });
-  } catch(e) { console.warn('listenAnnouncements:', e); }
-};
-
-window._getMyMessages=async function(){
-  try{const q=query(collection(db,'messages'),where('to','==',window._fbUID),orderBy('ts','desc'),limit(30));const snap=await getDocs(q);return snap.docs.map(d=>({id:d.id,...d.data()}));}catch{return[];}
-};
-
-// ── Leaderboard ──
-window._pushLBScore=async(name,score,unit)=>{if(!window._fbUID)return;try{await setDoc(doc(db,'leaderboard',window._fbUID),{name,score,unit,ts:serverTimestamp()},{merge:true});}catch{}};
-window._pullLBScores=async()=>{try{const q=query(collection(db,'leaderboard'),orderBy('score','desc'),limit(50));const snap=await getDocs(q);return snap.docs.map(d=>({...d.data(),uid:d.id}));}catch{return null;}};
-
-// ── Auth state ──
-onAuthStateChanged(auth,user=>{
-  window._fbUser=user||null;window._fbUID=user?.uid||null;
-  const badge=document.getElementById('fb-badge');
-  const abtn=document.getElementById('auth-top-btn');
-  const dot=document.getElementById('sync-dot');
-  if(user){
-    const name=user.displayName||user.email?.split('@')[0]||'לוחם';
-    if(badge){badge.textContent='👤 '+name;badge.style.display='flex';}
-    if(abtn)abtn.style.display='none';
-    if(dot){dot.style.background='rgba(0,255,136,.3)';dot.title='מחובר ☁️';}
-    syncDown(user.uid);
-  }else{
-    if(badge)badge.style.display='none';
-    if(abtn)abtn.style.display='block';
-    if(dot){dot.style.background='rgba(255,255,255,.1)';dot.title='לא מחובר';}
-    if(!localStorage.getItem('cf7_skip_auth')&&!localStorage.getItem('cf7_onboarded')){
-      // Firebase confirmed no user - show auth modal if not already visible
-    var _am=document.getElementById('auth-modal');
-    if(_am && _am.style.display!=='flex') _am.style.display='flex';
-    if(typeof window.hideSplash==='function') window.hideSplash();
-    }
-  }
-});
-
-window._FB={auth,db,doc,setDoc,getDoc,collection,getDocs,addDoc,updateDoc,query,where,orderBy,limit,serverTimestamp,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,updateProfile,GoogleAuthProvider,signInWithPopup};
-window._fbSignOut=()=>signOut(auth);
-}catch(e){console.warn('שגיאת Firebase:',e);}
-
-</script>
-
-
-
-<!-- GLOBAL MODAL -->
-<div id="modal-bk" onclick="if(event.target===this)closeModal()" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9998;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)">
-  <div id="modal-content" style="background:var(--card2);border:1px solid var(--b2);border-radius:18px 18px 0 0;padding:14px 16px 24px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;position:relative"></div>
-</div>
-
-<!-- ═══ ONBOARDING MODAL ═══ -->
-<div id="onboard-overlay" style="display:none;position:fixed;inset:0;background:rgba(2,4,5,.97);z-index:9999;overflow-y:auto;padding:20px;direction:rtl">
-  <div style="max-width:420px;margin:0 auto;padding-top:16px">
-    <div style="text-align:center;margin-bottom:20px">
-      <div style="font-size:36px;margin-bottom:6px">⚔</div>
-      <div style="font-size:20px;font-weight:900;color:#00ff88">ברוך הבא ל-Combat Fit IL</div>
-      <div style="font-size:12px;color:#7a94b0;margin-top:4px">2 דקות להגדרה</div>
-    </div>
-    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px">
-      <div class="ob-step ob-active" data-s="1">1</div>
-      <div class="ob-step" data-s="2">2</div>
-      <div class="ob-step" data-s="3">3</div>
-    </div>
-    <div id="ob-1">
-      <div style="font-size:14px;font-weight:700;color:#e8eef8;margin-bottom:12px">👤 הפרופיל שלך</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <input id="ob-name" type="text" placeholder="שם מלא" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px;width:100%"/>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <input id="ob-age" type="number" placeholder="גיל" inputmode="numeric" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
-          <input id="ob-weight" type="number" placeholder='משקל ק"ג' inputmode="numeric" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
-        </div>
-        <input id="ob-phone" type="tel" placeholder="טלפון לשיתוף ווטסאפ (אופציונלי)" inputmode="tel" style="padding:12px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:14px;direction:ltr;text-align:left"/>
-          <input id="ob-draft" type="text" placeholder="תאריך גיוס dd/mm/yyyy" style="padding:12px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px;width:100%"/>
-      </div>
-      <button onclick="obNext(1)" style="width:100%;margin-top:14px;padding:14px;background:#00ff88;color:#000;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;min-height:48px">המשך →</button>
-    </div>
-    <div id="ob-2" style="display:none">
-      <div style="font-size:14px;font-weight:700;color:#e8eef8;margin-bottom:12px">🎯 יחידת יעד</div>
-      <div id="ob-unit-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
-      <button onclick="obNext(2)" style="width:100%;margin-top:14px;padding:14px;background:#00ff88;color:#000;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;min-height:48px">המשך →</button>
-    </div>
-    <div id="ob-3" style="display:none">
-      <div style="font-size:14px;font-weight:700;color:#e8eef8;margin-bottom:8px">📊 מבחן כושר ראשוני</div>
-      <div style="font-size:12px;color:#7a94b0;margin-bottom:12px">אופציונלי — ניתן למלא אחר כך</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center">
-          <label style="font-size:12px;color:#7a94b0;white-space:nowrap">ריצה 2K</label>
-          <input id="ob-run" type="text" placeholder="9:30" style="padding:10px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
-        </div>
-        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center">
-          <label style="font-size:12px;color:#7a94b0">מתח</label>
-          <input id="ob-pull" type="number" placeholder="0" inputmode="numeric" style="padding:10px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
-        </div>
-        <div style="display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center">
-          <label style="font-size:12px;color:#7a94b0">שכיבות</label>
-          <input id="ob-push" type="number" placeholder="0" inputmode="numeric" style="padding:10px;border-radius:10px;background:#111620;border:1px solid #1e2d40;color:#e8eef8;font-size:14px"/>
-        </div>
-      </div>
-      <button onclick="obFinish()" style="width:100%;margin-top:14px;padding:14px;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;min-height:48px">⚔ צא לדרך!</button>
-      <button onclick="obSkip()" style="width:100%;margin-top:6px;padding:10px;background:transparent;color:#7a94b0;font-size:12px;border:none;cursor:pointer">דלג</button>
-    </div>
-  </div>
-</div>
-
-<style>
-.ob-step{width:32px;height:32px;border-radius:50%;background:#111620;border:1px solid #1e2d40;color:#7a94b0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
-.ob-active{background:#00ff88!important;color:#000!important;border-color:#00ff88!important}
-
-
-/* ══ RESPONSIVE ══ */
-@supports(padding:env(safe-area-inset-bottom)){.bottom{padding-bottom:max(7px,env(safe-area-inset-bottom))!important;}}
-@media(min-width:600px){.bottom{height:60px;}.bottom .nav{font-size:11px;min-height:60px;}.content{padding-bottom:70px!important;}.pg{max-width:700px;}}
-@media(min-width:1024px){.bottom{height:58px;}.bottom .nav{font-size:12px;}.content{padding-bottom:68px!important;}.pg{max-width:860px;}}
-@media(max-width:360px){.bottom .nav{font-size:8px!important;}.tab{font-size:9px!important;}}
-@media(max-height:450px)and(orientation:landscape){.bottom{height:44px;padding:0!important;}.bottom .nav{font-size:0;min-height:44px;}.content{padding-bottom:48px!important;}}
-@media(prefers-contrast:high){.card{border-width:2px;}.btn{border-width:2px;}}
-/* ════════════════ */
-
-</style>
-
-
-<!-- ✅ v7-FIX: AUTH MODAL — Email/Password Login -->
-<div id="auth-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;flex-direction:column;direction:rtl">
-  <div style="background:var(--card3);border:1px solid var(--b2);border-radius:20px;padding:28px;width:min(340px,90vw);text-align:center;max-height:90vh;overflow-y:auto">
-    <div style="font-size:48px;margin-bottom:12px">🔐</div>
-    <div style="font-size:18px;font-weight:900;color:var(--pri);margin-bottom:4px;font-family:var(--fd)">COMBAT FIT IL</div>
-    <div style="font-size:11px;color:var(--txt2);margin-bottom:20px;letter-spacing:1px">כניסה / הרשמה</div>
-    
-    <input id="auth-email" type="email" placeholder='דוא"ל' style="width:100%;margin-bottom:8px;padding:12px;font-size:14px;border-radius:10px;border:1px solid var(--b2);background:var(--card2);color:var(--txt);text-align:right;direction:rtl"/>
-    <input id="auth-password" type="password" placeholder="סיסמה (6 תווים+)" style="width:100%;margin-bottom:14px;padding:12px;font-size:14px;border-radius:10px;border:1px solid var(--b2);background:var(--card2);color:var(--txt);text-align:right;direction:rtl"/>
-    
-    <button onclick="authSignIn()" style="width:100%;margin-bottom:8px;padding:13px;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#000;font-weight:900;font-size:14px;border:none;border-radius:11px;cursor:pointer;min-height:48px">🔓 כניסה</button>
-    <button onclick="authSignUp()" style="width:100%;margin-bottom:8px;padding:13px;background:linear-gradient(135deg,var(--blue),#0055cc);color:#fff;font-weight:800;font-size:14px;border:none;border-radius:11px;cursor:pointer;min-height:48px">✨ הרשמה חדשה</button>
-    <div style="display:flex;align-items:center;gap:8px;margin:10px 0">
-      <div style="flex:1;height:1px;background:var(--b2)"></div>
-      <span style="font-size:10px;color:var(--txt3)">או</span>
-      <div style="flex:1;height:1px;background:var(--b2)"></div>
-    </div>
-    <button onclick="authGoogle()" style="width:100%;margin-bottom:8px;padding:12px;background:var(--card2);border:1px solid var(--b2);color:var(--txt);font-size:13px;font-weight:700;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      כניסה עם Google
-    </button>
-    <button onclick="authForgotPass()" style="width:100%;margin-bottom:6px;padding:8px;background:transparent;border:none;color:var(--cyan);font-size:11px;cursor:pointer">שכחתי סיסמה</button>
-    <button onclick="authSkip()" style="width:100%;padding:10px;background:transparent;border:1px solid var(--b2);color:var(--txt2);font-size:12px;border-radius:10px;cursor:pointer">⏭ המשך ללא כניסה</button>
-    <div style="font-size:10px;color:var(--txt3);margin-top:10px;text-align:center">בהרשמה אתה מסכים ל<a href="#" onclick="_legalTerms()" style="color:var(--cyan)">תנאי השימוש</a> ול<a href="#" onclick="_legalPrivacy()" style="color:var(--cyan)">מדיניות הפרטיות</a></div>
-    
-    <div id="auth-error" style="color:var(--red);font-size:11px;margin-top:10px;display:none"></div>
-  </div>
-</div>
-
-<div id="coach-login-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border:1px solid var(--b2);border-radius:18px;padding:24px;width:min(340px,90vw);direction:rtl;text-align:center;">
-    <div style="font-size:44px;margin-bottom:6px">&#127894;</div>
-    <div style="font-size:13px;color:var(--purpleL);font-weight:700;margin-bottom:4px">כניסת מאמן</div>
-    <div style="font-size:11px;color:var(--txt3);margin-bottom:14px">אזור מאמנים בלבד</div>
-    <input id="coach-pass-inp" type="password" placeholder="סיסמה"
-      style="width:100%;padding:12px;font-size:18px;text-align:center;letter-spacing:6px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;color:var(--txt);box-sizing:border-box;margin-bottom:10px;"
-      onkeydown="if(event.key==='Enter')submitCoachPass()"/>
-    <button onclick="submitCoachPass()" style="width:100%;margin-bottom:8px;min-height:48px;font-size:15px;font-weight:900;background:var(--pri);color:#000;border:none;border-radius:10px;cursor:pointer;">&#127894; כניסה</button>
-    <button onclick="hideCoachLogin()" style="width:100%;min-height:44px;background:var(--card2);border:1px solid var(--b1);color:var(--txt2);border-radius:10px;cursor:pointer;font-size:13px;">ביטול</button>
-    <div style="margin-top:10px;font-size:10px;color:var(--txt3);">🔑 סיסמה ראשונית: <strong style="color:var(--purpleL)">coach123</strong><br/>לשינוי: כנס כמאמן ← הגדרות מאמן</div>
-  </div>
-</div>
-
-<!-- ✅ PRESALE-FIX: Legal Modal -->
-<div id="legal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;align-items:center;justify-content:center;direction:rtl">
-  <div style="background:var(--card);border:1px solid var(--b2);border-radius:18px;padding:20px;width:min(380px,92vw);max-height:82vh;overflow-y:auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid var(--b2);padding-bottom:10px">
-      <div id="legal-title" style="font-size:14px;font-weight:900;color:var(--pri);font-family:var(--fd)"></div>
-      <button onclick="document.getElementById('legal-modal').style.display='none'" style="background:var(--card3);border:1px solid var(--b2);color:var(--txt);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer">✕</button>
-    </div>
-    <div id="legal-content" style="font-size:12px;line-height:1.9;color:var(--txt2)"></div>
-    <button onclick="document.getElementById('legal-modal').style.display='none'" style="width:100%;margin-top:14px;padding:11px;background:var(--card2);border:1px solid var(--b2);color:var(--txt2);border-radius:10px;cursor:pointer;font-size:12px">סגור</button>
-  </div>
-</div>
-
-<!-- ✅ PRESALE-FIX: Pricing Modal -->
-<div id="pricing-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:10000;align-items:center;justify-content:center;direction:rtl;overflow-y:auto">
-  <div style="background:var(--card);border:1px solid var(--b2);border-radius:20px;padding:20px;width:min(380px,92vw);margin:auto;position:relative">
-    <button onclick="document.getElementById('pricing-modal').style.display='none'" style="position:absolute;top:12px;left:12px;background:var(--card3);border:1px solid var(--b2);color:var(--txt);width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer">✕</button>
-    <div style="text-align:center;margin-bottom:16px;padding-top:4px">
-      <div style="font-size:36px">⚔</div>
-      <div style="font-family:var(--fd);font-size:15px;color:var(--pri);letter-spacing:2px">COMBAT FIT IL</div>
-      <div style="font-size:11px;color:var(--txt3);margin-top:4px">בחר את התוכנית שלך</div>
-    </div>
-    <!-- Free -->
-    <div style="background:var(--card2);border:1px solid var(--b1);border-radius:13px;padding:14px;margin-bottom:10px">
-      <div style="font-family:var(--fd);font-size:11px;color:var(--txt3);letter-spacing:1px;margin-bottom:4px">🆓 חינם לצמיתות</div>
-      <div style="font-family:var(--fd);font-size:26px;color:var(--txt)">₪0 <span style="font-size:11px;color:var(--txt3)">/חודש</span></div>
-      <div style="font-size:11px;color:var(--txt2);margin-top:8px;line-height:1.8">✓ מבחן בר-אור<br>✓ תוכנית שבועית<br>✓ ליגה ציבורית<br>✓ מעקב אימונים<br>✗ AI מאמן<br>✗ קבוצה עם מאמן</div>
-      <button class="btn bs" onclick="document.getElementById('pricing-modal').style.display='none'" style="margin-top:10px">המשך חינם</button>
-    </div>
-    <!-- Athlete Pro -->
-    <div style="background:linear-gradient(135deg,rgba(0,255,136,.08),var(--card2));border:2px solid var(--pri);border-radius:13px;padding:14px;margin-bottom:10px;position:relative">
-      <div style="position:absolute;top:-10px;right:14px;background:var(--pri);color:#000;font-size:10px;font-weight:900;padding:2px 10px;border-radius:10px;font-family:var(--fd)">⭐ פופולרי</div>
-      <div style="font-family:var(--fd);font-size:11px;color:var(--pri);letter-spacing:1px;margin-bottom:4px">💪 ATHLETE PRO</div>
-      <div style="font-family:var(--fd);font-size:26px;color:var(--pri)">₪29 <span style="font-size:11px;color:var(--txt3)">/חודש</span></div>
-      <div style="font-size:11px;color:var(--txt2);margin-top:8px;line-height:1.8">✓ כל מה שבחינם<br>✓ 🤖 AI מאמן ללא הגבלה<br>✓ תוכנית גיבוש מותאמת<br>✓ גיבוי ענן מלא<br>✓ סטטיסטיקות מתקדמות</div>
-      <button class="btn bp" onclick="handleUpgrade('athlete-pro')" style="margin-top:10px">🚀 שדרג עכשיו</button>
-    </div>
-    <!-- Coach Pro -->
-    <div style="background:linear-gradient(135deg,rgba(124,58,237,.08),var(--card2));border:1px solid rgba(124,58,237,.4);border-radius:13px;padding:14px;margin-bottom:10px">
-      <div style="font-family:var(--fd);font-size:11px;color:var(--purpleL);letter-spacing:1px;margin-bottom:4px">🎖 COACH PRO</div>
-      <div style="font-family:var(--fd);font-size:26px;color:var(--purpleL)">₪99 <span style="font-size:11px;color:var(--txt3)">/חודש</span></div>
-      <div style="font-size:11px;color:var(--txt2);margin-top:8px;line-height:1.8">✓ כל מה שב-Athlete Pro<br>✓ עד 50 חניכים בקבוצה<br>✓ דאשבורד מאמן מלא<br>✓ הודעות לחניכים<br>✓ דוחות ביצועים</div>
-      <button class="btn bpur" onclick="handleUpgrade('coach-pro')" style="margin-top:10px">🎖 Coach Pro</button>
-    </div>
-    <button onclick="document.getElementById('pricing-modal').style.display='none'" style="width:100%;padding:10px;background:transparent;border:none;color:var(--txt3);font-size:11px;cursor:pointer">לא עכשיו</button>
-  </div>
-</div>
-
-<!-- ✅ PRESALE-FIX: Support Card (injected by JS into settings tab) -->
-<div id="support-card" style="display:none;background:var(--card2);border:1px solid var(--b1);border-radius:13px;padding:14px;margin:10px;direction:rtl">
-  <div style="font-family:var(--fd);font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px">📞 תמיכה</div>
-  <div style="font-size:12px;color:var(--txt2);line-height:2">
-    <div>✉️ <a href="mailto:support@combatfit.il" style="color:var(--pri)">support@combatfit.il</a></div>
-    <div>💬 <a href="https://wa.me/972500000000" target="_blank" style="color:var(--pri)">WhatsApp תמיכה</a></div>
-    <div>📖 <a href="#" onclick="_legalTerms()" style="color:var(--cyan)">תנאי שימוש</a></div>
-    <div>🔒 <a href="#" onclick="_legalPrivacy()" style="color:var(--cyan)">מדיניות פרטיות</a></div>
-  </div>
-  <div style="font-size:10px;color:var(--txt3);margin-top:10px;text-align:center">Combat Fit IL v9 © 2025</div>
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded",function(){
-  if(!localStorage.getItem("cf7_coach_pass"))localStorage.setItem("cf7_coach_pass","coach123");
-  
-  var isNewUser = !localStorage.getItem("cf7_onboarded") && 
-                  !localStorage.getItem("cf7_skip_auth") && 
-                  !localStorage.getItem("cf7p");
-  
-  if(isNewUser){
-    // New user: show auth modal immediately, splash hides when modal appears
-    var m = document.getElementById("auth-modal");
-    if(m){ m.style.display="flex"; }
-    // Hide splash after modal is visible
-    setTimeout(function(){ if(typeof window.hideSplash==="function") window.hideSplash(); }, 400);
-  } else {
-    // Returning user: hide splash quickly
-    setTimeout(function(){ if(typeof window.hideSplash==="function") window.hideSplash(); }, 600);
-  }
-});
-</script>
-
-<!-- PWA Install Banner -->
-<div id="pwa-banner" style="display:none;position:fixed;bottom:80px;left:10px;right:10px;background:linear-gradient(135deg,#0a1628,#111e35);border:1px solid rgba(0,255,136,.3);border-radius:16px;padding:14px 16px;z-index:8000;direction:rtl;box-shadow:0 8px 32px rgba(0,0,0,.6);animation:slideUp .4s ease">
-  <div style="display:flex;align-items:center;gap:12px">
-    <div style="font-size:32px">⚔</div>
-    <div style="flex:1">
-      <div style="font-size:13px;font-weight:900;color:#fff;margin-bottom:2px">התקן את Combat Fit</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.6)">גישה מהמסך הבית — ללא דפדפן</div>
-    </div>
-    <button onclick="installPWA()" style="padding:8px 14px;background:linear-gradient(135deg,#00ff88,#00e5ff);color:#000;font-weight:900;font-size:12px;border:none;border-radius:10px;cursor:pointer">התקן</button>
-    <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer;padding:4px">✕</button>
-  </div>
-</div>
-<style>@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}</style>
-<script>
-var _pwaPrompt=null;
-window.addEventListener('beforeinstallprompt',function(e){
-  e.preventDefault(); _pwaPrompt=e;
-  setTimeout(function(){
-    if(!localStorage.getItem('cf7_pwa_installed')&&!localStorage.getItem('cf7_pwa_dismissed')){
-      var b=document.getElementById('pwa-banner');if(b)b.style.display='block';
-    }
-  },30000);
-});
-function installPWA(){
-  if(_pwaPrompt){
-    _pwaPrompt.prompt();
-    _pwaPrompt.userChoice.then(function(c){
-      if(c.outcome==='accepted'){
-        localStorage.setItem('cf7_pwa_installed','1');
-        if(typeof notify==='function')notify('✅ Combat Fit הותקן!','p');
-      } else {
-        localStorage.setItem('cf7_pwa_dismissed','1');
-      }
-      document.getElementById('pwa-banner').style.display='none';
-      _pwaPrompt=null;
-    });
-  }
-}
-window.addEventListener('appinstalled',function(){
-  localStorage.setItem('cf7_pwa_installed','1');
-  document.getElementById('pwa-banner').style.display='none';
-});
-</script>
-
+</body>
+</html>
 </body>
 </html>
