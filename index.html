@@ -2314,6 +2314,8 @@ function toggleCM(){
 }
 
 function openCoachLoginModal(){
+  // Ensure default password is always set
+  if(!localStorage.getItem('cf7_coach_pass')) localStorage.setItem('cf7_coach_pass','coach1234');
   const body=`
   <div style="text-align:center;padding:12px 0 16px">
     <div style="font-size:48px;margin-bottom:8px">🎖</div>
@@ -2321,63 +2323,46 @@ function openCoachLoginModal(){
     <div style="font-size:11px;color:var(--txt3);margin-bottom:16px">אזור זה מיועד למאמנים בלבד</div>
   </div>
   <label>🔐 סיסמת מאמן</label>
-  <input id="coach-pass-inp-old" type="password" placeholder="הזן סיסמה" style="font-size:18px;text-align:center;letter-spacing:6px"
+  <input id="coach-pass-inp" type="password" placeholder="הזן סיסמה" style="font-size:18px;text-align:center;letter-spacing:6px"
     onkeydown="if(event.key==='Enter')submitCoachPass()"/>
   <button class="btn bp" style="margin-top:10px" onclick="submitCoachPass()">🎖 כניסה</button>
   <button class="btn bs" style="margin-top:6px" onclick="closeModal()">ביטול</button>
   <div style="margin-top:14px;padding:10px;background:rgba(124,58,237,.06);border-radius:9px;border:1px solid rgba(124,58,237,.15)">
     <div style="font-size:10px;color:var(--txt3);line-height:1.6">
-      🔑 סיסמה: <strong style="color:var(--purpleL)">coach1234</strong><br/>💡 לשינוי: הגדרות מאמן ← שנה סיסמה
+      🔑 סיסמה ברירת מחדל: <strong style="color:var(--purpleL)">coach1234</strong><br/>💡 לשינוי: הגדרות מאמן ← שנה סיסמה
     </div>
   </div>`;
   openModal('🔐 אימות מאמן',body);
-  setTimeout(()=>document.getElementById('coach-pass-inp-old')?.focus(),100);
+  setTimeout(function(){var i=document.getElementById('coach-pass-inp');if(i)i.focus();},150);
 }
 
 function submitCoachPass(){
   if(!checkLoginBruteForce()) return;
-  // Brute force check
-  if (!checkLoginBruteForce()) return;
 
+  // Support both modal locations (inline overlay + openModal)
   var inp = document.getElementById('coach-pass-inp');
+  if (!inp) { inp = document.getElementById('coach-pass-inp-old'); }
   if (!inp) return;
-  var pass = inp.value;
-  if (!pass || pass.length < 1) return;
+  var pass = (inp.value||'').trim();
+  if (!pass) return;
 
-  var stored = localStorage.getItem(typeof COACH_PASS_KEY!=='undefined' ? COACH_PASS_KEY : 'cf7cp') || '';
-  // If no password set yet, use environment default (not shown in UI)
-  if (!stored) {
-    stored = localStorage.getItem('cf7_coach_pass_hash') || 'cf7_coach_pass';
-  }
+  // Always read from localStorage; default is coach1234
+  var stored = localStorage.getItem('cf7_coach_pass') || 'coach1234';
 
-  // Accept new default or stored password
-  if (pass === 'coach1234' || pass === stored || (stored==='' && pass==='cf7_coach_pass')) {
+  if (pass === stored || pass === 'coach1234') {
     recordSuccessfulLogin();
-    hideCoachLogin();
+    closeModal();
+    // Hide any standalone overlay too
+    var ov = document.getElementById('coach-login-overlay');
+    if(ov) ov.style.display = 'none';
     coachMode = true;
-    var navA = document.getElementById('nav-athlete');
-    var navC = document.getElementById('nav-coach');
-    if (navA) navA.style.display = 'none';
-    if (navC) navC.style.display = 'grid';
-    var b = document.getElementById('mode-btn');
-    if (b) b.textContent = '\u2694 \u05e1\u05e4\u05d5\u05e8\u05d8\u05d0\u05d9';
-    if (typeof showPg === 'function') showPg('coach');
-    try {
-      if (!window._coachGroups || !window._coachGroups.length) {
-        window._coachAthletes = window._coachAthletes || {};
-        window._coachAthletes['local'] = getAthletes();
-        window._coachGroups = [{id:'local', name:'\u05d4\u05e7\u05d1\u05d5\u05e6\u05d4', code:'LOCAL'}];
-        _activeGid = 'local';
-      }
-      if (typeof renderCoachGroupsUI === 'function') renderCoachGroupsUI();
-    } catch(e) {}
-    try { if (typeof renderCoachGroup === 'function') renderCoachGroup(); } catch(e) {}
-    if (typeof notify === 'function') notify('\ud83c\udf96 \u05d1\u05e8\u05d5\u05da \u05d4\u05d1\u05d0 \u05de\u05d0\u05de\u05df!', 'p');
+    initCM();
+    if (typeof notify === 'function') notify('🎖 ברוך הבא מאמן!', 'p');
     if (typeof haptic === 'function') haptic('success');
   } else {
     inp.value = '';
     inp.style.borderColor = 'var(--red)';
-    setTimeout(function() { if (inp) inp.style.borderColor = ''; }, 1500);
+    setTimeout(function() { if(inp) inp.style.borderColor = ''; }, 1500);
     recordFailedLogin();
   }
 }
@@ -2606,6 +2591,8 @@ function refreshDash(){
   renderHeatmap();
   genQuickWorkout();
 }
+// alias
+var renderDash = refreshDash;
 
 function acceptChallenge(){
   var key='cf7_ch_'+Math.floor(Date.now()/864e5);
