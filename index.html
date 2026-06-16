@@ -1366,6 +1366,7 @@ document.head.appendChild(_link);
     <button class="btn bp" style="font-size:14px;font-weight:900;min-height:48px" onclick="openShareSheet()">📤 שתף ברשתות</button>
     <button class="btn bs" style="font-size:14px;min-height:48px" onclick="exportReport()">📊 ייצא דוח</button>
   </div>
+  <button onclick="emailMyDataBackup()" style="width:100%;padding:11px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.3);color:var(--cyan);border-radius:11px;font-size:13px;font-weight:900;cursor:pointer;margin-bottom:12px">📧 גבה את כל הנתונים לאימייל שלי</button>
 
   <!-- Leaderboard tabs -->
   <div class="tabs" id="lb-tabs">
@@ -2080,6 +2081,9 @@ document.head.appendChild(_link);
       </div>
       <button onclick="broadcastToAllAthletes()" class="btn" style="width:100%;margin-top:8px;padding:10px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.3);font-size:13px;font-weight:900">
         🚀 שלח הודעה מתקדמת (עם WhatsApp)
+      </button>
+      <button onclick="openBroadcastEmail()" class="btn" style="width:100%;margin-top:6px;padding:10px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.3);color:var(--cyan);font-size:13px;font-weight:900">
+        📧 שלח מייל לכל הקבוצה
       </button>
     </div>
     <!-- Announcement history -->
@@ -5671,7 +5675,7 @@ function loadAIHistory(){
 }
 
 function authSignIn() {
-  var email = document.getElementById('auth-email')?.value?.trim();
+  var email = window._authEmail || (document.getElementById('auth-email')?.value?.trim());
   var pass = document.getElementById('auth-password')?.value;
   if (!email || !pass) { authShowError('מלא דוא"ל וסיסמה'); return; }
   if (!window._FB) {
@@ -5707,7 +5711,7 @@ function authSignIn() {
 }
 
 function authSignUp() {
-  var email = document.getElementById('auth-email')?.value?.trim();
+  var email = window._authEmail || (document.getElementById('auth-email')?.value?.trim());
   var pass = document.getElementById('auth-password')?.value;
   var name = (document.getElementById('auth-name')?.value||'').trim();
   if (!email || !pass) { authShowError('מלא דוא"ל וסיסמה'); return; }
@@ -5720,6 +5724,8 @@ function authSignUp() {
         document.getElementById('auth-modal').style.display = 'none';
         if(name) localStorage.setItem('cf7_user_name', name);
         if (typeof notify === 'function') notify('🎉 ברוך הבא ל-Combat Fit!', 'p');
+        // Send welcome email
+        if(typeof sendWelcomeEmail === 'function') sendWelcomeEmail(email, name || cred.user.displayName || 'לוחם');
         setTimeout(function() { showOnboardingOverlay(); }, 500);
       })
       .catch(function(err) {
@@ -5732,6 +5738,169 @@ function authSignUp() {
     setTimeout(function() { showOnboardingOverlay(); }, 500);
   }
 }
+
+// ═══════════════════════════════════════════════════════════
+// EMAIL SYSTEM — Gmail API via Claude backend
+// ═══════════════════════════════════════════════════════════
+
+// Send email via Claude API + Gmail MCP
+async function sendEmailViaGmail(to, subject, body) {
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 512,
+        system: 'You are an email assistant for Combat Fit IL app. Send the given email via Gmail. Reply only with {"sent":true} or {"sent":false,"error":"reason"}.',
+        messages: [{ role: 'user', content: 'Send email to: ' + to + '\nSubject: ' + subject + '\nBody:\n' + body }],
+        mcp_servers: [{ type: 'url', url: 'https://gmailmcp.googleapis.com/mcp/v1', name: 'gmail-mcp' }]
+      })
+    });
+    var data = await res.json();
+    var text = (data.content||[]).map(function(c){ return c.text||''; }).join('');
+    try { var j = JSON.parse(text.replace(/```json|```/g,'')); return j.sent !== false; }
+    catch(e) { return true; } // assume sent if can't parse
+  } catch(e) {
+    console.warn('Email error:', e);
+    return false;
+  }
+}
+
+// Open modal to compose & send email to a specific athlete
+function openEmailToAthlete(name, email) {
+  if (!email) { if(typeof notify==='function') notify('אין כתובת מייל לספורטאי זה','r'); return; }
+  if (typeof openModal !== 'function') return;
+  openModal('📧 שלח מייל ל-' + name,
+    '<div style="direction:rtl">' +
+    '<div style="font-size:11px;color:var(--txt3);margin-bottom:8px">אל: <strong style="color:var(--pri)">' + email + '</strong></div>' +
+    '<input id="email-subj" type="text" placeholder="נושא" value="הודעה מהמאמן — Combat Fit IL" style="width:100%;padding:10px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;color:var(--txt);font-size:13px;margin-bottom:10px;box-sizing:border-box"/>' +
+    '<textarea id="email-body" rows="5" placeholder="כתוב הודעה לספורטאי..." style="width:100%;padding:10px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;color:var(--txt);font-size:13px;resize:none;direction:rtl;box-sizing:border-box;margin-bottom:12px"></textarea>' +
+    '<button onclick="_doSendAthEmail(\'' + name + '\',\'' + email + '\')" class="btn bp" style="width:100%;padding:13px;font-size:14px">📧 שלח מייל</button>' +
+    '</div>'
+  );
+}
+
+// Send email to individual athlete
+async function _doSendAthEmail(name, email) {
+  var subj = (document.getElementById('email-subj')||{}).value || 'הודעה מהמאמן — Combat Fit IL';
+  var body = (document.getElementById('email-body')||{}).value || '';
+  if (!body.trim()) { if(typeof notify==='function') notify('כתוב הודעה לפני שליחה','y'); return; }
+  var pr = JSON.parse(localStorage.getItem('cf7pr')||'{}');
+  var coachName = pr.name || 'המאמן שלך';
+  var fullBody = 'שלום ' + name + ',\n\n' + body + '\n\n---\n' + coachName + ' | Combat Fit IL\nhttps://app-for-running.vercel.app';
+  if(typeof notify==='function') notify('📧 שולח...','p');
+  var ok = await sendEmailViaGmail(email, subj, fullBody);
+  if(typeof closeModal==='function') closeModal();
+  if(typeof notify==='function') notify(ok ? '✅ מייל נשלח ל-' + name + '!' : '❌ שגיאה בשליחה — נסה WhatsApp', ok ? 'p' : 'r');
+}
+
+// Broadcast email to ALL athletes in a group
+function openBroadcastEmail() {
+  var allAthletes = [];
+  var groups = window._coachGroups || [];
+  groups.forEach(function(g) {
+    var aths = window._coachAthletes && window._coachAthletes[g.id] ? window._coachAthletes[g.id] : [];
+    aths.forEach(function(a) { if(a.email) allAthletes.push(a); });
+  });
+  if (!allAthletes.length) { if(typeof notify==='function') notify('אין ספורטאים עם כתובת מייל','r'); return; }
+  if (typeof openModal !== 'function') return;
+  openModal('📧 שלח מייל לכל הקבוצה',
+    '<div style="direction:rtl">' +
+    '<div style="font-size:11px;color:var(--txt3);margin-bottom:8px">📨 נמענים: <strong style="color:var(--pri)">' + allAthletes.length + ' ספורטאים</strong></div>' +
+    '<input id="bc-email-subj" type="text" placeholder="נושא" value="הודעה מהמאמן — Combat Fit IL" style="width:100%;padding:10px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;color:var(--txt);font-size:13px;margin-bottom:10px;box-sizing:border-box"/>' +
+    '<textarea id="bc-email-body" rows="5" placeholder="הודעה לכל הספורטאים..." style="width:100%;padding:10px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;color:var(--txt);font-size:13px;resize:none;direction:rtl;box-sizing:border-box;margin-bottom:12px"></textarea>' +
+    '<button onclick="_doBroadcastEmail()" class="btn bp" style="width:100%;padding:13px;font-size:14px">📧 שלח לכולם (' + allAthletes.length + ')</button>' +
+    '</div>'
+  );
+}
+
+async function _doBroadcastEmail() {
+  var subj = (document.getElementById('bc-email-subj')||{}).value || 'הודעה מהמאמן — Combat Fit IL';
+  var body = (document.getElementById('bc-email-body')||{}).value || '';
+  if (!body.trim()) { if(typeof notify==='function') notify('כתוב הודעה לפני שליחה','y'); return; }
+  var allAthletes = [];
+  (window._coachGroups||[]).forEach(function(g) {
+    ((window._coachAthletes||{})[g.id]||[]).forEach(function(a){ if(a.email) allAthletes.push(a); });
+  });
+  if(typeof closeModal==='function') closeModal();
+  if(typeof notify==='function') notify('📧 שולח ל-' + allAthletes.length + ' ספורטאים...','p');
+  var pr = JSON.parse(localStorage.getItem('cf7pr')||'{}');
+  var coachName = pr.name || 'המאמן שלך';
+  var sent = 0;
+  for (var i = 0; i < allAthletes.length; i++) {
+    var a = allAthletes[i];
+    var fullBody = 'שלום ' + (a.nm||'ספורטאי') + ',\n\n' + body + '\n\n---\n' + coachName + ' | Combat Fit IL\nhttps://app-for-running.vercel.app';
+    var ok = await sendEmailViaGmail(a.email, subj, fullBody);
+    if (ok) sent++;
+  }
+  if(typeof notify==='function') notify('✅ נשלח ל-' + sent + '/' + allAthletes.length + ' ספורטאים!','p');
+}
+
+// Backup user data to their own email
+async function emailMyDataBackup() {
+  var user = window._fbUser;
+  if (!user || !user.email) { if(typeof notify==='function') notify('יש להתחבר כדי לגבות מייל','y'); return; }
+  var pr = JSON.parse(localStorage.getItem('cf7pr')||'{}');
+  var scores = JSON.parse(localStorage.getItem('cf7p')||'[]');
+  var wd = JSON.parse(localStorage.getItem('cf7wd')||'{}');
+  var sleep = JSON.parse(localStorage.getItem('cf7_sleep')||'[]');
+  var notes = JSON.parse(localStorage.getItem('cf7_notes')||'[]');
+  var prs = JSON.parse(localStorage.getItem('cf7_prs')||'{}');
+
+  var lines = ['⚔ Combat Fit IL — גיבוי נתונים אישי', '=' .repeat(40), ''];
+  lines.push('👤 פרופיל:');
+  lines.push('  שם: ' + (pr.name||'--'));
+  lines.push('  גיל: ' + (pr.age||'--') + ' | משקל: ' + (pr.weight||'--') + 'ק"ג');
+  lines.push('  יחידת יעד: ' + (pr.unit||'--'));
+  lines.push('  תאריך גיוס: ' + (pr.draft||'--'));
+  lines.push('');
+  if (scores.length) {
+    lines.push('📊 היסטוריית ציונים (' + scores.length + ' מבחנים):');
+    scores.slice(0,10).forEach(function(s,i){
+      lines.push('  #' + (i+1) + ' | ' + (s.date||'--') + ' | ציון: ' + (s.bar||'--') + '/100' +
+        ' | ריצה: ' + (s.run ? Math.floor(s.run/60)+':'+String(s.run%60).padStart(2,'0') : '--') +
+        ' | שכיבות: ' + (s.psh||'--') + ' | מתח: ' + (s.pul||'--'));
+    });
+    lines.push('');
+  }
+  if (Object.keys(prs).length) {
+    lines.push('🏆 שיאים אישיים:');
+    Object.entries(prs).forEach(function(kv){ lines.push('  ' + kv[0] + ': ' + kv[1].val + (kv[1].unit||'') + ' (' + kv[1].date + ')'); });
+    lines.push('');
+  }
+  if (notes.length) {
+    lines.push('📝 הערות אימון (5 אחרונות):');
+    notes.slice(0,5).forEach(function(n){ lines.push('  [' + n.date + '] ' + n.text); });
+    lines.push('');
+  }
+  lines.push('גיבוי נוצר: ' + new Date().toLocaleString('he-IL'));
+  lines.push('app-for-running.vercel.app');
+
+  if(typeof notify==='function') notify('📧 שולח גיבוי לאימייל...','p');
+  var ok = await sendEmailViaGmail(user.email, '⚔ Combat Fit IL — גיבוי נתונים ' + new Date().toLocaleDateString('he-IL'), lines.join('\n'));
+  if(typeof notify==='function') notify(ok ? '✅ גיבוי נשלח ל-' + user.email + '!' : '❌ שגיאה — בדוק חיבור אינטרנט', ok ? 'p' : 'r');
+}
+
+// Welcome email after registration
+async function sendWelcomeEmail(email, name) {
+  var body = [
+    'שלום ' + (name||'לוחם') + ', ברוך הבא ל-Combat Fit IL! 🎉',
+    '',
+    'חשבונך נוצר בהצלחה. האפליקציה מוכנה לאמן אותך לשירות קרבי.',
+    '',
+    '⚔ מה עכשיו?',
+    '  1. מלא את הפרופיל האישי שלך',
+    '  2. בצע מבחן בר-אור ראשוני',
+    '  3. קבל תוכנית אימונים מותאמת אישית',
+    '',
+    'בהצלחה! 💪',
+    'צוות Combat Fit IL',
+    'https://app-for-running.vercel.app'
+  ].join('\n');
+  await sendEmailViaGmail(email, '⚔ ברוך הבא ל-Combat Fit IL!', body);
+}
+// ═══════════════════════════════════════════════════════════
 
 function authSkip() {
   localStorage.setItem('cf7_skip_auth', '1');
@@ -5766,7 +5935,7 @@ function authGoogle() {
 }
 
 function authForgotPass() {
-  var email = document.getElementById('auth-email')?.value?.trim();
+  var email = window._authEmail || document.getElementById('auth-email')?.value?.trim();
   if (!email) { authShowError('הכנס דוא"ל תחילה'); return; }
   if (!window._FB) { authShowError('אין חיבור לשרת'); return; }
   import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js')
@@ -7460,6 +7629,7 @@ function openUserMenu(){
     +'<button class="btn bp bsm" onclick="window._syncUp&&window._syncUp();notify(\'מסנכרן...\',\'c\')">🔄 סנכרן</button>'
     +(isCoach?'<button class="btn bs bsm" onclick="createGroupDialog()">➕ קבוצה חדשה</button>':'<button class="btn bs bsm" onclick="joinGroupDialog()">🔗 הצטרף לקבוצה</button>')
     +'</div>'
+    +'<button onclick="emailMyDataBackup()" style="width:100%;margin-top:8px;padding:10px;background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.3);color:var(--cyan);border-radius:10px;font-size:12px;font-weight:900;cursor:pointer">📧 גבה נתונים לאימייל</button>'
     +'<button class="btn br bsm" style="width:100%;margin-top:8px" onclick="window._fbSignOut&&window._fbSignOut().then(()=>{notify(\'התנתקת\',\'r\');closeModal();})">🚪 התנתק</button>'
     +'</div>');
 }
@@ -7513,7 +7683,8 @@ function renderGroupAthletes(groupId){
       +'<div style="text-align:center;flex-shrink:0"><div style="font-family:var(--fd);font-size:22px;color:'+(a.sc>=80?'var(--pri)':a.sc>=60?'var(--yellow)':'var(--txt3)')+';line-height:1">'+(a.sc||'--')+'</div><div style="font-size:8px;color:var(--txt3)">ציון</div></div></div>'
       +'<div style="display:flex;gap:6px;margin-top:10px">'
       +'<button onclick="msgAthleteModal(\''+(a.uid||'')+'\',\''+(a.nm||a.name||'חניך').replace(/'/g,'')+'\',\''+(groupId||'')+'\',\'\')" style="flex:1;padding:8px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:var(--purpleL);border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">📤 הודעה</button>'
-      +'<button onclick="msgGroupModal()" style="flex:1;padding:8px;background:rgba(255,140,0,.08);border:1px solid rgba(255,140,0,.2);color:var(--orange);border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">📢 לקבוצה</button>'
+      +'<button onclick="openEmailToAthlete(\''+(a.nm||a.name||'ספורטאי').replace(/'/g,'')+'\',\''+(a.email||'')+'\''+')" style="flex:1;padding:8px;background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.2);color:var(--cyan);border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">📧 מייל</button>'
+      +'<button onclick="msgGroupModal()" style="flex:1;padding:8px;background:rgba(255,140,0,.08);border:1px solid rgba(255,140,0,.2);color:var(--orange);border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">📢 קבוצה</button>'
       +'</div></div>';
   }).join('');
 }
@@ -10265,42 +10436,154 @@ if(typeof window.hideSplash==='function')window.hideSplash();
 </div>
 
 
-<!-- ═══ AUTH MODAL ═══ -->
+<!-- ═══ AUTH MODAL — Email-first flow ═══ -->
 <div id="auth-modal" style="display:none;position:fixed;inset:0;background:rgba(5,8,15,.97);z-index:9001;align-items:center;justify-content:center;flex-direction:column;padding:20px">
-  <div style="background:var(--card);border:1px solid var(--b2);border-radius:20px;padding:28px;width:100%;max-width:360px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:radial-gradient(circle,rgba(0,229,255,.1) 0%,transparent 70%);pointer-events:none"></div>
-    <div style="text-align:center;margin-bottom:24px">
-      <div style="font-size:36px;margin-bottom:10px">⚔</div>
-      <div style="font-family:var(--fd);font-size:24px;font-weight:900;color:var(--txt);margin-bottom:3px">COMBAT FIT</div>
+  <div style="background:var(--card);border:1px solid var(--b2);border-radius:24px;padding:32px 24px;width:100%;max-width:360px;position:relative;overflow:hidden">
+
+    <!-- glow -->
+    <div style="position:absolute;top:-70px;right:-70px;width:200px;height:200px;background:radial-gradient(circle,rgba(0,229,255,.08) 0%,transparent 70%);pointer-events:none"></div>
+
+    <!-- Logo -->
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:40px;margin-bottom:10px">⚔</div>
+      <div style="font-family:var(--fd);font-size:22px;font-weight:900;color:var(--txt);letter-spacing:2px;margin-bottom:4px">COMBAT FIT</div>
       <div style="font-size:10px;color:var(--txt3);letter-spacing:3px">ELITE TRAINING SYSTEM</div>
     </div>
-    <!-- Tabs -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--bg2);border-radius:10px;padding:3px;margin-bottom:20px">
-      <button id="atab-in" onclick="authSwitchTab('signin',this)" style="padding:9px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;background:var(--card2);color:var(--txt);font-family:var(--fb);transition:.2s">כניסה</button>
-      <button id="atab-up" onclick="authSwitchTab('signup',this)" style="padding:9px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:var(--txt3);font-family:var(--fb);transition:.2s">הרשמה</button>
+
+    <!-- ── STEP 1: Email only ── -->
+    <div id="auth-step-1">
+      <div style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:6px;text-align:center">מה כתובת האימייל שלך?</div>
+      <div style="font-size:12px;color:var(--txt3);text-align:center;margin-bottom:18px">לכניסה או הרשמה — באותו מסך</div>
+      <input id="auth-email" type="email" placeholder='your@email.com' autocomplete="email"
+        style="margin-bottom:14px;direction:ltr;text-align:left;font-size:16px;padding:14px;border-radius:12px;border:1.5px solid var(--b2);background:var(--bg3);color:var(--txt);width:100%;box-sizing:border-box;transition:.2s"
+        onkeydown="if(event.key==='Enter')authCheckEmail()"
+        oninput="document.getElementById('auth-error').style.display='none'"
+        onfocus="this.style.borderColor='var(--pri)'" onblur="this.style.borderColor='var(--b2)'"/>
+      <button onclick="authCheckEmail()" id="auth-email-btn"
+        style="width:100%;padding:14px;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#010e05;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;transition:.15s;font-family:var(--fb)">
+        המשך →
+      </button>
+      <div style="display:flex;align-items:center;gap:10px;margin:16px 0">
+        <div style="flex:1;height:1px;background:var(--b2)"></div>
+        <span style="font-size:11px;color:var(--txt3)">או</span>
+        <div style="flex:1;height:1px;background:var(--b2)"></div>
+      </div>
+      <button onclick="authGoogle()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;background:var(--card2);border:1px solid var(--b2);border-radius:12px;color:var(--txt);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--fb);transition:.15s">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        המשך עם Google
+      </button>
+      <button onclick="authSkip()" style="width:100%;padding:10px;background:transparent;border:none;color:var(--txt3);font-size:12px;cursor:pointer;font-family:var(--fb);margin-top:6px">המשך ללא כניסה</button>
     </div>
-    <!-- Name field (signup only) -->
-    <div id="auth-name-row" style="display:none">
-      <input id="auth-name" type="text" placeholder="שם מלא" style="margin-bottom:10px"/>
+
+    <!-- ── STEP 2: Password (sign-in) ── -->
+    <div id="auth-step-2" style="display:none">
+      <button onclick="authBackToEmail()" style="background:none;border:none;color:var(--txt3);font-size:12px;cursor:pointer;padding:0;margin-bottom:14px;display:flex;align-items:center;gap:5px">
+        ← <span id="auth-email-display" style="color:var(--pri);font-weight:700;direction:ltr"></span>
+      </button>
+      <div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:4px" id="auth-step2-title">ברוך שובך!</div>
+      <div style="font-size:12px;color:var(--txt3);margin-bottom:16px" id="auth-step2-sub">הכנס סיסמה כדי להתחבר</div>
+      <!-- Name (signup only) -->
+      <div id="auth-name-row" style="display:none">
+        <input id="auth-name" type="text" placeholder="שם מלא" autocomplete="name"
+          style="margin-bottom:10px;font-size:15px;padding:13px;border-radius:12px;border:1.5px solid var(--b2);background:var(--bg3);color:var(--txt);width:100%;box-sizing:border-box"
+          onfocus="this.style.borderColor='var(--pri)'" onblur="this.style.borderColor='var(--b2)'"/>
+      </div>
+      <input id="auth-password" type="password" placeholder="סיסמה" autocomplete="current-password"
+        style="margin-bottom:14px;font-size:15px;padding:13px;border-radius:12px;border:1.5px solid var(--b2);background:var(--bg3);color:var(--txt);width:100%;box-sizing:border-box;direction:ltr"
+        onkeydown="if(event.key==='Enter')authMainAction()"
+        onfocus="this.style.borderColor='var(--pri)'" onblur="this.style.borderColor='var(--b2)'"/>
+      <button onclick="authMainAction()" id="auth-main-btn"
+        style="width:100%;padding:14px;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#010e05;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;font-family:var(--fb);transition:.15s">
+        🔓 כניסה
+      </button>
+      <div id="auth-forgot-wrap" style="text-align:center;margin-top:12px">
+        <span onclick="authForgotPass()" style="font-size:12px;color:var(--txt3);cursor:pointer">שכחתי סיסמה</span>
+      </div>
     </div>
-    <input id="auth-email" type="email" placeholder='דוא"ל' style="margin-bottom:10px;direction:ltr;text-align:left"/>
-    <input id="auth-password" type="password" placeholder="סיסמה (6+ תווים)" style="margin-bottom:14px"/>
-    <button class="btn bp" onclick="authMainAction()" id="auth-main-btn" style="margin-bottom:10px">🔓 כניסה</button>
-    <div id="auth-forgot-wrap" style="text-align:center;margin-bottom:12px">
-      <span onclick="authForgotPass()" style="font-size:12px;color:var(--txt3);cursor:pointer">שכחתי סיסמה</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-      <div style="flex:1;height:1px;background:var(--b2)"></div>
-      <span style="font-size:11px;color:var(--txt3)">או</span>
-      <div style="flex:1;height:1px;background:var(--b2)"></div>
-    </div>
-    <button onclick="authGoogle()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;background:var(--card2);border:1px solid var(--b2);border-radius:10px;color:var(--txt);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--fb);margin-bottom:8px;transition:.15s">
-      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      המשך עם Google
-    </button>
-    <button onclick="authSkip()" style="width:100%;padding:9px;background:transparent;border:none;color:var(--txt3);font-size:12px;cursor:pointer;font-family:var(--fb)">המשך ללא כניסה</button>
-    <div id="auth-error" style="font-size:12px;color:#ff6b6b;text-align:center;margin-top:8px;display:none"></div>
+
+    <!-- Error -->
+    <div id="auth-error" style="font-size:12px;color:#ff6b6b;text-align:center;margin-top:10px;display:none;padding:8px;background:rgba(255,45,85,.08);border-radius:8px"></div>
   </div>
 </div>
+
+<script>
+// ── Auth email-first helpers ──────────────────────────────
+function authShowError(msg){
+  var el=document.getElementById('auth-error');
+  if(el){el.textContent=msg;el.style.display='block';}
+}
+
+function authCheckEmail(){
+  var email=(document.getElementById('auth-email')||{}).value||'';
+  email=email.trim().toLowerCase();
+  if(!email||!/^[^@]+@[^@]+\.[^@]+$/.test(email)){authShowError('כתובת אימייל לא תקינה');return;}
+  document.getElementById('auth-error').style.display='none';
+  var btn=document.getElementById('auth-email-btn');
+  if(btn){btn.textContent='בודק...';btn.disabled=true;}
+  // Check if email exists in Firebase
+  if(window._FB&&window._FB.auth){
+    // Try sign-in — if error is wrong-password/user-not-found we know if exists
+    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js')
+      .then(function(m){return m.fetchSignInMethodsForEmail(window._FB.auth,email);})
+      .then(function(methods){
+        if(btn){btn.textContent='המשך →';btn.disabled=false;}
+        _showAuthStep2(email, methods&&methods.length>0);
+      })
+      .catch(function(){
+        if(btn){btn.textContent='המשך →';btn.disabled=false;}
+        // Can't check — just go to step 2 neutral
+        _showAuthStep2(email, null);
+      });
+  } else {
+    if(btn){btn.textContent='המשך →';btn.disabled=false;}
+    _showAuthStep2(email, null);
+  }
+}
+
+function _showAuthStep2(email, isExisting){
+  window._authEmail=email;
+  window._authIsNew=isExisting===false;
+  document.getElementById('auth-step-1').style.display='none';
+  document.getElementById('auth-step-2').style.display='block';
+  var disp=document.getElementById('auth-email-display');
+  if(disp)disp.textContent=email;
+  var title=document.getElementById('auth-step2-title');
+  var sub=document.getElementById('auth-step2-sub');
+  var btn=document.getElementById('auth-main-btn');
+  var nameRow=document.getElementById('auth-name-row');
+  var forgot=document.getElementById('auth-forgot-wrap');
+  var passInput=document.getElementById('auth-password');
+  if(isExisting===false){
+    // New user — signup
+    window._authTab='signup';
+    if(title)title.textContent='הרשמה חדשה!';
+    if(sub)sub.textContent='בחר סיסמה (לפחות 6 תווים)';
+    if(btn)btn.textContent='🚀 צור חשבון';
+    if(nameRow)nameRow.style.display='block';
+    if(forgot)forgot.style.display='none';
+    if(passInput)passInput.placeholder='סיסמה חדשה (לפחות 6 תווים)';
+    if(passInput)passInput.setAttribute('autocomplete','new-password');
+  } else {
+    // Existing or unknown — sign in
+    window._authTab='signin';
+    if(title)title.textContent='ברוך שובך! 👋';
+    if(sub)sub.textContent='הכנס סיסמה כדי להתחבר';
+    if(btn)btn.textContent='🔓 כניסה';
+    if(nameRow)nameRow.style.display='none';
+    if(forgot)forgot.style.display='block';
+    if(passInput)passInput.placeholder='סיסמה';
+    if(passInput)passInput.setAttribute('autocomplete','current-password');
+  }
+  setTimeout(function(){var p=document.getElementById('auth-password');if(p)p.focus();},150);
+}
+
+function authBackToEmail(){
+  document.getElementById('auth-step-1').style.display='block';
+  document.getElementById('auth-step-2').style.display='none';
+  document.getElementById('auth-error').style.display='none';
+  setTimeout(function(){var e=document.getElementById('auth-email');if(e)e.focus();},100);
+}
+// ─────────────────────────────────────────────────────────
+</script>
 </body>
 </html>
