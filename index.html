@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v13</title>
+<title>⚔ COMBAT FIT IL PRO v14</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -64,6 +64,7 @@ body.cm .co{display:block!important}
 
 /* ─── CONTENT ─── */
 .content{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;width:100%;display:block;padding-bottom:66px}
+.pg.active{display:block;animation:pgIn .2s ease}
 .pg{display:none;padding:11px;padding-bottom:80px;width:100%;box-sizing:border-box;max-width:100vw}
 .pg.active{display:block;animation:pgIn .2s ease}
 @keyframes pgIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
@@ -566,7 +567,7 @@ document.head.appendChild(_link);
   <div>
     <div class="logo-main" id="logo-main">⚔ COMBAT FIT</div>
     <div id="page-title-indicator" style="font-size:10px;color:var(--txt3);letter-spacing:.5px;margin-top:1px">🏠 בסיס</div>
-    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v13.0 PRO</div>
+    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v14.0 PRO</div>
   </div>
   <div class="top-right">
     <button id="notif-btn" onclick="requestNotifPermission()" title="הפעל התראות" style="background:transparent;border:none;font-size:18px;cursor:pointer;padding:4px;min-width:32px;min-height:44px;display:flex;align-items:center;justify-content:center">🔕</button>
@@ -1454,7 +1455,6 @@ document.head.appendChild(_link);
   </div>
 
   <!-- ════ GOOGLE MAPS ROUTE PLANNER ════ -->
-  <div 
   <!-- Pace Zones -->
   <div class="card" style="margin-top:8px">
     <div class="sh" style="color:var(--pri)">🏃 אזורי קצב</div>
@@ -2291,7 +2291,7 @@ function initCM(){
   const b=document.getElementById('mode-btn');
   if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
   const lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v13.0':'IDF ELITE SYSTEM v13.0 PRO';
+  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v14.0':'IDF ELITE SYSTEM v14.0 PRO';
   // Show/hide coach panel
   const afc=document.getElementById('ann-feed-card');
   const lbo=document.getElementById('lb-out');
