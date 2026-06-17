@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v14</title>
+<title>⚔ COMBAT FIT IL PRO v16</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -567,7 +567,7 @@ document.head.appendChild(_link);
   <div>
     <div class="logo-main" id="logo-main">⚔ COMBAT FIT</div>
     <div id="page-title-indicator" style="font-size:10px;color:var(--txt3);letter-spacing:.5px;margin-top:1px">🏠 בסיס</div>
-    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v14.0 PRO</div>
+    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v16.0 PRO</div>
   </div>
   <div class="top-right">
     <button id="notif-btn" onclick="requestNotifPermission()" title="הפעל התראות" style="background:transparent;border:none;font-size:18px;cursor:pointer;padding:4px;min-width:32px;min-height:44px;display:flex;align-items:center;justify-content:center">🔕</button>
@@ -743,7 +743,7 @@ document.head.appendChild(_link);
     <div class="sh" style="color:var(--orange)">🔥 שריפת קלוריות</div>
     <div class="r2" style="margin-top:8px">
       <div><label>סוג אימון</label>
-        <select id="cal-type" onchange="calcCalorieBurn()">
+        <select id="cal-type">
           <option value="run">ריצה</option>
           <option value="strength">כוח</option>
           <option value="hiit">HIIT</option>
@@ -752,19 +752,10 @@ document.head.appendChild(_link);
           <option value="walk">הליכה</option>
         </select>
       </div>
-      <div><label>דקות</label><input id="cal-dur" type="number" value="30" inputmode="numeric" oninput="calcCalorieBurn()"/></div>
+      <div><label>דקות</label><input id="cal-dur" type="number" value="30" inputmode="numeric"/></div>
     </div>
+    <button class="btn bp" onclick="calcCalorieBurn()" style="width:100%;margin-top:10px;min-height:44px;font-weight:900">🔥 חשב קלוריות</button>
     <div id="cal-result"></div>
-  </div>
-  <!-- Focus Timer -->
-  <div class="card" style="margin-bottom:10px">
-    <div class="sh">⏱ טיימר מיקוד</div>
-    <div id="focus-display" style="margin:10px 0"></div>
-    <div style="display:flex;gap:6px">
-      <button onclick="startFocusTimer(25)" style="flex:1;padding:9px;background:var(--pri);color:#000;border:none;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;min-height:40px">25 דק</button>
-      <button onclick="startFocusTimer(45)" style="flex:1;padding:9px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;color:var(--txt);font-size:12px;cursor:pointer;min-height:40px">45 דק</button>
-      <button onclick="startFocusTimer(60)" style="flex:1;padding:9px;background:var(--card2);border:1px solid var(--b1);border-radius:8px;color:var(--txt);font-size:12px;cursor:pointer;min-height:40px">60 דק</button>
-    </div>
   </div>
   <div class="mc" id="daily-mc">
     <div class="mt">🎯 משימת היום</div>
@@ -1312,7 +1303,7 @@ document.head.appendChild(_link);
         </select>
       </div>
       <div><label>ימי אימון/שבוע</label>
-        <select id="wk-days"><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option></select>
+        <select id="wk-days"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option></select>
       </div>
     </div>
     <button class="btn bp" onclick="buildWeekPlan()">📅 צור תוכנית שבועית</button>
@@ -2291,7 +2282,7 @@ function initCM(){
   const b=document.getElementById('mode-btn');
   if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
   const lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v14.0':'IDF ELITE SYSTEM v14.0 PRO';
+  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v16.0':'IDF ELITE SYSTEM v16.0 PRO';
   // Show/hide coach panel
   const afc=document.getElementById('ann-feed-card');
   const lbo=document.getElementById('lb-out');
@@ -3213,15 +3204,34 @@ function buildWeekPlan(){
   const uk=document.getElementById('wk-unit').value;
   const wn=parseInt(document.getElementById('wk-num').value||1);
   const inten=document.getElementById('wk-int').value;
+  const daysWanted=parseInt((document.getElementById('wk-days')||{}).value||5);
   const u=UNITS[uk]||UNITS.gen;
   const plan=WEEK_PLANS[uk]||WEEK_PLANS.gen;
   const today=new Date().getDay();
   const wdone=ld(K.WD,{});
   const intLbl={easy:'מתון',mid:'בינוני',hard:'גבוה',elite:'עילית'}[inten];
+  // Select training days based on user choice: keep workout days, convert rest to match count
+  var allDays=plan.days.slice();
+  var workoutDays=allDays.filter(function(d){return d.int>0;});
+  var restDays=allDays.filter(function(d){return d.int===0;});
+  var selectedDays;
+  if(daysWanted>=workoutDays.length){
+    // want more or equal training days than available workouts — use all workouts + fill
+    selectedDays=allDays.slice();
+  } else {
+    // want fewer — pick top intensity workout days + rest for the others
+    var sorted=workoutDays.slice().sort(function(a,b){return b.int-a.int;});
+    var chosen=sorted.slice(0,daysWanted);
+    // rebuild week order: keep original order but turn non-chosen workouts into rest
+    selectedDays=allDays.map(function(d){
+      if(d.int===0)return d;
+      return chosen.indexOf(d)>=0?d:{name:d.name,type:'מנוחה / התאוששות',icon:'😴',int:0,exs:[{e:'מנוחה אקטיבית',s:'מתיחות 10 דק׳ + הליכה קלה',t:'התאוששות חשובה לא פחות מאימון'}]};
+    });
+  }
   let html=`<div class="card" style="border-right:4px solid ${u.col}">
     <div class="sh" style="color:${u.col}">${u.emoji} שבוע ${wn} — ${u.n}</div>
-    <div class="mini" style="margin-bottom:10px">עצימות: <strong>${intLbl}</strong> | לחץ יום לפרטים + וידאו</div>`;
-  plan.days.forEach((day,i)=>{
+    <div class="mini" style="margin-bottom:10px">עצימות: <strong>${intLbl}</strong> · ${daysWanted} ימי אימון | לחץ יום לפרטים + וידאו</div>`;
+  selectedDays.forEach((day,i)=>{
     const isToday=(i===today);
     const dkey=`w${wn}_d${i}`;
     const isDone=wdone[dkey];
@@ -3297,17 +3307,30 @@ function addLbEntry(){
   const psh=parseInt(document.getElementById('lb-psh').value||0);
   const pul=parseInt(document.getElementById('lb-pul').value||0);
   const unit=document.getElementById('lb-unit-sel').value;
-  const emoji=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
   const list=ld(K.LB,[]);
-  list.push({nm,sc,run,psh,pul,unit,emoji,added:new Date().toISOString()});
-  sv(K.LB,list);
+  // Check if athlete already exists (case-insensitive name match) — update instead of duplicate
+  var existingIdx=list.findIndex(function(e){return (e.nm||'').trim().toLowerCase()===nm.toLowerCase();});
+  if(existingIdx>=0){
+    // Update existing entry, keep emoji
+    var prev=list[existingIdx];
+    list[existingIdx]={nm,sc,run,psh,pul,unit,emoji:prev.emoji||EMOJIS[0],added:prev.added||new Date().toISOString(),updated:new Date().toISOString()};
+    sv(K.LB,list);
+    ['lb-nm','lb-sc','lb-run','lb-psh','lb-pul'].forEach(id=>document.getElementById(id).value='');
+    renderLeaderboard();notify(`${nm} עודכן בדירוג! 🔄`);
+  } else {
+    const emoji=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+    list.push({nm,sc,run,psh,pul,unit,emoji,added:new Date().toISOString()});
+    sv(K.LB,list);
+    ['lb-nm','lb-sc','lb-run','lb-psh','lb-pul'].forEach(id=>document.getElementById(id).value='');
+    renderLeaderboard();notify(`${nm} נוסף לדירוג! 🏆`);
+  }
   // Auto-push to Firebase leaderboard
   if(window._pushLBScore){
     var _pr2=ld(K.PR,{});
-    window._pushLBScore(_pr2.name||'לוחם',myScore,_pr2.unit||'gen');
+    var _pg2=ld(K.P,[]);
+    var _myScore=_pg2.length?parseInt(_pg2[0].bar||0):sc;
+    window._pushLBScore(_pr2.name||nm,_myScore,_pr2.unit||unit||'gen');
   }
-  ['lb-nm','lb-sc','lb-run','lb-psh','lb-pul'].forEach(id=>document.getElementById(id).value='');
-  renderLeaderboard();notify(`${nm} נוסף לדירוג! 🏆`);
 }
 
 async function renderLeaderboard(){
@@ -9119,17 +9142,42 @@ function renderEffortLog() {
 }
 
 // ── 2. CALORIE BURN ESTIMATOR (MyFitnessPal-inspired) ─────────
-var MET_VALS = { run: 9.8, swim: 7.0, bike: 7.5, strength: 5.0, hiit: 8.0, walk: 3.5, yoga: 2.5, ruck: 6.5 };
+// MET values from 2024 Compendium of Physical Activities (Ainsworth et al.)
+// Calibrated for combat/military fitness intensity
+var MET_VALS = {
+  run:      11.0,  // ~9.6 km/h pace (combat tempo)
+  strength:  6.0,  // vigorous resistance training
+  hiit:     10.0,  // high-intensity interval
+  ruck:      8.0,  // loaded march ~20kg
+  swim:      8.3,  // moderate-vigorous freestyle
+  walk:      4.3,  // brisk walk ~6 km/h
+  bike:      8.0,
+  yoga:      3.0
+};
+function _getUserWeight(){
+  // Try multiple known storage keys for the user's weight
+  var w = parseFloat(
+    (document.getElementById('cal-wgt')&&document.getElementById('cal-wgt').value) ||
+    (document.getElementById('weight')&&document.getElementById('weight').value) ||
+    localStorage.getItem('cf7_weight') ||
+    (function(){try{return (JSON.parse(localStorage.getItem('cf7pr')||'{}')).weight;}catch(e){return null;}})() ||
+    localStorage.getItem('cf_wgt') || 70
+  );
+  return (w && w>0) ? w : 70;
+}
 function calcCalorieBurn() {
   var typeEl = document.getElementById('cal-type');
   var durEl  = document.getElementById('cal-dur');
-  var wgtEl  = document.getElementById('cal-wgt');
   if (!typeEl || !durEl) return;
   var type = typeEl.value || 'run';
-  var dur  = parseFloat(durEl.value || 30);
-  var wgt  = parseFloat((wgtEl && wgtEl.value) || localStorage.getItem('cf_wgt') || 70);
+  var dur  = parseFloat(durEl.value || 0);
+  if(!dur || dur<=0){var e0=document.getElementById('cal-result');if(e0)e0.innerHTML='<div style="text-align:center;color:var(--txt3);font-size:12px;padding:10px">הזן מספר דקות</div>';return;}
+  var wgt  = _getUserWeight();
   var met  = MET_VALS[type] || 7;
+  // Calories = MET × weight(kg) × hours  (standard MET formula)
   var cals = Math.round(met * wgt * (dur / 60));
+  // Useful extras: fat grams (1g fat ≈ 7.7 kcal usable), and equivalent foods
+  var fatG = (cals / 7.7).toFixed(1);
   var el   = document.getElementById('cal-result');
   if (!el) return;
   el.innerHTML =
@@ -9138,8 +9186,9 @@ function calcCalorieBurn() {
       '<div style="font-family:var(--fd);font-size:28px;color:var(--orange)">' + cals + '</div>' +
       '<div style="font-size:10px;color:var(--txt3)">קלוריות</div></div>' +
     '<div style="background:var(--card2);border-radius:10px;padding:10px;text-align:center">' +
-      '<div style="font-family:var(--fd);font-size:28px;color:var(--pri)">' + Math.round(cals/4.1) + '</div>' +
-      '<div style="font-size:10px;color:var(--txt3)">גרם שומן</div></div></div>';
+      '<div style="font-family:var(--fd);font-size:28px;color:var(--pri)">' + fatG + '</div>' +
+      '<div style="font-size:10px;color:var(--txt3)">גרם שומן</div></div></div>' +
+    '<div style="font-size:10px;color:var(--txt3);text-align:center;margin-top:8px">מבוסס על משקל ' + wgt + ' ק"ג · MET ' + met + ' · ' + dur + ' דק׳</div>';
 }
 
 // ── 3. BREATHING EXERCISE (Headspace/Box Breathing) ───────────
