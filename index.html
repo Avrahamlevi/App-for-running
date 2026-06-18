@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v16</title>
+<title>⚔ COMBAT FIT IL PRO v18</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -567,7 +567,7 @@ document.head.appendChild(_link);
   <div>
     <div class="logo-main" id="logo-main">⚔ COMBAT FIT</div>
     <div id="page-title-indicator" style="font-size:10px;color:var(--txt3);letter-spacing:.5px;margin-top:1px">🏠 בסיס</div>
-    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v16.0 PRO</div>
+    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v18.0 PRO</div>
   </div>
   <div class="top-right">
     <button id="notif-btn" onclick="requestNotifPermission()" title="הפעל התראות" style="background:transparent;border:none;font-size:18px;cursor:pointer;padding:4px;min-width:32px;min-height:44px;display:flex;align-items:center;justify-content:center">🔕</button>
@@ -1371,7 +1371,7 @@ document.head.appendChild(_link);
         <option value="unit669">669</option><option value="shaldag">שלדג</option>
         <option value="shai">שייטת 13</option><option value="matkal">מטכ"ל</option>
       </select>
-      <button class="btn bp" style="margin-top:3px" onclick="addLbEntry()">+ הוסף</button>
+      <button class="btn bp" style="margin-top:3px" onclick="addLbEntry()">+ הוסף / עדכן</button>
     </div>
   </div>
 
@@ -2282,7 +2282,7 @@ function initCM(){
   const b=document.getElementById('mode-btn');
   if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
   const lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v16.0':'IDF ELITE SYSTEM v16.0 PRO';
+  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v18.0':'IDF ELITE SYSTEM v18.0 PRO';
   // Show/hide coach panel
   const afc=document.getElementById('ann-feed-card');
   const lbo=document.getElementById('lb-out');
@@ -3388,10 +3388,29 @@ function renderLBList(list,isCloud){
     var medal=medals[i]||'';
     var u=UNITS[e.unit]||UNITS.gen||{n:'קרבי',col:'#888'};
     var rm=e.run&&e.run<900?Math.floor(e.run/60)+':'+String(e.run%60).padStart(2,'0'):'--';
-    html2+='<div class="lb-row '+medal+' '+(e.isMe?'me-row':'')+'"><div class="lb-rnk '+medal+'">'+rankEmoji(i)+'</div><div class="lb-av">'+(e.emoji||'⚔')+'</div><div class="lb-inf"><div class="lb-nm">'+e.nm+(e.isMe?' (אני)':'')+'</div><div class="lb-sub" style="color:'+u.col+'">'+u.n+(rm!=='--'?' | 2K:'+rm:'')+'</div></div><div class="lb-sc"><div class="lb-sc-n">'+e.sc+'</div><div class="lb-dl eq">/ 100</div></div></div>';
+    var editBtn=isCloud?'':'<button onclick="editLbEntry('+i+')" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);color:var(--purpleL);border-radius:7px;font-size:14px;padding:4px 8px;cursor:pointer;margin-right:4px" title="עדכן נתונים">✏️</button>';
+    html2+='<div class="lb-row '+medal+' '+(e.isMe?'me-row':'')+'"><div class="lb-rnk '+medal+'">'+rankEmoji(i)+'</div><div class="lb-av">'+(e.emoji||'⚔')+'</div><div class="lb-inf"><div class="lb-nm">'+e.nm+(e.isMe?' (אני)':'')+'</div><div class="lb-sub" style="color:'+u.col+'">'+u.n+(rm!=='--'?' | 2K:'+rm:'')+'</div></div>'+editBtn+'<div class="lb-sc"><div class="lb-sc-n">'+e.sc+'</div><div class="lb-dl eq">/ 100</div></div></div>';
   });
   html2+='</div>';
   document.getElementById('lb-out').innerHTML=html2;
+}
+
+// Fill the form with an existing athlete's data for quick update
+function editLbEntry(idx){
+  var list=ld(K.LB,[]);
+  var e=list[idx];
+  if(!e)return;
+  var set=function(id,v){var el=document.getElementById(id);if(el)el.value=v;};
+  set('lb-nm',e.nm||'');
+  set('lb-sc',e.sc||'');
+  set('lb-run',e.run&&e.run<900?e.run:'');
+  set('lb-psh',e.psh||'');
+  set('lb-pul',e.pul||'');
+  var us=document.getElementById('lb-unit-sel');if(us&&e.unit)us.value=e.unit;
+  // Scroll the form into view
+  var form=document.getElementById('lb-nm');
+  if(form){form.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){form.focus();},300);}
+  if(typeof notify==='function')notify('✏️ ערוך את הנתונים ולחץ "הוסף/עדכן"','c');
 }
 
 // ═══════════════════════════════════════════════════
@@ -6201,17 +6220,17 @@ function renderCoachScatter() {
     return;
   }
 
-  var W = 340, H = 170, PL = 32, PR = 16, PT = 14, PB = 28;
+  var W = 340, H = 180, PL = 32, PR = 16, PT = 14, PB = 30;
   var chartW = W - PL - PR, chartH = H - PT - PB;
 
   // X axis = push (שכיבות), Y axis = depends on _scatterAxis
-  var getX = function(a) { return parseInt(a.psh || 0); };
+  var getX = function(a) { return parseInt(a.psh || a.push || 0); };
   var getY_val, yLabel;
   if (_scatterAxis === 'run') {
     getY_val = function(a) { return parseInt(a.run || 600); }; // lower = better
     yLabel = 'ריצה (שנ)';
   } else if (_scatterAxis === 'pull') {
-    getY_val = function(a) { return parseInt(a.pul || 0); };
+    getY_val = function(a) { return parseInt(a.pul || a.pull || 0); };
     yLabel = 'מתח';
   } else {
     getY_val = function(a) { return parseInt(a.bar || a.sc || 0); };
@@ -6224,6 +6243,9 @@ function renderCoachScatter() {
   var maxX = Math.max.apply(null, xVals) + 10;
   var minY = Math.max(0, Math.min.apply(null, yVals) - (_scatterAxis==='run'?20:5));
   var maxY = Math.max.apply(null, yVals) + (_scatterAxis==='run'?20:5);
+  // Prevent zero range (all athletes same value) which would hide all dots
+  if (maxX - minX < 5) maxX = minX + 10;
+  if (maxY - minY < 5) maxY = minY + 10;
   var rangeX = maxX - minX || 1, rangeY = maxY - minY || 1;
 
   var toSX = function(v) { return PL + (v-minX)/rangeX*chartW; };
@@ -7927,7 +7949,7 @@ function coachShowTab(tab,btn){
   ['groups','athletes','msg','settings'].forEach(function(t){var el=document.getElementById('coach-tab-'+t);if(el)el.style.display=(t===tab)?'block':'none';});
   document.querySelectorAll('#nav-coach .nav').forEach(function(b){b.classList.remove('on');});
   if(btn)btn.classList.add('on');
-  if(tab==='groups')updateGroupStats();
+  if(tab==='groups'){updateGroupStats();if(typeof renderCoachScatter==='function')setTimeout(renderCoachScatter,50);}
   if(tab==='athletes'){
     var active=(window._coachGroups||[]).find(function(g){return g.id===_activeGid;});
     var nameEl=document.getElementById('athletes-tab-group-name');
