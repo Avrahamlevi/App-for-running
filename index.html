@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v18</title>
+<title>⚔ COMBAT FIT IL PRO v20</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -567,7 +567,7 @@ document.head.appendChild(_link);
   <div>
     <div class="logo-main" id="logo-main">⚔ COMBAT FIT</div>
     <div id="page-title-indicator" style="font-size:10px;color:var(--txt3);letter-spacing:.5px;margin-top:1px">🏠 בסיס</div>
-    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v18.0 PRO</div>
+    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v20.0 PRO</div>
   </div>
   <div class="top-right">
     <button id="notif-btn" onclick="requestNotifPermission()" title="הפעל התראות" style="background:transparent;border:none;font-size:18px;cursor:pointer;padding:4px;min-width:32px;min-height:44px;display:flex;align-items:center;justify-content:center">🔕</button>
@@ -1089,12 +1089,11 @@ document.head.appendChild(_link);
         </div>
 
         <label>🔥 רמת קושי</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-          <button class="btn" id="dlv-fresh" onclick="setDuneLv('fresh',this)" style="background:rgba(0,255,136,.08);border:2px solid var(--pri);color:var(--pri);font-size:11px;font-weight:900">🟢 מתחיל</button>
-          <button class="btn" id="dlv-mid" onclick="setDuneLv('mid',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">🟡 קרבי</button>
-          <button class="btn" id="dlv-hard" onclick="setDuneLv('hard',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">🔴 גיבוש</button>
-          <button class="btn" id="dlv-gibush" onclick="setDuneLv('gibush',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">💀 שייטת</button>
-          <button class="btn" id="dlv-elite" onclick="setDuneLv('elite',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900">💀 שייטת/מטכ"ל</button>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+          <button class="btn" id="dlv-fresh" onclick="setDuneLv('fresh',this)" style="background:rgba(0,255,136,.08);border:2px solid var(--pri);color:var(--pri);font-size:11px;font-weight:900;min-height:50px">🟢 מתחיל<br/><span style="font-size:8px;opacity:.7">טירונות</span></button>
+          <button class="btn" id="dlv-mid" onclick="setDuneLv('mid',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900;min-height:50px">🟡 קרבי<br/><span style="font-size:8px;opacity:.7">חי"ר/סיירת</span></button>
+          <button class="btn" id="dlv-hard" onclick="setDuneLv('hard',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900;min-height:50px">🟠 גיבוש<br/><span style="font-size:8px;opacity:.7">קומנדו</span></button>
+          <button class="btn" id="dlv-gibush" onclick="setDuneLv('gibush',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900;min-height:46px;grid-column:span 3">💀 עילית — מטכ"ל / שייטת 13 / שלדג / 669</button>
         </div>
 
         <label>🎒 ציוד זמין</label>
@@ -1391,7 +1390,6 @@ document.head.appendChild(_link);
     <button class="tab on" onclick="trt('tr-str',this)">כוח</button>
     <button class="tab" onclick="trt('tr-run',this)">ריצה</button>
     <button class="tab" onclick="trt('tr-route',this)">🗺 מסלול</button>
-    <button class="tab" onclick="trt('tr-build',this)">🤖 בונה</button>
     <button class="tab" onclick="trt('tr-hist',this)">📜 היסטוריה</button>
     <button class="tab" onclick="trt('tr-tmr',this)">⏱ טיימר</button>
     <button class="tab" onclick="trt('tr-rec',this)">🩹 שיקום</button>
@@ -2282,13 +2280,15 @@ function initCM(){
   const b=document.getElementById('mode-btn');
   if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
   const lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v18.0':'IDF ELITE SYSTEM v18.0 PRO';
+  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v20.0':'IDF ELITE SYSTEM v20.0 PRO';
   // Show/hide coach panel
   const afc=document.getElementById('ann-feed-card');
   const lbo=document.getElementById('lb-out');
   if(afc){afc.style.display=coachMode?'block':'none';}
   if(lbo){lbo.style.display=coachMode?'none':'block';}
   if(coachMode){
+    // Load any saved groups from previous sessions
+    if(typeof _loadCoachData==='function')_loadCoachData();
     // Load groups from Firebase or local
     if(window._coachGroups&&window._coachGroups.length){
       renderCoachGroupsUI();
@@ -2886,11 +2886,11 @@ function calcGib(){
   const g4=parseInt(document.getElementById('g400').value||999);
   const us=[
     {n:'סיירת מטכ"ל / שייטת 13',r3:10.5,r5:20,pl:18,ps:65,pla:180,g4:62,col:'var(--red)'},
-    {n:'שלדג / 669 / קומנדו',r3:11,r5:20.5,pl:16,ps:60,pla:160,g4:64,col:'var(--cyan)'},
-    {n:'אגוז / דובדבן',r3:11,r5:21,pl:15,ps:60,pla:150,g4:65,col:'var(--orange)'},
-    {n:'גולני / צנחנים / גבעתי 101',r3:12,r5:22,pl:12,ps:50,pla:120,g4:70,col:'var(--pri)'},
-    {n:'כפיר / סייר / עוקץ',r3:12.5,r5:23,pl:10,ps:45,pla:100,g4:72,col:'var(--purple)'},
-    {n:'קרבי כללי',r3:13,r5:24,pl:8,ps:40,pla:90,g4:76,col:'var(--txt2)'},
+    {n:'שלדג / 669',r3:11,r5:20.5,pl:16,ps:60,pla:160,g4:64,col:'var(--cyan)'},
+    {n:'קומנדו: אגוז / מגלן / דובדבן',r3:11,r5:21,pl:15,ps:60,pla:150,g4:65,col:'var(--orange)'},
+    {n:'סיירות חי"ר / עוקץ / יהל"ם',r3:11.5,r5:21.5,pl:13,ps:55,pla:130,g4:68,col:'var(--purple)'},
+    {n:'גולני / צנחנים / גבעתי / כפיר',r3:12,r5:22,pl:12,ps:50,pla:120,g4:70,col:'var(--pri)'},
+    {n:'נח"ל / קרבי כללי',r3:13,r5:24,pl:8,ps:40,pla:90,g4:76,col:'var(--txt2)'},
   ];
   let html='';
   us.forEach(u=>{
@@ -3163,41 +3163,58 @@ function saveRecovery(){calcRecovery();notify('שיקום נשמר!','c');}
 // ═══════════════════════════════════════════════════
 var WEEK_PLANS={
   gen:{days:[
-    {name:'ראשון',type:'ריצה + כוח',icon:'🏃',int:3,rest:false,vid:{t:'ריצה קלה 5ק"מ + כוח',dur:'40:00',url:'https://www.youtube.com/results?search_query=military+run+strength'},
-     exs:[{e:'ריצה קלה',s:'25 דקות',t:'קצב שיחה — 7:30/ק"מ'},{e:'שכיבות',s:'3×20',t:'מנוחה 60שנ'},{e:'פלאנק',s:'3×45שנ',t:''},{e:'ישיבות',s:'3×25',t:''}]},
-    {name:'שני',type:'מנוחה פעילה',icon:'🧘',int:1,rest:true,vid:null,
-     exs:[{e:'מתיחות דינמיות',s:'10 דקות',t:''},{e:'Dead Hang',s:'3×30שנ',t:''},{e:'ניידות ירך',s:'5 דקות',t:''}]},
-    {name:'שלישי',type:'כוח + HIIT',icon:'💪',int:4,rest:false,vid:{t:'Combat HIIT 20 Min',dur:'20:00',url:'https://www.youtube.com/results?search_query=military+HIIT+combat+workout'},
-     exs:[{e:'ברפיז',s:'4×10',t:'מנוחה 45שנ'},{e:'שכיבות קפיצה',s:'3×12',t:''},{e:'סקוואט קפיצה',s:'4×15',t:''},{e:'מתח',s:'4×Max',t:'GTG'}]},
-    {name:'רביעי',type:'ריצה מהירות',icon:'⚡',int:5,rest:false,vid:{t:'Interval 400m Training',dur:'35:00',url:'https://www.youtube.com/results?search_query=400m+interval+military+running'},
-     exs:[{e:'חימום 10 דק',s:'קל',t:''},{e:'8×400מ',s:'90שנ מנוחה',t:'קצב 85% מאמץ'},{e:'קירור 5 דק',s:'',t:''}]},
-    {name:'חמישי',type:'כוח מלא',icon:'🏋',int:4,rest:false,vid:{t:'Full Body Military Workout',dur:'45:00',url:'https://www.youtube.com/results?search_query=full+body+military+calisthenics'},
-     exs:[{e:'מתח',s:'5×Max',t:'3 דקות מנוחה'},{e:'שכיבות',s:'5×20',t:''},{e:'ישיבות',s:'4×25',t:''},{e:'לאנג',s:'3×20',t:''}]},
-    {name:'שישי',type:'Ruck + כוח',icon:'🎒',int:3,rest:false,vid:{t:'Ruck Training Guide',dur:'40:00',url:'https://www.youtube.com/results?search_query=ruck+march+training+military'},
-     exs:[{e:'Ruck',s:'35 דקות | 8ק"ג',t:'קצב 8:00/ק"מ'},{e:'מתח',s:'4×8',t:'כל 8 דקות'}]},
+    {name:'ראשון',type:'ריצת בסיס + ליבה',icon:'🏃',int:3,rest:false,vid:{t:'ריצת בסיס אירובית',dur:'40:00',url:'https://www.youtube.com/results?search_query=aerobic+base+run+military'},
+     exs:[{e:'חימום דינמי',s:'8 דקות',t:'ברכיים לחזה, בעיטות, סקיפ'},{e:'ריצה רציפה',s:'30 דקות',t:'קצב נוח שבו אפשר לדבר (Zone 2)'},{e:'פלאנק',s:'3×45שנ',t:'גב ישר, בטן נעולה'},{e:'פלאנק צד',s:'3×30שנ/צד',t:''},{e:'Superman',s:'3×15',t:'חיזוק גב תחתון'}]},
+    {name:'שני',type:'כוח פלג עליון',icon:'💪',int:4,rest:false,vid:{t:'Upper Body Calisthenics',dur:'40:00',url:'https://www.youtube.com/results?search_query=upper+body+calisthenics+military'},
+     exs:[{e:'מתח (משיכה)',s:'5×מקסימום',t:'מנוחה 2 דק׳ — איכות לפני כמות'},{e:'שכיבות שמיכה',s:'5×20',t:'חזה לרצפה, גוף ישר'},{e:'שכיבות יהלום',s:'3×12',t:'דגש על טריצפס'},{e:'Dips על ספסל',s:'3×15',t:''},{e:'Dead Hang',s:'3×40שנ',t:'חיזוק אחיזה לגיבוש'}]},
+    {name:'שלישי',type:'אינטרוולים + מהירות',icon:'⚡',int:5,rest:false,vid:{t:'Interval Running 400m',dur:'35:00',url:'https://www.youtube.com/results?search_query=400m+interval+military+running'},
+     exs:[{e:'חימום',s:'10 דקות קל',t:''},{e:'6×400מ',s:'מנוחה 90שנ',t:'קצב 85-90% — סימולציית מבחן'},{e:'4×100מ ספרינט',s:'מנוחה 60שנ',t:'מהירות מקסימלית'},{e:'קירור',s:'8 דקות',t:'ריצה קלה + מתיחות'}]},
+    {name:'רביעי',type:'מנוחה פעילה',icon:'🧘',int:1,rest:true,vid:null,
+     exs:[{e:'הליכה קלה',s:'20-30 דקות',t:'זרימת דם, התאוששות'},{e:'מתיחות סטטיות',s:'15 דקות',t:'ירכיים, שוקיים, גב'},{e:'ניידות מפרקים',s:'10 דקות',t:''}]},
+    {name:'חמישי',type:'מעגל קרבי (HIIT)',icon:'🔥',int:5,rest:false,vid:{t:'Combat Circuit HIIT',dur:'30:00',url:'https://www.youtube.com/results?search_query=military+circuit+HIIT+workout'},
+     exs:[{e:'מעגל × 5 סבבים',s:'מנוחה 90שנ בין סבבים',t:'ביצוע רציף'},{e:'15 ברפי',s:'',t:'נחיתה רכה'},{e:'20 סקוואט קפיצה',s:'',t:''},{e:'10 מתח',s:'',t:''},{e:'ריצה 200מ',s:'',t:'מאמץ גבוה'},{e:'30 ג׳אמפינג ג׳קס',s:'',t:''}]},
+    {name:'שישי',type:'מסע Ruck + נשיאה',icon:'🎒',int:3,rest:false,vid:{t:'Ruck March Training',dur:'45:00',url:'https://www.youtube.com/results?search_query=ruck+march+training+military'},
+     exs:[{e:'מסע עם משקל',s:'40 דקות | 10ק"ג',t:'קצב 8:00/ק"מ, יציבה זקופה'},{e:'נשיאת אלונקה/חבר',s:'4×50מ',t:'אם אפשר — בזוג'},{e:'מתח',s:'5×6',t:'כל 7 דקות במהלך המסע'}]},
     {name:'שבת',type:'מנוחה מלאה',icon:'🛌',int:0,rest:true,vid:null,
-     exs:[{e:'שינה 8+ שעות',s:'',t:'הכי חשוב!'},{e:'תזונה — חלבון',s:'2 גרם/ק"ג',t:''},{e:'ויזואליזציה',s:'10 דקות',t:''}]},
+     exs:[{e:'שינה 8+ שעות',s:'',t:'ההתאוששות הכי חשובה'},{e:'תזונה — חלבון',s:'1.6-2 גרם/ק"ג',t:'בניית שריר'},{e:'הידרציה',s:'3 ליטר',t:''},{e:'ויזואליזציה',s:'10 דקות',t:'דמיין הצלחה בגיבוש'}]},
+  ]},
+  say:{days:[
+    {name:'ראשון',type:'ריצת טמפו + ליבה',icon:'🏃',int:4,rest:false,vid:{t:'Tempo Run Training',dur:'45:00',url:'https://www.youtube.com/results?search_query=tempo+run+military+training'},
+     exs:[{e:'חימום',s:'10 דקות',t:''},{e:'ריצת טמפו',s:'5 ק"מ',t:'קצב סף — מאתגר אך בר-קיימא'},{e:'פלאנק דינמי',s:'4×45שנ',t:''},{e:'V-ups',s:'3×20',t:'ליבה'},{e:'Russian Twist',s:'3×30',t:''}]},
+    {name:'שני',type:'כוח עליון + אחיזה',icon:'💪',int:5,rest:false,vid:{t:'Pull-up & Grip Strength',dur:'45:00',url:'https://www.youtube.com/results?search_query=pull+up+grip+strength+military'},
+     exs:[{e:'מתח רחב',s:'6×מקסימום',t:'מנוחה 2.5 דק׳'},{e:'מתח צר/הפוך',s:'4×8',t:'גיוון אחיזה'},{e:'שכיבות',s:'6×25',t:''},{e:'Dips',s:'4×15',t:''},{e:'Farmer Carry',s:'4×40מ',t:'משקל כבד — אחיזה'},{e:'Dead Hang',s:'4×45שנ',t:''}]},
+    {name:'שלישי',type:'אינטרוולים קשים',icon:'⚡',int:5,rest:false,vid:{t:'Hard Intervals 800m',dur:'40:00',url:'https://www.youtube.com/results?search_query=800m+intervals+running'},
+     exs:[{e:'חימום',s:'12 דקות',t:''},{e:'5×800מ',s:'מנוחה 2 דק׳',t:'קצב מבחן 2 ק"מ'},{e:'6×100מ ספרינט במעלה',s:'',t:'כוח מתפרץ'},{e:'קירור',s:'10 דקות',t:''}]},
+    {name:'רביעי',type:'התאוששות פעילה',icon:'🧘',int:1,rest:true,vid:null,
+     exs:[{e:'שחייה/אופניים',s:'30 דקות קל',t:'קרדיו ללא עומס'},{e:'גלגול קצף',s:'15 דקות',t:''},{e:'מתיחות עמוקות',s:'15 דקות',t:''}]},
+    {name:'חמישי',type:'מעגל קרבי כבד',icon:'🔥',int:5,rest:false,vid:{t:'Heavy Combat Circuit',dur:'40:00',url:'https://www.youtube.com/results?search_query=heavy+combat+circuit+training'},
+     exs:[{e:'מעגל × 6 סבבים',s:'מנוחה 60שנ',t:'עצימות גבוהה'},{e:'12 מתח',s:'',t:''},{e:'20 שכיבות',s:'',t:''},{e:'25 סקוואט קפיצה',s:'',t:''},{e:'15 ברפי',s:'',t:''},{e:'זחילה 30מ',s:'',t:'זחילת לוחם'},{e:'ריצה 200מ',s:'',t:''}]},
+    {name:'שישי',type:'מסע משא + סבולת',icon:'🎒',int:4,rest:false,vid:{t:'Loaded Ruck Endurance',dur:'60:00',url:'https://www.youtube.com/results?search_query=loaded+ruck+endurance+military'},
+     exs:[{e:'מסע עם משקל',s:'55 דקות | 15ק"ג',t:'כולל עליות'},{e:'נשיאת אלונקה',s:'5×80מ',t:''},{e:'זחילות',s:'4×30מ',t:'בסוף המסע — עייפות'},{e:'מתח',s:'5×8',t:''}]},
+    {name:'שבת',type:'מנוחה + תכנון',icon:'🛌',int:0,rest:true,vid:null,
+     exs:[{e:'שינה 8-9 שעות',s:'',t:''},{e:'תזונה ופחמימות',s:'טעינה לשבוע הבא',t:''},{e:'מתיחות קלות',s:'15 דקות',t:''},{e:'ויזואליזציה',s:'10 דקות',t:''}]},
   ]},
   matkal:{days:[
-    {name:'ראשון',type:'ריצה עצימות',icon:'⚡',int:5,rest:false,vid:{t:'Elite Speed Run Military',dur:'50:00',url:'https://www.youtube.com/results?search_query=elite+military+speed+run+training'},
-     exs:[{e:'חימום דינמי',s:'10 דקות',t:''},{e:'10×400מ',s:'90שנ מנוחה',t:'קצב 90% מקסימום'},{e:'Strides 6×20שנ',s:'',t:''}]},
-    {name:'שני',type:'כוח פלג עליון',icon:'💪',int:5,rest:false,vid:{t:'Elite Pull-up Workout',dur:'45:00',url:'https://www.youtube.com/results?search_query=elite+pull+up+military+training'},
-     exs:[{e:'מתח',s:'6×Max',t:'3 דקות מנוחה'},{e:'שכיבות',s:'100 סה"כ',t:''},{e:'Dips',s:'4×15',t:''},{e:'Dead Hang',s:'3×40שנ',t:''}]},
-    {name:'שלישי',type:'Ruck + כוח',icon:'🎒',int:4,rest:false,vid:{t:'Heavy Ruck Training',dur:'70:00',url:'https://www.youtube.com/results?search_query=heavy+ruck+march+military'},
-     exs:[{e:'Ruck',s:'50 דקות | 16ק"ג',t:'עלייה-ירידה'},{e:'מתח',s:'4×10',t:'כל 10 דקות'}]},
-    {name:'רביעי',type:'HIIT קרבי',icon:'🔥',int:5,rest:false,vid:{t:'Combat HIIT Elite 35 Min',dur:'35:00',url:'https://www.youtube.com/results?search_query=elite+combat+HIIT+30+minutes'},
-     exs:[{e:'Circuit × 6',s:'ללא מנוחה',t:''},{e:'10 מתח+15 שכ+20 סקוואט+200מ',s:'',t:''},{e:'פלאנק',s:'3×90שנ',t:''}]},
-    {name:'חמישי',type:'ריצה ארוכה',icon:'🏃',int:4,rest:false,vid:{t:'Long Run Military Pacing',dur:'70:00',url:'https://www.youtube.com/results?search_query=long+run+military+training+pace'},
-     exs:[{e:'ריצה ארוכה',s:'12 ק"מ',t:'7:00-8:00/ק"מ'},{e:'3ק"מ אחרון Tempo',s:'5:00/ק"מ',t:''}]},
-    {name:'שישי',type:'פלג תחתון',icon:'🦵',int:4,rest:false,vid:{t:'Lower Body Combat Training',dur:'40:00',url:'https://www.youtube.com/results?search_query=military+lower+body+strength'},
-     exs:[{e:'סקוואט קפיצה',s:'5×15',t:''},{e:'Bulgarian Split',s:'4×12/רגל',t:''},{e:'Ruck',s:'20 דקות | 16ק"ג',t:''}]},
-    {name:'שבת',type:'מנוחה פעילה',icon:'🧘',int:1,rest:true,vid:null,
-     exs:[{e:'שחרור',s:'20 דקות',t:''},{e:'מתיחות',s:'15 דקות',t:''},{e:'שינה 9 שעות',s:'',t:'קריטי!'}]},
+    {name:'ראשון',type:'ריצת עצימות עילית',icon:'⚡',int:5,rest:false,vid:{t:'Elite Speed Training',dur:'55:00',url:'https://www.youtube.com/results?search_query=elite+military+speed+run+training'},
+     exs:[{e:'חימום דינמי',s:'12 דקות',t:'יסודי — מניעת פציעות'},{e:'10×400מ',s:'מנוחה 75שנ',t:'קצב 90% — סף עליון'},{e:'8×100מ ספרינט',s:'',t:'מהירות מקסימלית'},{e:'Strides',s:'6×20שנ',t:''},{e:'קירור',s:'10 דקות',t:''}]},
+    {name:'שני',type:'כוח עליון מקסימלי',icon:'💪',int:5,rest:false,vid:{t:'Max Upper Body Military',dur:'50:00',url:'https://www.youtube.com/results?search_query=max+pull+up+military+training'},
+     exs:[{e:'מתח',s:'8×מקסימום',t:'מנוחה 3 דק׳ — נפח גבוה'},{e:'מתח במשקל',s:'4×5',t:'אם אפשר — תוספת משקל'},{e:'שכיבות',s:'150 סה"כ',t:'חלק לסטים'},{e:'Dips',s:'5×15',t:''},{e:'Pull-up hold',s:'4×20שנ',t:'בזווית 90°'},{e:'Farmer Carry',s:'5×50מ',t:'כבד'}]},
+    {name:'שלישי',type:'מסע משא כבד',icon:'🎒',int:4,rest:false,vid:{t:'Heavy Ruck March',dur:'75:00',url:'https://www.youtube.com/results?search_query=heavy+ruck+march+military'},
+     exs:[{e:'מסע עם משקל',s:'60 דקות | 20ק"ג',t:'עליות וירידות, יציבה'},{e:'נשיאת אלונקה כבדה',s:'6×100מ',t:''},{e:'זחילת לוחם',s:'5×40מ',t:'בעייפות'},{e:'מתח',s:'5×10',t:'כל 8 דקות במסע'}]},
+    {name:'רביעי',type:'HIIT קרבי עילית',icon:'🔥',int:5,rest:false,vid:{t:'Elite Combat HIIT',dur:'40:00',url:'https://www.youtube.com/results?search_query=elite+combat+HIIT+30+minutes'},
+     exs:[{e:'מעגל × 7 סבבים',s:'מנוחה 45שנ',t:'דחיפה מקסימלית'},{e:'15 מתח',s:'',t:''},{e:'25 שכיבות',s:'',t:''},{e:'30 סקוואט קפיצה',s:'',t:''},{e:'20 ברפי',s:'',t:''},{e:'זחילה 40מ',s:'',t:''},{e:'ריצה 300מ',s:'',t:'מאמץ מלא'},{e:'פלאנק',s:'90שנ',t:''}]},
+    {name:'חמישי',type:'ריצה ארוכה + טמפו',icon:'🏃',int:4,rest:false,vid:{t:'Long Run + Tempo',dur:'75:00',url:'https://www.youtube.com/results?search_query=long+run+tempo+military+training'},
+     exs:[{e:'ריצה ארוכה',s:'14 ק"מ',t:'בניית סבולת בסיסית'},{e:'4 ק"מ אחרונים Tempo',s:'',t:'קצב סף — דחיפה'},{e:'מתיחות',s:'10 דקות',t:''}]},
+    {name:'שישי',type:'כוח תחתון + מתפרץ',icon:'🦵',int:5,rest:false,vid:{t:'Lower Body Power',dur:'45:00',url:'https://www.youtube.com/results?search_query=explosive+lower+body+military'},
+     exs:[{e:'סקוואט קפיצה',s:'6×15',t:'כוח מתפרץ'},{e:'Bulgarian Split Squat',s:'4×12/רגל',t:''},{e:'Lunge הליכה',s:'4×20',t:''},{e:'Box Jump',s:'5×8',t:'נחיתה מבוקרת'},{e:'Calf Raises',s:'4×25',t:'מניעת פציעות שוק'},{e:'מסע קצר',s:'20 דקות | 20ק"ג',t:''}]},
+    {name:'שבת',type:'מנוחה + שיקום',icon:'🧘',int:1,rest:true,vid:null,
+     exs:[{e:'שחרור שרירים',s:'25 דקות',t:'גלגול קצף + מתיחות'},{e:'הליכה קלה',s:'20 דקות',t:''},{e:'שינה 9 שעות',s:'',t:'קריטי להתאוששות עילית'},{e:'תזונה — עודף קל',s:'',t:'בניית כוח'}]},
   ]},
 };
+// Map each unit to the most appropriate plan tier
 ['golani','para','giv','nahal','kfir'].forEach(k=>{WEEK_PLANS[k]=WEEK_PLANS.gen;});
-['shai','unit669','shaldag','egoz','maglan','duvdevan','lotar','oketz','yaalom'].forEach(k=>{WEEK_PLANS[k]=WEEK_PLANS.matkal;});
-['nahalsay','egozsay','givsay','haruv','tzansay'].forEach(k=>{WEEK_PLANS[k]=WEEK_PLANS.gen;});
+['nahalsay','egozsay','givsay','haruv','tzansay','oketz'].forEach(k=>{WEEK_PLANS[k]=WEEK_PLANS.say;});
+['shai','unit669','shaldag','egoz','maglan','duvdevan','lotar','yaalom','matkal'].forEach(k=>{WEEK_PLANS[k]=WEEK_PLANS.matkal;});
 
 let wkBuilt=false;
 function buildWeekPlan(){
@@ -5306,13 +5323,13 @@ function setExTime(t,btn){
 
 function setDuneLv(lv,btn){
   duneLv=lv;
-  ['fresh','mid','hard','elite'].forEach(l=>{
+  ['fresh','mid','hard','gibush'].forEach(l=>{
     const b=document.getElementById('dlv-'+l);if(!b)return;
     b.style.background='var(--card3)';b.style.border='1px solid var(--b2)';b.style.color='var(--txt)';
   });
-  const cols={fresh:'var(--pri)',mid:'var(--yellow)',hard:'var(--orange)',elite:'var(--red)'};
-  const bgs={fresh:'rgba(0,255,136,.08)',mid:'rgba(255,214,10,.08)',hard:'rgba(255,136,0,.08)',elite:'rgba(255,45,85,.08)'};
-  btn.style.background=bgs[lv];btn.style.border=`2px solid ${cols[lv]}`;btn.style.color=cols[lv];
+  const cols={fresh:'var(--pri)',mid:'var(--yellow)',hard:'var(--orange)',gibush:'var(--red)'};
+  const bgs={fresh:'rgba(0,255,136,.08)',mid:'rgba(255,214,10,.08)',hard:'rgba(255,136,0,.08)',gibush:'rgba(255,45,85,.08)'};
+  btn.style.background=bgs[lv]||'var(--card3)';btn.style.border=`2px solid ${cols[lv]||'var(--b2)'}`;btn.style.color=cols[lv]||'var(--txt)';
   updateCombatPreview();
 }
 
@@ -5326,7 +5343,7 @@ function updateCombatPreview(){
   const avgSec=(min+max)/2;
   const totalMin=duneDurMin;
   const lbl={short:'15-30שנ',mid:'30-60שנ',long:'60-90שנ',grind:'90+שנ'}[duneExTime];
-  const lv={fresh:'מתחיל',mid:'קרבי',hard:'גיבוש',elite:'שייטת/מטכ"ל'}[duneLv];
+  const lv={fresh:'מתחיל',mid:'קרבי',hard:'גיבוש',gibush:'עילית'}[duneLv]||'קרבי';
   const el=document.getElementById('cm-preview-txt');
   if(el)el.textContent=`${duneDurMin} דקות · ${lbl} לכל תרגיל · רמה: ${lv}`;
 }
@@ -5350,9 +5367,27 @@ function startCombatMode(){
 }
 
 function getNextDuneCmd(){
-  const pool=DUNE_CMDS[duneLv]||DUNE_CMDS.mid;
-  let all=pool.filter(c=>!c.gear||c.gear.every(g=>duneGear.has(g)));
-  if(all.length>1&&window._lastDuneCmd)all=all.filter(c=>c.t!==window._lastDuneCmd);
+  // Map difficulty level (duneLv) to intensity key in DUNE_CMDS
+  var lvMap={fresh:'easy',mid:'mid',hard:'hard',gibush:'gibush',elite:'gibush'};
+  var intensity=lvMap[duneLv]||'mid';
+  // Build pool from ALL selected equipment types at this intensity
+  var pool=[];
+  // 'fresh' = bodyweight (no equipment), always included as base
+  if(DUNE_CMDS.fresh&&DUNE_CMDS.fresh[intensity])pool=pool.concat(DUNE_CMDS.fresh[intensity]);
+  // Add equipment-specific commands for each selected gear
+  duneGear.forEach(function(g){
+    if(g==='bag'||g==='none')return; // 'bag' handled below, 'none'=bodyweight only
+    if(DUNE_CMDS[g]&&DUNE_CMDS[g][intensity])pool=pool.concat(DUNE_CMDS[g][intensity]);
+  });
+  // If bag gear selected, add bag commands
+  if(duneGear.has('bag')&&DUNE_CMDS.bag&&DUNE_CMDS.bag[intensity])pool=pool.concat(DUNE_CMDS.bag[intensity]);
+  // Fallback if pool is empty
+  if(!pool.length){
+    pool=(DUNE_CMDS.fresh&&DUNE_CMDS.fresh.mid)||[];
+  }
+  if(!pool.length)return null;
+  var all=pool.slice();
+  if(all.length>1&&window._lastDuneCmd)all=all.filter(function(c){return c.t!==window._lastDuneCmd;});
   if(!all.length)all=pool;
   return all[Math.floor(Math.random()*all.length)];
 }
@@ -9707,10 +9742,27 @@ function doCreateGroup(){
   window._coachAthletes=window._coachAthletes||{};
   window._coachAthletes[group.id]=[];
   _activeGid=group.id;
+  _saveCoachData();
   if(typeof closeModal==='function')closeModal();
   if(typeof renderCoachGroupsUI==='function')renderCoachGroupsUI();
   if(typeof notify==='function')notify('✅ קבוצה "'+name+'" נוצרה! קוד: '+code,'p');
   if(typeof haptic==='function')haptic('success');
+}
+
+// Persist coach groups + athletes locally so they survive reload
+function _saveCoachData(){
+  try{
+    localStorage.setItem('cf7_coach_groups',JSON.stringify(window._coachGroups||[]));
+    localStorage.setItem('cf7_coach_athletes',JSON.stringify(window._coachAthletes||{}));
+  }catch(e){}
+}
+function _loadCoachData(){
+  try{
+    var g=JSON.parse(localStorage.getItem('cf7_coach_groups')||'null');
+    var a=JSON.parse(localStorage.getItem('cf7_coach_athletes')||'null');
+    if(g&&g.length){window._coachGroups=g;if(!_activeGid)_activeGid=g[0].id;}
+    if(a)window._coachAthletes=a;
+  }catch(e){}
 }
 
 function sendQuickAnn(){
