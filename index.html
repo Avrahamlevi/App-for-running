@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v20</title>
+<title>⚔ COMBAT FIT IL PRO v25</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -516,8 +516,6 @@ body.light-mode #theme-btn { color: #f59e0b; }
 
 <!-- Netlify Identity — free auth, no credit card -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 // Create manifest for PWA install
@@ -567,7 +565,7 @@ document.head.appendChild(_link);
   <div>
     <div class="logo-main" id="logo-main">⚔ COMBAT FIT</div>
     <div id="page-title-indicator" style="font-size:10px;color:var(--txt3);letter-spacing:.5px;margin-top:1px">🏠 בסיס</div>
-    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v20.0 PRO</div>
+    <div class="logo-sub" id="logo-sub">IDF ELITE SYSTEM v25.0 PRO</div>
   </div>
   <div class="top-right">
     <button id="notif-btn" onclick="requestNotifPermission()" title="הפעל התראות" style="background:transparent;border:none;font-size:18px;cursor:pointer;padding:4px;min-width:32px;min-height:44px;display:flex;align-items:center;justify-content:center">🔕</button>
@@ -612,8 +610,7 @@ document.head.appendChild(_link);
       <!-- 📤 שיתוף -->
       <div style="margin-bottom:12px">
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
-          <button onclick="(function(){var pr=JSON.parse(localStorage.getItem('cf7pr')||'{}');var sc=JSON.parse(localStorage.getItem('cf7p')||'[]');var b=sc.length?Math.max.apply(null,sc.map(function(s){return parseFloat(s.bar||0);})):0;window.open('https://wa.me/?text='+encodeURIComponent('⚔ Combat Fit
-'+(pr.name||'לוחם')+' בר-אור: '+b),'_blank');})()" style="padding:10px 2px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);border-radius:10px;color:#25d366;font-size:9px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:50px">&#128241;<br/>WA</button>
+          <button onclick="shareWhatsApp()" style="padding:10px 2px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);border-radius:10px;color:#25d366;font-size:9px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:50px">&#128241;<br/>WA</button>
           <button onclick="_shareInstagramCopy()" style="padding:10px 2px;background:rgba(225,48,108,.08);border:1px solid rgba(225,48,108,.2);border-radius:10px;color:#e1306c;font-size:9px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:50px">&#128248;<br/>IG</button>
           <button onclick="window.open('https://twitter.com/intent/tweet?text=%23CombatFitIL','_blank')" style="padding:10px 2px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#e2e8f0;font-size:9px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:50px">&#120143;<br/>X</button>
           <button onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcombatfit.il','_blank')" style="padding:10px 2px;background:rgba(24,119,242,.08);border:1px solid rgba(24,119,242,.2);border-radius:10px;color:#60a5fa;font-size:9px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:50px">&#128077;<br/>FB</button>
@@ -818,7 +815,6 @@ document.head.appendChild(_link);
     <button class="tab on" onclick="tt('tb-br',this)">בר-אור</button>
     <button class="tab" onclick="tt('tb-gi',this)">גיבוש</button>
     <button class="tab" onclick="tt('tb-pr',this)">פרופיל</button>
-    <button class="tab" onclick="tt('tb-1rm',this)">1RM</button>
     <button class="tab" onclick="tt('tb-nu',this)">תזונה</button>
     <button class="tab" onclick="tt('tb-idf',this)">🪖 ניקוד צה"ל</button>
     <button class="tab" onclick="tt('tb-cm',this)">🔴 מצב קרב</button>
@@ -828,7 +824,7 @@ document.head.appendChild(_link);
   <div id="tb-br">
     <div class="card hot">
       <div class="sh">⏱ מחשבון בר-אור</div>
-      <div class="mini" style="margin-bottom:8px">ריצה 40% + שכיבות 25% + מתח 20% + ישיבות 15%</div>
+      <div class="mini" style="margin-bottom:8px">ריצה 40% + שכיבות 25% + מתח 20% + כפיפות בטן 15%</div>
       <div class="r2">
         <div><label>ריצה 2ק"מ (ד:ש)</label><input id="bt" type="text" placeholder="9:00" inputmode="numeric" oninput="calcBaror()"/></div>
         <div><label>גיל</label><input id="bage" type="number" value="18" min="16" max="25" oninput="calcBaror()"/></div>
@@ -837,7 +833,7 @@ document.head.appendChild(_link);
         <div><label>שכיבות (2 דקות)</label><input id="bpu" type="number" placeholder="55" min="0" oninput="calcBaror()"/></div>
         <div><label>מתח (מקסימום)</label><input id="bpl" type="number" placeholder="12" min="0" oninput="calcBaror()"/></div>
       </div>
-      <div><label>ישיבות (2 דקות)</label><input id="bsi" type="number" placeholder="70" min="0" oninput="calcBaror()"/></div>
+      <div><label>כפיפות בטן (2 דקות)</label><input id="bsi" type="number" placeholder="70" min="0" oninput="calcBaror()"/></div>
       <button class="btn bp" onclick="calcBaror()">חשב ציון</button>
       
   <!-- Goal Setting -->
@@ -919,16 +915,6 @@ document.head.appendChild(_link);
 
       <button class="btn bp" style="width:100%" onclick="calcGib()">🎯 הערך לפי כל היחידות</button>
       
-  <!-- 1RM Calculator -->
-  <div class="card" style="margin-top:8px">
-    <div class="sh">🏋 מחשבון מקסימום (1RM)</div>
-    <div class="r2" style="margin-top:8px">
-      <div><label>משקל (ק"ג)</label><input id="rm-w" type="number" placeholder="100" inputmode="decimal" oninput="calcRM()"/></div>
-      <div><label>חזרות</label><input id="rm-r" type="number" placeholder="5" inputmode="numeric" oninput="calcRM()"/></div>
-    </div>
-    <div id="rm-res" style="margin-top:8px"></div>
-  </div>
-
   <div id="gi-res" style="margin-top:10px"></div>
     </div>
   </div>
@@ -1092,8 +1078,7 @@ document.head.appendChild(_link);
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
           <button class="btn" id="dlv-fresh" onclick="setDuneLv('fresh',this)" style="background:rgba(0,255,136,.08);border:2px solid var(--pri);color:var(--pri);font-size:11px;font-weight:900;min-height:50px">🟢 מתחיל<br/><span style="font-size:8px;opacity:.7">טירונות</span></button>
           <button class="btn" id="dlv-mid" onclick="setDuneLv('mid',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900;min-height:50px">🟡 קרבי<br/><span style="font-size:8px;opacity:.7">חי"ר/סיירת</span></button>
-          <button class="btn" id="dlv-hard" onclick="setDuneLv('hard',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900;min-height:50px">🟠 גיבוש<br/><span style="font-size:8px;opacity:.7">קומנדו</span></button>
-          <button class="btn" id="dlv-gibush" onclick="setDuneLv('gibush',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900;min-height:46px;grid-column:span 3">💀 עילית — מטכ"ל / שייטת 13 / שלדג / 669</button>
+          <button class="btn" id="dlv-hard" onclick="setDuneLv('hard',this)" style="background:var(--card3);border:1px solid var(--b2);font-size:11px;font-weight:900;min-height:50px">🟠 גיבוש<br/><span style="font-size:8px;opacity:.7">קומנדו/עילית</span></button>
         </div>
 
         <label>🎒 ציוד זמין</label>
@@ -1354,15 +1339,16 @@ document.head.appendChild(_link);
   <!-- Add competitor -->
   <div class="card">
     <div class="sh">➕ הוסף מתחרה</div>
+    <div class="mini" style="margin-bottom:8px;color:var(--txt3)">הציון מחושב אוטומטית לפי הביצועים 💡</div>
     <div class="r2">
       <div><label>שם / כינוי</label><input id="lb-nm" type="text" placeholder="ירון"/></div>
-      <div><label>ציון (0-100)</label><input id="lb-sc" type="number" placeholder="75" min="0" max="100"/></div>
+      <div><label>2K ריצה (שנ)</label><input id="lb-run" type="number" placeholder="520"/></div>
     </div>
-    <div class="r3">
-      <div><label>2K (שנ)</label><input id="lb-run" type="number" placeholder="520"/></div>
-      <div><label>שכיבות</label><input id="lb-psh" type="number" placeholder="60"/></div>
+    <div class="r2">
+      <div><label>שכיבות (2 דק׳)</label><input id="lb-psh" type="number" placeholder="60"/></div>
       <div><label>מתח</label><input id="lb-pul" type="number" placeholder="14"/></div>
     </div>
+    <input id="lb-sc" type="hidden" value="0"/>
     <div class="r2" style="margin-top:8px">
       <select id="lb-unit-sel">
         <option value="gen">קרבי</option><option value="golani">גולני</option>
@@ -1476,17 +1462,10 @@ document.head.appendChild(_link);
     <div class="card cc">
       <div class="sh c">🗺 מסלול ריצה</div>
       <div class="mini" style="margin-bottom:9px">חפש מיקום, הוסף נקודות למסלול, ואז הפעל מעקב ריצה</div>
-      <div style="display:flex;gap:6px;margin-bottom:8px">
-        <input id="map-search" type="text" placeholder="🔍 חפש מיקום..." style="flex:1"/>
-        <button class="btn bp bsm" onclick="searchMapLocation()" style="width:60px">חפש</button>
-      </div>
-      <div id="gmap" style="width:100%;height:300px;border-radius:12px;border:1px solid var(--b2);overflow:hidden;position:relative">
-        <div id="gmap-loading" style="position:absolute;inset:0;background:#0d1b2a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;text-align:center;color:var(--txt2)">
-          <div style="font-size:40px;margin-bottom:10px">🗺</div>
-          <div style="font-size:12px;margin-bottom:14px">לחץ לטעינת מפה</div>
-          <button class="btn bp" onclick="loadLeafletMap()">📍 טען מפה</button>
-        </div>
-        <div id="leaflet-map" style="width:100%;height:100%;display:none"></div>
+      <div style="background:linear-gradient(135deg,rgba(0,229,255,.08),var(--card2));border:1px solid rgba(0,229,255,.2);border-radius:12px;padding:14px;margin-bottom:10px;text-align:center">
+        <div style="font-size:32px;margin-bottom:6px">📍</div>
+        <div style="font-size:13px;font-weight:800;color:var(--cyan);margin-bottom:4px">מעקב ריצה GPS</div>
+        <div style="font-size:11px;color:var(--txt3)">מודד מרחק וזמן בזמן אמת לפי ה-GPS שלך</div>
       </div>
       <div id="route-stats" style="margin-top:10px">
         <!-- MapRunner-style live stats -->
@@ -1527,15 +1506,6 @@ document.head.appendChild(_link);
           <div id="rs-splits-labels" style="display:flex;gap:4px;margin-top:3px"></div>
         </div>
 
-        <div class="r2" style="margin-top:8px">
-          <div><label>קצב יעד (ד:ש/ק"מ)</label><input id="rt-pace" type="text" value="5:30" inputmode="numeric" oninput="refreshLPolyline()"/></div>
-          <div><label>משקל ק"ג</label><input id="rt-wgt" type="number" value="72" oninput="refreshLPolyline()"/></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">
-          <button class="btn bs bsm" onclick="undoRoutePt()">↩ בטל</button>
-          <button class="btn br bsm" onclick="clearRoute()">🗑 נקה</button>
-          <button class="btn bp bsm" onclick="saveRoute()">💾 שמור</button>
-        </div>
         <!-- RUN START BUTTON -->
         <button id="run-start-btn" onclick="startRun()" style="margin-top:10px;width:100%;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;font-size:17px;font-weight:900;letter-spacing:1.5px;border:none;border-radius:13px;padding:17px;box-shadow:0 4px 24px rgba(0,255,136,.4);cursor:pointer;font-family:var(--fd)">
           ▶ הפעל מעקב ריצה GPS
@@ -1905,14 +1875,8 @@ document.head.appendChild(_link);
           <button class="btn" onclick="startMentalEx('breathing')" style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);padding:12px;font-size:12px;font-weight:700">
             💨 נשימה טקטית<br/><span style="font-size:9px;color:var(--txt3)">4-7-8 / Box breathing</span>
           </button>
-          <button class="btn" onclick="startMentalEx('focus')" style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);padding:12px;font-size:12px;font-weight:700">
-            🎯 ריכוז לחץ<br/><span style="font-size:9px;color:var(--txt3)">Stress inoculation</span>
-          </button>
           <button class="btn" onclick="startMentalEx('visualization')" style="background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.2);padding:12px;font-size:12px;font-weight:700">
             🌄 ויזואליזציה<br/><span style="font-size:9px;color:var(--txt3)">Mental rehearsal</span>
-          </button>
-          <button class="btn" onclick="startMentalEx('cold')" style="background:rgba(10,132,255,.06);border:1px solid rgba(10,132,255,.2);padding:12px;font-size:12px;font-weight:700">
-            🧊 חשיפה לחץ<br/><span style="font-size:9px;color:var(--txt3)">Cold exposure protocol</span>
           </button>
         </div>
         
@@ -2280,7 +2244,7 @@ function initCM(){
   const b=document.getElementById('mode-btn');
   if(b)b.textContent=coachMode?'⚔ ספורטאי':'🎖 מאמן';
   const lm=document.getElementById('logo-main');if(lm)lm.textContent=coachMode?'COMBAT FIT COACH':'COMBAT FIT';
-  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v20.0':'IDF ELITE SYSTEM v20.0 PRO';
+  const ls=document.getElementById('logo-sub');if(ls)ls.textContent=coachMode?'TRAINER DASHBOARD v25.0':'IDF ELITE SYSTEM v25.0 PRO';
   // Show/hide coach panel
   const afc=document.getElementById('ann-feed-card');
   const lbo=document.getElementById('lb-out');
@@ -2480,11 +2444,12 @@ function tt(id,el){
 }
 function trt(id,btn){
   window._activeTrain=id;
-  // Hide all training sections safely
-  ['tr-str','tr-run','tr-route','tr-build','tr-hist','tr-tmr',
+  // Hide ALL training sections forcefully
+  ['tr-str','tr-run','tr-route','tr-hist','tr-tmr',
    'tr-rec','tr-body','tr-hr','tr-ruck','tr-period','tr-scale',
    'tr-sleep','tr-injury','tr-gibush'].forEach(function(x){
-    var e=document.getElementById(x);if(e){e.style.display='none';}
+    var e=document.getElementById(x);
+    if(e){e.style.display='none';e.classList.remove('active');}
   });
   // Show target
   var el=document.getElementById(id);
@@ -2497,12 +2462,18 @@ function trt(id,btn){
       tabsContainer.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
     }
     if(btn)btn.classList.add('on');
+    else{
+      // If called without button, find and highlight matching tab
+      var allTabs=document.querySelectorAll('.tabs .tab');
+      allTabs.forEach(function(t){
+        t.classList.toggle('on', t.getAttribute('onclick')&&t.getAttribute('onclick').indexOf("'"+id+"'")>=0);
+      });
+    }
   }catch(e){}
   // Init section content
   try{
-    if(id==='tr-route'&&typeof initRoute==='function')initRoute();
+    if(id==='tr-route'&&typeof initRoute==='function'){initRoute();setTimeout(function(){try{if(typeof gmap!=='undefined'&&gmap&&gmap.invalidateSize)gmap.invalidateSize();}catch(e){}},200);}
     if(id==='tr-hist'){if(typeof renderHistory==='function')renderHistory();setTimeout(function(){try{renderProgressChart&&renderProgressChart();}catch(e){}},300);}
-    if(id==='tr-build'&&typeof initBuilder==='function')initBuilder();
     if(id==='tr-rec'&&typeof initMuscleGrid==='function'){initMuscleGrid();setTimeout(function(){try{calcRecovery&&calcRecovery();}catch(e){}},50);}
     if(id==='tr-tmr'&&typeof onTM==='function')onTM();
     if(id==='tr-body'&&typeof initMuscleGrid==='function')initMuscleGrid();
@@ -2821,10 +2792,11 @@ function calcStrengthFull(){
 
   // Benchmarks vs IDF units
   const benchmarks=[
-    {n:'סיירת מטכ"ל / שייטת',pull:20,push:65,plank:180,col:'var(--red)',emoji:'🔱'},
+    {n:'סיירת מטכ"ל / שייטת 13',pull:20,push:65,plank:180,col:'var(--red)',emoji:'🔱'},
+    {n:'שלדג / 669',pull:17,push:62,plank:165,col:'var(--cyan)',emoji:'🦅'},
     {n:'קומנדו (אגוז/מגלן/דובדבן)',pull:16,push:60,plank:150,col:'var(--orange)',emoji:'💀'},
-    {n:'גולני / צנחנים / גבעתי',pull:12,push:50,plank:120,col:'var(--pri)',emoji:'🟢'},
-    {n:'כפיר / נח"ל / כללי',pull:8,push:40,plank:90,col:'var(--yellow)',emoji:'🟡'},
+    {n:'סיירות חי"ר / עוקץ / יהל"ם',pull:14,push:55,plank:135,col:'var(--purple)',emoji:'🎯'},
+    {n:'גולני / צנחנים / גבעתי / כפיר',pull:12,push:50,plank:120,col:'var(--pri)',emoji:'🟢'},
   ];
 
   let html=`
@@ -2890,7 +2862,6 @@ function calcGib(){
     {n:'קומנדו: אגוז / מגלן / דובדבן',r3:11,r5:21,pl:15,ps:60,pla:150,g4:65,col:'var(--orange)'},
     {n:'סיירות חי"ר / עוקץ / יהל"ם',r3:11.5,r5:21.5,pl:13,ps:55,pla:130,g4:68,col:'var(--purple)'},
     {n:'גולני / צנחנים / גבעתי / כפיר',r3:12,r5:22,pl:12,ps:50,pla:120,g4:70,col:'var(--pri)'},
-    {n:'נח"ל / קרבי כללי',r3:13,r5:24,pl:8,ps:40,pla:90,g4:76,col:'var(--txt2)'},
   ];
   let html='';
   us.forEach(u=>{
@@ -3245,9 +3216,33 @@ function buildWeekPlan(){
       return chosen.indexOf(d)>=0?d:{name:d.name,type:'מנוחה / התאוששות',icon:'😴',int:0,exs:[{e:'מנוחה אקטיבית',s:'מתיחות 10 דק׳ + הליכה קלה',t:'התאוששות חשובה לא פחות מאימון'}]};
     });
   }
+  // Calculate weekly intensity stats
+  var totalInt=0,activeDays=0,restCount=0;
+  selectedDays.forEach(function(d){if(d.int>0){totalInt+=d.int;activeDays++;}else{restCount++;}});
+  var avgInt=activeDays>0?(totalInt/activeDays):0;
+  var volumeLabel=avgInt>=4.3?'עומס גבוה מאוד 🔴':avgInt>=3.5?'עומס גבוה 🟠':avgInt>=2.5?'עומס בינוני 🟡':'עומס קל 🟢';
+  var weekScore=Math.round((totalInt/(activeDays*5||1))*100);
   let html=`<div class="card" style="border-right:4px solid ${u.col}">
     <div class="sh" style="color:${u.col}">${u.emoji} שבוע ${wn} — ${u.n}</div>
-    <div class="mini" style="margin-bottom:10px">עצימות: <strong>${intLbl}</strong> · ${daysWanted} ימי אימון | לחץ יום לפרטים + וידאו</div>`;
+    <div class="mini" style="margin-bottom:10px">עצימות: <strong>${intLbl}</strong> · ${daysWanted} ימי אימון | לחץ יום לפרטים + וידאו</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+      <div style="background:var(--card2);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-family:var(--fd);font-size:24px;color:${u.col}">${activeDays}</div>
+        <div style="font-size:9px;color:var(--txt3)">ימי אימון</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-family:var(--fd);font-size:24px;color:var(--cyan)">${restCount}</div>
+        <div style="font-size:9px;color:var(--txt3)">ימי מנוחה</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-family:var(--fd);font-size:24px;color:var(--yellow)">${avgInt.toFixed(1)}</div>
+        <div style="font-size:9px;color:var(--txt3)">עצימות ממוצעת</div>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(255,140,0,.08),var(--card2));border:1px solid rgba(255,140,0,.2);border-radius:10px;padding:10px;margin-bottom:12px;text-align:center">
+      <div style="font-size:11px;color:var(--txt2)">📊 עומס אימונים שבועי</div>
+      <div style="font-size:15px;font-weight:900;color:var(--orange);margin-top:2px">${volumeLabel}</div>
+    </div>`;
   selectedDays.forEach((day,i)=>{
     const isToday=(i===today);
     const dkey=`w${wn}_d${i}`;
@@ -3316,14 +3311,26 @@ function lbTab(p,el){
   el.classList.add('on');renderLeaderboard();
 }
 
+function _calcLeagueScore(run,psh,pul){
+  // Run score (2K): 480s(8:00)=100, 600s(10:00)=40 — lower is better
+  var runSc=run&&run<900?Math.max(0,Math.min(100,Math.round(100-(run-480)/2.4))):40;
+  // Pushups: 70+=100, 30=40
+  var pshSc=Math.max(0,Math.min(100,Math.round(psh*1.43)));
+  // Pullups: 20+=100, 5=40
+  var pulSc=Math.max(0,Math.min(100,Math.round(pul*5)));
+  // Weighted: run 40% + pushups 30% + pullups 30%
+  return Math.round(runSc*0.4 + pshSc*0.3 + pulSc*0.3);
+}
+
 function addLbEntry(){
   const nm=document.getElementById('lb-nm').value.trim();
   if(!nm){notify('הכנס שם','r');return;}
-  const sc=parseInt(document.getElementById('lb-sc').value||0);
   const run=parseInt(document.getElementById('lb-run').value||999);
   const psh=parseInt(document.getElementById('lb-psh').value||0);
   const pul=parseInt(document.getElementById('lb-pul').value||0);
   const unit=document.getElementById('lb-unit-sel').value;
+  // Score is auto-calculated from performance — no manual entry
+  const sc=_calcLeagueScore(run,psh,pul);
   const list=ld(K.LB,[]);
   // Check if athlete already exists (case-insensitive name match) — update instead of duplicate
   var existingIdx=list.findIndex(function(e){return (e.nm||'').trim().toLowerCase()===nm.toLowerCase();});
@@ -3332,14 +3339,14 @@ function addLbEntry(){
     var prev=list[existingIdx];
     list[existingIdx]={nm,sc,run,psh,pul,unit,emoji:prev.emoji||EMOJIS[0],added:prev.added||new Date().toISOString(),updated:new Date().toISOString()};
     sv(K.LB,list);
-    ['lb-nm','lb-sc','lb-run','lb-psh','lb-pul'].forEach(id=>document.getElementById(id).value='');
-    renderLeaderboard();notify(`${nm} עודכן בדירוג! 🔄`);
+    ['lb-nm','lb-run','lb-psh','lb-pul'].forEach(id=>document.getElementById(id).value='');
+    renderLeaderboard();notify(`${nm} עודכן! ציון: ${sc} 🔄`);
   } else {
     const emoji=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
     list.push({nm,sc,run,psh,pul,unit,emoji,added:new Date().toISOString()});
     sv(K.LB,list);
-    ['lb-nm','lb-sc','lb-run','lb-psh','lb-pul'].forEach(id=>document.getElementById(id).value='');
-    renderLeaderboard();notify(`${nm} נוסף לדירוג! 🏆`);
+    ['lb-nm','lb-run','lb-psh','lb-pul'].forEach(id=>document.getElementById(id).value='');
+    renderLeaderboard();notify(`${nm} נוסף! ציון: ${sc} 🏆`);
   }
   // Auto-push to Firebase leaderboard
   if(window._pushLBScore){
@@ -3392,6 +3399,7 @@ async function renderLeaderboard(){
 }
 
 function renderLBList(list,isCloud){
+  window._renderedLB=list; // store for delete/edit lookup
   if(!list.length){
     document.getElementById('lb-out').innerHTML='<div class="card" style="text-align:center;padding:20px"><div style="font-size:32px;margin-bottom:8px">🏆</div><div class="mini">'+(isCloud?'היה הראשון בלידרבורד!':'הוסף את עצמך!')+' </div>'+(isCloud?'':'<div class="mini" style="margin-top:8px;opacity:.6">💡 הירשם לחשבון לתחרות בזמן אמת</div>')+'</div>';
     return;
@@ -3406,6 +3414,8 @@ function renderLBList(list,isCloud){
     var u=UNITS[e.unit]||UNITS.gen||{n:'קרבי',col:'#888'};
     var rm=e.run&&e.run<900?Math.floor(e.run/60)+':'+String(e.run%60).padStart(2,'0'):'--';
     var editBtn=isCloud?'':'<button onclick="editLbEntry('+i+')" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);color:var(--purpleL);border-radius:7px;font-size:14px;padding:4px 8px;cursor:pointer;margin-right:4px" title="עדכן נתונים">✏️</button>';
+    var delBtn='<button onclick="deleteLbEntry('+i+','+(isCloud?'true':'false')+')" style="background:rgba(255,45,85,.12);border:1px solid rgba(255,45,85,.25);color:var(--red);border-radius:7px;font-size:14px;padding:4px 8px;cursor:pointer;margin-right:4px" title="מחק">🗑</button>';
+    editBtn=editBtn+delBtn;
     html2+='<div class="lb-row '+medal+' '+(e.isMe?'me-row':'')+'"><div class="lb-rnk '+medal+'">'+rankEmoji(i)+'</div><div class="lb-av">'+(e.emoji||'⚔')+'</div><div class="lb-inf"><div class="lb-nm">'+e.nm+(e.isMe?' (אני)':'')+'</div><div class="lb-sub" style="color:'+u.col+'">'+u.n+(rm!=='--'?' | 2K:'+rm:'')+'</div></div>'+editBtn+'<div class="lb-sc"><div class="lb-sc-n">'+e.sc+'</div><div class="lb-dl eq">/ 100</div></div></div>';
   });
   html2+='</div>';
@@ -3414,25 +3424,45 @@ function renderLBList(list,isCloud){
 
 // Fill the form with an existing athlete's data for quick update
 function editLbEntry(idx){
-  var list=ld(K.LB,[]);
-  var e=list[idx];
+  var rendered=window._renderedLB||[];
+  var e=rendered[idx];
   if(!e)return;
   var set=function(id,v){var el=document.getElementById(id);if(el)el.value=v;};
   set('lb-nm',e.nm||'');
-  set('lb-sc',e.sc||'');
   set('lb-run',e.run&&e.run<900?e.run:'');
   set('lb-psh',e.psh||'');
   set('lb-pul',e.pul||'');
   var us=document.getElementById('lb-unit-sel');if(us&&e.unit)us.value=e.unit;
-  // Scroll the form into view
   var form=document.getElementById('lb-nm');
   if(form){form.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){form.focus();},300);}
   if(typeof notify==='function')notify('✏️ ערוך את הנתונים ולחץ "הוסף/עדכן"','c');
 }
 
-// ═══════════════════════════════════════════════════
-// SHARE CARD
-// ═══════════════════════════════════════════════════
+function deleteLbEntry(idx,isCloud){
+  var rendered=window._renderedLB||[];
+  var entry=rendered[idx];
+  var name=entry?(entry.nm||'משתמש'):'משתמש';
+  if(!confirm('למחוק את "'+name+'" מהדירוג?'))return;
+  if(isCloud){
+    if(window._deleteLBByName){
+      window._deleteLBByName(name);
+      if(typeof notify==='function')notify('🗑 נמחק מהדירוג','y');
+      setTimeout(function(){renderLeaderboard();},500);
+    } else {
+      if(typeof notify==='function')notify('מחיקה מהענן לא זמינה כרגע','y');
+    }
+    return;
+  }
+  // Local entry — find by name in stored list (index may differ after sorting)
+  var list=ld(K.LB,[]);
+  var realIdx=list.findIndex(function(e){return (e.nm||'')===name;});
+  if(realIdx<0)realIdx=idx;
+  if(realIdx<0||realIdx>=list.length)return;
+  list.splice(realIdx,1);
+  sv(K.LB,list);
+  renderLeaderboard();
+  if(typeof notify==='function')notify('🗑 נמחק מהדירוג','y');
+}
 function refreshShareCard(){
   const pr=ld(K.PR,{});
   const pg=ld(K.P,[]);
@@ -4562,7 +4592,6 @@ let runPolyline=null;
 
 function startRun(){
   if(!navigator.geolocation){notify('GPS לא זמין במכשיר זה','r');return;}
-  if(!window._lmap){loadLeafletMap();setTimeout(startRun,1500);return;}
   // Show live run bar
   var liveBar=document.getElementById('live-run-bar');
   var startBtn=document.getElementById('run-start-btn');
@@ -4573,12 +4602,8 @@ function startRun(){
   window._runPts=[];
   window._runDist=0;
   window._runLastPos=null;
+  window._runLastKM=0;
   window._runPaceWindow=[];
-  // Create live run polyline (yellow)
-  if(window._lmap){
-    if(window._runPoly) window._runPoly.remove();
-    window._runPoly=L.polyline([],{color:'#ffd60a',weight:5,opacity:.9}).addTo(window._lmap);
-  }
   // Start GPS watch
   window._gpsWatch=navigator.geolocation.watchPosition(function(pos){
     onGPSUpdate(pos);
@@ -4593,6 +4618,8 @@ function startRun(){
     var m=Math.floor(elapsed/60),s=elapsed%60;
     var ltEl=document.getElementById('lr-time');
     if(ltEl) ltEl.textContent=m+':'+(String(s).padStart(2,'0'));
+    var rsTime=document.getElementById('rs-time');
+    if(rsTime) rsTime.textContent=m+':'+(String(s).padStart(2,'0'));
   },1000);
   notify('🔴 מעקב GPS פעיל — צא לרוץ!','p');
 }
@@ -4601,18 +4628,8 @@ function onGPSUpdate(pos){
   var lat=pos.coords.latitude, lng=pos.coords.longitude;
   var accuracy=pos.coords.accuracy;
   if(accuracy>50) return; // Filter bad readings
-  var latlng=L.latLng(lat,lng);
-  window._runPts.push(latlng);
-  // Update polyline
-  if(window._runPoly) window._runPoly.setLatLngs(window._runPts);
-  if(window._lmap) window._lmap.panTo(latlng);
-  // Add user marker
-  if(!window._runMarker){
-    window._runMarker=L.circleMarker(latlng,{radius:8,fillColor:'#ffd60a',fillOpacity:1,color:'#fff',weight:2}).addTo(window._lmap);
-  } else {
-    window._runMarker.setLatLng(latlng);
-  }
-  // Calculate distance from last point
+  window._runPts.push({lat:lat,lng:lng});
+  // Calculate distance from last point (Haversine)
   if(window._runLastPos){
     var R=6371,dLat=(lat-window._runLastPos.lat)*Math.PI/180,dLng=(lng-window._runLastPos.lng)*Math.PI/180;
     var x=Math.sin(dLat/2)**2+Math.cos(window._runLastPos.lat*Math.PI/180)*Math.cos(lat*Math.PI/180)*Math.sin(dLng/2)**2;
@@ -4622,7 +4639,7 @@ function onGPSUpdate(pos){
       window._runPaceWindow.push({d:d,t:pos.timestamp});
     }
   }
-  window._runLastPos={lat,lng,ts:pos.timestamp};
+  window._runLastPos={lat:lat,lng:lng,ts:pos.timestamp};
   // Update UI
   var dist=window._runDist;
   var elapsed=(Date.now()-window._runStart)/1000;
@@ -4632,7 +4649,6 @@ function onGPSUpdate(pos){
   var el=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
   el('lr-dist',dist.toFixed(2));
   el('lr-pace',dist>0.1?pm+':'+(String(ps).padStart(2,'0')):'--:--');
-  // Also update route stats
   el('rs-dist',dist.toFixed(2));
   var m2=Math.floor(elapsed/60),s2=Math.round(elapsed%60);
   el('rs-time',m2+':'+(String(s2).padStart(2,'0')));
@@ -4645,9 +4661,6 @@ function onGPSUpdate(pos){
     var kPaceSec=elapsed/dist;
     var kpm=Math.floor(kPaceSec/60),kps=Math.round(kPaceSec%60);
     notify('📍 '+km+'ק"מ | קצב: '+kpm+':'+(String(kps).padStart(2,'0'))+'/ק"מ','c');
-    if(window._runPoly){
-      L.divIcon({html:'<div style="background:var(--pri);color:#000;border-radius:4px;padding:1px 4px;font-size:10px;font-weight:900">'+km+'km</div>',className:'',iconSize:[30,16]});
-    }
   }
 }
 
@@ -4659,7 +4672,6 @@ function stopRun(){
   var startBtn=document.getElementById('run-start-btn');
   if(liveBar) liveBar.style.display='none';
   if(startBtn) startBtn.style.display='block';
-  if(window._runMarker){window._runMarker.remove();window._runMarker=null;}
   // Save run
   var dist=window._runDist||0;
   if(dist>0.1){
@@ -4709,12 +4721,14 @@ function pauseRun(){
 
 
 function initRoute(){
-  renderSavedRoutes();
-  // Auto-load map if already initialized
-  if(gmap) return;
+  if(typeof renderSavedRoutes==='function')renderSavedRoutes();
 }
 
 function loadLeafletMap(){
+  // Map removed — GPS-only tracking now. No-op to prevent errors.
+  return;
+}
+function _disabledMapInit(){
   const loading=document.getElementById('gmap-loading');
   const mapDiv=document.getElementById('leaflet-map');
   if(!mapDiv)return;
@@ -5392,6 +5406,24 @@ function getNextDuneCmd(){
   return all[Math.floor(Math.random()*all.length)];
 }
 
+function _duneInstructions(text){
+  var t=text||'';
+  if(t.includes('שכיב'))return 'ידיים ברוחב כתפיים, גוף ישר כמו קרש, רד עד שהחזה כמעט נוגע ברצפה, דחוף חזרה.';
+  if(t.includes('מתח'))return 'אחיזה רחבה מהכתפיים, משוך עד שהסנטר מעל המוט, רד באיטיות לזרועות ישרות.';
+  if(t.includes('פלאנק'))return 'מרפקים מתחת לכתפיים, גוף ישר מהראש לעקבים, בטן נעולה, אל תרים את הישבן.';
+  if(t.includes('סקוואט')||t.includes('כפיפות ברך'))return 'רגליים ברוחב כתפיים, רד כאילו מתיישב על כיסא עד שהירכיים מקבילות לרצפה, גב ישר.';
+  if(t.includes('ברפי')||t.includes('בורפי'))return 'מעמידה → כפיפה → קפיצה לפלאנק → שכיבת שמיכה → קפיצה חזרה → קפיצה למעלה.';
+  if(t.includes('זחיל'))return 'זחילה על המרפקים והברכיים קרוב לקרקע, ראש למטה, תנועה רציפה ומהירה.';
+  if(t.includes('ריצה')||t.includes('הליכה')||t.includes('ספרינט'))return 'שמור על קצב יציב, נשום בקצב, נחיתה על כף הרגל הקדמית, ידיים בזווית 90°.';
+  if(t.includes('ג\'אמפינג')||t.includes('jumping'))return 'קפיצה עם פתיחת רגליים והרמת ידיים מעל הראש, חזרה — קצב מהיר ורציף.';
+  if(t.includes('לאנג')||t.includes('מספריים'))return 'צעד גדול קדימה, רד עד שהברך האחורית כמעט נוגעת ברצפה, דחוף חזרה והחלף רגל.';
+  if(t.includes('קפיצ'))return 'התכופף קלות ופוצץ כלפי מעלה בכל הכוח, נחיתה רכה על הברכיים מכופפות.';
+  if(t.includes('שק')||t.includes('אלונקה')||t.includes('משא')||t.includes('נשיא'))return 'גב ישר, הרם מהרגליים לא מהגב, החזק את המשקל קרוב לגוף, צעדים יציבים.';
+  if(t.includes('בטן')||t.includes('כפיפות בטן')||t.includes('ישיב'))return 'שכב על הגב, ברכיים כפופות, הרם את פלג הגוף העליון תוך כיווץ הבטן, רד באיטיות.';
+  if(t.includes('מדרג'))return 'עלייה וירידה מבוקרת, דחיפה מכף הרגל, שמור על קצב ונשימה.';
+  return 'בצע בטכניקה נכונה ובשליטה מלאה. איכות לפני כמות. נשום נכון.';
+}
+
 function fireNextDuneCmd(first=false){
   const cmd=getNextDuneCmd();if(!cmd)return;
   window._lastDuneCmd=cmd.t;
@@ -5400,7 +5432,7 @@ function fireNextDuneCmd(first=false){
   // Update UI
   document.getElementById('cm-cmd-emoji').textContent=cmd.e;
   document.getElementById('cm-cmd-text').textContent=cmd.t;
-  document.getElementById('cm-cmd-detail').textContent=cmd.d||'';
+  document.getElementById('cm-cmd-detail').textContent=_duneInstructions(cmd.t);
   document.getElementById('cm-count').textContent=combatCmdCount;
   const remSec=Math.max(0,Math.round((combatEndTime-Date.now()-combatPausedMs)/1000));
   const remEl=document.getElementById('cm-remain-cnt');
@@ -6364,6 +6396,14 @@ function switchScatterAxis(axis, btn) {
   renderCoachScatter();
 }
 
+function shareWhatsApp(){
+  var pr=JSON.parse(localStorage.getItem('cf7pr')||'{}');
+  var sc=JSON.parse(localStorage.getItem('cf7p')||'[]');
+  var b=sc.length?Math.max.apply(null,sc.map(function(s){return parseFloat(s.bar||0);})):0;
+  var name=pr.name||'לוחם';
+  var txt='⚔ Combat Fit IL\n'+name+' — ציון בר-אור: '+b+'\n\nמתאמן לקרבי? בוא נראה מה אתה שווה 💪\nhttps://app-for-running.vercel.app';
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+}
 function _shareTikTok(){
   var pr=JSON.parse(localStorage.getItem('cf7pr')||'{}');
   var sc=JSON.parse(localStorage.getItem('cf7p')||'[]');
@@ -7761,7 +7801,7 @@ function renderGroupAthletes(groupId){
       +'<div style="text-align:center;flex-shrink:0"><div style="font-family:var(--fd);font-size:22px;color:'+(a.sc>=80?'var(--pri)':a.sc>=60?'var(--yellow)':'var(--txt3)')+';line-height:1">'+(a.sc||'--')+'</div><div style="font-size:8px;color:var(--txt3)">ציון</div></div></div>'
       +'<div style="display:flex;gap:6px;margin-top:10px">'
       +'<button onclick="msgAthleteModal(\''+(a.uid||'')+'\',\''+(a.nm||a.name||'חניך').replace(/'/g,'')+'\',\''+(groupId||'')+'\',\'\')" style="flex:1;padding:8px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);color:var(--purpleL);border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">📤 הודעה</button>'
-      +'<button onclick="openEmailToAthlete(\''+(a.nm||a.name||'ספורטאי').replace(/'/g,'')+'\',\''+(a.email||'')+'\''+')" style="flex:1;padding:8px;background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.2);color:var(--cyan);border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">📧 מייל</button>'
+      +'<button onclick="openEmailToAthlete(\''+(a.nm||a.name||'ספורטאי').replace(/'/g,'')+'\',\''+(a.email||'')+'\')" style="flex:1;padding:8px;background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.2);color:var(--cyan);border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">📧 מייל</button>'
       +'<button onclick="msgGroupModal()" style="flex:1;padding:8px;background:rgba(255,140,0,.08);border:1px solid rgba(255,140,0,.2);color:var(--orange);border-radius:8px;font-size:11px;font-weight:800;cursor:pointer">📢 קבוצה</button>'
       +'</div></div>';
   }).join('');
@@ -8072,7 +8112,7 @@ function renderMsgAthletesList(){
     var u=(typeof UNITS!=='undefined'&&UNITS[a.unit||a.un])||{emoji:'⚔'};
     return '<div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--card2);border-radius:11px;margin-bottom:6px;border:1px solid var(--b1)">'
       +'<div style="font-size:22px">'+u.emoji+'</div><div style="flex:1;font-weight:800;font-size:13px">'+(a.nm||a.name||'חניך')+'</div>'
-      +'<button onclick="openMsgToAthlete(\''+uid+'\'\',\''+nm+'\')" style="padding:8px 14px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);color:var(--purpleL);border-radius:9px;font-size:11px;font-weight:900;cursor:pointer">📤 שלח</button>'
+      +'<button onclick="openMsgToAthlete(\''+uid+'\',\''+nm+'\')" style="padding:8px 14px;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.25);color:var(--purpleL);border-radius:9px;font-size:11px;font-weight:900;cursor:pointer">📤 שלח</button>'
       +'</div>';
   }).join('');
 }
@@ -10302,7 +10342,7 @@ import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-ap
 import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,
   onAuthStateChanged,signOut,updateProfile,GoogleAuthProvider,signInWithPopup}
   from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import{getFirestore,doc,setDoc,getDoc,serverTimestamp,collection,getDocs,
+import{getFirestore,doc,setDoc,getDoc,deleteDoc,serverTimestamp,collection,getDocs,
   query,where,orderBy,limit,onSnapshot,addDoc,updateDoc}
   from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
@@ -10441,6 +10481,19 @@ window._getMyMessages=async function(){
 
 // ── Leaderboard ──
 window._pushLBScore=async(name,score,unit)=>{if(!window._fbUID)return;try{await setDoc(doc(db,'leaderboard',window._fbUID),{name,score,unit,ts:serverTimestamp()},{merge:true});}catch{}};
+// Delete a leaderboard entry from cloud by matching name (searches all docs)
+window._deleteLBByName=async(name)=>{
+  if(!window._fbUID)return;
+  try{
+    const snap=await getDocs(collection(db,'leaderboard'));
+    for(const docSnap of snap.docs){
+      const data=docSnap.data();
+      if((data.name||'').trim()===(name||'').trim()){
+        await deleteDoc(doc(db,'leaderboard',docSnap.id));
+      }
+    }
+  }catch(e){console.warn('delete LB:',e);}
+};
 window._pullLBScores=async()=>{try{const q=query(collection(db,'leaderboard'),orderBy('score','desc'),limit(50));const snap=await getDocs(q);return snap.docs.map(d=>({...d.data(),uid:d.id}));}catch{return null;}};
 
 // ── Auth state ──
