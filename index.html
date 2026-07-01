@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v47</title>
+<title>⚔ COMBAT FIT IL PRO v55</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -1017,15 +1017,36 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
       </div>
       <div><label>יחידה מבוקשת</label>
         <select id="pun">
-          <option value="gen">קרבי כללי</option>
-          <option value="nahal">🌿 נח"ל</option>
-          <option value="golani">🟢 גולני</option><option value="para">🪂 צנחנים</option>
-          <option value="giv">🔶 גבעתי</option><option value="kfir">🦁 כפיר</option>
-          <option value="oketz">🐕‍🦺 עוקץ</option><option value="duvdevan">🍒 דובדבן</option>
-          <option value="maglan">🎯 מגלן</option>
-          <option value="egoz">💀 אגוז</option><option value="lotar">🔫 לוט"ר</option>
-          <option value="unit669">🚁 יחידה 669</option><option value="shaldag">🦅 שלדג</option>
-          <option value="shai">🤿 שייטת 13</option><option value="matkal">🔱 סיירת מטכ"ל</option>
+          <optgroup label="גדודים">
+            <option value="nahal">🌿 נח"ל</option>
+            <option value="golani">🟢 גולני</option>
+            <option value="para">🪂 צנחנים</option>
+            <option value="giv">🔶 גבעתי</option>
+            <option value="kfir">🦁 כפיר</option>
+          </optgroup>
+          <optgroup label="סיירות">
+            <option value="nahalsay">🌵 סיירת נח"ל</option>
+            <option value="egozsay">🦅 סיירת גולני</option>
+            <option value="givsay">🦂 סיירת גבעתי</option>
+            <option value="tzansay">🪂 סיירת צנחנים</option>
+            <option value="haruv">🌿 חרוב</option>
+          </optgroup>
+          <optgroup label="יחידות מיוחדות">
+            <option value="oketz">🐕‍🦺 עוקץ</option>
+            <option value="lotar">🔫 לוט"ר</option>
+            <option value="yaalom">💎 יהל"ם</option>
+          </optgroup>
+          <optgroup label="קומנדו">
+            <option value="duvdevan">🍒 דובדבן</option>
+            <option value="maglan">🎯 מגלן</option>
+            <option value="egoz">💀 אגוז</option>
+          </optgroup>
+          <optgroup label="יחידות עילית">
+            <option value="unit669">🚁 יחידה 669</option>
+            <option value="shaldag">🦅 שלדג</option>
+            <option value="shai">🤿 שייטת 13</option>
+            <option value="matkal">🔱 סיירת מטכ"ל</option>
+          </optgroup>
         </select>
       </div>
       <div><label>תאריך גיוס משוער</label><input id="pdr" type="date"/></div>
@@ -1404,6 +1425,7 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
 
   <!-- My share card -->
   <div class="share-card" id="my-share-card" style="">
+    <button onclick="openEditMyCard()" style="position:absolute;top:12px;left:12px;z-index:5;background:rgba(0,255,136,.12);border:1px solid var(--pri);color:var(--pri);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;min-height:34px">✏️ ערוך</button>
     <div class="sc-hd">
       <div class="sc-logo">⚔ COMBAT FIT IL</div>
       <div class="sc-dt" id="sc-date"></div>
@@ -1453,12 +1475,38 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
     <input id="lb-sc" type="hidden" value="0"/>
     <div class="r2" style="margin-top:8px">
       <select id="lb-unit-sel">
-        <option value="gen">קרבי</option><option value="golani">גולני</option>
-        <option value="para">צנחנים</option><option value="egoz">אגוז</option>
-        <option value="unit669">669</option><option value="shaldag">שלדג</option>
-        <option value="shai">שייטת 13</option><option value="matkal">מטכ"ל</option>
+        <optgroup label="גדודים">
+          <option value="nahal">🌿 נח"ל</option>
+          <option value="golani">🟢 גולני</option>
+          <option value="para">🪂 צנחנים</option>
+          <option value="giv">🔶 גבעתי</option>
+          <option value="kfir">🦁 כפיר</option>
+        </optgroup>
+        <optgroup label="סיירות">
+          <option value="nahalsay">🌵 סיירת נח"ל</option>
+          <option value="egozsay">🦅 סיירת גולני</option>
+          <option value="givsay">🦂 סיירת גבעתי</option>
+          <option value="tzansay">🪂 סיירת צנחנים</option>
+          <option value="haruv">🌿 חרוב</option>
+        </optgroup>
+        <optgroup label="יחידות מיוחדות">
+          <option value="oketz">🐕‍🦺 עוקץ</option>
+          <option value="lotar">🔫 לוט"ר</option>
+          <option value="yaalom">💎 יהל"ם</option>
+        </optgroup>
+        <optgroup label="קומנדו">
+          <option value="duvdevan">🍒 דובדבן</option>
+          <option value="maglan">🎯 מגלן</option>
+          <option value="egoz">💀 אגוז</option>
+        </optgroup>
+        <optgroup label="יחידות עילית">
+          <option value="unit669">🚁 יחידה 669</option>
+          <option value="shaldag">🦅 שלדג</option>
+          <option value="shai">🤿 שייטת 13</option>
+          <option value="matkal">🔱 סיירת מטכ"ל</option>
+        </optgroup>
       </select>
-      <button class="btn bp" style="margin-top:3px" onclick="addLbEntry()">+ הוסף / עדכן</button>
+      <button id="lb-add-btn" class="btn bp" style="margin-top:3px" onclick="addLbEntry()">+ הוסף / עדכן</button>
     </div>
   </div>
 
@@ -2042,6 +2090,16 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
         <div style="font-size:9px;color:var(--txt3)">ציון מוביל</div>
       </div>
     </div>
+    <!-- Weekly Report -->
+    <div class="card" style="margin-bottom:10px;padding:14px;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(0,229,255,.03));border:1px solid rgba(124,58,237,.2)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="sh p" style="margin:0">📋 דוח שבועי</div>
+        <button onclick="renderWeeklyReport()" style="font-size:10px;font-weight:800;padding:5px 12px;border-radius:8px;border:1px solid var(--purpleL);background:rgba(124,58,237,.1);color:var(--purpleL);cursor:pointer;min-height:36px">🔄 רענן</button>
+      </div>
+      <div id="weekly-report-body">
+        <div style="text-align:center;color:var(--txt3);font-size:11px;padding:10px">לחץ "רענן" ליצירת דוח</div>
+      </div>
+    </div>
   </div>
 
   <!-- TAB: ATHLETES -->
@@ -2278,30 +2336,30 @@ var SYNC_KEYS=['cf7p','cf7s','cf7r','cf7wt','cf7wd','cf7pr','cf7lb','cf7ath','cf
 // ═══════════════════════════════════════════════════
 var UNITS={
   // גדודים
-  nahal:   {n:"נח\"ל",        r:570,p:40,l:8, r3:13.0,r5:24.0,col:'#ffd60a',emoji:'🌿',group:'גדודים',desc:'חטיבת רגלים קרבית — לחימה שוטפת בגבולות ובמוצבים'},
-  golani:  {n:'גולני',        r:540,p:45,l:10,r3:12.0,r5:22.5,col:'#00cc6a',emoji:'🟢',group:'גדודים',desc:'חטיבת רגלים מובחרת — מסורת קרבית ארוכה, מסעות ועמידות פיזית'},
-  kfir:    {n:'כפיר',         r:555,p:42,l:9, r3:12.5,r5:23.0,col:'#ff6600',emoji:'🦁',group:'גדודים',desc:'חטיבת חי"ר הגדולה בצה"ל — פעילות שוטפת ביהודה, שומרון ובגבולות'},
-  para:    {n:'צנחנים',       r:510,p:50,l:12,r3:11.5,r5:22.0,col:'#0a84ff',emoji:'🪂',group:'גדודים',desc:'לוחמי פלס עילית — יכולת חדירה מהאוויר, מסעות קשים וכוח גוף עליון'},
-  giv:     {n:'גבעתי',        r:540,p:45,l:10,r3:12.0,r5:22.5,col:'#ff8800',emoji:'🔶',group:'גדודים',desc:'חטיבה עם נוכחות מבצעית גבוהה — עזה, יהודה ושומרון'},
+  nahal:   {n:"נח\"ל",        r:555,p:42,l:8, r3:12.5,r5:23.5,col:'#ffd60a',emoji:'🌿',group:'גדודים',desc:'חטיבת רגלים קרבית — לחימה שוטפת בגבולות ובמוצבים'},
+  golani:  {n:'גולני',        r:525,p:48,l:11,r3:11.5,r5:22.0,col:'#00cc6a',emoji:'🟢',group:'גדודים',desc:'חטיבת רגלים מובחרת — מסורת קרבית ארוכה, מסעות ועמידות פיזית'},
+  kfir:    {n:'כפיר',         r:540,p:45,l:10,r3:12.0,r5:22.5,col:'#ff6600',emoji:'🦁',group:'גדודים',desc:'חטיבת חי"ר הגדולה בצה"ל — פעילות שוטפת ביהודה, שומרון ובגבולות'},
+  para:    {n:'צנחנים',       r:510,p:52,l:13,r3:11.0,r5:21.5,col:'#0a84ff',emoji:'🪂',group:'גדודים',desc:'לוחמי פלס עילית — יכולת חדירה מהאוויר, מסעות קשים וכוח גוף עליון'},
+  giv:     {n:'גבעתי',        r:525,p:48,l:11,r3:11.5,r5:22.0,col:'#ff8800',emoji:'🔶',group:'גדודים',desc:'חטיבה עם נוכחות מבצעית גבוהה — עזה, יהודה ושומרון'},
   // סיירות חי"ר
-  nahalsay:{n:"סיירת נח\"ל",  r:495,p:54,l:13,r3:11.5,r5:21.5,col:'#9acd32',emoji:'🌵',group:'סיירות',desc:'גיחות לילה, איסוף מודיעין ולחימה בגבולות'},
-  egozsay: {n:'סיירת גולני',  r:495,p:55,l:13,r3:11.5,r5:21.5,col:'#228b22',emoji:'🦅',group:'סיירות',desc:'לוחמה בשטח הררי וסבוך, סיור ואיסוף מודיעין'},
-  givsay:  {n:'סיירת גבעתי',  r:495,p:55,l:13,r3:11.5,r5:21.5,col:'#ff4400',emoji:'🦂',group:'סיירות',desc:'לחימה בשטח עירוני ופתוח, מבצעי לילה'},
-  haruv:   {n:'חרוב',         r:500,p:53,l:12,r3:12.0,r5:22.0,col:'#8b6914',emoji:'🌿',group:'סיירות',desc:'סיירת כפיר — לחימה ביהודה ושומרון, מסעות לילה'},
-  tzansay: {n:'סיירת צנחנים', r:490,p:56,l:14,r3:11.5,r5:21.0,col:'#1e90ff',emoji:'🪂',group:'סיירות',desc:'מבצעי חדירה, חילוץ ועומק בשטח אויב'},
+  nahalsay:{n:"סיירת נח\"ל",  r:480,p:56,l:14,r3:11.0,r5:21.0,col:'#9acd32',emoji:'🌵',group:'סיירות',desc:'גיחות לילה, איסוף מודיעין ולחימה בגבולות'},
+  egozsay: {n:'סיירת גולני',  r:480,p:57,l:14,r3:11.0,r5:21.0,col:'#228b22',emoji:'🦅',group:'סיירות',desc:'לוחמה בשטח הררי וסבוך, סיור ואיסוף מודיעין'},
+  givsay:  {n:'סיירת גבעתי',  r:480,p:57,l:14,r3:11.0,r5:21.0,col:'#ff4400',emoji:'🦂',group:'סיירות',desc:'לחימה בשטח עירוני ופתוח, מבצעי לילה'},
+  haruv:   {n:'חרוב',         r:485,p:55,l:13,r3:11.0,r5:21.5,col:'#8b6914',emoji:'🌿',group:'סיירות',desc:'סיירת כפיר — לחימה ביהודה ושומרון, מסעות לילה'},
+  tzansay: {n:'סיירת צנחנים', r:475,p:58,l:15,r3:10.5,r5:20.5,col:'#1e90ff',emoji:'🪂',group:'סיירות',desc:'מבצעי חדירה, חילוץ ועומק בשטח אויב'},
   // יחידות מיוחדות
-  oketz:   {n:'עוקץ',         r:495,p:56,l:14,r3:11.5,r5:21.5,col:'#ff8800',emoji:'🐕‍🦺',group:'מיוחדות',desc:'יחידת כלבנים מובחרת — שילוב כלב נשק ויכולת לחימה גבוהה'},
-  lotar:   {n:'לוט"ר',        r:475,p:62,l:16,r3:11.0,r5:21.0,col:'#ff1493',emoji:'🔫',group:'מיוחדות',desc:'לוחמה בטרור — חילוץ חטופים, מניעת פיגועים, סיכול מבצעים'},
-  yaalom:  {n:'יהל"ם',        r:490,p:57,l:14,r3:11.5,r5:21.0,col:'#8b4513',emoji:'💎',group:'מיוחדות',desc:'הנדסה קרבית מיוחדת — חבלה, פיצוצים, טיהור מוקשים ונשק כימי'},
+  oketz:   {n:'עוקץ',         r:480,p:58,l:15,r3:11.0,r5:21.0,col:'#ff8800',emoji:'🐕‍🦺',group:'מיוחדות',desc:'יחידת כלבנים מובחרת — שילוב כלב נשק ויכולת לחימה גבוהה'},
+  lotar:   {n:'לוט"ר',        r:465,p:63,l:17,r3:10.5,r5:20.5,col:'#ff1493',emoji:'🔫',group:'מיוחדות',desc:'לוחמה בטרור — חילוץ חטופים, מניעת פיגועים, סיכול מבצעים'},
+  yaalom:  {n:'יהל"ם',        r:475,p:58,l:15,r3:10.5,r5:20.5,col:'#8b4513',emoji:'💎',group:'מיוחדות',desc:'הנדסה קרבית מיוחדת — חבלה, פיצוצים, טיהור מוקשים ונשק כימי'},
   // קומנדו
-  duvdevan:{n:'דובדבן',       r:480,p:60,l:15,r3:11.0,r5:21.0,col:'#dc143c',emoji:'🍒',group:'קומנדו',desc:'יחידת מסתערבים — חדירה לשטחי אויב בלבוש אזרחי, מבצעי מעצר'},
-  maglan:  {n:'מגלן',         r:475,p:60,l:16,r3:11.0,r5:20.5,col:'#4b0082',emoji:'🎯',group:'קומנדו',desc:'לחימה בעומק שטח האויב — איתור ומיקוד מטרות איכותיות'},
-  egoz:    {n:'אגוז',         r:480,p:60,l:15,r3:11.0,r5:21.0,col:'#ff2d55',emoji:'💀',group:'קומנדו',desc:'לחימה בשטח הררי וסבוך — מתמחה בלחימה נגד גרילה וטרור'},
+  duvdevan:{n:'דובדבן',       r:465,p:62,l:16,r3:10.5,r5:20.5,col:'#dc143c',emoji:'🍒',group:'קומנדו',desc:'יחידת מסתערבים — חדירה לשטחי אויב בלבוש אזרחי, מבצעי מעצר'},
+  maglan:  {n:'מגלן',         r:460,p:62,l:17,r3:10.0,r5:20.0,col:'#4b0082',emoji:'🎯',group:'קומנדו',desc:'לחימה בעומק שטח האויב — איתור ומיקוד מטרות איכותיות'},
+  egoz:    {n:'אגוז',         r:465,p:62,l:16,r3:10.5,r5:20.5,col:'#ff2d55',emoji:'💀',group:'קומנדו',desc:'לחימה בשטח הררי וסבוך — מתמחה בלחימה נגד גרילה וטרור'},
   // עילית
-  unit669: {n:'יחידה 669',    r:460,p:65,l:18,r3:10.5,r5:20.0,col:'#00e5ff',emoji:'🚁',group:'עילית',desc:'חילוץ לחימה של חיל האוויר — רפואה טקטית, צניחה וכושר עילית'},
-  shaldag: {n:'שלדג',         r:450,p:68,l:19,r3:10.0,r5:19.5,col:'#00bcd4',emoji:'🦅',group:'עילית',desc:'סיירת חיל האוויר לפעולות עומק — מבצעים מאחורי קווי האויב'},
-  shai:    {n:'שייטת 13',     r:450,p:72,l:22,r3:10.0,r5:19.0,col:'#00e5ff',emoji:'🤿',group:'עילית',desc:'זרוע הים המובחרת — גיבוש השחייה הקשה ביותר בצה"ל'},
-  matkal:  {n:"סיירת מטכ\"ל", r:450,p:68,l:20,r3:10.0,r5:19.0,col:'#ff2d55',emoji:'🔱',group:'עילית',desc:'הסיירת — מבצעי עומק קיצוניים ופינוי חטופים, גיבוש מהקשים בעולם'},
+  unit669: {n:'יחידה 669',    r:450,p:66,l:19,r3:10.0,r5:19.5,col:'#00e5ff',emoji:'🚁',group:'עילית',desc:'חילוץ לחימה של חיל האוויר — רפואה טקטית, צניחה וכושר עילית'},
+  shaldag: {n:'שלדג',         r:440,p:70,l:20,r3:9.5,r5:19.0,col:'#00bcd4',emoji:'🦅',group:'עילית',desc:'סיירת חיל האוויר לפעולות עומק — מבצעים מאחורי קווי האויב'},
+  shai:    {n:'שייטת 13',     r:435,p:72,l:22,r3:9.5,r5:18.5,col:'#00e5ff',emoji:'🤿',group:'עילית',desc:'זרוע הים המובחרת — גיבוש השחייה הקשה ביותר בצה"ל'},
+  matkal:  {n:"סיירת מטכ\"ל", r:435,p:70,l:21,r3:9.5,r5:18.5,col:'#ff2d55',emoji:'🔱',group:'עילית',desc:'הסיירת — מבצעי עומק קיצוניים ופינוי חטופים, גיבוש מהקשים בעולם'},
   gen:{n:'קרבי כללי',r:570,p:35,l:7,r3:13.0,r5:24.0,col:'#6a94aa',emoji:'🪖',group:'_',desc:''},
 };
 
@@ -2654,8 +2712,44 @@ function refreshDash(){
     const days=Math.ceil((new Date(pr.draft)-d)/86400000);
     if(days>0){
       const u=UNITS[pr.unit||'gen']||UNITS.gen;
+      // Readiness % — STRICT: steep penalty for missing targets, harsher for elite units
+      var scoresList=ld(K.P,[]);
+      var latest=scoresList.length?scoresList[0]:null;
+      var readiness=0;
+      if(latest){
+        var myRun=parseFloat(latest.run||0);   // seconds for 2km
+        var myPsh=parseFloat(latest.psh||0);
+        var myPul=parseFloat(latest.pul||0);
+        // Difficulty factor: elite units punish shortfalls much harder
+        var groupHarsh={'גדודים':1.6,'סיירות':2.0,'מיוחדות':2.4,'קומנדו':2.8,'עילית':3.4};
+        var harsh=groupHarsh[u.group]||2.0;
+        // Score each component: 100 if you meet/beat target, steep drop if you miss
+        function comp(ratio){
+          // ratio = how well you did vs target (1.0 = exactly at target, >1 = beat it)
+          if(ratio>=1)return 100;
+          // Below target: penalty grows with how far AND how elite the unit
+          var miss=1-ratio;              // how far below (0..1)
+          var penalty=miss*100*harsh;    // steep, scaled by unit difficulty
+          return Math.max(0,Math.round(100-penalty));
+        }
+        var runScore=0,pshScore=0,pulScore=0,wSum=0,wTotal=0;
+        // Run: target/yours (faster = higher ratio). If you're slower, ratio<1
+        if(myRun>0&&u.r){runScore=comp(u.r/myRun);wSum+=runScore*0.5;wTotal+=0.5;}
+        // Pull-ups: yours/target
+        if(u.l&&myPul>0){pulScore=comp(myPul/u.l);wSum+=pulScore*0.25;wTotal+=0.25;}
+        // Push-ups: yours/target
+        if(u.p&&myPsh>0){pshScore=comp(myPsh/u.p);wSum+=pshScore*0.25;wTotal+=0.25;}
+        if(wTotal>0){
+          readiness=Math.round(wSum/wTotal);
+        } else if(latest.bar){
+          readiness=Math.min(100,Math.round(parseFloat(latest.bar)/80*100));
+        }
+      }
+      var readyColor=readiness>=90?'var(--pri)':readiness>=70?'var(--yellow)':'var(--orange)';
+      var readyHtml=readiness>0?
+        `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px"><span style="color:var(--txt3)">מוכנות ל${u.n} ${u.emoji}</span><span style="color:${readyColor};font-weight:900">${readiness}%</span></div><div style="height:6px;background:var(--card3);border-radius:3px;overflow:hidden"><div style="height:100%;width:${readiness}%;background:${readyColor};border-radius:3px"></div></div></div>`:'';
       document.getElementById('cd-box').innerHTML=
-        `<div class="cdb"><div class="cdd" style="position:relative">${days}</div><div class="cdl">ימים עד גיוס</div><div class="cde">${u.n} ${u.emoji} · ${new Date(pr.draft).toLocaleDateString('he-IL')}</div></div>`;
+        `<div class="cdb"><div class="cdd" style="position:relative">${days}</div><div class="cdl">ימים עד גיוס</div><div class="cde">${u.n} ${u.emoji} · ${new Date(pr.draft).toLocaleDateString('he-IL')}</div>${readyHtml}</div>`;
     }
   }
   const pg=ld(K.P,[]);
@@ -3537,8 +3631,15 @@ function addLbEntry(){
   // Score is auto-calculated from performance — no manual entry
   const sc=_calcLeagueScore(run,psh,pul);
   const list=ld(K.LB,[]);
-  // Check if athlete already exists (case-insensitive name match) — update instead of duplicate
-  var existingIdx=list.findIndex(function(e){return (e.nm||'').trim().toLowerCase()===nm.toLowerCase();});
+  // If we're editing, find by the ORIGINAL name (so renaming works too)
+  var existingIdx=-1;
+  if(window._editingLBName){
+    existingIdx=list.findIndex(function(e){return (e.nm||'').trim().toLowerCase()===window._editingLBName.toLowerCase();});
+  }
+  // Otherwise, check if a competitor with this name already exists
+  if(existingIdx<0){
+    existingIdx=list.findIndex(function(e){return (e.nm||'').trim().toLowerCase()===nm.toLowerCase();});
+  }
   if(existingIdx>=0){
     // Update existing entry, keep emoji
     var prev=list[existingIdx];
@@ -3553,6 +3654,13 @@ function addLbEntry(){
     ['lb-nm','lb-run','lb-psh','lb-pul'].forEach(id=>document.getElementById(id).value='');
     renderLeaderboard();notify(`${nm} נוסף! ציון: ${sc} 🏆`);
   }
+  // Reset edit mode + button
+  window._editingLBName=null;
+  var addBtn=document.getElementById('lb-add-btn');
+  if(addBtn){addBtn.textContent='+ הוסף / עדכן';addBtn.style.background='';}
+  // Refresh all linked views so data stays in sync everywhere
+  if(typeof refreshDash==='function')try{refreshDash();}catch(e){}
+  if(typeof renderCoachGroup==='function'&&window.coachMode)try{renderCoachGroup();}catch(e){}
   // Auto-push to Firebase leaderboard
   if(window._pushLBScore){
     var _pr2=ld(K.PR,{});
@@ -3632,15 +3740,20 @@ function editLbEntry(idx){
   var rendered=window._renderedLB||[];
   var e=rendered[idx];
   if(!e)return;
+  // Remember the original name so we update the RIGHT entry even if name changes
+  window._editingLBName=(e.nm||'').trim();
   var set=function(id,v){var el=document.getElementById(id);if(el)el.value=v;};
   set('lb-nm',e.nm||'');
   set('lb-run',e.run&&e.run<900?e.run:'');
   set('lb-psh',e.psh||'');
   set('lb-pul',e.pul||'');
   var us=document.getElementById('lb-unit-sel');if(us&&e.unit)us.value=e.unit;
+  // Change button to show we're in edit mode
+  var btn=document.getElementById('lb-add-btn');
+  if(btn){btn.textContent='✅ שמור עדכון';btn.style.background='var(--pri)';}
   var form=document.getElementById('lb-nm');
-  if(form){form.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){form.focus();},300);}
-  if(typeof notify==='function')notify('✏️ ערוך את הנתונים ולחץ "הוסף/עדכן"','c');
+  if(form){try{form.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}setTimeout(function(){try{form.focus();}catch(e){}},300);}
+  if(typeof notify==='function')notify('✏️ ערוך את הנתונים ולחץ "שמור עדכון"','c');
 }
 
 function deleteLbEntry(idx,isCloud){
@@ -3673,6 +3786,73 @@ function deleteLbEntry(idx,isCloud){
   if(typeof notify==='function')notify('🗑 "'+name+'" נמחק','p');
   setTimeout(function(){renderLeaderboard();},isCloud?500:0);
 }
+function openEditMyCard(){
+  var pr=ld(K.PR,{});
+  var pg=ld(K.P,[]);
+  var latest=pg.length?pg[0]:{};
+  // Build unit options
+  var unitOpts='';
+  var groups={};
+  for(var key in UNITS){
+    if(key==='gen')continue;
+    var un=UNITS[key];
+    if(!groups[un.group])groups[un.group]=[];
+    groups[un.group].push('<option value="'+key+'"'+((pr.unit===key)?' selected':'')+'>'+un.emoji+' '+un.n+'</option>');
+  }
+  for(var g in groups){unitOpts+='<optgroup label="'+g+'">'+groups[g].join('')+'</optgroup>';}
+  var curRun=latest.run&&latest.run<900?latest.run:'';
+  var html='<div style="padding:6px">'+
+    '<div style="margin-bottom:10px"><label style="font-size:12px;color:var(--txt2)">שם / כינוי</label>'+
+      '<input id="ec-name" type="text" value="'+(pr.name||'').replace(/"/g,'&quot;')+'" style="width:100%;padding:10px;border-radius:8px;background:var(--card2);border:1px solid var(--b2);color:var(--txt);font-size:14px"/></div>'+
+    '<div style="margin-bottom:10px"><label style="font-size:12px;color:var(--txt2)">יחידה מבוקשת</label>'+
+      '<select id="ec-unit" style="width:100%;padding:10px;border-radius:8px;background:var(--card2);border:1px solid var(--b2);color:var(--txt);font-size:14px">'+unitOpts+'</select></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">'+
+      '<div><label style="font-size:11px;color:var(--txt2)">ריצה 2ק"מ (שנ\')</label><input id="ec-run" type="number" inputmode="numeric" value="'+curRun+'" placeholder="510" style="width:100%;padding:9px;border-radius:8px;background:var(--card2);border:1px solid var(--b2);color:var(--txt);font-size:14px;text-align:center"/></div>'+
+      '<div><label style="font-size:11px;color:var(--txt2)">שכיבות</label><input id="ec-psh" type="number" inputmode="numeric" value="'+(latest.psh||'')+'" placeholder="50" style="width:100%;padding:9px;border-radius:8px;background:var(--card2);border:1px solid var(--b2);color:var(--txt);font-size:14px;text-align:center"/></div>'+
+      '<div><label style="font-size:11px;color:var(--txt2)">מתח</label><input id="ec-pul" type="number" inputmode="numeric" value="'+(latest.pul||'')+'" placeholder="12" style="width:100%;padding:9px;border-radius:8px;background:var(--card2);border:1px solid var(--b2);color:var(--txt);font-size:14px;text-align:center"/></div>'+
+    '</div>'+
+    '<button onclick="saveMyCard()" class="btn bp" style="width:100%;min-height:46px;font-weight:900">💾 שמור עדכון</button>'+
+  '</div>';
+  openModal('✏️ עריכת הכרטיס שלי',html);
+}
+
+function saveMyCard(){
+  var pr=ld(K.PR,{});
+  var pg=ld(K.P,[]);
+  var name=document.getElementById('ec-name').value.trim();
+  var unit=document.getElementById('ec-unit').value;
+  var run=parseInt(document.getElementById('ec-run').value||0);
+  var psh=parseInt(document.getElementById('ec-psh').value||0);
+  var pul=parseInt(document.getElementById('ec-pul').value||0);
+  // Update profile (name + unit)
+  pr.name=name;pr.unit=unit;
+  sv(K.PR,pr);
+  // Update latest test result (run/psh/pul) + recalc bar score
+  var latest=pg.length?pg[0]:{};
+  if(run>0)latest.run=run;
+  if(psh>0)latest.psh=psh;
+  if(pul>0)latest.pul=pul;
+  // Recalculate bar score if we have the calc function
+  if(typeof _calcLeagueScore==='function'&&run>0){
+    latest.bar=_calcLeagueScore(run,psh,pul);
+  }
+  latest.date=latest.date||new Date().toISOString();
+  if(pg.length)pg[0]=latest; else pg.unshift(latest);
+  sv(K.P,pg);
+  // Sync the profile form fields too
+  var setv=function(id,v){var el=document.getElementById(id);if(el)el.value=v;};
+  setv('pnm',name);setv('pun',unit);
+  var wku=document.getElementById('wk-unit');if(wku)wku.value=unit;
+  // Refresh EVERYTHING that depends on this data
+  if(typeof refreshShareCard==='function')refreshShareCard();
+  if(typeof refreshDash==='function')refreshDash();
+  if(typeof renderLeaderboard==='function')renderLeaderboard();
+  if(typeof buildUnitTargets==='function')buildUnitTargets();
+  if(typeof closeModal==='function')closeModal();
+  if(typeof notify==='function')notify('✅ הכרטיס עודכן — כל הנתונים סונכרנו!','p');
+  if(typeof haptic==='function')haptic('success');
+}
+
 function refreshShareCard(){
   const pr=ld(K.PR,{});
   const pg=ld(K.P,[]);
@@ -6809,7 +6989,13 @@ if('wakeLock' in navigator){document.addEventListener('click',async function wl(
 const savedAge=localStorage.getItem('cf_age');if(savedAge)document.getElementById('ai-age').value=savedAge;
 const savedWgt=localStorage.getItem('cf_wgt');if(savedWgt)document.getElementById('weight').value=savedWgt;
 const pr=ld(K.PR,{});
-if(pr.unit){document.getElementById('wk-unit').value=pr.unit;document.getElementById('pun').value=pr.unit;}
+if(pr.unit){var wku=document.getElementById('wk-unit');if(wku)wku.value=pr.unit;var pun=document.getElementById('pun');if(pun)pun.value=pr.unit;}
+// Load all profile fields so edits persist visibly
+if(pr.name){var e=document.getElementById('pnm');if(e)e.value=pr.name;}
+if(pr.age){var e=document.getElementById('pag');if(e)e.value=pr.age;}
+if(pr.height){var e=document.getElementById('phg');if(e)e.value=pr.height;}
+if(pr.weight){var e=document.getElementById('pwg');if(e)e.value=pr.weight;}
+if(pr.draft){var e=document.getElementById('pdr');if(e)e.value=pr.draft;}
 // Animate rings on load
 setTimeout(()=>{const pg=ld(K.P,[]);if(pg.length)updateRings(pg[0]);},300);
 refreshDash();buildUnitTargets();refreshShareCard();renderLeaderboard();
@@ -8132,6 +8318,51 @@ function selectMsgType(type){
 function switchCoachGroup_old_disabled(gid) {
   _activeGid = gid;
   renderCoachGroupsUI();
+}
+
+function renderWeeklyReport(){
+  var body=document.getElementById('weekly-report-body');
+  if(!body)return;
+  var gid=window._activeGroupId;
+  // Get athletes for the active group
+  var athletes=(window._coachAthletes&&window._coachAthletes[gid])||[];
+  if(!athletes.length){try{athletes=JSON.parse(localStorage.getItem('cf7_ath_'+gid)||'[]');}catch(e){}}
+  if(!athletes.length){athletes=(typeof getAthletes==='function'?getAthletes():[])||[];}
+  if(!athletes.length){
+    body.innerHTML='<div style="text-align:center;color:var(--txt3);font-size:11px;padding:10px">אין חניכים בקבוצה — הוסף חניכים כדי לקבל דוח</div>';
+    return;
+  }
+  var total=athletes.length;
+  // Scores
+  var scores=athletes.map(function(a){return parseInt(a.sc||a.score||0);}).filter(function(s){return s>0;});
+  var avg=scores.length?Math.round(scores.reduce(function(x,y){return x+y;},0)/scores.length):0;
+  var top=scores.length?Math.max.apply(null,scores):0;
+  // Categorize
+  var strong=athletes.filter(function(a){return parseInt(a.sc||a.score||0)>=80;}).length;
+  var mid=athletes.filter(function(a){var s=parseInt(a.sc||a.score||0);return s>=60&&s<80;}).length;
+  var needWork=athletes.filter(function(a){var s=parseInt(a.sc||a.score||0);return s>0&&s<60;}).length;
+  // Athletes at risk (low score or no data)
+  var atRisk=athletes.filter(function(a){var s=parseInt(a.sc||a.score||0);return s<60;});
+  var riskNames=atRisk.slice(0,3).map(function(a){return a.nm||a.name||'חניך';}).join(', ');
+  
+  var html='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">'+
+    '<div style="text-align:center;background:var(--card);border-radius:9px;padding:9px"><div style="font-size:22px;font-weight:900;color:var(--pri)">'+strong+'</div><div style="font-size:9px;color:var(--txt3)">ציון 80+</div></div>'+
+    '<div style="text-align:center;background:var(--card);border-radius:9px;padding:9px"><div style="font-size:22px;font-weight:900;color:var(--yellow)">'+mid+'</div><div style="font-size:9px;color:var(--txt3)">ציון 60-79</div></div>'+
+    '<div style="text-align:center;background:var(--card);border-radius:9px;padding:9px"><div style="font-size:22px;font-weight:900;color:var(--red)">'+needWork+'</div><div style="font-size:9px;color:var(--txt3)">מתחת ל-60</div></div>'+
+    '</div>';
+  
+  // Summary line
+  html+='<div style="font-size:12px;color:var(--txt);line-height:1.7;background:var(--card);border-radius:9px;padding:11px">';
+  html+='📊 <strong>'+total+' חניכים</strong> בקבוצה · ממוצע ציון <strong style="color:var(--pri)">'+avg+'</strong> · מוביל <strong style="color:var(--yellow)">'+top+'</strong>';
+  if(atRisk.length>0){
+    html+='<br><br>⚠️ <strong style="color:var(--red)">'+atRisk.length+' חניכים דורשים תשומת לב</strong>';
+    html+='<br><span style="font-size:11px;color:var(--txt2)">בדוק מי מהם בציון נמוך — שקול להגביר ליווי או להתאים תוכנית אישית</span>';
+  } else {
+    html+='<br><br>✅ <strong style="color:var(--pri)">כל החניכים במצב טוב!</strong> המשך כך.';
+  }
+  html+='</div>';
+  
+  body.innerHTML=html;
 }
 
 function copyGroupCode() {
