@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v55</title>
+<title>⚔ COMBAT FIT IL PRO v56</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -2708,6 +2708,7 @@ function refreshDash(){
   // If there's an active challenge, show its progress instead
   if(typeof renderActiveChallenge==='function')renderActiveChallenge();
   const pr=ld(K.PR,{});
+  var cdBox=document.getElementById('cd-box');
   if(pr.draft){
     const days=Math.ceil((new Date(pr.draft)-d)/86400000);
     if(days>0){
@@ -2750,7 +2751,13 @@ function refreshDash(){
         `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px"><span style="color:var(--txt3)">מוכנות ל${u.n} ${u.emoji}</span><span style="color:${readyColor};font-weight:900">${readiness}%</span></div><div style="height:6px;background:var(--card3);border-radius:3px;overflow:hidden"><div style="height:100%;width:${readiness}%;background:${readyColor};border-radius:3px"></div></div></div>`:'';
       document.getElementById('cd-box').innerHTML=
         `<div class="cdb"><div class="cdd" style="position:relative">${days}</div><div class="cdl">ימים עד גיוס</div><div class="cde">${u.n} ${u.emoji} · ${new Date(pr.draft).toLocaleDateString('he-IL')}</div>${readyHtml}</div>`;
+    } else {
+      // Draft date is in the past
+      if(cdBox)cdBox.innerHTML='<div class="cdb" style="cursor:pointer" onclick="showPg(\'test\');setTimeout(function(){if(typeof tt===\'function\')tt(\'tb-pr\');},100)"><div class="cdl" style="padding:14px 8px">📅 תאריך הגיוס עבר — עדכן אותו בפרופיל כדי לראות מד מוכנות</div></div>';
     }
+  } else {
+    // No draft date set — invite user to set one
+    if(cdBox)cdBox.innerHTML='<div class="cdb" style="cursor:pointer" onclick="showPg(\'test\');setTimeout(function(){if(typeof tt===\'function\')tt(\'tb-pr\');},100)"><div class="cdd" style="font-size:26px">🎯</div><div class="cdl">הגדר תאריך גיוס ויחידת יעד</div><div class="cde" style="color:var(--pri)">לחץ כאן כדי לראות את מד המוכנות שלך →</div></div>';
   }
   const pg=ld(K.P,[]);
   if(pg.length){updateRings(pg[0]);}
