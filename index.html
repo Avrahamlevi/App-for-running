@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v63</title>
+<title>⚔ COMBAT FIT IL PRO v64</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -2252,6 +2252,13 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
       <button class="btn bp" style="width:100%;min-height:44px" onclick="saveBranding()">💾 שמור מיתוג</button>
       <button class="btn bs" style="width:100%;margin-top:6px" onclick="resetBranding()">↺ אפס לברירת מחדל</button>
     </div>
+    <!-- Sales demo mode -->
+    <div id="demo-mode-card" style="background:var(--card);border:1px solid rgba(255,184,0,.3);border-radius:13px;padding:13px;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:800;color:var(--yellow);margin-bottom:4px">🎬 מצב הדגמה (למכירות)</div>
+      <div style="font-size:10px;color:var(--txt3);margin-bottom:10px;line-height:1.5">ממלא את האפליקציה בנתונים לדוגמה — פרופיל, מבחנים, ליגה וחניכים. מושלם להצגה ללקוח. הנתונים האמיתיים שלך נשמרים ויחזרו כשתכבה.</div>
+      <button class="btn bp" id="demo-on-btn" style="width:100%;min-height:44px;background:var(--yellow);color:#000" onclick="enableDemoMode()">🎬 הפעל מצב הדגמה</button>
+      <button class="btn bs" id="demo-off-btn" style="width:100%;margin-top:6px;display:none" onclick="disableDemoMode()">↺ כבה והחזר את הנתונים שלי</button>
+    </div>
     <!-- Data backup -->
     <div style="background:var(--card);border:1px solid var(--b2);border-radius:13px;padding:13px;margin-bottom:10px">
       <div style="font-size:11px;font-weight:800;color:var(--cyan);margin-bottom:4px">💾 גיבוי נתונים</div>
@@ -2885,6 +2892,28 @@ var EMOJIS=['🦁','🐯','🦅','🔥','⚡','💀','🥷','🤺','💪','🗡'
 // ═══════════════════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════════════════
+// Calculate readiness % vs a unit's requirements (strict, elite units punish harder)
+function _calcUnitReadiness(u,latest){
+  if(!u||!latest)return 0;
+  var myRun=parseFloat(latest.run||0);   // seconds for 2km
+  var myPsh=parseFloat(latest.psh||0);
+  var myPul=parseFloat(latest.pul||0);
+  var groupHarsh={'גדודים':1.6,'סיירות':2.0,'מיוחדות':2.4,'קומנדו':2.8,'עילית':3.4};
+  var harsh=groupHarsh[u.group]||2.0;
+  function comp(ratio){
+    if(ratio>=1)return 100;
+    var miss=1-ratio;
+    return Math.max(0,Math.round(100-miss*100*harsh));
+  }
+  var wSum=0,wTotal=0;
+  if(myRun>0&&u.r){wSum+=comp(u.r/myRun)*0.5;wTotal+=0.5;}
+  if(u.l&&myPul>0){wSum+=comp(myPul/u.l)*0.25;wTotal+=0.25;}
+  if(u.p&&myPsh>0){wSum+=comp(myPsh/u.p)*0.25;wTotal+=0.25;}
+  if(wTotal>0)return Math.round(wSum/wTotal);
+  if(latest.bar)return Math.min(100,Math.round(parseFloat(latest.bar)/80*100));
+  return 0;
+}
+
 function refreshDash(){
   if(!MISSIONS||!TIPS||!CHALLENGES)return;
   const d=new Date();
@@ -2897,55 +2926,34 @@ function refreshDash(){
   if(typeof renderActiveChallenge==='function')renderActiveChallenge();
   const pr=ld(K.PR,{});
   var cdBox=document.getElementById('cd-box');
-  if(pr.draft){
-    const days=Math.ceil((new Date(pr.draft)-d)/86400000);
-    if(days>0){
-      const u=UNITS[pr.unit||'gen']||UNITS.gen;
-      // Readiness % — STRICT: steep penalty for missing targets, harsher for elite units
-      var scoresList=ld(K.P,[]);
-      var latest=scoresList.length?scoresList[0]:null;
-      var readiness=0;
-      if(latest){
-        var myRun=parseFloat(latest.run||0);   // seconds for 2km
-        var myPsh=parseFloat(latest.psh||0);
-        var myPul=parseFloat(latest.pul||0);
-        // Difficulty factor: elite units punish shortfalls much harder
-        var groupHarsh={'גדודים':1.6,'סיירות':2.0,'מיוחדות':2.4,'קומנדו':2.8,'עילית':3.4};
-        var harsh=groupHarsh[u.group]||2.0;
-        // Score each component: 100 if you meet/beat target, steep drop if you miss
-        function comp(ratio){
-          // ratio = how well you did vs target (1.0 = exactly at target, >1 = beat it)
-          if(ratio>=1)return 100;
-          // Below target: penalty grows with how far AND how elite the unit
-          var miss=1-ratio;              // how far below (0..1)
-          var penalty=miss*100*harsh;    // steep, scaled by unit difficulty
-          return Math.max(0,Math.round(100-penalty));
-        }
-        var runScore=0,pshScore=0,pulScore=0,wSum=0,wTotal=0;
-        // Run: target/yours (faster = higher ratio). If you're slower, ratio<1
-        if(myRun>0&&u.r){runScore=comp(u.r/myRun);wSum+=runScore*0.5;wTotal+=0.5;}
-        // Pull-ups: yours/target
-        if(u.l&&myPul>0){pulScore=comp(myPul/u.l);wSum+=pulScore*0.25;wTotal+=0.25;}
-        // Push-ups: yours/target
-        if(u.p&&myPsh>0){pshScore=comp(myPsh/u.p);wSum+=pshScore*0.25;wTotal+=0.25;}
-        if(wTotal>0){
-          readiness=Math.round(wSum/wTotal);
-        } else if(latest.bar){
-          readiness=Math.min(100,Math.round(parseFloat(latest.bar)/80*100));
-        }
-      }
-      var readyColor=readiness>=90?'var(--pri)':readiness>=70?'var(--yellow)':'var(--orange)';
-      var readyHtml=readiness>0?
-        `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px"><span style="color:var(--txt3)">מוכנות ל${u.n} ${u.emoji}</span><span style="color:${readyColor};font-weight:900">${readiness}%</span></div><div style="height:6px;background:var(--card3);border-radius:3px;overflow:hidden"><div style="height:100%;width:${readiness}%;background:${readyColor};border-radius:3px"></div></div></div>`:'';
-      document.getElementById('cd-box').innerHTML=
-        `<div class="cdb"><div class="cdd" style="position:relative">${days}</div><div class="cdl">ימים עד גיוס</div><div class="cde">${u.n} ${u.emoji} · ${new Date(pr.draft).toLocaleDateString('he-IL')}</div>${readyHtml}</div>`;
+  var hasUnit=!!(pr.unit&&UNITS[pr.unit]);
+  var scoresList=ld(K.P,[]);
+  var latestTest=scoresList.length?scoresList[0]:null;
+  var readiness=hasUnit?_calcUnitReadiness(UNITS[pr.unit],latestTest):0;
+  var daysLeft=pr.draft?Math.ceil((new Date(pr.draft)-d)/86400000):null;
+  if(cdBox){
+    if(!hasUnit&&!pr.draft){
+      // Nothing set — invite
+      cdBox.innerHTML='<div class="cdb" style="cursor:pointer" onclick="showPg(\'test\');setTimeout(function(){if(typeof tt===\'function\')tt(\'tb-pr\');},100)"><div class="cdd" style="font-size:26px">🎯</div><div class="cdl">הגדר יחידת יעד ותאריך גיוס</div><div class="cde" style="color:var(--pri)">לחץ כאן כדי לראות את מד המוכנות שלך ←</div></div>';
     } else {
-      // Draft date is in the past
-      if(cdBox)cdBox.innerHTML='<div class="cdb" style="cursor:pointer" onclick="showPg(\'test\');setTimeout(function(){if(typeof tt===\'function\')tt(\'tb-pr\');},100)"><div class="cdl" style="padding:14px 8px">📅 תאריך הגיוס עבר — עדכן אותו בפרופיל כדי לראות מד מוכנות</div></div>';
+      var u=UNITS[pr.unit||'gen']||UNITS.gen;
+      var readyColor=readiness>=90?'var(--pri)':readiness>=70?'var(--yellow)':readiness>=40?'var(--orange)':'var(--red)';
+      var readyHtml='';
+      if(readiness>0){
+        readyHtml='<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px"><span style="color:var(--txt3)">מוכנות ל'+u.n+' '+u.emoji+'</span><span style="color:'+readyColor+';font-weight:900">'+readiness+'%</span></div><div style="height:6px;background:var(--card3);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+readiness+'%;background:'+readyColor+';border-radius:3px"></div></div></div>';
+      } else if(hasUnit){
+        readyHtml='<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);font-size:10px;color:var(--txt3);cursor:pointer" onclick="showPg(\'test\')">📊 בצע מבחן בר-אור כדי לראות את אחוז המוכנות שלך ←</div>';
+      }
+      if(pr.draft&&daysLeft>0){
+        cdBox.innerHTML='<div class="cdb"><div class="cdd" style="position:relative">'+daysLeft+'</div><div class="cdl">ימים עד גיוס</div><div class="cde">'+u.n+' '+u.emoji+' · '+new Date(pr.draft).toLocaleDateString('he-IL')+'</div>'+readyHtml+'</div>';
+      } else if(hasUnit){
+        // Unit set but no (valid) draft date — still show readiness
+        var dateHint=pr.draft?'📅 תאריך הגיוס עבר — עדכן בפרופיל':'📅 הוסף תאריך גיוס בפרופיל לספירה לאחור';
+        cdBox.innerHTML='<div class="cdb"><div class="cdd" style="font-size:30px">'+u.emoji+'</div><div class="cdl">יעד: '+u.n+'</div><div class="cde" style="cursor:pointer" onclick="showPg(\'test\');setTimeout(function(){if(typeof tt===\'function\')tt(\'tb-pr\');},100)">'+dateHint+'</div>'+readyHtml+'</div>';
+      } else {
+        cdBox.innerHTML='<div class="cdb" style="cursor:pointer" onclick="showPg(\'test\');setTimeout(function(){if(typeof tt===\'function\')tt(\'tb-pr\');},100)"><div class="cdd" style="font-size:26px">🎯</div><div class="cdl">בחר יחידת יעד בפרופיל</div><div class="cde" style="color:var(--pri)">לחץ כאן ←</div></div>';
+      }
     }
-  } else {
-    // No draft date set — invite user to set one
-    if(cdBox)cdBox.innerHTML='<div class="cdb" style="cursor:pointer" onclick="showPg(\'test\');setTimeout(function(){if(typeof tt===\'function\')tt(\'tb-pr\');},100)"><div class="cdd" style="font-size:26px">🎯</div><div class="cdl">הגדר תאריך גיוס ויחידת יעד</div><div class="cde" style="color:var(--pri)">לחץ כאן כדי לראות את מד המוכנות שלך →</div></div>';
   }
   const pg=ld(K.P,[]);
   if(pg.length){updateRings(pg[0]);}
@@ -3364,7 +3372,7 @@ function saveProf(){
   const m=Math.floor(u.r/60),s=u.r%60;
   document.getElementById('unit-card').innerHTML=
     `<div class="card" style="border-right:4px solid ${u.col}">
-      <div class="sh" style="color:${u.col}">${u.emoji} ${u.n} — Tier ${u.tier}</div>
+      <div class="sh" style="color:${u.col}">${u.emoji} ${u.n} — ${u.group}</div>
       <div class="mini" style="margin-bottom:10px;color:var(--txt2)">${u.desc}</div>
       <div class="sg"><div class="sb"><div class="sv" style="color:${u.col};font-size:18px">${m}:${String(s).padStart(2,'0')}</div><div class="sl">2ק"מ</div></div><div class="sb cb"><div class="sv" style="font-size:18px">${u.p}</div><div class="sl">שכיבות</div></div><div class="sb cy2"><div class="sv" style="font-size:18px">${u.l}</div><div class="sl">מתח</div></div></div>
       <div class="mini">📏 3ק"מ מתחת ל-${u.r3} דקות | 5ק"מ מתחת ל-${u.r5} דקות</div>
@@ -4199,8 +4207,76 @@ function getAthletes(){
   if(localStorage.getItem('cf7_demo_mode')==='1')return DEMO_ATHLETES.slice(0,4);
   return [];
 }
-function enableDemoMode(){localStorage.setItem('cf7_demo_mode','1');if(typeof notify==='function')notify('🎬 מצב הדגמה פעיל','p');location.reload();}
-function disableDemoMode(){localStorage.removeItem('cf7_demo_mode');if(typeof notify==='function')notify('מצב הדגמה כבוי','y');location.reload();}
+function _syncDemoButtons(){
+  var on=localStorage.getItem('cf7_demo_mode')==='1';
+  var onBtn=document.getElementById('demo-on-btn');
+  var offBtn=document.getElementById('demo-off-btn');
+  if(onBtn)onBtn.style.display=on?'none':'block';
+  if(offBtn)offBtn.style.display=on?'block':'none';
+  var card=document.getElementById('demo-mode-card');
+  if(card&&on)card.style.borderColor='var(--yellow)';
+}
+
+function enableDemoMode(){
+  try{
+    // Back up the user's REAL data so nothing is lost
+    var backup={};
+    ['cf7pr','cf7p','cf7lb','cf7_ch_active'].forEach(function(k){
+      var v=localStorage.getItem(k);
+      if(v!==null)backup[k]=v;
+    });
+    localStorage.setItem('cf7_demo_backup',JSON.stringify(backup));
+
+    // ── Athlete side: profile with unit + draft date ──
+    var draft=new Date();draft.setDate(draft.getDate()+142);
+    sv(K.PR,{name:'יונתן מור',age:'18',height:'179',weight:'73',unit:'maglan',draft:draft.toISOString().slice(0,10)});
+
+    // ── Test history: 4 tests showing real improvement ──
+    var mk=function(daysAgo,run,psh,pul,sit,bar){
+      var dt=new Date();dt.setDate(dt.getDate()-daysAgo);
+      return {mk:'demo'+daysAgo,date:dt.toISOString(),run:run,psh:psh,pul:pul,sit:sit,bar:bar};
+    };
+    sv(K.P,[
+      mk(3,  486,62,17,78,86),   // latest — best
+      mk(24, 502,57,15,74,81),
+      mk(47, 519,52,13,70,75),
+      mk(72, 541,45,10,64,67)    // oldest — starting point
+    ]);
+
+    // ── League: a few competitors ──
+    sv(K.LB,[
+      {nm:'יונתן מור',sc:86,run:486,psh:62,pul:17,unit:'maglan',emoji:'🎯',added:new Date().toISOString()},
+      {nm:'איתמר בן דוד',sc:91,run:462,psh:70,pul:20,unit:'shaldag',emoji:'🦅',added:new Date().toISOString()},
+      {nm:'רועי אלמוג',sc:83,run:495,psh:60,pul:16,unit:'egoz',emoji:'💀',added:new Date().toISOString()},
+      {nm:'גיא שטרן',sc:78,run:510,psh:55,pul:14,unit:'golani',emoji:'🟢',added:new Date().toISOString()},
+      {nm:'נדב כרמי',sc:72,run:528,psh:50,pul:12,unit:'para',emoji:'🪂',added:new Date().toISOString()}
+    ]);
+
+    localStorage.setItem('cf7_demo_mode','1');
+    if(typeof notify==='function')notify('🎬 מצב הדגמה פעיל — טוען...','p');
+    setTimeout(function(){location.reload();},600);
+  }catch(e){
+    if(typeof notify==='function')notify('שגיאה בטעינת ההדגמה','r');
+  }
+}
+function disableDemoMode(){
+  try{
+    // Restore the user's real data
+    var raw=localStorage.getItem('cf7_demo_backup');
+    ['cf7pr','cf7p','cf7lb','cf7_ch_active'].forEach(function(k){localStorage.removeItem(k);});
+    if(raw){
+      var backup=JSON.parse(raw);
+      Object.keys(backup).forEach(function(k){localStorage.setItem(k,backup[k]);});
+    }
+    localStorage.removeItem('cf7_demo_backup');
+    localStorage.removeItem('cf7_demo_mode');
+    if(typeof notify==='function')notify('מצב הדגמה כבוי — משחזר את הנתונים שלך','y');
+    setTimeout(function(){location.reload();},600);
+  }catch(e){
+    localStorage.removeItem('cf7_demo_mode');
+    location.reload();
+  }
+}
 function saveAthletes(a){sv(K.ATH,a);}
 
 function renderCoachGroup(){
@@ -7288,6 +7364,7 @@ refreshDash();buildUnitTargets();refreshShareCard();renderLeaderboard();
 try{applyBranding();}catch(e){}
 try{_checkInviteLink();}catch(e){}
 try{maybeShowInstallBanner();}catch(e){}
+try{_syncDemoButtons();}catch(e){}
 if(coachMode)renderCoachGroup();
 
 // ═══════════════════════════════════════════════════
@@ -10398,30 +10475,63 @@ function renderFocusTimer(secs) {
 function calcPaceZones() {
   var rt = document.getElementById('race-time');
   var rd = document.getElementById('race-dist');
-  if (!rt || !rd) return;
-  var timeParts = (rt.value || '30:00').split(':');
-  var mins = parseInt(timeParts[0]) + (parseInt(timeParts[1] || 0)) / 60;
-  var dist = parseFloat(rd.value || 5);
-  if (!mins || !dist) return;
-  var basePace = mins / dist; // min/km
-  var zones = [
-    { name: 'ריצה קלה (Z1)', factor: 1.35, col: 'var(--cyan)', desc: 'שיחוח + ריצה' },
-    { name: 'בסיס אירובי (Z2)', factor: 1.20, col: '#4ade80', desc: 'נוח, מדבר בקלות' },
-    { name: 'סף אירובי (Z3)', factor: 1.08, col: 'var(--yellow)', desc: 'מאמץ בינוני' },
-    { name: 'סף אנאירובי (Z4)', factor: 1.00, col: 'var(--orange)', desc: 'קשה לדבר' },
-    { name: 'מקסימל (Z5)', factor: 0.90, col: 'var(--red)', desc: 'ספרינט/מרוץ' },
-  ];
   var el = document.getElementById('pace-zones-result');
-  if (!el) return;
-  el.innerHTML = zones.map(function(z) {
-    var p = basePace * z.factor;
-    var pm = Math.floor(p); var ps = Math.round((p - pm) * 60);
+  if (!rt || !rd || !el) return;
+  // Auto-fill from the athlete's latest 2K test if the field is empty
+  if (!rt.value) {
+    var pgz = ld(K.P, []);
+    if (pgz.length && pgz[0].run) {
+      var rs = parseInt(pgz[0].run);
+      rt.value = Math.floor(rs/60) + ':' + String(rs%60).padStart(2,'0');
+      rd.value = 2;
+    }
+  }
+  var timeParts = (rt.value || '9:00').split(':');
+  var mins = parseInt(timeParts[0]) + (parseInt(timeParts[1] || 0)) / 60;
+  var dist = parseFloat(rd.value || 2);
+  if (!mins || !dist) return;
+  var basePace = mins / dist; // min/km at race effort
+  var fmt = function(p){ var m=Math.floor(p); var s=Math.round((p-m)*60); if(s===60){m++;s=0;} return m + ':' + String(s).padStart(2,'0'); };
+
+  // ── Target pace for the athlete's goal unit ──
+  var prz = ld(K.PR, {});
+  var uz = (typeof UNITS !== 'undefined' && UNITS[prz.unit]) || null;
+  var targetHtml = '';
+  if (uz && uz.r) {
+    var targetPace = (uz.r / 60) / 2;              // unit 2K target -> min/km
+    var gap = basePace - targetPace;               // + = you are slower than needed
+    var gapTxt, gapCol;
+    if (gap <= 0) { gapTxt = '✅ אתה עומד ביעד היחידה!'; gapCol = 'var(--pri)'; }
+    else { gapTxt = '⚠️ צריך לשפר ' + fmt(gap) + ' לכל ק"מ'; gapCol = gap > 0.5 ? 'var(--red)' : 'var(--orange)'; }
+    targetHtml =
+      '<div style="background:var(--card2);border:1px solid ' + uz.col + '55;border-radius:10px;padding:11px;margin-bottom:10px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">' +
+          '<span style="font-size:11px;font-weight:800;color:' + uz.col + '">' + uz.emoji + ' יעד ' + uz.n + '</span>' +
+          '<span style="font-family:var(--fd);font-size:15px;color:' + uz.col + '">' + fmt(targetPace) + '/ק"מ</span>' +
+        '</div>' +
+        '<div style="display:flex;justify-content:space-between;font-size:10px">' +
+          '<span style="color:var(--txt3)">הקצב שלך כעת: ' + fmt(basePace) + '/ק"מ</span>' +
+          '<span style="color:' + gapCol + ';font-weight:700">' + gapTxt + '</span>' +
+        '</div>' +
+      '</div>';
+  } else {
+    targetHtml = '<div style="font-size:10px;color:var(--txt3);margin-bottom:8px">💡 בחר יחידת יעד בפרופיל כדי לראות את קצב היעד שלך</div>';
+  }
+
+  var zones = [
+    { name: 'ריצה קלה (Z1)', factor: 1.35, col: 'var(--cyan)', desc: 'התאוששות — שיחה מלאה' },
+    { name: 'בסיס אירובי (Z2)', factor: 1.20, col: '#4ade80', desc: 'נוח, בונה סיבולת' },
+    { name: 'סף אירובי (Z3)', factor: 1.08, col: 'var(--yellow)', desc: 'מאמץ בינוני — טמפו' },
+    { name: 'סף אנאירובי (Z4)', factor: 1.00, col: 'var(--orange)', desc: 'קצב מבחן — קשה לדבר' },
+    { name: 'מקסימלי (Z5)', factor: 0.92, col: 'var(--red)', desc: 'אינטרוולים / ספרינט' },
+  ];
+  el.innerHTML = targetHtml + zones.map(function(z) {
     return '<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--b1)">' +
       '<div style="width:10px;height:10px;border-radius:50%;background:' + z.col + ';flex-shrink:0"></div>' +
       '<div style="flex:1"><div style="font-size:11px;font-weight:700;color:var(--txt)">' + z.name + '</div>' +
       '<div style="font-size:10px;color:var(--txt3)">' + z.desc + '</div></div>' +
       '<div style="font-family:var(--fd);font-size:13px;color:' + z.col + '">' +
-      pm + ':' + String(ps).padStart(2,'0') + '/ק"מ</div></div>';
+      fmt(basePace * z.factor) + '/ק"מ</div></div>';
   }).join('');
 }
 
