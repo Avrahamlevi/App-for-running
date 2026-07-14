@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v64</title>
+<title>⚔ COMBAT FIT IL PRO v69</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -671,9 +671,8 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
           <div style="font-size:13px;font-weight:700;color:var(--txt)">📈 מגמה אישית</div>
           <div style="display:flex;gap:4px">
-            <button id="chart-tab-bar" onclick="switchChartMetric('bar',this)" style="font-size:9px;font-weight:700;padding:3px 9px;border-radius:5px;border:1px solid var(--pri);background:rgba(0,229,255,.1);color:var(--pri);cursor:pointer">ציון</button>
-            <button id="chart-tab-run" onclick="switchChartMetric('run',this)" style="font-size:9px;font-weight:700;padding:3px 9px;border-radius:5px;border:1px solid var(--b2);background:transparent;color:var(--txt3);cursor:pointer">ריצה</button>
-            <button id="chart-tab-str" onclick="switchChartMetric('str',this)" style="font-size:9px;font-weight:700;padding:3px 9px;border-radius:5px;border:1px solid var(--b2);background:transparent;color:var(--txt3);cursor:pointer">כוח</button>
+            <button id="chart-tab-run" onclick="switchChartMetric('run',this)" style="font-size:9px;font-weight:900;padding:3px 12px;border-radius:5px;border:1px solid var(--pri);background:rgba(0,255,136,.15);color:var(--pri);cursor:pointer">🏃 ריצה</button>
+            <button id="chart-tab-str" onclick="switchChartMetric('str',this)" style="font-size:9px;font-weight:700;padding:3px 12px;border-radius:5px;border:1px solid var(--b2);background:var(--card3);color:var(--txt2);cursor:pointer">💪 כוח</button>
           </div>
         </div>
         <svg id="prog-chart" viewBox="0 0 340 100" style="width:100%;height:100px;overflow:visible;display:block">
@@ -919,7 +918,7 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
       <div class="sh">⏱ מחשבון בר-אור</div>
       <div class="mini" style="margin-bottom:8px">ריצה 40% + שכיבות 25% + מתח 20% + כפיפות בטן 15%</div>
       <div class="r2">
-        <div><label>ריצה 2ק"מ — דקות</label><input id="bt-min" type="number" placeholder="9" min="5" max="20" inputmode="numeric" oninput="calcBaror()"/></div>
+        <div><label>ריצה 2ק"מ — דקות</label><input id="bt-min" type="number" placeholder="9" min="4" max="25" step="any" inputmode="decimal" oninput="calcBaror()"/><div style="font-size:9px;color:var(--txt3);margin-top:2px">אפשר גם 7.5 = 7:30</div></div>
         <div><label>שניות</label><input id="bt-sec" type="number" placeholder="30" min="0" max="59" inputmode="numeric" oninput="calcBaror()"/></div>
       </div>
       <input id="bt" type="hidden"/>
@@ -1519,6 +1518,7 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
         </optgroup>
       </select>
       <button id="lb-add-btn" class="btn bp" style="margin-top:3px" onclick="addLbEntry()">+ הוסף / עדכן</button>
+      <button id="lb-cancel-btn" class="btn bs" style="margin-top:5px;display:none;min-height:40px" onclick="cancelLbEdit()">✕ בטל עריכה — הוסף מתחרה חדש</button>
     </div>
   </div>
 
@@ -1535,19 +1535,17 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
 <div class="pg" id="p-train">
   <div class="pgh"><span>💪</span> אימון</div>
   <div class="tabs" style="overflow-x:auto;justify-content:flex-start;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:4px">
-    <button class="tab on" onclick="trt('tr-str',this)">כוח</button>
-    <button class="tab" onclick="trt('tr-run',this)">ריצה</button>
+    <button class="tab on" onclick="trt('tr-run',this)">🏃 ריצה</button>
     <button class="tab" onclick="trt('tr-route',this)">🗺 מסלול</button>
     <button class="tab" onclick="trt('tr-hist',this)">📜 היסטוריה</button>
     <button class="tab" onclick="trt('tr-tmr',this)">⏱ טיימר</button>
     <button class="tab" onclick="trt('tr-rec',this)">🩹 שיקום</button>
     <button class="tab" onclick="trt('tr-body',this)">📏 מידות</button>
-    <button class="tab" onclick="trt('tr-hr',this)">❤️ דופק</button>
         <button class="tab" onclick="trt('tr-tools',this)">🛠 כלים</button>
         <button class="tab" onclick="trt('tr-injury',this)">🩹 פציעות</button>
   </div>
 
-  <div id="tr-str">
+  <div id="tr-str" style="display:none">
     <div class="card hot">
       <div class="sh">🏋 תוכנית כוח קרבית</div>
       <div class="r2">
@@ -1567,7 +1565,7 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
     <div id="str-out"></div>
   </div>
 
-  <div id="tr-run" style="display:none">
+  <div id="tr-run">
     <div class="card hot">
       <div class="sh">🏃 תוכנית ריצה מדעית</div>
       <div class="r2">
@@ -1579,7 +1577,6 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
         <div><label>שבועות</label><select id="rwks"><option>6</option><option>8</option><option selected>10</option><option>12</option></select></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-          <button class="btn bs bsm" onclick="showPreRunBriefing()" style="min-height:44px;font-size:12px">⚡ BRIEFING לפני ריצה</button>
           <button class="btn bs bsm" onclick="startVoiceCoach()" style="min-height:44px;font-size:12px">🎙️ מאמן קולי</button>
         </div>
         <button class="btn bp" onclick="buildRun()">צור תוכנית ריצה</button>
@@ -2360,7 +2357,7 @@ var muscleState={};
 var _obUnit=null;
 var _gibushDay=0;
 var _activeGroupId=null;
-var _chartMetric='bar';
+var _chartMetric='run';
 var _scatterAxis='run';
 var _tInt=null,_tRun=false,_tCur=0;
 var coachFilterMode='all';
@@ -2460,6 +2457,25 @@ function initCM(){
   if(afc){afc.style.display=coachMode?'block':'none';}
   if(lbo){lbo.style.display=coachMode?'none':'block';}
   if(coachMode){
+    // DEMO MODE: always show a fully-populated demo group (for client presentations)
+    if(localStorage.getItem('cf7_demo_mode')==='1'){
+      var demoAths=(typeof DEMO_ATHLETES!=='undefined'?DEMO_ATHLETES.slice(0,7):[]).map(function(a){
+        var c=Object.assign({},a);
+        c.sc=c.sc||c.bar||0;           // coach stats read .sc
+        c.uid='demo_'+(c.nm||'').replace(/\s/g,'');
+        return c;
+      });
+      window._coachAthletes=window._coachAthletes||{};
+      window._coachAthletes['demo']=demoAths;
+      try{localStorage.setItem('cf7_ath_demo',JSON.stringify(demoAths));}catch(e){}
+      var brandD={};try{brandD=JSON.parse(localStorage.getItem('cf7_brand')||'{}');}catch(e){}
+      window._coachGroups=[{id:'demo',name:brandD.name||'קבוצת הכנה — מחזור אוגוסט',code:'DEMO01'}];
+      _activeGid='demo';
+      window._activeGroupId='demo';
+      renderCoachGroupsUI();
+      showPg('coach');
+      return;
+    }
     // Load any saved groups from previous sessions
     if(typeof _loadCoachData==='function')_loadCoachData();
     // Load groups from Firebase or local
@@ -2737,6 +2753,14 @@ function notify(msg,type=''){
 // NAV
 // ═══════════════════════════════════════════════════
 function showPg(p){
+  // Any move away from the league cancels a stuck edit mode (so "add new" always works)
+  if(p!=='lb' && window._editingLBName){
+    window._editingLBName=null;
+    var _ab=document.getElementById('lb-add-btn');
+    if(_ab){_ab.textContent='+ הוסף / עדכן';_ab.style.background='';}
+    var _cb=document.getElementById('lb-cancel-btn');
+    if(_cb)_cb.style.display='none';
+  }
   window._activePg=p;
   // Analytics: track which section users visit
   try{if(typeof gtag==='function')gtag('event','view_page',{page_name:p});}catch(e){}
@@ -3169,8 +3193,12 @@ function setProfileUnit(k){
 // ═══════════════════════════════════════════════════
 function calcBaror(){
   try{if(typeof gtag==='function')gtag('event','baror_test');}catch(e){}
-  const mm=parseInt(document.getElementById('bt-min')?.value||0);
-  const ss2=parseInt(document.getElementById('bt-sec')?.value||0);
+  // Accept decimal minutes (e.g. 7.5 = 7:30) as well as min+sec fields
+  var _mmRaw=parseFloat(document.getElementById('bt-min')?.value||0);
+  var mm=Math.floor(_mmRaw)||0;
+  var ss2=parseInt(document.getElementById('bt-sec')?.value||0)||0;
+  if(_mmRaw>0 && _mmRaw%1!==0 && !ss2){ ss2=Math.round((_mmRaw-mm)*60); }
+  if(ss2>59){ mm+=Math.floor(ss2/60); ss2=ss2%60; }
   const pu=parseInt(document.getElementById('bpu').value||0);
   const pl=parseInt(document.getElementById('bpl').value||0);
   const si=parseInt(document.getElementById('bsi').value||0);
@@ -3824,6 +3852,16 @@ function _calcLeagueScore(run,psh,pul){
   return Math.round(runSc*0.4 + pshSc*0.3 + pulSc*0.3);
 }
 
+function cancelLbEdit(){
+  window._editingLBName=null;
+  ['lb-nm','lb-run','lb-psh','lb-pul'].forEach(function(id){var e=document.getElementById(id);if(e)e.value='';});
+  var btn=document.getElementById('lb-add-btn');
+  if(btn){btn.textContent='+ הוסף / עדכן';btn.style.background='';}
+  var cb=document.getElementById('lb-cancel-btn');
+  if(cb)cb.style.display='none';
+  if(typeof notify==='function')notify('העריכה בוטלה — אפשר להוסיף מתחרה חדש','c');
+}
+
 function addLbEntry(){
   const nm=document.getElementById('lb-nm').value.trim();
   if(!nm){notify('הכנס שם','r');return;}
@@ -3861,6 +3899,8 @@ function addLbEntry(){
   window._editingLBName=null;
   var addBtn=document.getElementById('lb-add-btn');
   if(addBtn){addBtn.textContent='+ הוסף / עדכן';addBtn.style.background='';}
+  var cbtn=document.getElementById('lb-cancel-btn');
+  if(cbtn)cbtn.style.display='none';
   // Refresh all linked views so data stays in sync everywhere
   if(typeof refreshDash==='function')try{refreshDash();}catch(e){}
   if(typeof renderCoachGroup==='function'&&window.coachMode)try{renderCoachGroup();}catch(e){}
@@ -3954,6 +3994,8 @@ function editLbEntry(idx){
   // Change button to show we're in edit mode
   var btn=document.getElementById('lb-add-btn');
   if(btn){btn.textContent='✅ שמור עדכון';btn.style.background='var(--pri)';}
+  var cb=document.getElementById('lb-cancel-btn');
+  if(cb)cb.style.display='block';
   var form=document.getElementById('lb-nm');
   if(form){try{form.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}setTimeout(function(){try{form.focus();}catch(e){}},300);}
   if(typeof notify==='function')notify('✏️ ערוך את הנתונים ולחץ "שמור עדכון"','c');
@@ -4096,13 +4138,14 @@ function copyTxt(t){
 var K2={ANN:'cf7ann',CHAT:'cf7chat',ATT:'cf7att',HIST:'cf7hist',PLANS:'cf7plans'};
 
 var DEMO_ATHLETES=[
-  {nm:'ירון כהן',age:19,phone:'050-1234567',unit:'egoz',run:490,psh:62,pul:16,bar:82,si:70,training_days:5,note:'בתהליך מצוין',target:'אגוז',status:'ok',emoji:'🦁',joined:'2025-01-10',height:178,weight:74,injuries:''},
-  {nm:'איתי לוי',age:18,phone:'052-7654321',unit:'golani',run:540,psh:48,pul:10,bar:65,si:58,training_days:3,note:'מתח צריך שיפור — GTG יומי',target:'גולני',status:'warn',emoji:'⚡',joined:'2025-01-15',height:175,weight:71,injuries:''},
-  {nm:'עמית מזרחי',age:20,phone:'054-9988776',unit:'para',run:515,psh:55,pul:13,bar:75,si:65,training_days:4,note:'',target:'צנחנים',status:'ok',emoji:'🐯',joined:'2025-01-08',height:182,weight:78,injuries:''},
-  {nm:'דניאל ברוך',age:18,phone:'053-1112233',unit:'gen',run:590,psh:32,pul:6,bar:45,si:42,training_days:2,note:'⚠️ מתחת לסטנדרט — חסר מוטיבציה',target:'כפיר',status:'alert',emoji:'🔥',joined:'2025-02-01',height:170,weight:80,injuries:'כאב ברך שמאל'},
-  {nm:'נועם שפיר',age:19,phone:'050-7878787',unit:'shai',run:465,psh:71,pul:21,bar:89,si:74,training_days:6,note:'מועמד מצוין לשייטת 13!',target:'שייטת 13',status:'ok',emoji:'💀',joined:'2025-01-05',height:180,weight:72,injuries:''},
-  {nm:'תום אברמוב',age:18,phone:'054-3344556',unit:'matkal',run:472,psh:68,pul:19,bar:86,si:72,training_days:5,note:'עבודה מעולה. להמשיך',target:"סיירת מטכ\"ל",status:'ok',emoji:'🗡',joined:'2025-01-12',height:177,weight:73,injuries:''},
-  {nm:'שי פרץ',age:19,phone:'052-1122334',unit:'unit669',run:481,psh:64,pul:17,bar:83,si:68,training_days:4,note:'שחייה עדיין חלשה',target:'669',status:'warn',emoji:'🚁',joined:'2025-01-20',height:179,weight:75,injuries:''},
+  // Each athlete is strong in something different — so the coach graphs tell a real story
+  {nm:'נועם שפיר',age:19,phone:'050-7878787',unit:'shai',run:465,psh:56,pul:14,bar:73,sc:73,si:72,training_days:6,note:'רץ מצוין — צריך לחזק פלג גוף עליון',target:'שייטת 13',status:'ok',emoji:'💀',joined:'2025-01-05',height:180,weight:72,injuries:''},
+  {nm:'עמית מזרחי',age:20,phone:'054-9988776',unit:'para',run:470,psh:50,pul:11,bar:67,sc:67,si:66,training_days:4,note:'מהיר, אבל הכוח מפגר — GTG מתח יומי',target:'צנחנים',status:'warn',emoji:'🐯',joined:'2025-01-08',height:182,weight:78,injuries:''},
+  {nm:'שי פרץ',age:19,phone:'052-1122334',unit:'unit669',run:480,psh:64,pul:18,bar:80,sc:80,si:74,training_days:4,note:'מאוזן — התקדמות יפה',target:'669',status:'ok',emoji:'🚁',joined:'2025-01-20',height:179,weight:75,injuries:''},
+  {nm:'ירון כהן',age:19,phone:'050-1234567',unit:'egoz',run:496,psh:70,pul:20,bar:82,sc:82,si:76,training_days:5,note:'חזק מאוד — לשפר קצב ריצה',target:'אגוז',status:'ok',emoji:'🦁',joined:'2025-01-10',height:178,weight:74,injuries:''},
+  {nm:'תום אברמוב',age:18,phone:'054-3344556',unit:'matkal',run:508,psh:74,pul:22,bar:84,sc:84,si:78,training_days:5,note:'כוח יוצא דופן — הריצה היא צוואר הבקבוק',target:"סיירת מטכ\"ל",status:'ok',emoji:'🗡',joined:'2025-01-12',height:177,weight:73,injuries:''},
+  {nm:'איתי לוי',age:18,phone:'052-7654321',unit:'golani',run:532,psh:60,pul:16,bar:70,sc:70,si:70,training_days:3,note:'הריצה דורשת עבודה — 3 אימונים בשבוע',target:'גולני',status:'warn',emoji:'⚡',joined:'2025-01-15',height:175,weight:71,injuries:''},
+  {nm:'דניאל ברוך',age:18,phone:'053-1112233',unit:'gen',run:565,psh:42,pul:8,bar:47,sc:47,si:60,training_days:2,note:'⚠️ מתחת לסטנדרט — דורש ליווי צמוד',target:'כפיר',status:'alert',emoji:'🔥',joined:'2025-02-01',height:170,weight:80,injuries:'כאב ברך שמאל'},
 ];
 
 // Demo history per athlete (last 8 weeks of bar-or score)
@@ -4204,7 +4247,7 @@ function getAthletes(){
   var stored=ld(K.ATH,null);
   if(stored&&stored.length)return stored;
   // Demo data only if explicitly enabled (for sales demos)
-  if(localStorage.getItem('cf7_demo_mode')==='1')return DEMO_ATHLETES.slice(0,4);
+  if(localStorage.getItem('cf7_demo_mode')==='1')return DEMO_ATHLETES.slice(0,7).map(function(a){var c=Object.assign({},a);c.sc=c.sc||c.bar||0;return c;});
   return [];
 }
 function _syncDemoButtons(){
@@ -4234,7 +4277,7 @@ function enableDemoMode(){
     // ── Test history: 4 tests showing real improvement ──
     var mk=function(daysAgo,run,psh,pul,sit,bar){
       var dt=new Date();dt.setDate(dt.getDate()-daysAgo);
-      return {mk:'demo'+daysAgo,date:dt.toISOString(),run:run,psh:psh,pul:pul,sit:sit,bar:bar};
+      return {mk:dt.toISOString().slice(0,7)+'-d'+daysAgo,date:dt.toLocaleDateString('he-IL'),run:run,psh:psh,pul:pul,si:sit,bar:bar};
     };
     sv(K.P,[
       mk(3,  486,62,17,78,86),   // latest — best
@@ -6861,7 +6904,7 @@ function authMainAction(){
 function switchChartMetric(metric, btn) {
   _chartMetric = metric;
   // Update button styles
-  ['bar','run','str'].forEach(function(m) {
+  ['run','str'].forEach(function(m) {
     var b = document.getElementById('chart-tab-' + m);
     if (!b) return;
     if (m === metric) {
@@ -6944,18 +6987,14 @@ function renderProgressChart() {
     : [40, 60, 80, 100];
   gridVals.forEach(function(v) {
     if (v < minV || v > maxV) return;
-    var y = getY(v).toFixed(1);
+    // must use the same axis mapping as the data points (inverted for run)
+    var y = (isRun ? toYRun(v) : getY(v)).toFixed(1);
     html2 += '<line x1="' + PL + '" y1="' + y + '" x2="' + (W-PR) + '" y2="' + y + '" stroke="rgba(255,255,255,.05)" stroke-width="1"/>';
     var lbl = isRun ? Math.floor(v/60)+':'+(String(v%60).padStart(2,'0')) : v;
     html2 += '<text x="' + (PL-4) + '" y="' + (parseFloat(y)+3.5).toFixed(1) + '" fill="rgba(255,255,255,.25)" font-size="8" text-anchor="end">' + lbl + '</text>';
   });
 
-  // X-axis dates (every 2nd if many)
-  pts.forEach(function(p, i) {
-    if (pts.length > 4 && i % 2 !== 0) return;
-    var d = p.date ? p.date.split('/').slice(0,2).join('/') : '';
-    html2 += '<text x="' + p.x.toFixed(1) + '" y="' + (H-5) + '" fill="rgba(255,255,255,.2)" font-size="7.5" text-anchor="middle">' + d + '</text>';
-  });
+  // (X-axis date labels removed — they cluttered the chart)
 
   // Target zone (only for bar)
   if (!isRun) {
@@ -6992,26 +7031,26 @@ function renderProgressChart() {
     var first = values.filter(function(v){return v>0&&v<999;})[0];
     var last = values.filter(function(v){return v>0&&v<999;}).slice(-1)[0];
     var diff = isRun ? first - last : last - first; // positive = improvement
-    var trendStr = diff > 0 ? '▲ +' + Math.abs(isRun ? Math.round(diff) : diff) + (isRun?' שנ':'') + ' ✅' :
-                   diff < 0 ? '▼ ' + Math.abs(diff) + (isRun?' שנ':'') : '→ ≡ יציב';
+    var trendStr = diff > 0 ? '\u2191' + Math.abs(isRun ? Math.round(diff) : diff) + (isRun?' שנ':'') :
+                   diff < 0 ? '\u2193' + Math.abs(diff) + (isRun?' שנ':'') : 'יציב';
     var trendColor = diff > 0 ? 'var(--pri)' : diff < 0 ? 'var(--red)' : 'var(--yellow)';
     html2 += '<text x="' + (W-PR) + '" y="14" fill="' + trendColor + '" font-size="10" text-anchor="end" font-weight="bold">' + trendStr + '</text>';
   }
 
   svg.innerHTML = html2;
 
-  // Update stats row
-  var validScores = metric==='bar' ? pg.map(function(p){return parseInt(p.bar||0);}).filter(Boolean) :
-                    metric==='run' ? pg.map(function(p){return parseInt(p.run||999);}).filter(function(v){return v<900;}) :
-                    pg.map(function(p){return Math.min(100,Math.round((parseInt(p.pul||0)*5+parseInt(p.psh||0)*1.3)/2));}).filter(Boolean);
+  // Update stats row — built from `values` (already oldest-first, same order as the chart)
+  var validScores = values.filter(function(v){ return isRun ? (v > 0 && v < 900) : v > 0; });
 
   if (validScores.length) {
-    var latest = validScores[validScores.length-1];
+    var latest = validScores[validScores.length-1];              // newest test
     var best = isRun ? Math.min.apply(null, validScores) : Math.max.apply(null, validScores);
-    var trend = validScores.length>=2 ? (isRun?validScores[0]-latest:latest-validScores[0]) : 0;
+    // Positive trend = improvement (for run: got faster)
+    var trend = validScores.length>=2 ? (isRun ? validScores[0]-latest : latest-validScores[0]) : 0;
     var latestDisplay = isRun ? Math.floor(latest/60)+':'+(String(latest%60).padStart(2,'0')) : latest;
     var bestDisplay = isRun ? Math.floor(best/60)+':'+(String(best%60).padStart(2,'0')) : best;
-    var trendDisplay = (trend>0?'+':'')+trend+(isRun?' שנ':'');
+    // No minus sign — direction shown with an arrow
+    var trendDisplay = trend===0 ? '0' : (trend>0?'\u2191':'\u2193') + Math.abs(trend) + (isRun?' שנ':'');
     var el = function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
     el('pstat-latest', latestDisplay);
     el('pstat-best', bestDisplay);
@@ -7082,9 +7121,10 @@ function renderGroupTrend(){
     svg.innerHTML='<text x="170" y="56" fill="rgba(255,255,255,.15)" font-size="11" text-anchor="middle">אין נתונים למדד זה</text>';
     return;
   }
-  // For a "trend" we show each athlete as a point along X, sorted, with a line — group distribution
-  // Better: show sorted values as a line (group performance curve)
-  var sorted=vals.slice().sort(function(a,b){return metric==='run'?a-b:b-a;}); // best first
+  // Group performance curve — always RISING: weakest on the left, strongest on the right.
+  // For run, lower seconds = better, so the axis is inverted (faster sits higher).
+  var isRunM = metric==='run';
+  var sorted=vals.slice().sort(function(a,b){ return isRunM ? b-a : a-b; }); // worst -> best
   var W=340,H=100,PL=30,PR=12,PT=12,PB=18;
   var chartW=W-PL-PR,chartH=H-PT-PB;
   var min=Math.min.apply(null,sorted),max=Math.max.apply(null,sorted);
@@ -7092,7 +7132,9 @@ function renderGroupTrend(){
   var n=sorted.length;
   var pts=sorted.map(function(v,i){
     var x=PL+(n===1?chartW/2:chartW*i/(n-1));
-    var y=PT+chartH-((v-min)/(max-min))*chartH;
+    var frac=(v-min)/(max-min);
+    // better = higher on the chart, for both metrics
+    var y=isRunM ? (PT+frac*chartH) : (PT+chartH-frac*chartH);
     return [x,y,v];
   });
   var h='';
@@ -7361,6 +7403,19 @@ if(pr.draft){var e=document.getElementById('pdr');if(e)e.value=pr.draft;}
 // Animate rings on load
 setTimeout(()=>{const pg=ld(K.P,[]);if(pg.length)updateRings(pg[0]);},300);
 refreshDash();buildUnitTargets();refreshShareCard();renderLeaderboard();
+// One-time cleanup: convert any raw ISO test dates left in storage to he-IL format
+try{
+  var _pgFix=ld(K.P,[]);
+  var _fixed=false;
+  _pgFix.forEach(function(t){
+    if(t && typeof t.date==='string' && /^\d{4}-\d{2}-\d{2}T/.test(t.date)){
+      t.date=new Date(t.date).toLocaleDateString('he-IL');
+      _fixed=true;
+    }
+    if(t && t.sit!==undefined && t.si===undefined){t.si=t.sit;delete t.sit;_fixed=true;}
+  });
+  if(_fixed)sv(K.P,_pgFix);
+}catch(e){}
 try{applyBranding();}catch(e){}
 try{_checkInviteLink();}catch(e){}
 try{maybeShowInstallBanner();}catch(e){}
@@ -7440,43 +7495,7 @@ function stopMental(){
 // ═══════════════════════════════════════════════════
 // PROGRESS CHART
 // ═══════════════════════════════════════════════════
-function renderProgressChart(){
-  var pg=ld(K.P,[]);
-  var svg=document.getElementById('prog-chart');
-  if(!svg||!pg.length)return;
-  var scores=pg.slice(0,8).reverse().map(function(p){return parseInt(p.bar||0);});
-  if(scores.every(function(s){return s===0;}))return;
-  var W=360,H=100,PAD=20;
-  var maxV=Math.max.apply(null,scores.concat([60]));
-  var minV=Math.max(0,Math.min.apply(null,scores)-10);
-  var html='';
-  [40,60,80,100].forEach(function(v){
-    if(v<minV||v>maxV)return;
-    var y=PAD+(H-PAD*2)*(1-(v-minV)/(maxV-minV));
-    html+='<line x1="'+PAD+'" y1="'+y.toFixed(1)+'" x2="'+(W-PAD)+'" y2="'+y.toFixed(1)+'" stroke="rgba(255,255,255,.06)" stroke-width="1"/>';
-    html+='<text x="'+(PAD-4)+'" y="'+(y+4).toFixed(1)+'" fill="rgba(255,255,255,.3)" font-size="9" text-anchor="end">'+v+'</text>';
-  });
-  var pts=scores.map(function(s,i){
-    var x=PAD+i/(scores.length-1||1)*(W-PAD*2);
-    var y=PAD+(H-PAD*2)*(1-(s-minV)/(maxV-minV));
-    return {x:x,y:y,s:s};
-  });
-  var pathD=pts.map(function(p,i){return (i===0?'M':'L')+p.x.toFixed(1)+' '+p.y.toFixed(1);}).join(' ');
-  var areaD=pathD+' L'+pts[pts.length-1].x+' '+(H-PAD)+' L'+PAD+' '+(H-PAD)+' Z';
-  html+='<path d="'+areaD+'" fill="rgba(0,255,136,.08)"/>';
-  html+='<path d="'+pathD+'" fill="none" stroke="var(--pri)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
-  pts.forEach(function(p){
-    html+='<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="4" fill="var(--pri)" stroke="var(--card)" stroke-width="2"/>';
-    html+='<text x="'+p.x.toFixed(1)+'" y="'+(p.y-8).toFixed(1)+'" fill="var(--pri)" font-size="9" text-anchor="middle" font-weight="bold">'+p.s+'</text>';
-  });
-  if(scores.length>1){
-    var trend=scores[scores.length-1]-scores[0];
-    var trendTxt=trend>0?'↑ +'+trend+' שיפור 🔥':trend<0?'↓ '+trend+' ירידה':'→ יציב';
-    var trendCol=trend>0?'var(--pri)':trend<0?'var(--red)':'var(--yellow)';
-    html+='<text x="'+(W-PAD)+'" y="15" fill="'+trendCol+'" font-size="10" text-anchor="end" font-weight="bold">'+trendTxt+'</text>';
-  }
-  svg.innerHTML=html;
-}
+// (removed duplicate renderProgressChart — the metric-aware version above is used)
 
 
 function initMuscleGrid(){
@@ -9033,9 +9052,14 @@ function switchCoachGroup(gid){_activeGid=gid;var db=document.getElementById('de
 
 function updateGroupStats(){
   var athletes=(window._coachAthletes&&_activeGid&&window._coachAthletes[_activeGid])||[];
+  if(!athletes.length){try{athletes=JSON.parse(localStorage.getItem('cf7_ath_'+_activeGid)||'[]');}catch(e){}}
+  if(!athletes.length&&typeof getAthletes==='function'){athletes=getAthletes()||[];}
+  // score may be stored as .sc, .score or .bar depending on the source
+  var _v=function(a){return parseInt(a.sc||a.score||a.bar||0);};
+  var scored=athletes.filter(function(a){return _v(a)>0;});
   var count=athletes.length;
-  var avg=count?Math.round(athletes.reduce(function(s,a){return s+(a.sc||0);},0)/count):0;
-  var top=count?Math.max.apply(null,athletes.map(function(a){return a.sc||0;})):0;
+  var avg=scored.length?Math.round(scored.reduce(function(s,a){return s+_v(a);},0)/scored.length):0;
+  var top=scored.length?Math.max.apply(null,scored.map(_v)):0;
   var el=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
   el('cgs-count',count||0);el('cgs-avg',avg||'--');el('cgs-top',top||'--');
 }
