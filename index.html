@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#020405"/>
-<title>⚔ COMBAT FIT IL PRO v69</title>
+<title>⚔ COMBAT FIT IL PRO v71</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Heebo:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -1454,7 +1454,15 @@ var _ai=document.createElement('link');_ai.rel='apple-touch-icon';_ai.href=_icon
     <div class="sc-bar-wrap"><div class="sc-bar-fill" id="sc-bar" style="width:0%"></div></div>
     <div class="sc-total">
       <div class="sc-total-n" id="sc-score-big">0</div>
-      <div class="sc-total-l">ציון קרבי מוכנות / 100</div>
+      <div class="sc-total-l">ציון בר-אור / 100</div>
+      <div style="font-size:9px;color:var(--txt3);margin-top:2px">ציון כושר כללי — ריצה 40% · שכיבות 25% · מתח 20% · בטן 15%</div>
+    </div>
+    <div id="sc-readiness-row" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.1)">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px">
+        <span id="sc-ready-lbl" style="color:var(--txt2)">🎯 מוכנות ליחידה</span>
+        <span id="sc-ready-val" style="font-weight:900;font-size:15px">--</span>
+      </div>
+      <div style="font-size:9px;color:var(--txt3);margin-top:2px">כמה אתה קרוב לדרישות היחידה שבחרת (מדד נפרד מהציון)</div>
     </div>
     <div class="sc-footer"><div class="sc-tagline" id="sc-tagline">TRAIN HARD · FIGHT SMART · NEVER QUIT</div></div>
   </div>
@@ -2964,7 +2972,7 @@ function refreshDash(){
       var readyColor=readiness>=90?'var(--pri)':readiness>=70?'var(--yellow)':readiness>=40?'var(--orange)':'var(--red)';
       var readyHtml='';
       if(readiness>0){
-        readyHtml='<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px"><span style="color:var(--txt3)">מוכנות ל'+u.n+' '+u.emoji+'</span><span style="color:'+readyColor+';font-weight:900">'+readiness+'%</span></div><div style="height:6px;background:var(--card3);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+readiness+'%;background:'+readyColor+';border-radius:3px"></div></div></div>';
+        readyHtml='<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)"><div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px"><span style="color:var(--txt3)">מוכנות ל'+u.n+' '+u.emoji+'</span><span style="color:'+readyColor+';font-weight:900">'+readiness+'%</span></div><div style="height:6px;background:var(--card3);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+readiness+'%;background:'+readyColor+';border-radius:3px"></div></div><div style="font-size:8.5px;color:var(--txt3);margin-top:4px;text-align:center">הביצועים שלך מול דרישות '+u.n+' (לא זהה לציון בר-אור)</div></div>';
       } else if(hasUnit){
         readyHtml='<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);font-size:10px;color:var(--txt3);cursor:pointer" onclick="showPg(\'test\')">📊 בצע מבחן בר-אור כדי לראות את אחוז המוכנות שלך ←</div>';
       }
@@ -3159,28 +3167,48 @@ function genQuickWorkout(){
 function buildUnitTargets(){
   const el=document.getElementById('unit-targets');
   if(!el)return;
-  el.innerHTML=''; // always rebuild
-  // Exact display order as specified
-  const ORDER=[
-    {key:'nahal'},    {key:'golani'},  {key:'kfir'},
-    {key:'para'},     {key:'giv'},
-    {key:'nahalsay'}, {key:'egozsay'},{key:'givsay'},
-    {key:'haruv'},    {key:'tzansay'},
-    {key:'oketz'},    {key:'lotar'},  {key:'yaalom'},
-    {key:'duvdevan'}, {key:'maglan'}, {key:'egoz'},
-    {key:'unit669'},  {key:'shaldag'},{key:'shai'},  {key:'matkal'},
+  el.innerHTML='';
+  const pr=ld(K.PR,{});
+  const myUnit=pr.unit||'';
+  // Units grouped by category, each with a heading
+  const GROUPS=[
+    {t:'גדודים',           e:'🎖',  d:'חטיבות חי״ר — הבסיס של הלחימה היבשתית',  c:'#ffd60a', keys:['nahal','golani','kfir','para','giv']},
+    {t:'סיירות',           e:'🔍',  d:'יחידות סיור מובחרות — נדרש גיבוש',        c:'#4ade80', keys:['nahalsay','egozsay','givsay','haruv','tzansay']},
+    {t:'יחידות מיוחדות',   e:'⚡',  d:'התמחות ייעודית — גיבוש תובעני',           c:'#ff8800', keys:['oketz','lotar','yaalom']},
+    {t:'קומנדו',           e:'💀',  d:'לחימה בעומק שטח האויב — סף כניסה גבוה',   c:'#ff2d55', keys:['duvdevan','maglan','egoz']},
+    {t:'יחידות עילית',     e:'🔱',  d:'הגיבושים הקשים ביותר בצה״ל',              c:'#00e5ff', keys:['unit669','shaldag','shai','matkal']},
   ];
+  const fmtRun=function(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
   let html='';
-  ORDER.forEach(({key})=>{
-    const u=UNITS[key];if(!u||!u.desc)return;
-    html+=`<div style="display:flex;align-items:center;gap:11px;padding:11px 12px;background:var(--card2);border-radius:11px;margin-bottom:6px;border:1px solid var(--b1);border-right:3px solid ${u.col}">
-      <span style="font-size:22px;flex-shrink:0;width:30px;text-align:center">${u.emoji}</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:900;font-size:13px;color:${u.col}">${u.n}</div>
-        <div style="font-size:10px;color:var(--txt2);margin-top:3px;line-height:1.5">${u.desc}</div>
-      </div>
-    </div>`;
+  GROUPS.forEach(function(g){
+    // ── Category heading ──
+    html+='<div style="display:flex;align-items:center;gap:8px;margin:14px 0 8px;padding:8px 11px;background:linear-gradient(90deg,'+g.c+'18,transparent);border-right:3px solid '+g.c+';border-radius:8px">'
+        +'<span style="font-size:17px">'+g.e+'</span>'
+        +'<div style="flex:1;min-width:0">'
+          +'<div style="font-weight:900;font-size:13px;color:'+g.c+'">'+g.t+'</div>'
+          +'<div style="font-size:9.5px;color:var(--txt3);margin-top:1px">'+g.d+'</div>'
+        +'</div></div>';
+    // ── Units in this category ──
+    g.keys.forEach(function(key){
+      const u=UNITS[key];
+      if(!u)return;
+      const isMine=(key===myUnit);
+      html+='<div style="display:flex;align-items:center;gap:11px;padding:10px 12px;background:'+(isMine?'rgba(0,255,136,.07)':'var(--card2)')+';border-radius:11px;margin-bottom:5px;border:1px solid '+(isMine?'var(--pri)':'var(--b1)')+';border-right:3px solid '+u.col+'">'
+        +'<span style="font-size:20px;flex-shrink:0;width:28px;text-align:center">'+u.emoji+'</span>'
+        +'<div style="flex:1;min-width:0">'
+          +'<div style="font-weight:900;font-size:12.5px;color:'+u.col+'">'+u.n+(isMine?' <span style="font-size:9px;color:var(--pri)">— היעד שלי</span>':'')+'</div>'
+          +'<div style="font-size:9.5px;color:var(--txt2);margin-top:2px;line-height:1.45">'+(u.desc||'')+'</div>'
+          +'<div style="display:flex;gap:9px;margin-top:5px;font-size:9.5px;font-family:var(--fm)">'
+            +'<span style="color:var(--cyan)">🏃 '+fmtRun(u.r)+'</span>'
+            +'<span style="color:var(--txt3)">|</span>'
+            +'<span style="color:var(--yellow)">💪 '+u.p+' שכיבות</span>'
+            +'<span style="color:var(--txt3)">|</span>'
+            +'<span style="color:var(--purpleL)">🤸 '+u.l+' מתח</span>'
+          +'</div>'
+        +'</div></div>';
+    });
   });
+  html+='<div style="font-size:9px;color:var(--txt3);text-align:center;margin-top:12px;line-height:1.6">⚠️ היעדים הם הערכה מקצועית לצורך אימון — אינם נתונים רשמיים של צה״ל</div>';
   el.innerHTML=html;
 }
 function setProfileUnit(k){
@@ -4115,6 +4143,23 @@ function refreshShareCard(){
   document.getElementById('sc-score-big').textContent=sc;
   document.getElementById('sc-bar').style.width=sc+'%';
   document.getElementById('sc-tagline').textContent=taglines[sc%taglines.length];
+  // Unit readiness — a SEPARATE metric from the Bar-Or score
+  try{
+    var _row=document.getElementById('sc-readiness-row');
+    var _rd=(pr.unit&&UNITS[pr.unit]&&pg.length&&typeof _calcUnitReadiness==='function')
+              ? _calcUnitReadiness(UNITS[pr.unit],pg[0]) : 0;
+    if(_row){
+      if(_rd>0){
+        _row.style.display='block';
+        document.getElementById('sc-ready-lbl').textContent='מוכנות ל'+u.n+' '+u.emoji;
+        var _rv=document.getElementById('sc-ready-val');
+        _rv.textContent=_rd+'%';
+        _rv.style.color=_rd>=90?'var(--pri)':_rd>=70?'var(--yellow)':_rd>=40?'var(--orange)':'var(--red)';
+      } else {
+        _row.style.display='none';
+      }
+    }
+  }catch(e){}
 }
 
 function sharePerf(){
